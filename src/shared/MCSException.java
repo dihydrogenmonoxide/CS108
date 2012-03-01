@@ -1,4 +1,4 @@
-package server.discovery;
+package shared;
 
 public class MCSException 
 extends Exception

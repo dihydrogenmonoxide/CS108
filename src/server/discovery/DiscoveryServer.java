@@ -18,18 +18,19 @@ implements Runnable
 	private static final String s_Address = "225.6.7.8";
 	
 	private int i_ServerPort;
+	private InetAddress IA_MultiCastGroup;
 	
 	/**
 	 * This is the constructor for the Server-Discovery-Implementation.
 	 * <p>
 	 * It automatically acquires the ServerIP, only the Serverport needs to be passed on.
-	 * <p>
+	 * <p> 
 	 * IMPORTANT: Don't forget to start it after creating the class!
 	 * @param i_ServerPort your Server's Port
 	 */
 	public DiscoveryServer(int i_ServerPort)
 	{
-		this.i_ServerPort = i_ServerPort;		
+		this.i_ServerPort = i_ServerPort;
 	}
 	
 	
@@ -42,7 +43,7 @@ implements Runnable
 			MS_socket = SetUp();
 			//sends a message like "SERV 192.168.1.11 12345" so others know where to connect to 
 			byte[] ab_MSG = ("SERV "+InetAddress.getLocalHost()+" "+this.i_ServerPort).getBytes();
-			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length);
+			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			int i_Success = 0;
 			int i_Total = 0;
 			while(true)
@@ -84,7 +85,7 @@ implements Runnable
 		{
 			try 
 			{
-				InetAddress IA_MultiCastGroup = InetAddress.getByName(s_Address);
+				IA_MultiCastGroup = InetAddress.getByName(s_Address);
 				MS_socket = new MulticastSocket(i_Port);
 				MS_socket.joinGroup(IA_MultiCastGroup);
 				

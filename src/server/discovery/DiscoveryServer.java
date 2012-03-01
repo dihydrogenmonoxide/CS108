@@ -19,12 +19,19 @@ implements Runnable
 	
 	private int i_ServerPort;
 	
-	
+	/**
+	 * This is the constructor for the Server-Discovery-Implementation.
+	 * <p>
+	 * It automatically acquires the ServerIP, only the Serverport needs to be passed on.
+	 * <p>
+	 * IMPORTANT: Don't forget to start it after creating the class!
+	 * @param i_ServerPort your Server's Port
+	 */
 	public DiscoveryServer(int i_ServerPort)
 	{
 		this.i_ServerPort = i_ServerPort;		
 	}
-
+	
 	
 	public void run() 
 	{

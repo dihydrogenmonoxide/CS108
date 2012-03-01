@@ -142,18 +142,14 @@ implements Runnable
 					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port));
 					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port);
 				}
-				else
-				{
-					Log.DebugLog("Already found the server "+IA_Address+":"+i_Port);
-				}
 			} 
 			catch (UnknownHostException e) 
 			{
-				Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata :"+e.getMessage());
+				Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata (IP) :"+e.getMessage());
 			}
 			catch(NumberFormatException e)
 			{
-				Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata :"+e.getMessage());
+				Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata (port):"+e.getMessage());
 			}
 		}
 		else

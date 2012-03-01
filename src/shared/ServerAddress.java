@@ -26,6 +26,7 @@ public class ServerAddress
 	 */
 	public InetAddress getAddress()
 	{
+		//bad practice in c++, but this is java, isn't it?
 		return this.IA_InetAddress;
 	}
 	

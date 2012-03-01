@@ -1,11 +1,13 @@
 package shared;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 
 public class ServerAddress 
 {
 	private InetAddress IA_InetAddress;
 	private int i_Port;
+	private NetworkInterface NI_Interface;
 	
 	/**
 	 * This Class stores the discovered Server data.
@@ -14,10 +16,11 @@ public class ServerAddress
 	 * @param i_Port The Server's Port
 	 */
 	
-	public ServerAddress(InetAddress IA_InetAddress, int i_Port)
+	public ServerAddress(InetAddress IA_InetAddress, int i_Port, NetworkInterface NI_Interface)
 	{
 		this.IA_InetAddress = IA_InetAddress;
 		this.i_Port = i_Port;
+		this.NI_Interface = NI_Interface;
 	}
 	
 	/**
@@ -37,6 +40,15 @@ public class ServerAddress
 	public int getPort()
 	{
 		return this.i_Port;
+	}
+	
+	/**
+	 * 
+	 * @return The Interface it was discovered on
+	 */
+	public NetworkInterface getInterface()
+	{
+		return NI_Interface;
 	}
 
 }

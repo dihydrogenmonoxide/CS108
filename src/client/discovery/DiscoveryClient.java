@@ -39,6 +39,7 @@ implements Runnable
 	public void run() 
 	{
 		Log.InformationLog("New Discovery CLient Started");
+		List<Thread> lT_Threads = new ArrayList<Thread>();
 		try
 		{
 			Enumeration<NetworkInterface> eNI_Interface = NetworkInterface.getNetworkInterfaces();
@@ -52,22 +53,35 @@ implements Runnable
 				Reciver R_rec = new Reciver();
 				R_rec.setOptions(lSA_Servers, NI_Interface);
 				Thread T_Thread = new Thread(R_rec);
-				T_Thread.start();				
-				try
-				{
-					Thread.sleep(1500);
-				}
-				catch(InterruptedException e)
-				{
-					
-				}
-				T_Thread.interrupt();
+				T_Thread.start();
+				lT_Threads.add(T_Thread);
+				
+								
+				
 			}
 		}
 		catch(SocketException e)
 		{
 			
-		}		
+		}	
+		
+		Log.DebugLog("Started " + lT_Threads.size() + " Threads");
+		
+		try
+		{
+			Thread.sleep(2500);
+		}
+		catch(InterruptedException e)
+		{
+			
+		}
+		
+		for(Thread T_Thread: lT_Threads)
+		{
+			T_Thread.interrupt();
+		}
+		
+		Log.DebugLog("Stopped " + lT_Threads.size() + " Threads");
 	}
 	
 	

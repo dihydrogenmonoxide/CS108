@@ -9,21 +9,17 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 public class DiscoveryClient
 implements Runnable
 {
-	private static final int i_retries = 10;
-	private static final int i_sleep = 10;
-	private static final int i_Port = 9001;
-	private static final String s_Address = "225.6.7.8";
-	private static final int i_BuffSZ = 250;
-	
-	private InetAddress IA_MultiCastGroup;
-	
+	private int i_Timeout;
 	private List<ServerAddress> lSA_Servers = new ArrayList<ServerAddress>();
 	
 
@@ -35,15 +31,99 @@ implements Runnable
 	 * IMPORTANT: Don't forget to start it after creating the class!
 	 * @param i_ServerPort your Server's Port
 	 */
-	public DiscoveryClient()
+	public DiscoveryClient(int i_Timeout)
 	{
+		this.i_Timeout = i_Timeout;
 		this.lSA_Servers.clear();
 	}
 	
 	
 	public void run() 
 	{
+		List<Thread> lTH_Threads = new ArrayList<Thread>();
 		Log.InformationLog("New Discovery CLient Started");
+		try
+		{
+			Enumeration<NetworkInterface> eNI_Interface = NetworkInterface.getNetworkInterfaces();
+			while (eNI_Interface.hasMoreElements())
+			{
+				NetworkInterface NI_Interface =eNI_Interface.nextElement();
+				if(NI_Interface.isLoopback()||!NI_Interface.isUp()||NI_Interface.isVirtual())
+					continue;
+				
+				//creating a Thread for every socket that receives the server information
+				Reciver R_rec = new Reciver();
+				R_rec.setOptions(lSA_Servers, NI_Interface);
+				Thread T_Thread = new Thread(R_rec);
+				T_Thread.start();
+				lTH_Threads.add(T_Thread);
+			}
+		}
+		catch(SocketException e)
+		{
+			
+		}
+		
+		try 
+		{
+			Thread.sleep(i_Timeout);
+		}
+		catch (InterruptedException e)
+		{
+			
+		}
+		
+		//stopping all threads after the time ran out
+		for(Thread T_Thread : lTH_Threads)
+		{
+			T_Thread.interrupt();
+		}
+		
+	}
+	
+	
+	/**
+	 * Clears the List of Servers it found so far.
+	 */
+	public void ClearServerlist()
+	{
+		this.lSA_Servers.clear();
+	}
+	
+	/**
+	 * 
+	 * @return The Servers it discovered so far (unsorted).
+	 */
+	public List<ServerAddress> GetList()
+	{
+		return this.lSA_Servers;
+	}
+}
+
+class Reciver
+implements Runnable
+{
+	private static final int i_retries = 10;
+	private static final int i_sleep = 1;
+	private static final int i_Port = 9001;
+	private static final String s_Address = "225.6.7.8";
+	private static final int i_BuffSZ = 250;
+	
+	
+	private List<ServerAddress> lSA_Servers;
+	private NetworkInterface NA_Interface;
+	private InetAddress IA_MultiCastGroup;
+	
+	
+	public void run() 
+	{
+		if(this.lSA_Servers == null)
+		{
+			Log.ErrorLog("Options not set - exiting thread");
+			return;
+			
+		}
+		
 		MulticastSocket MS_socket;
 		try
 		{
@@ -53,24 +133,24 @@ implements Runnable
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length);
 			int i_Success = 0;
 			int i_Total = 0;
-			try {
-				MS_socket.send(new DatagramPacket("ALIV".getBytes(), "ALIV".getBytes().length, IA_MultiCastGroup, i_Port));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			DatagramPacket DP_alive = new DatagramPacket("ALIV".getBytes(), "ALIV".getBytes().length, IA_MultiCastGroup, i_Port);
+
+			MS_socket.setNetworkInterface(NA_Interface);
+			MS_socket.send(DP_alive);
+		
 			while(true)
 			{
 				i_Total++;
-				try 
+				try
 				{
 					MS_socket.receive(DP_packet);
 					Parse(DP_packet);
-					i_Success++;
+					i_Success++;					
 				}
-				catch (IOException e) 
+				catch(IOException e)
 				{
-					Log.WarningLog("Failed to recive packet("+i_Success+" out of "+i_Total+" were recived: "+e.getMessage());
+					Log.WarningLog("Couldn't send packet(out of "+i_Total+" "+i_Success+"were sent successful");
+					
 				}
 				
 				try 
@@ -79,14 +159,30 @@ implements Runnable
 				} catch (InterruptedException e) 
 				{
 					Log.DebugLog("Thread.Sleep failed :"+e.getMessage());
-				}							
+				}
 			}
+
+		}
+		catch(SocketException e)
+		{
+			Log.ErrorLog("Couldn't assignt he network adapter: "+e.getMessage());	
 		}
 		catch(MCSException e)
 		{
 			Log.ErrorLog("Couldn't create the MulticastSocket: "+e.getMessage());
 		}
+		catch (IOException e) 
+		{
+			Log.ErrorLog("Couldn't send the keep alive: "+e.getMessage());
+		}	
 	}
+	
+	public void setOptions(List<ServerAddress> lSA_Servers, NetworkInterface NA_Interface)
+	{
+		this.lSA_Servers = lSA_Servers;
+		this.NA_Interface = NA_Interface;
+	}
+	
 	
 	private MulticastSocket SetUp() 
 			throws MCSException
@@ -121,7 +217,7 @@ implements Runnable
 		}
 		return null;
 	}
-
+	
 	private void Parse(DatagramPacket DP_MSG)
 	{
 		String s_MSG = new String(DP_MSG.getData(), 0, DP_MSG.getLength());
@@ -131,21 +227,17 @@ implements Runnable
 			return;
 		}
 		String[] as_MSG = s_MSG.split("\\s");
-		if(as_MSG.length == 3)
+		if(as_MSG.length == 2)
 		{
 			try 
 			{
-				InetAddress IA_Address = InetAddress.getByName(as_MSG[1]);
-				int i_Port = Integer.parseInt(as_MSG[2]);
+				InetAddress IA_Address = DP_MSG.getAddress();
+				int i_Port = Integer.parseInt(as_MSG[1]);
 				if(!AlreadyFound(IA_Address, i_Port))
 				{
-					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port));
+					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface));
 					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port);
 				}
-			} 
-			catch (UnknownHostException e) 
-			{
-				Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata (IP) :"+e.getMessage());
 			}
 			catch(NumberFormatException e)
 			{
@@ -158,11 +250,11 @@ implements Runnable
 		}
 				
 	}
-
+	
 	/**
-	 * Checks wheter the Server is already int he List or not.
+	 * Checks whether the Server is already in the List or not.
 	 * <p>
-	 * It also checks wheter the port is in a valid range or not.
+	 * It also checks whether the port is in a valid range or not.
 	 * 
 	 * @param IA_Address The Server's IP
 	 * @param i_Port The Server's Port
@@ -180,24 +272,6 @@ implements Runnable
 			if(SA_Address.getAddress().equals(IA_Address) && i_Port == SA_Address.getPort()) return true;
 		}
 		return false;		
-	}
-	
-	
-	/**
-	 * Clears the List of Servers it found so far.
-	 */
-	public void ClearServerlist()
-	{
-		this.lSA_Servers.clear();
-	}
-	
-	/**
-	 * 
-	 * @return The Servers it discovered so far (unsorted).
-	 */
-	public List<ServerAddress> GetList()
-	{
-		return this.lSA_Servers;
-	}
+	}	
 }
 

@@ -5,10 +5,10 @@ import shared.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
@@ -53,7 +53,7 @@ implements Runnable
 			
 			while(true)
 			{
-				i_Total++;
+				
 				try 
 				{
 					Enumeration<NetworkInterface> eNI_Interface = NetworkInterface.getNetworkInterfaces();
@@ -62,6 +62,7 @@ implements Runnable
 						NetworkInterface NI_Interface =eNI_Interface.nextElement();
 						if(NI_Interface.isLoopback()||!NI_Interface.isUp()||NI_Interface.isVirtual())
 							continue;
+						i_Total++;
 						try
 						{
 							//Sending it on all Network Interfaces (even into the virtual box)
@@ -71,15 +72,16 @@ implements Runnable
 						}
 						catch(IOException e)
 						{
-							Log.DebugLog("Faulty Adapter : "+NI_Interface.getDisplayName());
+							Log.DebugLog("Faulty Adapter : "+NI_Interface.getDisplayName()+ " - out of "+i_Total+" "+i_Success+" Packets were sent");
 							//We don't care about that... 
 						}
 					}
 				}
-				catch (IOException e) 
+				catch (SocketException e) 
 				{
-					Log.WarningLog("Failed to send packet("+i_Success+" out of "+i_Total+" were sent: "+e.getMessage());
+					Log.WarningLog("SocketException occured "+e.getMessage());
 				}
+
 				
 				try 
 				{

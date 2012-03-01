@@ -53,12 +53,17 @@ implements Runnable
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length);
 			int i_Success = 0;
 			int i_Total = 0;
+			try {
+				MS_socket.send(new DatagramPacket("ALIV".getBytes(), "ALIV".getBytes().length, IA_MultiCastGroup, i_Port));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			while(true)
 			{
 				i_Total++;
 				try 
 				{
-					MS_socket.send(new DatagramPacket("ALIV".getBytes(), "ALIV".getBytes().length, IA_MultiCastGroup, i_Port));
 					MS_socket.receive(DP_packet);
 					Parse(DP_packet);
 					i_Success++;
@@ -120,9 +125,9 @@ implements Runnable
 	private void Parse(DatagramPacket DP_MSG)
 	{
 		String s_MSG = new String(DP_MSG.getData());
-		if(s_MSG.toUpperCase().equals("ALIV"))
+		if(s_MSG.toUpperCase().startsWith("ALIV"))
 		{
-			Log.DebugLog("Keep alive recived from "+ DP_MSG.getAddress());
+			Log.DebugLog("Keep Alive recived: " +DP_MSG.getSocketAddress());
 			return;
 		}
 		String[] as_MSG = s_MSG.split(" ");
@@ -133,9 +138,14 @@ implements Runnable
 				InetAddress IA_Address = InetAddress.getByName(as_MSG[1]);
 				int i_Port = Integer.parseInt(as_MSG[2]);
 				if(!AlreadyFound(IA_Address, i_Port))
+				{
 					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port));
+					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port);
+				}
 				else
+				{
 					Log.DebugLog("Already found the server "+IA_Address+":"+i_Port);
+				}
 			} 
 			catch (UnknownHostException e) 
 			{
@@ -148,7 +158,7 @@ implements Runnable
 		}
 		else
 		{
-			//Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata");
+			Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata");
 		}
 				
 	}

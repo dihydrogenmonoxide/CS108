@@ -6,6 +6,12 @@ public class Log
 	private static final boolean b_LogWarning = true;
 	private static final boolean b_LogDebug = true;
 	private static final boolean b_LogInformation = true;
+	
+	private Log()
+	{
+		
+	}
+	
 	public static void ErrorLog(String s_MSG)
 	{
 		if(b_LogError)

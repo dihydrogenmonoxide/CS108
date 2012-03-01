@@ -17,7 +17,7 @@ public class DiscoveryClient
 implements Runnable
 {
 	private static final int i_retries = 10;
-	private static final int i_sleep = 1;
+	private static final int i_sleep = 10;
 	private static final int i_Port = 9001;
 	private static final String s_Address = "225.6.7.8";
 	private static final int i_BuffSZ = 250;
@@ -119,7 +119,7 @@ implements Runnable
 
 	private void Parse(DatagramPacket DP_MSG)
 	{
-		String s_MSG = DP_MSG.getData().toString();
+		String s_MSG = new String(DP_MSG.getData());
 		if(s_MSG.toUpperCase().equals("ALIV"))
 		{
 			Log.DebugLog("Keep alive recived from "+ DP_MSG.getAddress());
@@ -148,7 +148,7 @@ implements Runnable
 		}
 		else
 		{
-			Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata");
+			//Log.WarningLog("Seems\'"+s_MSG+"\' doesn\'t represent valid Serverdata");
 		}
 				
 	}

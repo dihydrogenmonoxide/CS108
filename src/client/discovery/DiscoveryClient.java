@@ -147,6 +147,9 @@ implements Runnable
 	}
 
 	/**
+	 * Checks wheter the Server is already int he List or not.
+	 * <p>
+	 * It also checks wheter the port is in a valid range or not.
 	 * 
 	 * @param IA_Address The Server's IP
 	 * @param i_Port The Server's Port
@@ -154,6 +157,11 @@ implements Runnable
 	 */
 	private boolean AlreadyFound(InetAddress IA_Address, int i_Port)
 	{
+		if(i_Port > 0xFFFF||i_Port < 0)
+		{
+			Log.DebugLog(i_Port+" is no valid Port - not adding it to the list");
+					return false;
+		}
 		for(ServerAddress SA_Address: this.lSA_Servers)
 		{
 			if(SA_Address.getAddress().equals(IA_Address) && i_Port == SA_Address.getPort()) return true;

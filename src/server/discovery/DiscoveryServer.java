@@ -30,6 +30,8 @@ implements Runnable
 	 */
 	public DiscoveryServer(int i_ServerPort)
 	{
+		if(i_ServerPort > 0xFFFF || i_ServerPort < 0)
+			Log.DebugLog(i_ServerPort+" isn't a Valid Port - the datagram creation will throw an Error");
 		this.i_ServerPort = i_ServerPort;
 	}
 	

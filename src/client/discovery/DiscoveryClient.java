@@ -58,6 +58,7 @@ implements Runnable
 				i_Total++;
 				try 
 				{
+					MS_socket.send(new DatagramPacket("ALIV".getBytes(), "ALIV".getBytes().length, IA_MultiCastGroup, i_Port));
 					MS_socket.receive(DP_packet);
 					Parse(DP_packet);
 					i_Success++;

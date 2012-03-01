@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiscoveryClient
@@ -23,7 +24,7 @@ implements Runnable
 	
 	private InetAddress IA_MultiCastGroup;
 	
-	private List<ServerAddress> lSA_Servers;
+	private List<ServerAddress> lSA_Servers = new ArrayList<ServerAddress>();
 	
 
 	/**

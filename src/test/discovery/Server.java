@@ -15,6 +15,18 @@ public class Server {
 		Thread t = new Thread(s);
 		t.start();
 		
+		DiscoveryServer ss = new DiscoveryServer(10001);
+		Thread tt = new Thread(ss);
+		tt.start();
+		
+		DiscoveryServer sss = new DiscoveryServer(10002);
+		Thread ttt = new Thread(sss);
+		ttt.start();
+		
+		DiscoveryServer ssss = new DiscoveryServer(10003);
+		Thread ft = new Thread(ssss);
+		ft.start();
+		
 		
 		try {
 			t.join();

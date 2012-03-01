@@ -16,7 +16,7 @@ public class DiscoveryServer
 implements Runnable
 {
 	private static final int i_retries = 10;
-	private static final int i_sleep = 500;
+	private static final int i_sleep = 250;
 	private static final int i_Port = 9001;
 	private static final String s_Address = "225.6.7.8";
 	
@@ -60,7 +60,7 @@ implements Runnable
 					while (eNI_Interface.hasMoreElements())
 					{
 						NetworkInterface NI_Interface =eNI_Interface.nextElement();
-						if(NI_Interface.isLoopback()||!NI_Interface.isUp()||NI_Interface.isVirtual())
+						if(NI_Interface.isLoopback()||!NI_Interface.isUp())
 							continue;
 						i_Total++;
 						try

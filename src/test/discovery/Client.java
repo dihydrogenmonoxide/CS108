@@ -34,6 +34,12 @@ public class Client
 			e.printStackTrace();
 		}
 		
+		for(ServerAddress a : s.GetList())
+		{
+			System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());
+			System.out.println("----");
+		}
+		
 		
 
 	}

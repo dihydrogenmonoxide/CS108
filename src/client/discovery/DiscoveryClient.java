@@ -54,9 +54,19 @@ implements Runnable
 				//creating a Thread for every socket that receives the server information
 				Reciver R_rec = new Reciver();
 				R_rec.setOptions(lSA_Servers, NI_Interface);
+				Log.DebugLog("new thread on "+NI_Interface.getDisplayName());
 				Thread T_Thread = new Thread(R_rec);
 				T_Thread.start();
 				lTH_Threads.add(T_Thread);
+				
+				try
+				{
+					Thread.sleep(3);
+				}
+				catch(InterruptedException e)
+				{
+					
+				}
 			}
 		}
 		catch(SocketException e)
@@ -148,6 +158,7 @@ implements Runnable
 				i_Total++;
 				try
 				{
+					MS_socket.setNetworkInterface(NA_Interface);
 					MS_socket.receive(DP_packet);
 					Parse(DP_packet);
 					i_Success++;					
@@ -163,7 +174,7 @@ implements Runnable
 					Thread.sleep(i_sleep);
 				} catch (InterruptedException e) 
 				{
-					Log.DebugLog("Thread.Sleep failed :"+e.getMessage());
+					
 				}
 			}
 

@@ -15,7 +15,7 @@ public class Server {
 		Thread t = new Thread(s);
 		t.start();
 		
-		DiscoveryServer ss = new DiscoveryServer(10001);
+	/*	DiscoveryServer ss = new DiscoveryServer(10001);
 		Thread tt = new Thread(ss);
 		tt.start();
 		
@@ -25,7 +25,7 @@ public class Server {
 		
 		DiscoveryServer ssss = new DiscoveryServer(10003);
 		Thread ft = new Thread(ssss);
-		ft.start();
+		ft.start();*/
 		
 		
 		try {

@@ -5,15 +5,18 @@ import shared.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 public class DiscoveryServer
 implements Runnable
 {
 	private static final int i_retries = 10;
-	private static final int i_sleep = 250;
+	private static final int i_sleep = 500;
 	private static final int i_Port = 9001;
 	private static final String s_Address = "225.6.7.8";
 	
@@ -42,24 +45,40 @@ implements Runnable
 		MulticastSocket MS_socket;
 		try
 		{
-			MS_socket = SetUp();
-			//sends a message like "SERV 192.168.1.11 12345" so others know where to connect to 
-			byte[] ab_MSG = ("SERV "+InetAddress.getLocalHost().getHostAddress()+" "+this.i_ServerPort).getBytes();
-			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
+			MS_socket = SetUp(); 
 			int i_Success = 0;
 			int i_Total = 0;
-			Log.DebugLog("Packet: \'"+new String(DP_packet.getData(), 0, DP_packet.getLength())+"\'");
+			byte[] ab_MSG = ("SERV "+this.i_ServerPort).getBytes();
+			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
+			
 			while(true)
 			{
 				i_Total++;
 				try 
 				{
-					MS_socket.send(DP_packet);
-					i_Success++;
+					Enumeration<NetworkInterface> eNI_Interface = NetworkInterface.getNetworkInterfaces();
+					while (eNI_Interface.hasMoreElements())
+					{
+						NetworkInterface NI_Interface =eNI_Interface.nextElement();
+						if(NI_Interface.isLoopback()||!NI_Interface.isUp()||NI_Interface.isVirtual())
+							continue;
+						try
+						{
+							//Sending it on all Network Interfaces (even into the virtual box)
+							MS_socket.setNetworkInterface(NI_Interface);
+							MS_socket.send(DP_packet);
+							i_Success++;
+						}
+						catch(IOException e)
+						{
+							Log.DebugLog("Faulty Adapter : "+NI_Interface.getDisplayName());
+							//We don't care about that... 
+						}
+					}
 				}
 				catch (IOException e) 
 				{
-					Log.WarningLog("Failed to sent packet("+i_Success+" out of "+i_Total+" were sent: "+e.getMessage());
+					Log.WarningLog("Failed to send packet("+i_Success+" out of "+i_Total+" were sent: "+e.getMessage());
 				}
 				
 				try 
@@ -74,8 +93,6 @@ implements Runnable
 		catch(MCSException e)
 		{
 			Log.ErrorLog("Couldn't create the MulticastSocket: "+e.getMessage());
-		} catch (UnknownHostException e) {
-			Log.ErrorLog("Couldn't get this computer\'s Address "+e.getMessage());
 		}		
 	}
 	

@@ -120,6 +120,11 @@ implements Runnable
 	private void Parse(DatagramPacket DP_MSG)
 	{
 		String s_MSG = DP_MSG.getData().toString();
+		if(s_MSG.toUpperCase().equals("ALIV"))
+		{
+			Log.DebugLog("Keep alive recived from "+ DP_MSG.getAddress());
+			return;
+		}
 		String[] as_MSG = s_MSG.split(" ");
 		if(as_MSG.length == 3)
 		{

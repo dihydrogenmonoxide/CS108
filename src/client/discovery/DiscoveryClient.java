@@ -124,7 +124,7 @@ implements Runnable
 
 	private void Parse(DatagramPacket DP_MSG)
 	{
-		String s_MSG = new String(DP_MSG.getData());
+		String s_MSG = new String(DP_MSG.getData(), 0, DP_MSG.getLength());
 		if(s_MSG.toUpperCase().startsWith("ALIV"))
 		{
 			Log.DebugLog("Keep Alive recived: " +DP_MSG.getSocketAddress());

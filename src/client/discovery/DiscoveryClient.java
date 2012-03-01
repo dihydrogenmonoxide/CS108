@@ -48,7 +48,7 @@ implements Runnable
 			while (eNI_Interface.hasMoreElements())
 			{
 				NetworkInterface NI_Interface =eNI_Interface.nextElement();
-				if(NI_Interface.isLoopback()||!NI_Interface.isUp()||NI_Interface.isVirtual())
+				if(NI_Interface.isLoopback()||!NI_Interface.isUp())
 					continue;
 				
 				//creating a Thread for every socket that receives the server information

@@ -14,7 +14,7 @@ public class Client
 	 */
 	public static void main(String[] args) 
 	{
-		DiscoveryClient s = new DiscoveryClient(5000);
+		DiscoveryClient s = new DiscoveryClient();
 		Thread t = new Thread(s);
 		t.start();
 		
@@ -40,7 +40,7 @@ public class Client
 			System.out.println("----");
 		}
 		
-		t.interrupt();
+		System.exit(0);
 	}
 
 }

@@ -19,7 +19,6 @@ import java.util.List;
 public class DiscoveryClient
 implements Runnable
 {
-	private int i_Timeout;
 	private List<ServerAddress> lSA_Servers = new ArrayList<ServerAddress>();
 	
 
@@ -31,16 +30,14 @@ implements Runnable
 	 * IMPORTANT: Don't forget to start it after creating the class!
 	 * @param i_ServerPort your Server's Port
 	 */
-	public DiscoveryClient(int i_Timeout)
+	public DiscoveryClient()
 	{
-		this.i_Timeout = i_Timeout;
 		this.lSA_Servers.clear();
 	}
 	
 	
 	public void run() 
 	{
-		List<Thread> lTH_Threads = new ArrayList<Thread>();
 		Log.InformationLog("New Discovery CLient Started");
 		try
 		{
@@ -54,46 +51,23 @@ implements Runnable
 				//creating a Thread for every socket that receives the server information
 				Reciver R_rec = new Reciver();
 				R_rec.setOptions(lSA_Servers, NI_Interface);
-				Log.DebugLog("new thread on "+NI_Interface.getDisplayName());
 				Thread T_Thread = new Thread(R_rec);
-				T_Thread.start();
-				lTH_Threads.add(T_Thread);
-				
+				T_Thread.start();				
 				try
 				{
-					Thread.sleep(3);
+					Thread.sleep(1500);
 				}
 				catch(InterruptedException e)
 				{
 					
 				}
+				T_Thread.interrupt();
 			}
 		}
 		catch(SocketException e)
 		{
 			
-		}
-		Log.DebugLog("Started a total of "+lTH_Threads.size()+" Threads");
-		
-		try 
-		{
-			Thread.sleep(i_Timeout);
-		}
-		catch (InterruptedException e)
-		{
-			
-		}
-		
-		
-		
-		//stopping all threads after the time ran out
-		for(Thread T_Thread : lTH_Threads)
-		{
-			T_Thread.interrupt();
-		}
-		
-		Log.DebugLog("Stopped all Threads, not looking for servers anymore");
-		
+		}		
 	}
 	
 	

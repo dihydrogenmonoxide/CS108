@@ -8,13 +8,13 @@ public class Client
 {
 
 	/**
-	 * Testing wheter it's able to find servers or not.
+	 * Testing whether it's able to find servers or not.
 	 * 
 	 * @param args does nothing
 	 */
 	public static void main(String[] args) 
 	{
-		DiscoveryClient s = new DiscoveryClient();
+		DiscoveryClient s = new DiscoveryClient(5000);
 		Thread t = new Thread(s);
 		t.start();
 		
@@ -24,10 +24,13 @@ public class Client
 			{
 				System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());				
 			}
-			try {
+			
+			try
+			{
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException e)
+			{
+				
 				e.printStackTrace();
 			}
 		}

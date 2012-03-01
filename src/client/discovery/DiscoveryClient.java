@@ -63,6 +63,7 @@ implements Runnable
 		{
 			
 		}
+		Log.DebugLog("Started a total of "+lTH_Threads.size()+" Threads");
 		
 		try 
 		{
@@ -73,11 +74,15 @@ implements Runnable
 			
 		}
 		
+		
+		
 		//stopping all threads after the time ran out
 		for(Thread T_Thread : lTH_Threads)
 		{
 			T_Thread.interrupt();
 		}
+		
+		Log.DebugLog("Stopped all Threads, not looking for servers anymore");
 		
 	}
 	
@@ -223,7 +228,6 @@ implements Runnable
 		String s_MSG = new String(DP_MSG.getData(), 0, DP_MSG.getLength());
 		if(s_MSG.toUpperCase().startsWith("ALIV"))
 		{
-			Log.DebugLog("Keep Alive recived: " +DP_MSG.getSocketAddress());
 			return;
 		}
 		String[] as_MSG = s_MSG.split("\\s");

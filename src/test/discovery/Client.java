@@ -22,12 +22,13 @@ public class Client
 		{
 			for(ServerAddress a : s.GetList())
 			{
-				System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());				
+				System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());
+				System.out.println("----");
 			}
 			
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(5000);
 			} catch (InterruptedException e)
 			{
 				

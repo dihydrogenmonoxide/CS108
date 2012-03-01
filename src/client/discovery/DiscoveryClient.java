@@ -43,7 +43,7 @@ implements Runnable
 	
 	public void run() 
 	{
-		Log.InformationLog("New Discovery Server Started");
+		Log.InformationLog("New Discovery CLient Started");
 		MulticastSocket MS_socket;
 		try
 		{

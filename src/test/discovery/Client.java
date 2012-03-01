@@ -18,23 +18,22 @@ public class Client
 		Thread t = new Thread(s);
 		t.start();
 		
-		while(true)
+	
+		for(ServerAddress a : s.GetList())
 		{
-			for(ServerAddress a : s.GetList())
-			{
-				System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());
-				System.out.println("----");
-			}
-			
-			try
-			{
-				Thread.sleep(5000);
-			} catch (InterruptedException e)
-			{
-				
-				e.printStackTrace();
-			}
+			System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());
+			System.out.println("----");
 		}
+		
+		try
+		{
+			Thread.sleep(5000);
+		} catch (InterruptedException e)
+		{
+			
+			e.printStackTrace();
+		}
+		
 		
 
 	}

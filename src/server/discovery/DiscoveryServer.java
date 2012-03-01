@@ -48,6 +48,7 @@ implements Runnable
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			int i_Success = 0;
 			int i_Total = 0;
+			Log.DebugLog("Packet: \'"+new String(DP_packet.getData())+"\'");
 			while(true)
 			{
 				i_Total++;

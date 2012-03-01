@@ -130,7 +130,7 @@ implements Runnable
 			Log.DebugLog("Keep Alive recived: " +DP_MSG.getSocketAddress());
 			return;
 		}
-		String[] as_MSG = s_MSG.split(" ");
+		String[] as_MSG = s_MSG.split("\\s");
 		if(as_MSG.length == 3)
 		{
 			try 

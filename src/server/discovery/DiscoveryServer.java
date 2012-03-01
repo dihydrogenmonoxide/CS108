@@ -44,7 +44,7 @@ implements Runnable
 		{
 			MS_socket = SetUp();
 			//sends a message like "SERV 192.168.1.11 12345" so others know where to connect to 
-			byte[] ab_MSG = ("SERV "+InetAddress.getLocalHost()+" "+this.i_ServerPort).getBytes();
+			byte[] ab_MSG = ("SERV "+InetAddress.getLocalHost().getHostAddress()+" "+this.i_ServerPort).getBytes();
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			int i_Success = 0;
 			int i_Total = 0;

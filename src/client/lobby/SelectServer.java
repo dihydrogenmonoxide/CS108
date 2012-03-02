@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Timer;
@@ -14,6 +15,7 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -42,11 +44,16 @@ public class SelectServer extends JPanel{
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
-		JLabel label = new JLabel();
-		label.setText("Wählen Sie ihren Server:");
+		JLabel lbl_Dialog = new JLabel();
+		lbl_Dialog.setText("Wählen Sie ihren Server:");
+		lbl_Dialog.setBackground(new Color (255,255,255));
+		lbl_Dialog.setOpaque(true);
+		lbl_Dialog.setForeground(new Color (50,50,50));
+		c.fill = GridBagConstraints.LINE_END;
+		c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 0;
-		this.add(label, c);
+		this.add(lbl_Dialog, c);
 		
 		jl_Dialog = new JList(new DefaultListModel());
 		jl_Dialog.setVisibleRowCount(5);
@@ -112,19 +119,45 @@ public class SelectServer extends JPanel{
 		c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 1;
-		
-		
-		
+		c.insets=new Insets(0,0,10,0);
 		this.add(jsp_ServerPane, c);
-
-		bt_Join = new JButton("Server beitreten");
-		bt_Join.setEnabled(false);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 40;      //make this component tall
+		
+		
+		JLabel lbl_User = new JLabel();
+		lbl_User.setText("Wählen Sie ihren Benutzernamen:");
+		lbl_User.setBackground(new Color (255,255,255));
+		lbl_User.setOpaque(true);
+		lbl_User.setForeground(new Color (50,50,50));
+		c.fill = GridBagConstraints.LINE_END;
+		c.ipady = -1;
 		c.weightx = 0.0;
 		c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 3;
+		c.insets=new Insets(10,5,2,5);
+		this.add(lbl_User, c);
+		
+		JFormattedTextField jft_UserName = new JFormattedTextField();
+		jft_UserName.setColumns(10);
+		jft_UserName.setText(System.getProperty("user.name"));
+		c.fill = GridBagConstraints.LINE_END;
+		c.ipady = -1;
+		c.weightx = 0.0;
+		c.gridwidth = 3;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.insets=new Insets(0,0,10,5);
+		this.add(jft_UserName, c);
+		
+		
+		bt_Join = new JButton("Server beitreten");
+		bt_Join.setEnabled(false);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 20;      //make this component tall
+		c.weightx = 0.0;
+		c.gridwidth = 3;
+		c.gridx = 0;
+		c.gridy = 5;
 		this.add(bt_Join, c);
 		
 

@@ -63,7 +63,8 @@ implements Runnable
 				}
 				catch(InterruptedException e)
 				{
-					
+					//Exit on interrupt
+					return;					
 				}
 								
 				

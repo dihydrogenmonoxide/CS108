@@ -63,4 +63,8 @@ public class ServerAddress
 		return this.s_ServerName;
 	}
 
+	public String toString(){
+		return this.s_ServerName+" at "+this.IA_InetAddress;
+	}
+	
 }

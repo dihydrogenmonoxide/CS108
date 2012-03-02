@@ -1,12 +1,17 @@
 package client.lobby;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,18 +31,19 @@ public class SelectServer extends JPanel{
 	private Vector<ServerAddress> vs_Servers;
 	private JList jl_Dialog;
 	private JButton bt_Join;
-	String[] sa_NoServers={"suchen ...","bitte haben Sie Geduld"};
+	private String[] sa_NoServers={"suchen ...","bitte haben Sie Geduld"};
+	private int i_ScreenX;
+	private int i_ScreenY;
 
 	public SelectServer()
 	{
 		Log.DebugLog("Choose a server");
 
-
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
+		
 		JLabel label = new JLabel();
-		label.setText("Wählen Sie ihren Server:");
+		label.setText("W√§hlen Sie ihren Server:");
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(label, c);
@@ -52,7 +58,7 @@ public class SelectServer extends JPanel{
 		jl_Dialog.setListData(sa_NoServers);
 		jl_Dialog.setEnabled(false); //because no server found yet
 
-		//suche regelmässig nach servern
+		//suche regelm√§ssig nach servern
 		Timer timer = new Timer();
 		int i_Delay = 1000;   
 		int i_Period = 6000;
@@ -120,5 +126,26 @@ public class SelectServer extends JPanel{
 		c.gridx = 0;
 		c.gridy = 3;
 		this.add(bt_Join, c);
+		
+
+		this.setPreferredSize(getMinimumSize());
+	}
+	public void paintComponent(Graphics g)
+	{
+		BufferedImage img = null;
+		try 
+		{
+			img = ImageIO.read(new File("lobby_bg.jpg"));
+			g.drawImage(img, 0, 0, this.i_ScreenX, this.i_ScreenY, 0, 0, img.getWidth(), img.getHeight(), new Color(0,0,0), null);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+
+		}
+	}
+	public void setScreen(int x, int y) {
+		this.i_ScreenX=x;
+		this.i_ScreenY=y;
 	}
 }

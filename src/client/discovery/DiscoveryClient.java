@@ -236,11 +236,11 @@ implements Runnable
 			{
 				InetAddress IA_Address = DP_MSG.getAddress();
 				int i_Port = Integer.parseInt(as_MSG[1]);
-				String serverName = as_MSG[2];
+				String s_ServerName = as_MSG[2];
 				if(!AlreadyFound(IA_Address, i_Port))
 				{
-					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface, serverName));
-					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port+" Servername: "+serverName);
+					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface, s_ServerName));
+					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port+" Servername: "+s_ServerName);
 				}
 			}
 			catch(NumberFormatException e)

@@ -8,7 +8,7 @@ public class ServerAddress
 	private InetAddress IA_InetAddress;
 	private int i_Port;
 	private NetworkInterface NI_Interface;
-	private String serverName;
+	private String s_ServerName;
 	
 	/**
 	 * This Class stores the discovered Server data.
@@ -27,7 +27,7 @@ public class ServerAddress
 	public ServerAddress(InetAddress iA_Address, int i_Port2, NetworkInterface na_Interface, String serverName) 
 	{
 		this(iA_Address, i_Port2, na_Interface);
-		this.serverName=serverName;
+		this.s_ServerName=serverName;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ServerAddress
 
 	public String getServerName() {
 		// TODO Auto-generated method stub
-		return this.serverName;
+		return this.s_ServerName;
 	}
 
 }

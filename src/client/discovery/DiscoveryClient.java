@@ -56,6 +56,15 @@ implements Runnable
 				T_Thread.start();
 				lT_Threads.add(T_Thread);
 				
+				//sleeping a little bit to prevent some errors
+				try
+				{
+					Thread.sleep(10);
+				}
+				catch(InterruptedException e)
+				{
+					
+				}
 								
 				
 			}

@@ -230,16 +230,17 @@ implements Runnable
 			return;
 		}
 		String[] as_MSG = s_MSG.split("\\s");
-		if(as_MSG.length == 2)
+		if(as_MSG.length == 3)
 		{
 			try 
 			{
 				InetAddress IA_Address = DP_MSG.getAddress();
 				int i_Port = Integer.parseInt(as_MSG[1]);
+				String serverName = as_MSG[2];
 				if(!AlreadyFound(IA_Address, i_Port))
 				{
-					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface));
-					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port);
+					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface, serverName));
+					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port+" Servername: "+serverName);
 				}
 			}
 			catch(NumberFormatException e)

@@ -8,6 +8,7 @@ public class ServerAddress
 	private InetAddress IA_InetAddress;
 	private int i_Port;
 	private NetworkInterface NI_Interface;
+	private String serverName;
 	
 	/**
 	 * This Class stores the discovered Server data.
@@ -23,6 +24,12 @@ public class ServerAddress
 		this.NI_Interface = NI_Interface;
 	}
 	
+	public ServerAddress(InetAddress iA_Address, int i_Port2, NetworkInterface na_Interface, String serverName) 
+	{
+		this(iA_Address, i_Port2, na_Interface);
+		this.serverName=serverName;
+	}
+
 	/**
 	 * 
 	 * @return The Server's Address for you to connect to.
@@ -49,6 +56,11 @@ public class ServerAddress
 	public NetworkInterface getInterface()
 	{
 		return NI_Interface;
+	}
+
+	public String getServerName() {
+		// TODO Auto-generated method stub
+		return this.serverName;
 	}
 
 }

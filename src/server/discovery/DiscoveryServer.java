@@ -19,6 +19,9 @@ implements Runnable
 	private static final int i_sleep = 250;
 	private static final int i_Port = 9001;
 	private static final String s_Address = "225.6.7.8";
+
+	//assigns serverName, has to improved (likely by regex to eliminate spaces, etc.)
+	private String serverName= System.getProperty("user.name");
 	
 	private int i_ServerPort;
 	private InetAddress IA_MultiCastGroup;
@@ -48,7 +51,8 @@ implements Runnable
 			MS_socket = SetUp(); 
 			int i_Success = 0;
 			int i_Total = 0;
-			byte[] ab_MSG = ("SERV "+this.i_ServerPort).getBytes();
+			
+			byte[] ab_MSG = ("SERV "+this.i_ServerPort+" "+this.serverName).getBytes();
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			
 			while(true)

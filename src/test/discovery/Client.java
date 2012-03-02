@@ -36,7 +36,7 @@ public class Client
 		
 		for(ServerAddress a : s.GetList())
 		{
-			System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort());
+			System.out.println("IP: "+a.getAddress()+" Port: "+a.getPort()+" Servername: "+a.getServerName());
 			System.out.println("----");
 		}
 		

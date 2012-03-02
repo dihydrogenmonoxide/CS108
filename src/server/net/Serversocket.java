@@ -5,6 +5,7 @@ import server.parser.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -140,10 +141,14 @@ implements Runnable
 			ObjectInputStream OIS_MSG = new ObjectInputStream(S_socket.getInputStream());
 			String s_MSG = OIS_MSG.readUTF();
 			OIS_MSG.close();
+			
 			String s_Answer = P_Parser.Parse(s_MSG);
 			
+			ObjectOutputStream OOS_MSG = new ObjectOutputStream(S_socket.getOutputStream());
+			OOS_MSG.writeUTF(s_Answer);
+			OOS_MSG.close();
 			
-			
+			S_socket.close();			
 		}
 		catch(IOException e)
 		{

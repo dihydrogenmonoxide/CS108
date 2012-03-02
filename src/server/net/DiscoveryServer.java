@@ -1,4 +1,4 @@
-package server.discovery;
+package server.net;
 
 
 import shared.*;

@@ -1,7 +1,7 @@
 package test.discovery;
 
 
-import client.discovery.*;
+import client.net.*;
 import shared.*;
 
 public class Client 

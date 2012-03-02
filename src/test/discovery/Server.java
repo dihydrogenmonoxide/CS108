@@ -1,6 +1,6 @@
 package test.discovery;
 
-import server.discovery.*;
+import server.net.*;
 
 public class Server {
 

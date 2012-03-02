@@ -26,7 +26,7 @@ import javax.swing.event.ListSelectionListener;
 
 import shared.Log;
 import shared.ServerAddress;
-import client.discovery.DiscoveryClient;
+import client.net.DiscoveryClient;
 
 public class SelectServer extends JPanel{
 	private static final long serialVersionUID = 1L;

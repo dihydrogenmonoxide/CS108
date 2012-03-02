@@ -1,4 +1,4 @@
-package client.discovery;
+package client.net;
 
 
 

@@ -11,6 +11,6 @@ public class TestLobby {
 		// TODO Auto-generated method stub
 		ClientLobby l = new ClientLobby();
 		
-	}//test
+	}
 
 }

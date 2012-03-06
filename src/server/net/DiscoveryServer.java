@@ -21,7 +21,7 @@ implements Runnable
 	private static final String s_Address = "225.6.7.8";
 
 	//assigns serverName, has to improved (likely by regex to eliminate spaces, etc.)
-	private String s_ServerName= System.getProperty("user.name");
+	private String s_ServerName = System.getProperty("user.name");
 	
 	private int i_ServerPort;
 	private InetAddress IA_MultiCastGroup;
@@ -34,10 +34,12 @@ implements Runnable
 	 * IMPORTANT: Don't forget to start it after creating the class!
 	 * @param i_ServerPort your Server's Port
 	 */
-	public DiscoveryServer(int i_ServerPort)
+	public DiscoveryServer (int i_ServerPort)
 	{
-		if(i_ServerPort > 0xFFFF || i_ServerPort < 0)
-			Log.DebugLog(i_ServerPort+" isn't a Valid Port - the datagram creation will throw an Error");
+		if (i_ServerPort > 0xFFFF || i_ServerPort < 0)
+		{
+			Log.DebugLog(i_ServerPort + " isn't a Valid Port - the datagram creation will throw an Error");
+		}
 		this.i_ServerPort = i_ServerPort;
 	}
 	

@@ -4,7 +4,11 @@ package client.lobby;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import client.events.ServerSelectedEvent;
+import client.events.ServerSelectedListener;
+
 import shared.Log;
+import shared.ServerAddress;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,6 +32,8 @@ public class ClientLobby extends JFrame {
 	/**height of the lobby in pixel.*/
 	private int iLobbyY = 575;
 
+	private PopupFactory factory=PopupFactory.getSharedInstance();
+	private SelectServer s;
 	/**creates the lobby.*/
 	public ClientLobby()
 	{
@@ -76,11 +82,35 @@ public class ClientLobby extends JFrame {
 		lobby.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
 		lobby.setContentPane(bg);
 		
-		SelectServer s = new SelectServer();
+		s = new SelectServer();
+		s.addServerSelectedListener(new ServerSelectedListener(){
+			public void serverSelected(ServerSelectedEvent ev){
+				try
+				{
+					
+				    Popup popup = factory.getPopup(lobby,new JLabel("Well, this is just a warning message"), 50, 50);
+				    popup.show();
+					/*
+					 * 
+					 * 
+					 *   DO STUFF HERE
+					 * 
+					 * 
+					 * 
+					 * */	
+					Log.InformationLog("-->Connected to **** as ******");
+				}
+				catch (Exception e)
+				{
+					
+				}	
+			}
+		});
 		lobby.add(s);
 		Log.InformationLog("you can now select a server");
 		
-		
+
+
 		lobby.setVisible(true);
 	}
 

@@ -9,14 +9,37 @@ import shared.ServerAddress;
  * @author oliver
  *
  */
-public class ServerSelectedEvent extends EventObject{
+public class ServerSelectedEvent extends EventObject 
+{
+	/**serial.*/
 	private static final long serialVersionUID = 1L;
+	/**holds the Address of the selected Server.*/
 	private ServerAddress a;
-	public ServerSelectedEvent(Object source, ServerAddress _a) {
+	/**holds the desired Username.*/
+	private String u;
+	/**Constructs the Event.
+	 * @param source Eventsource
+	 * @param server Server which is selected.
+	 * @param user desired Username.
+	 * */
+	public ServerSelectedEvent(final Object source, final ServerAddress server, final String user) 
+	{
 		super(source);
-		this.a= _a;
+		this.a =  server;
+		this.u = user;
 	}
-	public ServerAddress getServer(){
+	/**Return the ServerAddress.
+	 * @return a the selected Server
+	 * */
+	public final ServerAddress getServer()
+	{
 		return a;
+	}
+	/**return the desired Username.
+	 * @return u the desired Username.
+	 * */
+	public final String getUsername()
+	{
+		return this.u;
 	}
 }

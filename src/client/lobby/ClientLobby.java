@@ -84,10 +84,15 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setContentPane(bg);
 		
 		s = new SelectServer();
-		s.addServerSelectedListener(new ServerSelectedListener(){
-			public void serverSelected(final ServerSelectedEvent ev){
+		s.addServerSelectedListener(new ServerSelectedListener()
+		{
+			public void serverSelected(final ServerSelectedEvent ev)
+			{
+				ServerAddress server = ev.getServer();
+				String desiredNick = ev.getUsername();
 				try
 				{
+					Log.InformationLog("-->Connecting to " + ev.getServer().getServerName() + "(" + server.getAddress().getHostAddress() + ") as " + ev.getUsername() + "(desired Username)");
 					JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
 				    
 					/*
@@ -99,7 +104,6 @@ public class ClientLobby extends JFrame {
 					 * 
 					 * */
 					
-					
 					s.stopSearch();
 					s.setVisible(false);
 					
@@ -108,10 +112,10 @@ public class ClientLobby extends JFrame {
 					
 					/*add game listener here*/
 					
-					Log.InformationLog("-->Connected to **** as ******");
 				}
 				catch (Exception e)
 				{
+					Log.WarningLog("-->Could not connect to " + server.getServerName() + "(" + server.getAddress().getHostAddress()+ ") as " + desiredNick);
 					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden", "Connection Error", JOptionPane.ERROR_MESSAGE);
 					s.setVisible(true);
 					s.startSearch();

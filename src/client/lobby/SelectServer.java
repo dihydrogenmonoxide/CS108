@@ -166,7 +166,7 @@ public class SelectServer extends JPanel {
 					Log.DebugLog("-->choosen " + foundServers.elementAt(listServers.getSelectedIndex()) + " as Server");
 					ServerAddress a = foundServers.elementAt(listServers.getSelectedIndex());
 					//connect to server
-					serverSelected(new ServerSelectedEvent("Server selected", a));
+					serverSelected(new ServerSelectedEvent("Server selected", a, sUsername));
 	
 				}
 				catch (ArrayIndexOutOfBoundsException e)

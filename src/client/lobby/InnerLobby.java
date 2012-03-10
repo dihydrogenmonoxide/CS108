@@ -1,5 +1,6 @@
 package client.lobby;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import client.events.GameSelectedEvent;
@@ -13,13 +14,16 @@ public class InnerLobby extends JPanel {
 	/**List of listeners. */
 	private javax.swing.event.EventListenerList listeners =  new javax.swing.event.EventListenerList();
 	
+	public InnerLobby(){
+	JLabel temp = new JLabel();
+	temp.setText("Hanspeter, ein Platzhalter");
+	this.add(temp);
 	
 	
 	
 	
 	
-	
-	
+	}
 	
 	
 	

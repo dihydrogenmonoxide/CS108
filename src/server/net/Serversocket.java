@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 
 public class Serversocket 
@@ -18,6 +19,7 @@ implements Runnable
 	private ServerSocket SS_Socket;
 	private Parser P_Parser;
 	private int i_Port;
+	private List<Socket> lS_Socks = new java.util.LinkedList<Socket>();
 	
 	
 	/**
@@ -30,11 +32,12 @@ implements Runnable
 	 * @param i_Port The Port it's listening on
 	 */
 	public Serversocket(int i_Port, Parser P_Parser)
+	throws SocketCreationException
 	{
 		if(i_Port > 0xFFFF || i_Port <0)
 		{
 			Log.ErrorLog("Invalid Port number, can't make the ServerSocket : "+i_Port);
-			return;
+			throw new SocketCreationException("Invalid port");
 		}
 		Log.InformationLog("New ServerSocket initialized");
 		
@@ -43,14 +46,16 @@ implements Runnable
 		
 		try
 		{
-			SS_Socket = new ServerSocket(i_Port);
+			SS_Socket = new ServerSocket(this.i_Port);
 		}
 		catch(IOException e)
 		{
-			Log.ErrorLog("Couldn't Create the Socket: "+e.getMessage());			
+			Log.ErrorLog("Couldn't Create the Socket: "+e.getMessage());
+			throw new SocketCreationException("Failed creating the Socket: "+e.getMessage());
 		}
 		
 		T_Thread = new Thread(this);
+		lS_Socks.clear();
 	}
 	
 	/**
@@ -61,6 +66,12 @@ implements Runnable
 		if(running)
 		{
 			Log.DebugLog("Socket is already running - can't start the same socket twice");
+			return;
+		}
+		
+		if(SS_Socket == null)
+		{
+			Log.ErrorLog("Can't start the socket as it couldn't be created");
 			return;
 		}
 
@@ -82,10 +93,18 @@ implements Runnable
 			Log.DebugLog("Socket is not running - can't stop something that isn't running");
 			return;
 		}
-
+		
+		
 		T_Thread.interrupt();
+		try 
+		{
+			this.SS_Socket.close();
+		} catch (IOException e) 
+		{
+			Log.WarningLog("Closing a socket failed");
+		}
 
-		running = true;
+		running = false;
 		Log.InformationLog("Stopped a Socket");
 	}
 
@@ -97,18 +116,40 @@ implements Runnable
 	{
 		if(Thread.currentThread() != this.T_Thread)
 		{
-			Log.DebugLog("RTFM");
+			Log.DebugLog("RTFM - Socket not running");
 			return;			
 		}
+		
+		Log.DebugLog("Listeing to connection attempts on "+this.i_Port);
+		
 		while(true)
 		{
 			try
 			{
+				//listening to connection attempts and opening a Socket
 				Socket S_Sock = this.SS_Socket.accept();
+				lS_Socks.add(S_Sock);
 				new ConnectionHandler(S_Sock, P_Parser);
 			} 
 			catch (IOException e) 
 			{
+				//Closing all Sockets in Case the Server was terminated
+				if(SS_Socket.isClosed())
+				{
+					for(Socket S_Socket : lS_Socks)
+					{
+						try 
+						{
+							S_Socket.close();
+						}
+						catch (IOException e1)
+						{
+							Log.WarningLog("Clouldn\'t close a Socket: "+e1.getMessage());							
+						}
+					}
+					Log.InformationLog("Closed all Sockets (and therefore terminated all connections)");
+					return;
+				}
 				Log.WarningLog("Failed Creating a Socket: "+e.getMessage());
 			}
 			
@@ -130,29 +171,50 @@ implements Runnable
 		this.S_socket = S_Sock;
 		this.P_Parser = P_Parser;
 		Thread T_Thread = new Thread(this);
-		T_Thread.start();		
+		T_Thread.start();
+		Log.DebugLog("New Socket open: "+S_socket.getInetAddress());
 	}
 
 	
 	public void run()
 	{
-		try
+		boolean b_active = true;
+
+		try 
 		{
 			ObjectInputStream OIS_MSG = new ObjectInputStream(S_socket.getInputStream());
-			String s_MSG = OIS_MSG.readUTF();
-			OIS_MSG.close();
-			
-			String s_Answer = P_Parser.Parse(s_MSG);
-			
 			ObjectOutputStream OOS_MSG = new ObjectOutputStream(S_socket.getOutputStream());
-			OOS_MSG.writeUTF(s_Answer);
-			OOS_MSG.close();
+			S_socket.setKeepAlive(true);
 			
-			S_socket.close();			
+			do
+			{
+				try
+				{
+					//reading what we received
+					String s_MSG = OIS_MSG.readUTF();
+					//parsing&handling it
+					String s_Answer = P_Parser.Parse(s_MSG);
+					//Confirming
+					OOS_MSG.writeUTF(s_Answer);				
+					OOS_MSG.flush();
+				}
+				catch(IOException e)
+				{
+					if(S_socket.isClosed())
+					{
+						Log.InformationLog("CLosed a socket");
+						OIS_MSG.close();
+						OOS_MSG.close();
+						return;
+					}
+					Log.WarningLog("Failed to recive or send");
+				}
+			}
+			while(b_active);
 		}
-		catch(IOException e)
+		catch (IOException e1) 
 		{
-			Log.WarningLog("Failed to recive or send");
-		}		
+			Log.ErrorLog("Clouldn't create an input or output-stream: "+e1.getMessage());
+		}
 	}	
 }

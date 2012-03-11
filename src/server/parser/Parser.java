@@ -1,5 +1,7 @@
 package server.parser;
 
+import shared.Log;
+
 public class Parser 
 {
 	
@@ -10,8 +12,9 @@ public class Parser
 	 */
 	public String Parse(String s_MSG)
 	{
+		Log.InformationLog("Recived: \'"+s_MSG+"\'" );
 		
-		return "";
+		return "Brool story co\nline2\nline3";
 	}
 
 }

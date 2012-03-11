@@ -26,7 +26,7 @@ public class ClientLobby extends JFrame {
 	private int screenY;
 
 	/**JFrame which contains the GUI for the Lobby.*/
-	private JFrame lobby;
+	private JFrame lobbyParent;
 	/**width of the lobby in pixel.*/
 	private int iLobbyX = 900; 
 	/**height of the lobby in pixel.*/
@@ -34,6 +34,7 @@ public class ClientLobby extends JFrame {
 
 	private PopupFactory factory=PopupFactory.getSharedInstance();
 	private SelectServer s;
+	private InnerLobby l;
 	/**creates the lobby.*/
 	public ClientLobby()
 	{
@@ -75,43 +76,59 @@ public class ClientLobby extends JFrame {
 		/*
 		 * Set up lobby / inputs
 		 * */
-		lobby = new JFrame("SwissDefcon Lobby");
-		lobby.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		lobby.setSize(iLobbyX, iLobbyY);
-		lobby.setResizable(false);
-		lobby.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
-		lobby.setContentPane(bg);
+		lobbyParent = new JFrame("SwissDefcon Lobby");
+		lobbyParent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		lobbyParent.setSize(iLobbyX, iLobbyY);
+		lobbyParent.setResizable(false);
+		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
+		lobbyParent.setContentPane(bg);
 		
 		s = new SelectServer();
-		s.addServerSelectedListener(new ServerSelectedListener(){
-			public void serverSelected(ServerSelectedEvent ev){
+		s.addServerSelectedListener(new ServerSelectedListener()
+		{
+			public void serverSelected(final ServerSelectedEvent ev)
+			{
+				ServerAddress server = ev.getServer();
+				String desiredNick = ev.getUsername();
 				try
 				{
-					
-				    Popup popup = factory.getPopup(lobby,new JLabel("Well, this is just a warning message"), 50, 50);
-				    popup.show();
+					Log.InformationLog("-->Connecting to " + ev.getServer().getServerName() + "(" + server.getAddress().getHostAddress() + ") as " + ev.getUsername() + "(desired Username)");
+					JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
+				    
 					/*
 					 * 
 					 * 
-					 *   DO STUFF HERE
+					 *   DO STUFF HERE, make connection
 					 * 
 					 * 
 					 * 
-					 * */	
-					Log.InformationLog("-->Connected to **** as ******");
+					 * */
+					
+					s.stopSearch();
+					s.setVisible(false);
+					
+					l = new InnerLobby();
+					lobbyParent.add(l);
+					
+					/*add game listener here*/
+					
 				}
 				catch (Exception e)
 				{
+					Log.WarningLog("-->Could not connect to " + server.getServerName() + "(" + server.getAddress().getHostAddress()+ ") as " + desiredNick);
+					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden", "Connection Error", JOptionPane.ERROR_MESSAGE);
+					s.setVisible(true);
+					s.startSearch();
 					
-				}	
+				}
 			}
 		});
-		lobby.add(s);
+		lobbyParent.add(s);
 		Log.InformationLog("you can now select a server");
 		
 
 
-		lobby.setVisible(true);
+		lobbyParent.setVisible(true);
 	}
 
 

@@ -34,8 +34,10 @@ import client.net.DiscoveryClient;
 public class SelectServer extends JPanel {
 	/**serialid.*/
 	private static final long serialVersionUID = 1L;
-	/**List of listeners  */
+	/**List of listeners.  */
 	private javax.swing.event.EventListenerList listeners =  new javax.swing.event.EventListenerList();
+	/**timer for repeating the search.*/
+	private Timer timer;
 	/**List to hold all the found Server.*/
 	private Vector<ServerAddress> foundServers;
 	/**optionlist which displays all the servers.*/
@@ -81,49 +83,7 @@ public class SelectServer extends JPanel {
 		listServers.setListData(msgNoServers);
 		listServers.setEnabled(false); //because no server found yet
 
-		/*
-		 *Timer, so we will scan every 6sec for new servers.
-		 *Servers found are copied in vs_Servers and displayed 
-		 *in the SelectList
-		 * */
-		Timer timer = new Timer();
-		int scanDelay = 1000;   
-		int scanPeriod = 6000;
-
-		timer.scheduleAtFixedRate(new TimerTask() {
-			public void run() {
-				DiscoveryClient s = new DiscoveryClient();
-				Thread t = new Thread(s);
-				t.start();
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// not important
-					e.printStackTrace();
-				}
-				int selected = listServers.getSelectedIndex();
-				foundServers.clear();
-				for (ServerAddress a : s.GetList())
-				{
-					foundServers.add(a);
-				}
-
-				if (foundServers.isEmpty()) //no server active
-				{
-					listServers.clearSelection();
-					listServers.setEnabled(false);
-					listServers.setListData(msgNoServers);
-					buttonJoin.setEnabled(false);
-				} else
-				{	
-					listServers.setListData(foundServers);
-					listServers.setSelectedIndex(selected);
-					listServers.setEnabled(true);
-				}
-				listServers.repaint();
-				t.interrupt();
-			}
-		}, scanDelay, scanPeriod);
+		this.startSearch();
 
 		listServers.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(final ListSelectionEvent evt) {
@@ -206,7 +166,7 @@ public class SelectServer extends JPanel {
 					Log.DebugLog("-->choosen " + foundServers.elementAt(listServers.getSelectedIndex()) + " as Server");
 					ServerAddress a = foundServers.elementAt(listServers.getSelectedIndex());
 					//connect to server
-					serverSelected(new ServerSelectedEvent("Server selected", a));
+					serverSelected(new ServerSelectedEvent("Server selected", a, sUsername));
 	
 				}
 				catch (ArrayIndexOutOfBoundsException e)
@@ -251,9 +211,64 @@ public class SelectServer extends JPanel {
 	/**sanitize the given username.
 	 * @param sUsername to check
 	 * @return sanitized username*/
-	public final String checkUsername(final String sUsername)
+	private String checkUsername(final String sUsername)
 	{		
 		return sUsername.replaceAll("[^A-Za-z0-9]", "");
+	}
+	/**
+	 *This method sets a Timer, so we will scan every 6sec for new servers.
+	 *Servers found are copied in vs_Servers and displayed then
+	 *in the SelectList
+	*/
+	public void startSearch()
+	{
+		
+		timer = new Timer();
+		int scanDelay = 1000;   
+		int scanPeriod = 6000;
+
+		timer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				DiscoveryClient s = new DiscoveryClient();
+				Thread t = new Thread(s);
+				t.start();
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// not important
+					e.printStackTrace();
+				}
+				int selected = listServers.getSelectedIndex();
+				foundServers.clear();
+				for (ServerAddress a : s.GetList())
+				{
+					foundServers.add(a);
+				}
+
+				if (foundServers.isEmpty()) //no server active
+				{
+					listServers.clearSelection();
+					listServers.setEnabled(false);
+					listServers.setListData(msgNoServers);
+					buttonJoin.setEnabled(false);
+				} else
+				{	
+					listServers.setListData(foundServers);
+					listServers.setSelectedIndex(selected);
+					listServers.setEnabled(true);
+				}
+				listServers.repaint();
+				t.interrupt();
+			}
+		}, scanDelay, scanPeriod);
+	}
+	
+	/**
+	 * Stops the timer, so it will not search for servers.
+	 * */
+	public void stopSearch() 
+	{
+		timer.cancel();
 	}
 	
 	/** 

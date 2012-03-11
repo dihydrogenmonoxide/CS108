@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
+import client.net.Clientsocket;
 
 import shared.Log;
 import shared.ServerAddress;
@@ -34,7 +35,9 @@ public class ClientLobby extends JFrame {
 
 	private PopupFactory factory=PopupFactory.getSharedInstance();
 	private SelectServer s;
+	private Clientsocket socket;
 	private InnerLobby l;
+	
 	/**creates the lobby.*/
 	public ClientLobby()
 	{
@@ -93,8 +96,9 @@ public class ClientLobby extends JFrame {
 				try
 				{
 					Log.InformationLog("-->Connecting to " + ev.getServer().getServerName() + "(" + server.getAddress().getHostAddress() + ") as " + ev.getUsername() + "(desired Username)");
+					
+					socket = new Clientsocket(server);
 					JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
-				    
 					/*
 					 * 
 					 * 

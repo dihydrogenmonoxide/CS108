@@ -24,6 +24,8 @@ import javax.swing.event.*;
 
 import shared.Log;
 import shared.ServerAddress;
+import client.events.ServerSelectedEvent;
+import client.events.ServerSelectedListener;
 import client.net.DiscoveryClient;
 /**
  * This creates a dialog to join a server.
@@ -32,6 +34,8 @@ import client.net.DiscoveryClient;
 public class SelectServer extends JPanel {
 	/**serialid.*/
 	private static final long serialVersionUID = 1L;
+	/**List of listeners  */
+	private javax.swing.event.EventListenerList listeners =  new javax.swing.event.EventListenerList();
 	/**List to hold all the found Server.*/
 	private Vector<ServerAddress> foundServers;
 	/**optionlist which displays all the servers.*/
@@ -200,26 +204,10 @@ public class SelectServer extends JPanel {
 				try
 				{
 					Log.DebugLog("-->choosen " + foundServers.elementAt(listServers.getSelectedIndex()) + " as Server");
-
+					ServerAddress a = foundServers.elementAt(listServers.getSelectedIndex());
 					//connect to server
-					try
-					{
-						/*
-						 * 
-						 * 
-						 *   DO STUFF HERE, idee: set flag and  throw event to ClientLobby
-						 * 
-						 * 
-						 * 
-						 * */	
-						Log.InformationLog("-->Connected to **** as " + sUsername);
-					}
-					catch (Exception e)
-					{
-						Log.DebugLog("-->Could not join Server");
-						labelError.setText("konnte nicht mit Server verbinden");
-						labelError.setVisible(true);
-					}
+					serverSelected(new ServerSelectedEvent("Server selected", a));
+	
 				}
 				catch (ArrayIndexOutOfBoundsException e)
 				{
@@ -267,4 +255,34 @@ public class SelectServer extends JPanel {
 	{		
 		return sUsername.replaceAll("[^A-Za-z0-9]", "");
 	}
+	
+	/** 
+	 * adds serverSelected listeners.
+	 * @param listener
+	 */
+    public void addServerSelectedListener(ServerSelectedListener listener) {
+        listenerList.add(ServerSelectedListener.class, listener);
+    }
+
+    /**
+     * removes serverSelected listeners.
+     * @param listener
+     */
+    public void removeServerSelectedListener(ServerSelectedListener listener) {
+        listenerList.remove(ServerSelectedListener.class, listener);
+    }
+
+   /**
+    * Fires the ServerSelectedEvent to all the Listeners
+    * @param evt
+    */
+    void serverSelected(ServerSelectedEvent evt) {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i=0; i<listeners.length; i+=2) {
+            if (listeners[i]==ServerSelectedListener.class) {
+                ServerSelectedListener listener = (ServerSelectedListener)listeners[i+1];
+				listener.serverSelected(evt);
+            }
+        }
+    }
 }

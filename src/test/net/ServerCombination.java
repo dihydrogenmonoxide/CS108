@@ -20,6 +20,7 @@ public class ServerCombination {
 		Parser p = new Parser();
 		try {
 			Serversocket sockS = new Serversocket(9002, p);
+			sockS.start_();
 		} catch (SocketCreationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

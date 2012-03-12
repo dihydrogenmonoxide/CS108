@@ -6,10 +6,10 @@ import shared.ServerAddress;
 
 /**
  *  
+ *  Event which is fired when a server is selected
  * @author oliver
  *
  */
-<<<<<<< HEAD
 public class ServerSelectedEvent extends EventObject 
 {
 	/**serial.*/

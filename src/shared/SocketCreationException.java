@@ -1,5 +1,6 @@
 package shared;
 
+@SuppressWarnings("serial")
 public class SocketCreationException
 extends Exception
 {

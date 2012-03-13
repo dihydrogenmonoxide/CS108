@@ -5,6 +5,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.PriorityQueue;
 
+import client.events.ChatEventListener;
+import client.events.GameEventListener;
+import client.events.LobbyEventListener;
+
 import shared.*;
 
 public class Clientsocket 
@@ -15,6 +19,8 @@ implements Runnable
 	private Thread T_Thread;
 	private boolean b_connected;
 	PriorityQueue<String> PQS_Queue = new PriorityQueue<String>();
+	/**Parser to parse the received messages.*/
+	private ClientParser parser;
 	
 	/**
 	 * Creates the Socket to communicate with the server
@@ -22,7 +28,7 @@ implements Runnable
 	 */
 	public Clientsocket(ServerAddress SA_Server)
 	throws SocketCreationException
-	{
+	{	
 		this.SA_Server = SA_Server;
 		try
 		{
@@ -40,6 +46,7 @@ implements Runnable
 		
 		this.T_Thread = new Thread(this);
 		this.T_Thread.start();
+		this.parser = new ClientParser();
 	}
 
 	
@@ -68,6 +75,10 @@ implements Runnable
 					OOS_MSG.flush();
 					String s = OIS_MSG.readUTF();
 					Log.InformationLog("zeh answer:" +s);
+					
+					parser.parse(s);
+					
+					
 					b_connected = false;
 				}
 				catch(IOException e1)
@@ -92,5 +103,29 @@ implements Runnable
 		Log.DebugLog("Closed a Socket");		
 	}
 	
+	
+	public void addChatEventListener(ChatEventListener e){
+		parser.addChatEventListener(e);
+	}
 
+	public void removeChatEventListener(ChatEventListener e){
+		parser.removeChatEventListener(e);
+	}
+	
+	public void addLobbyEventListener(LobbyEventListener e){
+		parser.addLobbyEventListener(e);
+	}
+	
+	public void removeLobbyEventListener(LobbyEventListener e){
+		parser.removeLobbyEventListener(e);
+	}
+	
+	public void addGameEventListener(GameEventListener e){
+		parser.addGameEventListener(e);
+	}
+	
+	public void removeGameEventListener(GameEventListener e){
+		parser.removeGameEventListener(e);
+	}
+	
 }

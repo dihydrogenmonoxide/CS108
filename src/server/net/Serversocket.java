@@ -207,7 +207,7 @@ implements Runnable
 						OOS_MSG.close();
 						return;
 					}
-					if(!S_socket.isInputShutdown())
+					if(!S_socket.isConnected())
 					{
 						Log.InformationLog("Someone just disconnected: " +S_socket.getInetAddress().getHostAddress());
 						S_socket.close();

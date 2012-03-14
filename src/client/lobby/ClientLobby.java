@@ -97,21 +97,15 @@ public class ClientLobby extends JFrame {
 				{
 					Log.InformationLog("-->Connecting to " + ev.getServer().getServerName() + "(" + server.getAddress().getHostAddress() + ") as " + ev.getUsername() + "(desired Username)");
 					
+					//make Connection
 					socket = new Clientsocket(server);
 					JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
-					/*
-					 * 
-					 * 
-					 *   DO STUFF HERE, make connection
-					 * 
-					 * 
-					 * 
-					 * */
 					
+
 					s.stopSearch();
 					s.setVisible(false);
 					
-					l = new InnerLobby();
+					l = new InnerLobby(socket);
 					lobbyParent.add(l);
 					
 					/*add game listener here*/

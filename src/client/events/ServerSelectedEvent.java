@@ -5,7 +5,7 @@ import java.util.EventObject;
 import shared.ServerAddress;
 
 /**
- *  
+ *  Event which is fired when a server is selected
  * @author oliver
  *
  */

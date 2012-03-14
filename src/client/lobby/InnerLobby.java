@@ -1,6 +1,7 @@
 package client.lobby;
 
 import javax.swing.JLabel;
+import client.net.Clientsocket;
 import javax.swing.JPanel;
 
 import client.events.GameSelectedEvent;
@@ -13,6 +14,8 @@ import client.events.ServerSelectedListener;
 public class InnerLobby extends JPanel {
 	/**List of listeners. */
 	private javax.swing.event.EventListenerList listeners =  new javax.swing.event.EventListenerList();
+	/**Socket / Connection to server*/
+	Clientsocket socket;
 	
 	public InnerLobby(){
 	JLabel temp = new JLabel();
@@ -24,6 +27,13 @@ public class InnerLobby extends JPanel {
 	
 	
 	}
+	
+	public InnerLobby(Clientsocket s){
+		this();
+		this.socket = s;
+	}
+	
+	
 	
 	
 	

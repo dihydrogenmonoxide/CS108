@@ -2,9 +2,11 @@ package client.net;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.LinkedHashMap;
-import java.util.PriorityQueue;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import client.events.ChatEventListener;
 import client.events.GameEventListener;
@@ -15,12 +17,21 @@ import shared.*;
 public class Clientsocket 
 implements Runnable
 {
+	private final static int i_Timeout = 4000;
+	private final static int i_ConnectingTimeout = 4000;
+	private final static int i_Wait = 500;
+	
 	private Socket S_sock;
 	private ServerAddress SA_Server;
 	private Thread T_Thread_rec;
 	private Thread T_Thread_send;
 	private boolean b_connected;
-	private int i_ObjectID= 1;
+	private ObjectOutputStream OOS_MSG;
+	private ObjectInputStream OIS_MSG;
+	
+	BlockingQueue<String> bq_Queue = new LinkedBlockingQueue<String>();
+	
+	private String s_PlayerID = "";
 	
 	/**Parser to parse the received messages.*/
 	private ClientParser parser;
@@ -36,6 +47,8 @@ implements Runnable
 		try
 		{
 			this.S_sock = new Socket(this.SA_Server.getAddress(), this.SA_Server.getPort());
+			S_sock.setKeepAlive(true);
+			S_sock.setSoTimeout(i_Timeout);
 		}
 		catch (IOException e)
 		{
@@ -45,69 +58,136 @@ implements Runnable
 		
 		
 		this.b_connected = true;
-		
 		this.parser = new ClientParser();
+		
+		try 
+		{
+			OOS_MSG = new ObjectOutputStream(S_sock.getOutputStream());
+			OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
+			
+			//Authenticating with the server
+			OOS_MSG.writeUTF("VAUTH");
+			OOS_MSG.flush();
+			String s_Answer = OIS_MSG.readUTF();
+			if(s_Answer.startsWith("VHASH "))
+			{
+				s_Answer = s_Answer.substring(5);
+				Log.InformationLog("Received the hash: " + s_Answer);
+				this.s_PlayerID = s_Answer;
+			}
+			
+			bq_Queue.clear();			
+		} 
+		catch (IOException e)
+		{
+			throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
+		}
 		
 		this.T_Thread_rec = new Thread(this);
 		this.T_Thread_rec.start();
 		
 		this.T_Thread_send = new Thread(this);
 		this.T_Thread_send.start();
-		
 	}
 
 	
 	public void run() 
 	{
-	/*	if(Thread.currentThread() != T_Thread)
+		try
 		{
-			Log.DebugLog("RTFM - Socket not running");
-			return;
-		}*/
-		
-		Log.DebugLog("Started a new Socket");
-		
-		try 
-		{
-			S_sock.setKeepAlive(true);
-			
-			ObjectOutputStream OOS_MSG = new ObjectOutputStream(S_sock.getOutputStream());
-			ObjectInputStream OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
-			
-			do
+			if(Thread.currentThread() == this.T_Thread_rec)
 			{
-				try
+				//<Receiver Thread>
+				do
 				{
-					OOS_MSG.writeUTF("TEST: "+this.S_sock.getLocalPort()+" "+S_sock.getSoTimeout());
-					OOS_MSG.flush();
-					String s = OIS_MSG.readUTF();
-					Log.InformationLog("zeh answer:" +s);
-					
-					parser.parse(s);
-					
-					
-					b_connected = false;
-				}
-				catch(IOException e1)
-				{
-					if(S_sock.isClosed() || !b_connected)
+					try
 					{
-						if(!b_connected)
-							S_sock.close();
-						Log.DebugLog("Socket closed - exiting");
-						return;
+						String s = OIS_MSG.readUTF();
+						parser.parse(s);		
+						
 					}
-					
-					Log.ErrorLog("Socket IE Error: "+e1.getMessage());
+					catch(SocketTimeoutException  e2)
+					{
+						//A timeout occurred!
+						parser.parse("VTOUT "+i_Timeout);						
+					}
+					catch(IOException e1)
+					{
+						if(S_sock.isClosed() || !b_connected)
+						{
+							if(!b_connected)
+								S_sock.close();
+							Log.DebugLog("Socket closed - exiting");
+							return;
+						}
+						
+						Log.ErrorLog("Socket IE Error: "+e1.getMessage());
+					}
 				}
+				while(b_connected);
+				//</Receiver Thread>
 			}
-			while(b_connected);
+			else if(Thread.currentThread() == this.T_Thread_send)
+			{
+				//<Sender Thread>
+				do
+				{
+					try
+					{
+						if(bq_Queue.isEmpty()) 
+							OOS_MSG.writeUTF("VPING");
+						
+						while(!bq_Queue.isEmpty())
+						{
+							try 
+							{
+								OOS_MSG.writeUTF(bq_Queue.take());
+							} 
+							catch (InterruptedException e)
+							{
+								Log.ErrorLog("This shouldn't be interrupted!");
+							}
+						}
+						OOS_MSG.flush();
+						
+						if(bq_Queue.isEmpty())	
+						{
+							try 
+							{
+								Thread.currentThread().wait(i_Wait);
+							} catch (InterruptedException e) 
+							{
+								Log.DebugLog("Waiting in the send Thread was interrupted");
+							}							
+						}						
+					}
+					catch(IOException e1)
+					{
+						if(S_sock.isClosed() || !b_connected)
+						{
+							if(!b_connected)
+								S_sock.close();
+							Log.DebugLog("Socket closed - exiting");
+							return;
+						}
+						
+						Log.ErrorLog("Socket IE Error: "+e1.getMessage());
+					}
+				}
+				while(b_connected);
+				//</Sender Thread>
+			}
+			else
+			{
+				Log.DebugLog("RTFM - Socket not running");
+				return;
+			}
 		}
-		catch (IOException e) 
+		catch(IOException e)
 		{
-			Log.ErrorLog("Couldn't create a ObjectStream:"+e.getMessage());
+			Log.WarningLog("Failed to close a Socket: "+e.getMessage());
 		}
-		Log.DebugLog("Closed a Socket");		
+				
 	}
 	
 	/**
@@ -115,12 +195,17 @@ implements Runnable
 	 * @param s_Data the Data you'd like to send
 	 * @return The ID of the Data you sent (for the Event Listener)
 	 */
-	public int sendData(String s_Data)
+	public void sendData(String s_Data)
 	{
-		this.i_ObjectID++;
-		
-		
-		return this.i_ObjectID;
+		try 
+		{
+			bq_Queue.put(s_Data);
+			this.T_Thread_send.notify();
+		}
+		catch (InterruptedException e) 
+		{
+			Log.ErrorLog("\'"+s_Data+"\' was not sent: "+e.getMessage());
+		}
 	}
 	
 	/**
@@ -132,11 +217,88 @@ implements Runnable
 	 * 
 	 * @param s_MSG the Chat message
 	 */
-	public void sendMessage(String s_MSG)
+	public void sendChatMessage(String s_MSG)
 	{
+		try 
+		{
+			bq_Queue.put("CCHAT " + s_MSG);
+			this.T_Thread_send.notify();
+		}
+		catch (InterruptedException e) 
+		{
+			Log.ErrorLog("The chat message \'"+s_MSG+"\' was not sent: "+e.getMessage());
+		}
+	}
+	
+	/**
+	 * Reconnects if the Connection is lost.
+	 * @throws SocketCreationException
+	 */
+	public void reconnect()
+	throws SocketCreationException
+	{
+		if(!b_connected)
+			throw new SocketCreationException("THis connection was manually closed! Can't reopen!");
+		
+		if(this.S_sock.isClosed() || !this.S_sock.isConnected())
+		{
+			try 
+			{
+				this.S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), i_ConnectingTimeout);
+				
+			} 
+			catch (IOException e) 
+			{
+				throw new SocketCreationException("Couldn't connect: "+e.getMessage());
+			}
+			
+			try 
+			{
+				OOS_MSG = new ObjectOutputStream(S_sock.getOutputStream());
+				OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
+				
+				//Authenticating with the server
+				OOS_MSG.writeUTF("VAUTH "+this.s_PlayerID);
+				OOS_MSG.flush();
+				String s_Answer = OIS_MSG.readUTF();
+				if(s_Answer.startsWith("VHASH "+this.s_PlayerID))
+				{
+					Log.InformationLog("Reconnected!");
+				}
+				
+				bq_Queue.clear();			
+			} 
+			catch (IOException e)
+			{
+				throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
+			}
+			
+			this.T_Thread_rec.start();
+			this.T_Thread_send.start();
+		}
+		
+		
+		try 
+		{
+			OOS_MSG.writeUTF("VPING");
+			OOS_MSG.flush();
+		} 
+		catch (IOException e) 
+		{
+			throw new SocketCreationException("Failed to send a reconnect ping: "+e.getMessage());
+		}
+		
 		
 	}
 	
+	/**
+	 * Closes the Socket and notifys the Server of the disconnect as last action.
+	 */
+	public void disconnect()
+	{
+		this.sendData("VEXIT");
+		this.b_connected = false;
+	}
 	
 	public void addChatEventListener(ChatEventListener e){
 		parser.addChatEventListener(e);

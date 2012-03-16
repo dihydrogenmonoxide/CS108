@@ -23,6 +23,7 @@ public class Parser
 			{
 				String s_PlayerID = s_MSG.substring(5, s_MSG.length()-1);
 				//TODO reconnect the player
+				Log.InformationLog("Reconnected a player");
 				return s_PlayerID;
 			}
 			else

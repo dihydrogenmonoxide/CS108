@@ -1,4 +1,5 @@
 package client.net;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -110,22 +111,36 @@ implements Runnable
 						parser.parse(s);		
 						
 					}
-					catch(SocketTimeoutException  e2)
+					catch(EOFException e2)
+					{
+						Log.ErrorLog("Reading Error: "+e2.getMessage());
+						this.S_sock.close();
+						return;
+					}
+					catch(SocketTimeoutException  e3)
 					{
 						//A timeout occurred!
-						parser.parse("VTOUT "+i_Timeout);						
+						Log.ErrorLog("Disconnected! Initiating reconnect! "+e3.getMessage());
+						parser.parse("VTOUT "+i_Timeout);
 					}
 					catch(IOException e1)
 					{
-						if(S_sock.isClosed() || !b_connected)
+						if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
 						{
-							if(!b_connected)
-								S_sock.close();
+							Log.ErrorLog("Disconnected! Initiating reconnect! "+e1.getMessage());
+							parser.parse("VTOUT "+i_Timeout);
+							return;
+						}
+						
+						if(!b_connected)
+						{
+							S_sock.close();
 							Log.DebugLog("Socket closed - exiting");
 							return;
 						}
 						
-						Log.ErrorLog("Socket IE Error: "+e1.getMessage());
+						Log.ErrorLog("Socket IO Error : "+e1.getMessage()+" & "+e1.getClass());
+						return;
 					}
 				}
 				while(b_connected);
@@ -158,6 +173,7 @@ implements Runnable
 						{
 							try 
 							{
+								// TODO don't use interrupt() to continue... needs fixingz!
 								Thread.sleep(i_Wait);
 							} catch (InterruptedException e) 
 							{
@@ -167,15 +183,22 @@ implements Runnable
 					}
 					catch(IOException e1)
 					{
-						if(S_sock.isClosed() || !b_connected)
+						if(!b_connected)
 						{
-							if(!b_connected)
-								S_sock.close();
+							S_sock.close();
 							Log.DebugLog("Socket closed - exiting");
 							return;
 						}
 						
-						Log.ErrorLog("Socket IE Error: "+e1.getMessage());
+						if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
+						{
+							Log.ErrorLog("Disconnected! Initiating reconnect! "+e1.getMessage());
+							parser.parse("VTOUT "+i_Timeout);
+							return;
+						}
+						
+						Log.ErrorLog("Socket IO Error: "+e1.getMessage());
+						return;
 					}
 				}
 				while(b_connected);
@@ -246,10 +269,12 @@ implements Runnable
 		
 		if(this.S_sock.isClosed() || !this.S_sock.isConnected())
 		{
+			Log.DebugLog("Socket was Closed... Attempting reconnect");
 			try 
 			{
-				this.S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), i_ConnectingTimeout);
-				
+				this.S_sock = new Socket(this.SA_Server.getAddress(), this.SA_Server.getPort());
+				S_sock.setKeepAlive(true);
+				S_sock.setSoTimeout(i_Timeout);			
 			} 
 			catch (IOException e) 
 			{
@@ -284,6 +309,7 @@ implements Runnable
 		
 		try 
 		{
+			Log.InformationLog("Seinding a Ping");
 			OOS_MSG.writeUTF("VPING");
 			OOS_MSG.flush();
 		} 

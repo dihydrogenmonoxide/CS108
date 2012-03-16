@@ -113,6 +113,7 @@ public class ClientLobby extends JFrame {
 				}
 				catch (Exception e)
 				{
+					e.printStackTrace();
 					Log.WarningLog("-->Could not connect to " + server.getServerName() + "(" + server.getAddress().getHostAddress()+ ") as " + desiredNick);
 					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden", "Connection Error", JOptionPane.ERROR_MESSAGE);
 					s.setVisible(true);

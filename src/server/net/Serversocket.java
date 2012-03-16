@@ -207,6 +207,14 @@ implements Runnable
 						OOS_MSG.close();
 						return;
 					}
+					if(!S_socket.isInputShutdown())
+					{
+						Log.InformationLog("Someone just disconnected: " +S_socket.getInetAddress().getHostAddress());
+						S_socket.close();
+						OIS_MSG.close();
+						OOS_MSG.close();
+						return;
+					}
 					Log.WarningLog("Failed to recive or send");
 				}
 			}

@@ -71,9 +71,13 @@ implements Runnable
 			String s_Answer = OIS_MSG.readUTF();
 			if(s_Answer.startsWith("VHASH "))
 			{
-				s_Answer = s_Answer.substring(5);
+				s_Answer = s_Answer.substring(6);
 				Log.InformationLog("Received the hash: " + s_Answer);
 				this.s_PlayerID = s_Answer;
+			}
+			else
+			{
+				throw new SocketCreationException("Authentication failed: "+s_Answer);
 			}
 			
 			bq_Queue.clear();			
@@ -154,7 +158,7 @@ implements Runnable
 						{
 							try 
 							{
-								Thread.currentThread().wait(i_Wait);
+								Thread.sleep(i_Wait);
 							} catch (InterruptedException e) 
 							{
 								Log.DebugLog("Waiting in the send Thread was interrupted");
@@ -200,7 +204,7 @@ implements Runnable
 		try 
 		{
 			bq_Queue.put(s_Data);
-			this.T_Thread_send.notify();
+			this.T_Thread_send.interrupt();
 		}
 		catch (InterruptedException e) 
 		{
@@ -222,7 +226,7 @@ implements Runnable
 		try 
 		{
 			bq_Queue.put("CCHAT " + s_MSG);
-			this.T_Thread_send.notify();
+			this.T_Thread_send.interrupt();
 		}
 		catch (InterruptedException e) 
 		{
@@ -292,7 +296,7 @@ implements Runnable
 	}
 	
 	/**
-	 * Closes the Socket and notifys the Server of the disconnect as last action.
+	 * Closes the Socket and notifies the Server of the disconnect as last action.
 	 */
 	public void disconnect()
 	{

@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -63,7 +65,7 @@ public class SelectServer extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 
 		JLabel labelDialog = new JLabel();
-		labelDialog.setText("WŠhlen Sie ihren Server:");
+		labelDialog.setText("Wï¿½hlen Sie ihren Server:");
 		labelDialog.setBackground(new Color(255, 255, 255));
 		labelDialog.setOpaque(true);
 		labelDialog.setForeground(new Color(50, 50, 50));
@@ -99,6 +101,29 @@ public class SelectServer extends JPanel {
 			}
 		});
 
+		listServers.addKeyListener(new KeyListener(){
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				if(arg0.getKeyCode()==KeyEvent.VK_ENTER){
+					buttonJoin.dispatchEvent(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"Join"));
+				}
+			}
+			
+		});
 		JScrollPane serverScroll = new JScrollPane(listServers);
 		serverScroll.setPreferredSize(new Dimension(250, 80));
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -112,7 +137,7 @@ public class SelectServer extends JPanel {
 
 
 		JLabel labelUser = new JLabel();
-		labelUser.setText("WŠhlen Sie ihren Benutzernamen:");
+		labelUser.setText("Wï¿½hlen Sie ihren Benutzernamen:");
 		labelUser.setBackground(new Color(255, 255, 255));
 		labelUser.setOpaque(true);
 		labelUser.setForeground(new Color(50, 50, 50));

@@ -1,5 +1,6 @@
 package client.net;
 
+import shared.Log;
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.GameEvent;
@@ -27,9 +28,10 @@ public class ClientParser {
 	public void parse(String msg){
 		/*
 		 * 
-		 * Implement protocol handling here
+		 * Implement protocoExceptionl handling here
 		 * 
 		 */
+		Log.DebugLog("Parser received Message: "+msg);
 		
 		this.gameReceived(new GameEvent(msg, 12));
 		this.chatMsgReceived(new ChatEvent(msg, 12, msg));

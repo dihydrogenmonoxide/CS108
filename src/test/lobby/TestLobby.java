@@ -10,6 +10,7 @@ public class TestLobby {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ClientLobby l = new ClientLobby();
+		
 	}
 
 }

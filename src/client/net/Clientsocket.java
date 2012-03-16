@@ -222,6 +222,7 @@ implements Runnable
 	 * @param s_Data the Data you'd like to send
 	 * @return The ID of the Data you sent (for the Event Listener)
 	 */
+	
 	public void sendData(String s_Data)
 	{
 		try 
@@ -243,6 +244,11 @@ implements Runnable
 	 * example: /msg otto hello otto
 	 * 
 	 * @param s_MSG the Chat message
+	 */
+	/*TODO man kann keine strings mit leerzeichen senden (hinzugefŸgt von Oli)
+	 *TODO die Nachricht wird vom parser wieder gelesen -> evtl. einfach ignorieren 
+	 *(so wie bim irc, auf gesendete Nachrichten (der Server sendet einfach die Nachricht an den Addressaten))
+	 *bei fragen --> see you in the irc
 	 */
 	public void sendChatMessage(String s_MSG)
 	{
@@ -309,7 +315,7 @@ implements Runnable
 		
 		try 
 		{
-			Log.InformationLog("Seinding a Ping");
+			Log.InformationLog("Sennding a Ping");
 			OOS_MSG.writeUTF("VPING");
 			OOS_MSG.flush();
 		} 

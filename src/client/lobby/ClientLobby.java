@@ -99,7 +99,7 @@ public class ClientLobby extends JFrame {
 					
 					//make Connection
 					socket = new Clientsocket(server);
-					JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
+					//JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
 					
 
 					s.stopSearch();

@@ -22,7 +22,6 @@ public class ServerCombination {
 			Serversocket sockS = new Serversocket(9002, p);
 			sockS.start_();
 		} catch (SocketCreationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

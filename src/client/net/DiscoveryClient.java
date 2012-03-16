@@ -12,14 +12,12 @@ import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 public class DiscoveryClient
 implements Runnable
 {
-	private List<ServerAddress> lSA_Servers = new ArrayList<ServerAddress>();
+	private List<ServerAddress> lSA_Servers = new LinkedList<ServerAddress>();
 	
 
 	/**
@@ -123,14 +121,14 @@ implements Runnable
 	private static final int i_BuffSZ = 250;
 	
 	
-	private List<ServerAddress> lSA_Servers;
+	private static List<ServerAddress> lSA_Servers;
 	private NetworkInterface NA_Interface;
 	private InetAddress IA_MultiCastGroup;
 	
 	
 	public void run() 
 	{
-		if(this.lSA_Servers == null)
+		if(lSA_Servers == null)
 		{
 			Log.ErrorLog("Options not set - exiting thread");
 			return;
@@ -191,9 +189,9 @@ implements Runnable
 		}	
 	}
 	
-	public void setOptions(List<ServerAddress> lSA_Servers, NetworkInterface NA_Interface)
+	public void setOptions(List<ServerAddress> lSA_Serv, NetworkInterface NA_Interface)
 	{
-		this.lSA_Servers = lSA_Servers;
+		lSA_Servers = lSA_Serv;
 		this.NA_Interface = NA_Interface;
 	}
 	
@@ -249,7 +247,7 @@ implements Runnable
 				String s_ServerName = as_MSG[2];
 				if(!AlreadyFound(IA_Address, i_Port))
 				{
-					this.lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface, s_ServerName));
+					lSA_Servers.add(new ServerAddress(IA_Address, i_Port, this.NA_Interface, s_ServerName));
 					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port+" Servername: "+s_ServerName);
 				}
 			}
@@ -274,14 +272,14 @@ implements Runnable
 	 * @param i_Port The Server's Port
 	 * @return Whether the Server already is in the list or not.
 	 */
-	private boolean AlreadyFound(InetAddress IA_Address, int i_Port)
+	private static synchronized boolean AlreadyFound(InetAddress IA_Address, int i_Port)
 	{
 		if(i_Port > 0xFFFF||i_Port < 0)
 		{
 			Log.DebugLog(i_Port+" is no valid Port - not adding it to the list");
 					return false;
 		}
-		for(ServerAddress SA_Address: this.lSA_Servers)
+		for(ServerAddress SA_Address: lSA_Servers)
 		{
 			if(SA_Address.getAddress().equals(IA_Address) && i_Port == SA_Address.getPort()) return true;
 		}

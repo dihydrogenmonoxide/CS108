@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.LinkedHashMap;
 import java.util.PriorityQueue;
 
 import client.events.ChatEventListener;
@@ -16,9 +17,11 @@ implements Runnable
 {
 	private Socket S_sock;
 	private ServerAddress SA_Server;
-	private Thread T_Thread;
+	private Thread T_Thread_rec;
+	private Thread T_Thread_send;
 	private boolean b_connected;
-	PriorityQueue<String> PQS_Queue = new PriorityQueue<String>();
+	private int i_ObjectID= 1;
+	
 	/**Parser to parse the received messages.*/
 	private ClientParser parser;
 	
@@ -40,23 +43,27 @@ implements Runnable
 			throw new SocketCreationException(e.getMessage());
 		}
 		
-		PQS_Queue.clear();
 		
 		this.b_connected = true;
 		
-		this.T_Thread = new Thread(this);
-		this.T_Thread.start();
 		this.parser = new ClientParser();
+		
+		this.T_Thread_rec = new Thread(this);
+		this.T_Thread_rec.start();
+		
+		this.T_Thread_send = new Thread(this);
+		this.T_Thread_send.start();
+		
 	}
 
 	
 	public void run() 
 	{
-		if(Thread.currentThread() != T_Thread)
+	/*	if(Thread.currentThread() != T_Thread)
 		{
 			Log.DebugLog("RTFM - Socket not running");
 			return;
-		}
+		}*/
 		
 		Log.DebugLog("Started a new Socket");
 		
@@ -101,6 +108,33 @@ implements Runnable
 			Log.ErrorLog("Couldn't create a ObjectStream:"+e.getMessage());
 		}
 		Log.DebugLog("Closed a Socket");		
+	}
+	
+	/**
+	 * 
+	 * @param s_Data the Data you'd like to send
+	 * @return The ID of the Data you sent (for the Event Listener)
+	 */
+	public int sendData(String s_Data)
+	{
+		this.i_ObjectID++;
+		
+		
+		return this.i_ObjectID;
+	}
+	
+	/**
+	 * Sends a chat message to everyone
+	 * <p>
+	 * To send a Message to a single user type /msg NICKNAME MESSAGE
+	 * <p>
+	 * example: /msg otto hello otto
+	 * 
+	 * @param s_MSG the Chat message
+	 */
+	public void sendMessage(String s_MSG)
+	{
+		
 	}
 	
 	

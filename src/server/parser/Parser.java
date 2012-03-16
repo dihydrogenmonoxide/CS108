@@ -16,7 +16,7 @@ public class Parser
 	{
 		Log.InformationLog("Received: \'"+s_MSG+"\'" );
 		
-		switch(s_MSG.substring(0, 4).toUpperCase())
+		switch(s_MSG.substring(0, 5).toUpperCase())
 		{
 		case "VAUTH":
 			if(s_MSG.length()>6)
@@ -30,15 +30,15 @@ public class Parser
 				//TODO store the UUID in the right place
 				String uuid = UUID.randomUUID().toString();
 				
-				return uuid;
+				return "VHASH "+uuid;
 			}
 		case "VPING":
 			return "VPONG";
 		case "CCHAT":
 			return s_MSG;
-		}
-		
-		return "not implemented yet";
+		default:
+			return "not implemented yet";	
+		}		
 	}
 
 }

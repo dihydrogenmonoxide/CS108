@@ -22,18 +22,17 @@ public class ServerSocketTest
 			
 			Clientsocket c = new Clientsocket(new ServerAddress(InetAddress.getByName("127.0.0.1"), 9002, (NetworkInterface) null));
 			Clientsocket c2 = new Clientsocket(new ServerAddress(InetAddress.getByName("127.0.0.1"), 9002, (NetworkInterface) null));
+			c.sendChatMessage("TEST");
+			c2.sendData("VPING");
 			
-			Thread.sleep(1000);
+			Thread.sleep(10000);
 			s.stop_();
 		
 		} catch (SocketCreationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

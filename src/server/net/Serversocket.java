@@ -3,6 +3,7 @@ package server.net;
 import shared.*;
 import server.parser.*;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -201,6 +202,13 @@ implements Runnable
 						OOS_MSG.flush();
 					}
 				}
+				catch(EOFException e2)
+				{
+					//the client closed the socket wirthout saying good bye
+					Log.DebugLog("Client Disconnected without saying bye");
+					this.S_socket.close();
+					return;
+				}
 				catch(IOException e)
 				{
 					if(S_socket.isClosed())
@@ -210,7 +218,7 @@ implements Runnable
 						OOS_MSG.close();
 						return;
 					}
-					if(!S_socket.isConnected())
+					if(!S_socket.isConnected() || S_socket.isInputShutdown() || S_socket.isOutputShutdown())
 					{
 						Log.InformationLog("Someone just disconnected: " +S_socket.getInetAddress().getHostAddress());
 						S_socket.close();

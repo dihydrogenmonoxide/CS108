@@ -195,8 +195,11 @@ implements Runnable
 					//parsing&handling it
 					String s_Answer = P_Parser.Parse(s_MSG);
 					//Confirming
-					OOS_MSG.writeUTF(s_Answer);				
-					OOS_MSG.flush();
+					if(s_Answer != "")
+					{
+						OOS_MSG.writeUTF(s_Answer);				
+						OOS_MSG.flush();
+					}
 				}
 				catch(IOException e)
 				{
@@ -215,7 +218,7 @@ implements Runnable
 						OOS_MSG.close();
 						return;
 					}
-					Log.WarningLog("Failed to recive or send");
+					Log.WarningLog("Failed to recive or send: "+e.getMessage());
 				}
 			}
 			while(b_active);

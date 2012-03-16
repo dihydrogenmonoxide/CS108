@@ -120,7 +120,7 @@ implements Runnable
 			return;			
 		}
 		
-		Log.DebugLog("Listeing to connection attempts on "+this.i_Port);
+		Log.DebugLog("Listening to connection attempts on "+this.i_Port);
 		
 		while(true)
 		{
@@ -218,7 +218,7 @@ implements Runnable
 						OOS_MSG.close();
 						return;
 					}
-					Log.WarningLog("Failed to recive or send: "+e.getMessage());
+					Log.WarningLog("Failed to receive or send: "+e.getMessage());
 				}
 			}
 			while(b_active);

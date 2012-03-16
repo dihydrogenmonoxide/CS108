@@ -1,6 +1,6 @@
 package server.GamePlayObjects;
 
-import shared.Coordinates;
+import shared.*;
 
 public interface GamePlayObject {
 	//Loads the Image and displays it on the client GUI
@@ -10,6 +10,9 @@ public interface GamePlayObject {
 		
 		//Returns the Coordinates where the Object is.
 		Coordinates getPos();
+		
+		//Returns the Owner of the Object.
+		User getOwner();
 		
 		//Asks the Server if the Object can be build here.
 		//If true, the Object gets build.

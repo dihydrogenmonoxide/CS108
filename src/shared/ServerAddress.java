@@ -58,11 +58,12 @@ public class ServerAddress
 		return NI_Interface;
 	}
 
+	/**returns the Hostname of the server.*/
 	public String getServerName() {
-		// TODO Auto-generated method stub
 		return this.s_ServerName;
 	}
-
+	
+	/**returns a String of the format: "servername at 192.168.1.230" .*/
 	public String toString(){
 		return this.s_ServerName+" at "+this.IA_InetAddress;
 	}

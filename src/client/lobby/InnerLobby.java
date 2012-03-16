@@ -22,6 +22,9 @@ import javax.swing.JTextPane;
 import client.net.Clientsocket;
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import shared.Log;
@@ -66,6 +69,8 @@ public class InnerLobby extends JPanel {
 	/**label where game options are shown.*/
 	private JLabel gameSettings;
 
+	/** holds the StyledDocuments chatContent with the chat*/
+	JTextPane chatPane;
 
 	/** holds all the Chat-messages.*/
 	private StyledDocument chatContent;
@@ -168,15 +173,14 @@ public class InnerLobby extends JPanel {
 		c.gridy = 27;
 		this.add(createButton, c);
 
-
-		JTextPane chatMessages = new JTextPane();
-		chatMessages.setEditable(false);
-		chatMessages.setFocusable(false);
-
-		chatContent = chatMessages.getStyledDocument();
+		
+		//TODO: move the whole Chat in a separate Class
+		
+		/* The styled Document which holds the actual chat messages*/
+		chatContent = new DefaultStyledDocument();
 		try 
 		{
-			chatContent.insertString(chatContent.getLength(), "<client> Hello", chatContent.getStyle("HTMLDocument"));
+			chatContent.insertString(chatContent.getLength(), "<client> Hello \n", chatContent.getStyle("HTMLDocument"));
 		} 
 		catch (Exception e)
 		{
@@ -190,7 +194,7 @@ public class InnerLobby extends JPanel {
 			{
 				try
 				{
-					chatContent.insertString(chatContent.getLength(), "Received following Message from Server=" + evt.getMsgId(),chatContent.getStyle("HTMLDocument"));
+					chatContent.insertString(chatContent.getLength(), "Received following Message from Server=" + evt.getMsgId(), chatContent.getStyle("HTMLDocument"));
 				}
 				catch (BadLocationException e)
 				{
@@ -203,8 +207,11 @@ public class InnerLobby extends JPanel {
 			{
 				try
 				{
-					chatContent.insertString(chatContent.getLength(), evt.getMsg(), chatContent.getStyle("HTMLDocument"));
-				} catch (BadLocationException e)
+					Log.DebugLog("Chat received: "+evt.getMsg());
+					chatContent.insertString(chatContent.getLength(), evt.getMsgNsp(), evt.getAttrs());
+					chatPane.select(chatContent.getLength(), chatContent.getLength());
+				} 
+				catch (BadLocationException e)
 				{
 					Log.ErrorLog("Chat receiving Error");
 				}
@@ -212,7 +219,14 @@ public class InnerLobby extends JPanel {
 
 		});
 
-		chatScroll = new JScrollPane(chatMessages);
+		chatPane = new JTextPane();
+		chatPane.setEditable(false);
+		chatPane.setFocusable(false);
+		chatPane.setDocument(chatContent);
+		
+		
+		chatScroll = new JScrollPane(chatPane);
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipadx = 400;
 		c.ipady = 460;
@@ -226,7 +240,6 @@ public class InnerLobby extends JPanel {
 
 
 		inputChat = new JFormattedTextField("Nachricht hier eingeben");
-		//inputChat.setText(checkMessage("Nachricht hier eingeben"));
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = 1;
 		c.ipadx = 200;
@@ -263,11 +276,9 @@ public class InnerLobby extends JPanel {
 			{
 				boolean chatMsgValid = 3 < inputChat.getText().length();
 				sendButton.setEnabled(chatMsgValid);
-				Log.DebugLog(arg0.getKeyCode()+" Key Pressed");
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER && chatMsgValid)
 				{
-					Log.DebugLog("Enter received");
-					sendButton.dispatchEvent(new ActionEvent(sendButton, ActionEvent.ACTION_PERFORMED, "Presses"));
+					sendButton.doClick();
 				}
 			}
 
@@ -289,7 +300,7 @@ public class InnerLobby extends JPanel {
 				try
 				{
 					message = checkMessage(inputChat.getText());
-					Log.InformationLog("Chat Message send: "+message);
+					Log.InformationLog("Chat Message sending: "+message);
 					socket.sendChatMessage(message);
 					inputChat.setText("");
 				}
@@ -297,8 +308,6 @@ public class InnerLobby extends JPanel {
 				{
 					Log.DebugLog("-->no Message written, set to default");
 				}
-
-				
 			}
 		});
 		c.fill = GridBagConstraints.HORIZONTAL;

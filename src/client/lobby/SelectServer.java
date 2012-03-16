@@ -104,22 +104,21 @@ public class SelectServer extends JPanel {
 		listServers.addKeyListener(new KeyListener(){
 
 			@Override
-			public void keyPressed(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void keyPressed(final KeyEvent arg0) 
+			{	
 			}
 
 			@Override
-			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void keyReleased(final KeyEvent arg0) 
+			{
 			}
 
 			@Override
-			public void keyTyped(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				if(arg0.getKeyCode()==KeyEvent.VK_ENTER){
-					buttonJoin.dispatchEvent(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"Join"));
+			public void keyTyped(final KeyEvent arg0) 
+			{
+				if(arg0.getKeyCode( )== KeyEvent.VK_ENTER)
+				{
+					buttonJoin.doClick();
 				}
 			}
 			

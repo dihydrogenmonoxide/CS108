@@ -63,7 +63,7 @@ public class SelectServer extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 
 		JLabel labelDialog = new JLabel();
-		labelDialog.setText("WÃ¤hlen Sie ihren Server:");
+		labelDialog.setText("WŠhlen Sie ihren Server:");
 		labelDialog.setBackground(new Color(255, 255, 255));
 		labelDialog.setOpaque(true);
 		labelDialog.setForeground(new Color(50, 50, 50));
@@ -112,7 +112,7 @@ public class SelectServer extends JPanel {
 
 
 		JLabel labelUser = new JLabel();
-		labelUser.setText("WÃ¤hlen Sie ihren Benutzernamen:");
+		labelUser.setText("WŠhlen Sie ihren Benutzernamen:");
 		labelUser.setBackground(new Color(255, 255, 255));
 		labelUser.setOpaque(true);
 		labelUser.setForeground(new Color(50, 50, 50));

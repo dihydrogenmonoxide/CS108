@@ -21,14 +21,26 @@ public class PlayerManager
 	 */
 	public void broadcastMessage(String s_MSG, Player p_player)
 	{
-		for(Player p : l_players)
+		if(p_player.getServer() == null)
 		{
-			//will this cause null ptr exception?
-			if(p.getServer() == p_player.getServer())
+			//send to the whole lobby
+			for(Player p : l_players)
 			{
-				p.sendMessage(s_MSG);				
-			}			
-		}		
+				if(p.getServer() == null)				
+				{
+					p.sendMessage(s_MSG);				
+				}			
+			}	
+		}
+		else
+		{
+			for(Player p : p_player.getServer().getPlayers())
+			{
+				p.sendMessage(s_MSG);
+			}
+		}
+			
+			
 	}
 
 
@@ -78,6 +90,5 @@ public class PlayerManager
 				}
 			}
 		}
-		
 	}
 }

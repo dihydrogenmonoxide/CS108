@@ -8,26 +8,29 @@ public class Player
 implements Comparable<Player>
 {
 	private String s_Nick = "JohnDoe";
-	private String s_ID;
+	private String s_PlayerToken;
 	private Server s_server;
 	private PlayerSocket ps_sock;
+	private int i_ID;
+	
+	private static int i_numplayers = 0;
 	
 	/**
 	 * Creates a new Player on the Server;
-	 * @param s_ID The unique playerID the Server assigned
+	 * @param s_ID The unique token the Server assigned
 	 */
 	public Player(String s_ID, PlayerSocket ps_sock)
 	{
-		this.s_ID = s_ID;
+		this.s_PlayerToken = s_ID;
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
+		this.i_ID = i_numplayers++;
 	}
 
 	@Override
 	public int compareTo(Player o)
 	{
-		// TODO Implement compareto function
-		return 0;
+		return o.i_ID-this.i_ID;
 	}
 	
 	/**
@@ -49,12 +52,21 @@ implements Comparable<Player>
 	}
 	
 	/**
-	 * 
+	 * This is a number the player and his actions can be linked to. 
 	 * @return the unique playerID
 	 */
-	public String getID()
+	public int getID()
 	{
-		return this.s_ID;
+		return this.i_ID;
+	}
+	
+	/**
+	 * Returns the Players UUID
+	 * @return the token
+	 */
+	public String getToken()
+	{
+		return this.s_PlayerToken;
 	}
 
 	/**
@@ -73,6 +85,19 @@ implements Comparable<Player>
 	public void sendMessage(String s_MSG)
 	{
 		ps_sock.sendData(s_MSG);
+	}
+	
+	public boolean isInLobby()
+	{
+		return (this.s_server == null);
+	}
+
+	/**
+	 * This gets called when the Player lost the connection and may tries to reconnect
+	 */
+	public void connectionLost()
+	{
+		//TODO implement
 	}
 
 

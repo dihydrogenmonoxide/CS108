@@ -5,6 +5,7 @@ import java.util.EventObject;
 import shared.ServerAddress;
 
 /**
+ *  
  *  Event which is fired when a server is selected
  * @author oliver
  *
@@ -42,4 +43,16 @@ public class ServerSelectedEvent extends EventObject
 	{
 		return this.u;
 	}
+=======
+public class ServerSelectedEvent extends EventObject{
+	private static final long serialVersionUID = 1L;
+	private ServerAddress a;
+	public ServerSelectedEvent(Object source, ServerAddress _a) {
+		super(source);
+		this.a= _a;
+	}
+	public ServerAddress getServer(){
+		return a;
+	}
+>>>>>>> ServerSelected Event implemented
 }

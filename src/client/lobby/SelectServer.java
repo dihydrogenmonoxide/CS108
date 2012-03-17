@@ -151,7 +151,7 @@ public class SelectServer extends JPanel {
 
 		inputUsername = new JFormattedTextField();
 		inputUsername.setColumns(10);
-		inputUsername.setText(checkUsername(System.getProperty("user.name")));
+		inputUsername.setText(InputValidator.UserName(System.getProperty("user.name")));
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = -1;
 		c.weightx = 0.0;
@@ -177,7 +177,7 @@ public class SelectServer extends JPanel {
 				String sUsername;
 				try
 				{
-					sUsername = checkUsername(inputUsername.getText());
+					sUsername = InputValidator.UserName(inputUsername.getText());
 				}
 				catch (NullPointerException e)
 				{
@@ -232,13 +232,6 @@ public class SelectServer extends JPanel {
 
 	}
 
-	/**sanitize the given username.
-	 * @param sUsername to check
-	 * @return sanitized username*/
-	private String checkUsername(final String sUsername)
-	{		
-		return sUsername.replaceAll("[^A-Za-z0-9]", "");
-	}
 	/**
 	 *This method sets a Timer, so we will scan every 6sec for new servers.
 	 *Servers found are copied in vs_Servers and displayed then

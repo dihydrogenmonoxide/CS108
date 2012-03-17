@@ -37,7 +37,7 @@ public class Parser
 			return "VPONG";
 		case "CCHAT":
 			// TODO make it identifiable who sent it
-			return s_MSG;
+			return "CCHAT <USERNAME>\t"+s_MSG.substring(6, s_MSG.length());
 		default:
 			return "not implemented yet";	
 		}		

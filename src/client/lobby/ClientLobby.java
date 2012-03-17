@@ -10,6 +10,7 @@ import client.net.Clientsocket;
 
 import shared.Log;
 import shared.ServerAddress;
+import shared.User;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -33,14 +34,20 @@ public class ClientLobby extends JFrame {
 	/**height of the lobby in pixel.*/
 	private int iLobbyY = 575;
 
-	private PopupFactory factory=PopupFactory.getSharedInstance();
+	/**The Server Selecting Dialog.*/
 	private SelectServer s;
+	/**the Connection made to the Server.*/
 	private Clientsocket socket;
+	/**the Lobby.*/
 	private InnerLobby l;
+	/**the User which holds all User based Infos.*/
+	private User user;
 	
 	/**creates the lobby.*/
-	public ClientLobby()
+	public ClientLobby(User u)
 	{
+		this.user = u;
+		
 		/*
 		 * Get Infos about the screen
 		 * */
@@ -49,7 +56,7 @@ public class ClientLobby extends JFrame {
 		DisplayMode disp = screen.getDisplayMode();
 		screenX = disp.getWidth();
 		screenY = disp.getHeight();
-
+		
 
 
 		/*
@@ -86,7 +93,7 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
 		lobbyParent.setContentPane(bg);
 		
-		s = new SelectServer();
+		s = new SelectServer(user);
 		s.addServerSelectedListener(new ServerSelectedListener()
 		{
 			public void serverSelected(final ServerSelectedEvent ev)
@@ -97,18 +104,21 @@ public class ClientLobby extends JFrame {
 				{
 					Log.InformationLog("-->Connecting to " + ev.getServer().getServerName() + "(" + server.getAddress().getHostAddress() + ") as " + ev.getUsername() + "(desired Username)");
 					
+					//stop discovery
+					s.stopSearch();
+					s.setVisible(false);
+					
 					//make Connection
 					socket = new Clientsocket(server);
 					//JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
 					
-
-					s.stopSearch();
-					s.setVisible(false);
-					
-					l = new InnerLobby(socket);
+					l = new InnerLobby(socket, user);
 					lobbyParent.add(l);
 					
-					/*add game listener here*/
+					//request nick
+					socket.sendData("VNICK " + desiredNick);
+					
+					//TODO Game Listener to start game here.
 					
 				}
 				catch (Exception e)
@@ -129,6 +139,7 @@ public class ClientLobby extends JFrame {
 
 		lobbyParent.setVisible(true);
 	}
+
 
 
 }

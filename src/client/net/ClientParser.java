@@ -33,49 +33,82 @@ public class ClientParser {
 	public void parse(String msg){
 
 		//catch empty messages
-		if (msg.length() <= 0) 
+		if (msg.length() < 5) 
 		{
 			return;
 		}
 
+		//catch PONGs
+		if(msg.equals("VPONG")){return;}
+		
 		Log.DebugLog("Parser, received Message: " + msg);
 
 		String region = (String) msg.subSequence(0, 1);
+		msg = msg.substring(1);
 		SimpleAttributeSet attrs = new SimpleAttributeSet();
+		
 		
 		switch(region)
 		{
-		case "V":
-			// Connection messages
+		
+		case "V": // Connection messages
+			Log.DebugLog("->connection: "+msg);
+			StyleConstants.setForeground(attrs, Color.red);
 			
+			//get the subcommand
+			String command = (String) msg.subSequence(0, 4);
+			
+			switch(command)
+			{
+			case "NICK":
+				Log.DebugLog("-->request nick: "+msg);
+				this.chatMsgReceived(new ChatEvent(msg, 12, "<client>Requested Nick: "+msg, attrs));
+				break;
+				
+				
+			case "PONG": //just in case
+				Log.DebugLog("-->pong from Server");
+				return;
+			}
 			
 			//Just for Testing purpose:
 			// TODO remove the following (or comment it)
-			StyleConstants.setForeground(attrs, Color.red);
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg.substring(1), attrs));
+			this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg, attrs));
 
 			break;
-		case "G":
-			//Game messages
+			
+			
+		case "G": //Game messages
+			Log.DebugLog("->game: "+msg);
+			
 			this.gameReceived(new GameEvent(msg, 12));
 
 			break;
-		case "L":
-			//Lobby messages
+			
+			
+		case "L": //Lobby messages
+			Log.DebugLog("->lobby: "+msg);
+			
 			this.lobbyReceived(new LobbyEvent(msg, 12));
 
 
 			break;
-		case "C":
-			//Chat messages		
+			
+			
+			
+		case "C":	//Chat messages	
+			Log.DebugLog("->chat: "+msg);
+			
 
 			//declare Attributes (color, font, etc...)
 			StyleConstants.setBackground(attrs, Color.white);
 			//fire Event
-			this.chatMsgReceived(new ChatEvent(msg, 12, msg.substring(1), attrs));
+			this.chatMsgReceived(new ChatEvent(msg, 12, msg, attrs));
 
 			break;
-		default:
+			
+			
+		default: //wrong formated
 			Log.DebugLog("Parser, received wrong formatted message:" + msg);
 		}	
 	}

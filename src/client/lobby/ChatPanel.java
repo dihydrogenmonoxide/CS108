@@ -27,6 +27,7 @@ import client.events.ChatEventListener;
 import client.events.NetEvent;
 import client.net.Clientsocket;
 
+/**This class provides a Chatpanel as JPanel, everything is included, only a socket is needed.*/
 public class ChatPanel extends JPanel {
 	/**the Connection to listen to*/
 	private Clientsocket socket;
@@ -39,7 +40,7 @@ public class ChatPanel extends JPanel {
 	/**panel where chat entries are listed.*/
 	private JScrollPane chatScroll;
 
-	/** holds the StyledDocuments chatContent with the chat*/
+	/** holds the StyledDocuments chatContent with the chat.*/
 	JTextPane chatPane;
 
 	/** holds all the Chat-messages.*/
@@ -109,8 +110,8 @@ public class ChatPanel extends JPanel {
 		sendButton.setEnabled(false);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		chatScroll.setPreferredSize(new Dimension(20, 20));
-		c.ipady=2;
-		c.ipadx=5;
+		c.ipady = 2;
+		c.ipadx = 5;
 		c.weightx = 0.0;
 		c.gridwidth = 1;
 		c.gridx = 25;
@@ -148,7 +149,6 @@ public class ChatPanel extends JPanel {
 			{
 				try
 				{
-					Log.DebugLog("Chat received: " + evt.getMsg());
 					chatContent.insertString(chatContent.getLength(), evt.getMsgNsp(), evt.getAttrs());
 					chatPane.select(chatContent.getLength(), chatContent.getLength());
 				} 
@@ -168,9 +168,18 @@ public class ChatPanel extends JPanel {
 				try
 				{
 					message = InputValidator.ChatMessage(inputChat.getText());
-					Log.InformationLog("Chat Message sending: "+message);
+					if (message.subSequence(0, 1).equals("/"))
+					{
+						Log.InformationLog("Chat sending command: " + message.substring(1));
+						socket.sendData(message);	
+					}
+					else
+					{
+					Log.InformationLog("Chat Message sending: " + message);
 					socket.sendChatMessage(message);
+					}
 					inputChat.setText("");
+					sendButton.setEnabled(false);
 				}
 				catch (NullPointerException e)
 				{
@@ -193,6 +202,7 @@ public class ChatPanel extends JPanel {
 			{
 			}
 		});
+		
 		
 		/* Key Input Listeners, will activate the "Send Button" if msg-length>3 and send the message with enter*/
 		inputChat.addKeyListener(new KeyListener()

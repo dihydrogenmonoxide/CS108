@@ -29,6 +29,7 @@ import javax.swing.text.StyledDocument;
 
 import shared.Log;
 import shared.ServerAddress;
+import shared.User;
 
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
@@ -48,13 +49,18 @@ public class InnerLobby extends JPanel {
 
 	/**Socket / Connection to server.*/
 	private Clientsocket socket;
+	/**hold all the user information*/
+	private User user;
 
-	/**method with initialises the GUI for the inner Lobby.*/
-	public void makeGUI() {
-
+	/**initializes the Lobby.
+	 * @param s the socket to the server
+	 * @param u the current user*/
+	public InnerLobby(final Clientsocket s, final User u){
+		this.user = u;
+		this.socket = s;
+		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
 
 		GamesPanel games = new GamesPanel(socket);
 		c.ipady = 2;
@@ -73,16 +79,6 @@ public class InnerLobby extends JPanel {
 		this.add(chat, c);
 
 		this.setOpaque(false);
-
-
-
-
-	}
-
-
-	public InnerLobby(Clientsocket s){
-		this.socket = s;
-		makeGUI();
 	}
 
 	/** 

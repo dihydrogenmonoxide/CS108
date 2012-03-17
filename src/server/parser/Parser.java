@@ -2,6 +2,9 @@ package server.parser;
 
 import java.util.UUID;
 
+import server.MainServer;
+import server.net.PlayerSocket;
+import server.players.Player;
 import shared.Log;
 
 public class Parser 
@@ -12,7 +15,7 @@ public class Parser
 	 * @param s_MSG the Message the Server socket received
 	 * @return What the Socket should answer
 	 */
-	public String Parse(String s_MSG)
+	public void Parse(String s_MSG, PlayerSocket ps_sock)
 	{
 		Log.InformationLog("Received: \'"+s_MSG+"\'" );
 		
@@ -24,22 +27,42 @@ public class Parser
 				String s_PlayerID = s_MSG.substring(6, s_MSG.length());
 				//TODO reconnect the player
 				Log.InformationLog("Reconnected a player");
-				return "VHASH "+s_PlayerID;
+				ps_sock.sendData("VHASH "+s_PlayerID);
 			}
 			else
 			{
-				//TODO store the UUID in the right place
 				String uuid = UUID.randomUUID().toString();
-				
-				return "VHASH "+uuid;
+				ps_sock.setPlayer(new Player(uuid, ps_sock));
+				ps_sock.sendData("VHASH "+uuid);
 			}
+			break;
+			
 		case "VPING":
-			return "VPONG";
+			ps_sock.sendData("VPONG");
+			break;
+			
+		case "VNICK":
+			s_MSG = s_MSG.substring(6, s_MSG.length());
+			//TODO verify nick etc
+			ps_sock.getPlayer().setNick(s_MSG);
+			break;
+			
 		case "CCHAT":
-			// TODO make it identifiable who sent it
-			return "CCHAT <USERNAME>\t"+s_MSG.substring(6, s_MSG.length());
+			s_MSG = s_MSG.substring(6, s_MSG.length());
+			if(s_MSG.toUpperCase().startsWith("/MSG"))
+			{
+				// TODO implement pvt chatting
+				
+			}
+			else
+			{
+				MainServer.getPlayerManager().broadcastMessage("CCHAT <"+ps_sock.getPlayer().getNick()+">\t"+s_MSG,	ps_sock.getPlayer());
+			}
+			break;
+			
 		default:
-			return "not implemented yet";	
+			ps_sock.sendData("VERRO not implemented yet");	
+			break;
 		}		
 	}
 

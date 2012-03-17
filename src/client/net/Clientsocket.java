@@ -85,6 +85,10 @@ implements Runnable
 			
 			bq_Queue.clear();			
 		} 
+		catch(EOFException e)
+		{
+			throw new SocketCreationException("The server closed the connection: "+e.getMessage());
+		}
 		catch (IOException e)
 		{
 			throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
@@ -359,6 +363,10 @@ implements Runnable
 				
 				bq_Queue.clear();			
 			} 
+			catch(EOFException e)
+			{
+				throw new SocketCreationException("The server closed the connection: "+e.getMessage());
+			}
 			catch (IOException e)
 			{
 				throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());

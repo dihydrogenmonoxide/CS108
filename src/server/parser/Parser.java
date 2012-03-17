@@ -34,7 +34,7 @@ public class Parser
 				return "VHASH "+uuid;
 			}
 		case "VPING":
-			return "";
+			return "VPONG";
 		case "CCHAT":
 			// TODO make it identifiable who sent it
 			return s_MSG;

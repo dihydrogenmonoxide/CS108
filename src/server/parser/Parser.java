@@ -21,10 +21,10 @@ public class Parser
 		case "VAUTH":
 			if(s_MSG.length()>6)
 			{
-				String s_PlayerID = s_MSG.substring(5, s_MSG.length()-1);
+				String s_PlayerID = s_MSG.substring(6, s_MSG.length());
 				//TODO reconnect the player
 				Log.InformationLog("Reconnected a player");
-				return s_PlayerID;
+				return "VHASH "+s_PlayerID;
 			}
 			else
 			{
@@ -34,8 +34,9 @@ public class Parser
 				return "VHASH "+uuid;
 			}
 		case "VPING":
-			return "VPONG";
+			return "";
 		case "CCHAT":
+			// TODO make it identifiable who sent it
 			return s_MSG;
 		default:
 			return "not implemented yet";	

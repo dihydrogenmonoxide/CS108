@@ -22,7 +22,7 @@ public class ServerSocketTest
 			
 			Clientsocket c = new Clientsocket(new ServerAddress(InetAddress.getByName("127.0.0.1"), 9002, (NetworkInterface) null));
 			Clientsocket c2 = new Clientsocket(new ServerAddress(InetAddress.getByName("127.0.0.1"), 9002, (NetworkInterface) null));
-			c.sendChatMessage("TEST");
+			c.sendChatMessage("T E S T !");
 			c2.sendData("CCHAT ROFLMAO asdsa dasdaf sadsad asdsadas dasdas dasdasdasd");
 			
 			Thread.sleep(100000);

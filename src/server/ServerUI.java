@@ -6,7 +6,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
 import javax.swing.JTextArea;
 
 import server.players.Player;
@@ -15,7 +14,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JTextPane;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;

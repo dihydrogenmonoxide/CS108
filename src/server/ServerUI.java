@@ -42,7 +42,7 @@ public class ServerUI {
 	 */
 	private void initialize() {
 		frmSwissDefconServer = new JFrame();
-		frmSwissDefconServer.setTitle("Swiss Defcon Server");
+		frmSwissDefconServer.setTitle("SwissDefcon Server");
 		frmSwissDefconServer.setBounds(100, 100, 950, 400);
 		frmSwissDefconServer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -54,7 +54,7 @@ public class ServerUI {
 				{
 					for(Player p : MainServer.getPlayerManager().getPlayers())
 					{
-						p.sendMessage(txtServerconsole.getText());
+						p.sendData(txtServerconsole.getText());
 					}
 					printText("Send \'"+txtServerconsole.getText()+"\' to "+MainServer.getPlayerManager().getPlayers().size()+" Players");
 					txtServerconsole.setText("");
@@ -92,14 +92,14 @@ public class ServerUI {
 		scrollPane = new JScrollPane();
 		frmSwissDefconServer.getContentPane().add(scrollPane, BorderLayout.EAST);
 		scrollPane.setViewportView(txtpnStdout);
-		scrollPane.setAutoscrolls(true);
 		scrollPane.setPreferredSize(new Dimension(550, 450));
+		scrollPane.setAutoscrolls(true);
 		
 		scrollPane_1 = new JScrollPane();
 		frmSwissDefconServer.getContentPane().add(scrollPane_1, BorderLayout.CENTER);
 		scrollPane_1.setViewportView(txtrServeroutput);
-		scrollPane_1.setAutoscrolls(true);
 		scrollPane_1.setPreferredSize(new Dimension(400, 450));
+		scrollPane_1.setAutoscrolls(true);
 		
 		OutputStream stdout = new OutputStream()
 		{

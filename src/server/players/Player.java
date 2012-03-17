@@ -41,7 +41,7 @@ implements Comparable<Player>
 	 */
 	public void setNick(String s_Nick)
 	{
-		if(b_NameSet)
+		if(!b_NameSet)
 			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
 		else
 			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+this.s_Nick+"\' -> \'"+s_Nick+"\'");
@@ -88,7 +88,7 @@ implements Comparable<Player>
 	 * Sends the Data to the specified Player
 	 * @param s_MSG the data
 	 */
-	public void sendMessage(String s_MSG)
+	public void sendData(String s_MSG)
 	{
 		ps_sock.sendData(s_MSG);
 	}
@@ -103,7 +103,14 @@ implements Comparable<Player>
 	 */
 	public void connectionLost()
 	{
+		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		//TODO implement
+	}
+
+	public void reconnect() 
+	{
+		// TODO what to do when the player reconnects?
+		
 	}
 
 

@@ -1,9 +1,9 @@
 package server.players;
 
 import java.util.*;
-
+import shared.*;
 import server.MainServer;
-import shared.Log;
+
 
 public class PlayerManager 
 {
@@ -29,7 +29,7 @@ public class PlayerManager
 			{
 				if(p.getServer() == null)				
 				{
-					p.sendMessage(s_MSG);				
+					p.sendData(s_MSG);				
 				}			
 			}	
 		}
@@ -37,11 +37,28 @@ public class PlayerManager
 		{
 			for(Player p : p_player.getServer().getPlayers())
 			{
-				p.sendMessage(s_MSG);
+				p.sendData(s_MSG);
 			}
 		}
 			
 			
+	}
+	
+	/**
+	 * checks whether a certain player is connected to the server and if so return the name
+	 * <p>
+	 * returns null if none was found
+	 * @param s_name the pleayer's name you're looking for
+	 * @return the player or null if no such player was found
+	 */
+	public Player findPlayer(String s_name)
+	{
+		for(Player p : this.l_players)
+		{
+			if(s_name.compareToIgnoreCase(p.getNick()) == 0)
+				return p;
+		}
+		return null;
 	}
 
 
@@ -87,9 +104,19 @@ public class PlayerManager
 				Player p = i_players.next();
 				if(p == p_player)
 				{
-					MainServer.printInformation("Removed "+p.getNick());					
+					MainServer.printInformation("Removed "+p.getNick()+" from the List of active Players");					
 				}
 			}
 		}
+	}
+	
+	public Player findUUID(String s_PlayerID) 
+	{
+		for(Player p : this.l_players)
+		{
+			if(s_PlayerID.compareTo(p.getToken()) == 0)
+				return p;
+		}
+		return null;
 	}
 }

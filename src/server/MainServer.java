@@ -54,6 +54,7 @@ public class MainServer
 		catch (SocketCreationException e) 
 		{
 			MainServer.printInformation("Starting the Server failed: "+e.getMessage());
+			return;
 		}
 		pm_PlaM = new PlayerManager();
 		sm_ServM = new ServerManager();

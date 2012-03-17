@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import server.MainServer;
 import server.parser.Parser;
 import server.players.Player;
 import shared.Log;
@@ -108,7 +109,7 @@ implements Runnable
 								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
 								Thread.currentThread().wait(i_Timeout);
 								
-								if(bq_Queue.isEmpty())
+								if(bq_Queue.isEmpty() && !this.S_socket.isClosed())
 								{
 									//the wait was interrupted by a timeout, this client has lost the connection!
 									this.P_Parser.Parse("VTOUT "+i_Timeout, this);
@@ -129,6 +130,7 @@ implements Runnable
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
 					this.S_socket.close();
+					MainServer.getPlayerManager().removePlayer(this.p_player);
 					return;
 				}
 				catch(IOException e)
@@ -173,6 +175,7 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
+					MainServer.getPlayerManager().removePlayer(this.p_player);
 					this.S_socket.close();
 					return;
 				}

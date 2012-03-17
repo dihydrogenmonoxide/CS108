@@ -29,21 +29,6 @@ public class ServerUI {
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ServerUI window = new ServerUI();
-					window.frmSwissDefconServer.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -79,18 +64,18 @@ public class ServerUI {
 		txtServerconsole.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				if("Enter any Commands here and they\'re broadcast to everyone".compareTo(txtServerconsole.getText()) == 0)
+				if("Enter any Commands here and they\'re broadcasted to everyone".compareTo(txtServerconsole.getText()) == 0)
 						txtServerconsole.setText("");				
 			}
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(txtServerconsole.getText().length() == 0)
 				{
-					txtServerconsole.setText("Enter any Commands here and they\'re broadcast to everyone");
+					txtServerconsole.setText("Enter any Commands here and they\'re broadcasted to everyone");
 				}
 			}
 		});
-		txtServerconsole.setText("Enter any Commands here and they\'re broadcast to everyone");
+		txtServerconsole.setText("Enter any Commands here and they\'re broadcasted to everyone");
 		frmSwissDefconServer.getContentPane().add(txtServerconsole, BorderLayout.SOUTH);
 		txtServerconsole.setColumns(10);
 		
@@ -114,7 +99,7 @@ public class ServerUI {
 		frmSwissDefconServer.getContentPane().add(scrollPane_1, BorderLayout.CENTER);
 		scrollPane_1.setViewportView(txtrServeroutput);
 		scrollPane_1.setAutoscrolls(true);
-		scrollPane_1.setPreferredSize(new Dimension(300, 450));
+		scrollPane_1.setPreferredSize(new Dimension(400, 450));
 		
 		OutputStream stdout = new OutputStream()
 		{

@@ -40,8 +40,8 @@ public class MainServer
 			i_Serverport = i_Port;
 		}
 		
-		//creating the window
-		ServerUI sui_UI = new ServerUI();
+		//creating the server UI
+		sui_UI = new ServerUI();
 		sui_UI.setVisible(true);
 		
 		p_parser = new Parser();
@@ -57,6 +57,8 @@ public class MainServer
 		}
 		pm_PlaM = new PlayerManager();
 		sm_ServM = new ServerManager();
+		
+		MainServer.printInformation("Server is up and running!");
 	}
 	
 	/**

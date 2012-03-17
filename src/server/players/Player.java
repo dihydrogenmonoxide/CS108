@@ -12,6 +12,7 @@ implements Comparable<Player>
 	private Server s_server;
 	private PlayerSocket ps_sock;
 	private int i_ID;
+	private boolean b_NameSet = false;
 	
 	private static int i_numplayers = 0;
 	
@@ -25,6 +26,7 @@ implements Comparable<Player>
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
 		this.i_ID = i_numplayers++;
+		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
 
 	@Override
@@ -39,6 +41,10 @@ implements Comparable<Player>
 	 */
 	public void setNick(String s_Nick)
 	{
+		if(b_NameSet)
+			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
+		else
+			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+this.s_Nick+"\' -> \'"+s_Nick+"\'");
 		this.s_Nick = s_Nick;
 	}
 

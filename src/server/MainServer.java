@@ -1,5 +1,7 @@
 package server;
 
+import java.awt.EventQueue;
+
 import shared.*;
 import server.net.*;
 import server.parser.*;
@@ -14,6 +16,7 @@ public class MainServer
 	private static DiscoveryServer ds_serv;
 	private static PlayerManager pm_PlaM;
 	private static ServerManager sm_ServM;
+	private static ServerUI sui_UI;
 	
 	private MainServer()
 	{
@@ -36,6 +39,11 @@ public class MainServer
 		{
 			i_Serverport = i_Port;
 		}
+		
+		//creating the window
+		ServerUI sui_UI = new ServerUI();
+		sui_UI.setVisible(true);
+		
 		p_parser = new Parser();
 		try
 		{
@@ -57,7 +65,7 @@ public class MainServer
 	 */
 	public static void printInformation(String s_MSG)
 	{
-		System.out.println("Serverinfo: "+s_MSG);
+		sui_UI.printText(s_MSG);
 	}
 
 	/**

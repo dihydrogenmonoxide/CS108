@@ -11,10 +11,10 @@ import shared.Log;
 
 public class Parser 
 {
-	private Formatter f_fmt;
+
 	public Parser()
 	{
-		f_fmt = new Formatter();
+		
 	}
 	
 	/**
@@ -86,19 +86,20 @@ public class Parser
 				s_MSG = s_MSG+i;
 			}
 			//TODO use this in future
-			String ret = this.f_fmt.format("VNICK %02d %s", ps_sock.getPlayer().getID(), s_MSG).toString();
+			Formatter f_fm = new Formatter();
+			String ret = f_fm.format("VNICK %02d %s", ps_sock.getPlayer().getID(), s_MSG).toString();
 			Log.DebugLog(ret);
 			ps_sock.getPlayer().setNick(s_MSG);
 			MainServer.getPlayerManager().broadcastMessage(ret, ps_sock.getPlayer());
 			break;
 			
 		case "VEXIT":
-			ps_sock.sendData("VEXIT");
 			ps_sock.close();
 			break;
 			
 		case "VMYID":
-			ps_sock.sendData(this.f_fmt.format("VMYID %02d", ps_sock.getPlayer().getID()).toString());
+			Formatter f_fmt = new Formatter();
+			ps_sock.sendData(f_fmt.format("VMYID %02d", ps_sock.getPlayer().getID()).toString());
 			break;
 			
 		case "CCHAT"://tested & works ~Frank

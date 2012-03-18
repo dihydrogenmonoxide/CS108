@@ -13,7 +13,7 @@ implements Comparable<Player>
 	private PlayerSocket ps_sock;
 	private int i_ID;
 	private boolean b_NameSet = false;
-	
+	private boolean b_quit = false;
 	/**
 	 * Creates a new Player on the Server;
 	 * @param s_ID The unique token the Server assigned
@@ -118,7 +118,11 @@ implements Comparable<Player>
 	public void disconnect() 
 	{
 		// TODO what to send out when a player quits?
-		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
+		if(!b_quit)
+		{
+			MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
+			MainServer.getPlayerManager().removePlayer(this);
+		}
 	}
 
 

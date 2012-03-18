@@ -46,8 +46,15 @@ implements Comparable<Player>
 			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
 			for(Player play : MainServer.getPlayerManager().getPlayers())
 			{
-				if(play != this && play.isInLobby())
+				if(play != this)
+				{
+					if(play.isInLobby())
+						ps_sock.sendData("LJOIN "+play.getID()+" "+play.getNick());
 					ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+				}
+					
+					
+				
 			}
 			for(Server s : MainServer.getServerManager().getServers())
 			{

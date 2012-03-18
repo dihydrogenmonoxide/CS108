@@ -16,8 +16,6 @@ implements Runnable
 	private ServerSocket SS_Socket;
 	private Parser P_Parser;
 	private int i_Port;
-	private List<Socket> lS_Socks = new java.util.LinkedList<Socket>();
-	
 	
 	/**
 	 * Sets up a Server socket on the desired Port
@@ -52,7 +50,6 @@ implements Runnable
 		}
 		
 		T_Thread = new Thread(this);
-		lS_Socks.clear();
 	}
 	
 	/**
@@ -125,28 +122,10 @@ implements Runnable
 			{
 				//listening to connection attempts and opening a Socket
 				Socket S_Sock = this.SS_Socket.accept();
-				lS_Socks.add(S_Sock);
 				new PlayerSocket(S_Sock, P_Parser);
 			} 
 			catch (IOException e) 
 			{
-				//Closing all Sockets in Case the Server was terminated
-				if(SS_Socket.isClosed())
-				{
-					for(Socket S_Socket : lS_Socks)
-					{
-						try 
-						{
-							S_Socket.close();
-						}
-						catch (IOException e1)
-						{
-							Log.WarningLog("Clouldn\'t close a Socket: "+e1.getMessage());							
-						}
-					}
-					Log.InformationLog("Closed all Sockets (and therefore terminated all connections)");
-					return;
-				}
 				Log.WarningLog("Failed Creating a Socket: "+e.getMessage());
 			}
 			

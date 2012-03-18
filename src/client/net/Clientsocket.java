@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import client.events.ChatEventListener;
 import client.events.GameEventListener;
 import client.events.LobbyEventListener;
+import client.events.InfoEventListener;
 
 import shared.*;
 
@@ -102,7 +103,7 @@ implements Runnable
 	}
 
 	
-	public void run() 
+	public void run()
 	{
 		if(Thread.currentThread() == this.T_Thread_rec)
 		{
@@ -439,5 +440,13 @@ implements Runnable
 	public void removeGameEventListener(GameEventListener e){
 		parser.removeGameEventListener(e);
 	}
+
+
+	public void addInfoEventListener(InfoEventListener infoEventListener) {
+		parser.addInfoEventListener(infoEventListener);
+	}
 	
+	public void removeInfoEventListener(InfoEventListener e) {
+		parser.removeInfoEventListener(e);
+	}
 }

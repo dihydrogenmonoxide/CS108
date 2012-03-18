@@ -1,4 +1,4 @@
-package shared;
+package shared.game;
 
 public class Coordinates {
 	private int x;

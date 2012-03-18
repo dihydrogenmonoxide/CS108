@@ -10,6 +10,8 @@ import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.GameEvent;
 import client.events.GameEventListener;
+import client.events.InfoEvent;
+import client.events.InfoEventListener;
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
 import client.events.ServerSelectedEvent;
@@ -19,6 +21,9 @@ import client.events.ServerSelectedListener;
  * Parser for all Messages, fires the correct Event.
  * */
 public class ClientParser {
+
+	/**List of ChatEventListener.  */
+	private javax.swing.event.EventListenerList infoListeners =  new javax.swing.event.EventListenerList();
 
 	/**List of ChatEventListener.  */
 	private javax.swing.event.EventListenerList chatListeners =  new javax.swing.event.EventListenerList();
@@ -40,77 +45,95 @@ public class ClientParser {
 
 		//catch PONGs
 		if(msg.equals("VPONG")){return;}
-		
-		Log.DebugLog("Parser, received Message: " + msg);
 
-		String region = (String) msg.subSequence(0, 1);
-		msg = msg.substring(1);
-		SimpleAttributeSet attrs = new SimpleAttributeSet();
-		
-		
-		switch(region)
+		try
 		{
-		
-		case "V": // Connection messages
-			Log.DebugLog("->connection: "+msg);
-			StyleConstants.setForeground(attrs, Color.red);
-			
-			//get the subcommand
-			String command = (String) msg.subSequence(0, 4);
-			
-			switch(command)
+			Log.DebugLog("Parser, received Message: " + msg);
+
+			String region = (String) msg.subSequence(0, 1);
+			msg = msg.substring(1);
+			SimpleAttributeSet attrs = new SimpleAttributeSet();
+
+
+			switch(region)
 			{
-			case "NICK":
-				Log.DebugLog("-->request nick: "+msg);
-				this.chatMsgReceived(new ChatEvent(msg, 12, "<client>Requested Nick: "+msg, attrs));
+
+			case "V": // Connection messages
+				Log.DebugLog("->connection: " + msg);
+				StyleConstants.setForeground(attrs, Color.red);
+
+				//get the subcommand
+				String command = (String) msg.subSequence(0, 4);
+
+				switch(command)
+				{
+				case "NICK":
+					Log.DebugLog("-->request nick: " + msg);
+					this.chatMsgReceived(new ChatEvent(msg, 12, "<client>Requested Nick: "+msg, attrs));
+					break;
+
+
+				case "PONG": //just in case
+					Log.DebugLog("-->pong from Server");
+					return;
+
+				case "TOUT":
+					Log.ErrorLog("--> connection broke, reconnect");
+					this.chatMsgReceived(new ChatEvent(msg, 12, "<client> connection broken, trying to reconnect", attrs));
+					break;
+				case "FAIL":
+					Log.ErrorLog("--> Connection failed, returning to Select server");
+					this.infoReceived(new InfoEvent(msg,-1,"<server disconnected>"));
+					break;
+				default:
+
+					this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg, attrs));
+
+					break;
+				}
+
 				break;
-				
-				
-			case "PONG": //just in case
-				Log.DebugLog("-->pong from Server");
-				return;
+
+
+			case "G": //Game messages
+				Log.DebugLog("->game: " + msg);
+
+				this.gameReceived(new GameEvent(msg, 12));
+
+				break;
+
+
+			case "L": //Lobby messages
+				Log.DebugLog("->lobby: " + msg);
+
+				this.lobbyReceived(new LobbyEvent(msg, 12));
+
+
+				break;
+
+
+
+			case "C":	//Chat messages	
+				Log.DebugLog("->chat: " + msg);
+
+				if(msg.subSequence(0,13).equals("CHAT [SERVER]")){
+					StyleConstants.setBackground(attrs, Color.red);
+				}
+
+				//fire Event
+				this.chatMsgReceived(new ChatEvent(msg, 12, msg.substring(5), attrs));
+
+				break;
+
+
+			default: //wrong formated
+				Log.DebugLog("-> wrong format" + msg);
 			}
-			
-			//Just for Testing purpose:
-			// TODO remove the following (or comment it)
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg, attrs));
-
-			break;
-			
-			
-		case "G": //Game messages
-			Log.DebugLog("->game: "+msg);
-			
-			this.gameReceived(new GameEvent(msg, 12));
-
-			break;
-			
-			
-		case "L": //Lobby messages
-			Log.DebugLog("->lobby: "+msg);
-			
-			this.lobbyReceived(new LobbyEvent(msg, 12));
-
-
-			break;
-			
-			
-			
-		case "C":	//Chat messages	
-			Log.DebugLog("->chat: "+msg);
-			
-
-			//declare Attributes (color, font, etc...)
-			StyleConstants.setBackground(attrs, Color.white);
-			//fire Event
-			this.chatMsgReceived(new ChatEvent(msg, 12, msg, attrs));
-
-			break;
-			
-			
-		default: //wrong formated
-			Log.DebugLog("Parser, received wrong formatted message:" + msg);
-		}	
+		}
+		catch (final Exception e)
+		{
+			Log.ErrorLog("Parser, error could not parse message");
+		}
 	}
 
 
@@ -148,12 +171,47 @@ public class ClientParser {
 		}
 	}
 
+	/** 
+	 * adds ChatEvent listeners.
+	 * @param listener
+	 */
+	public void addInfoEventListener(InfoEventListener listener) 
+	{
+		infoListeners.add(InfoEventListener.class, listener);
+	}
+
+	/**
+	 * removes ChatEvent listeners.
+	 * @param listener
+	 */
+	public void removeInfoEventListener(InfoEventListener listener) 
+	{
+		infoListeners.remove(InfoEventListener.class, listener);
+	}
+
+	/**
+	 * Fires the ChatEvent to all the Listeners
+	 * @param evt
+	 * @throws NetworkException 
+	 */
+	void infoReceived(InfoEvent evt)
+	{
+		Object[] listeners = infoListeners.getListenerList();
+		for (int i=0; i<listeners.length; i+=2) {
+			if (listeners[i]==InfoEventListener.class) {
+				InfoEventListener listener = (InfoEventListener)listeners[i+1];
+				listener.received(evt);
+			}
+		}
+	}
+
 
 	/** 
 	 * adds LobbyEvent listeners.
 	 * @param listener
 	 */
-	public void addLobbyEventListener(LobbyEventListener listener) {
+	public void addLobbyEventListener(LobbyEventListener listener) 
+	{
 		chatListeners.add(LobbyEventListener.class, listener);
 	}
 
@@ -161,7 +219,8 @@ public class ClientParser {
 	 * removes LobbyEvent listeners.
 	 * @param listener
 	 */
-	public void removeLobbyEventListener(LobbyEventListener listener) {
+	public void removeLobbyEventListener(LobbyEventListener listener) 
+	{
 		chatListeners.remove(LobbyEventListener.class, listener);
 	}
 
@@ -169,12 +228,18 @@ public class ClientParser {
 	 * Fires the LobbyEvent to all the Listeners
 	 * @param evt
 	 */
-	void lobbyReceived(LobbyEvent evt) {
+	void lobbyReceived(LobbyEvent evt) 
+	{
 		Object[] listeners = lobbyListeners.getListenerList();
 		for (int i=0; i<listeners.length; i+=2) {
 			if (listeners[i]==LobbyEventListener.class) {
 				LobbyEventListener listener = (LobbyEventListener)listeners[i+1];
-				listener.received(evt);
+				try {
+					listener.received(evt);
+				} catch (Exception e) {
+					//should not occur
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -183,7 +248,8 @@ public class ClientParser {
 	 * adds GameEvent listeners.
 	 * @param listener
 	 */
-	public void addGameEventListener(GameEventListener listener) {
+	public void addGameEventListener(GameEventListener listener) 
+	{
 		chatListeners.add(GameEventListener.class, listener);
 	}
 
@@ -191,7 +257,8 @@ public class ClientParser {
 	 * removes LobbyEvent listeners.
 	 * @param listener
 	 */
-	public void removeGameEventListener(GameEventListener listener) {
+	public void removeGameEventListener(GameEventListener listener) 
+	{
 		chatListeners.remove(GameEventListener.class, listener);
 	}
 
@@ -199,7 +266,8 @@ public class ClientParser {
 	 * Fires the LobbyEvent to all the Listeners
 	 * @param evt
 	 */
-	void gameReceived(GameEvent evt) {
+	void gameReceived(GameEvent evt) 
+	{
 		Object[] listeners = gameListeners.getListenerList();
 		for (int i=0; i<listeners.length; i+=2) {
 			if (listeners[i]==GameEventListener.class) {

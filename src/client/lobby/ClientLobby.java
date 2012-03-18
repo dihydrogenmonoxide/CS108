@@ -4,12 +4,19 @@ package client.lobby;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import client.events.InfoEvent;
+import client.events.LobbyEvent;
+import client.events.LobbyEventListener;
+import client.events.NetEvent;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
+import client.events.InfoEventListener;
 import client.net.Clientsocket;
+import client.net.NetworkException;
 
 import shared.Log;
 import shared.ServerAddress;
+import shared.SocketCreationException;
 import shared.User;
 
 import java.awt.*;
@@ -120,12 +127,29 @@ public class ClientLobby extends JFrame {
 					
 					//TODO Game Listener to start game here.
 					
+					socket.addInfoEventListener(new InfoEventListener()
+					{
+						@Override
+						public void received(InfoEvent evt){
+							 if(evt.getId()==-1)
+							 {
+								Log.InformationLog("Connection to server broken, starting ServerSelect");
+								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
+								lobbyParent.remove(l);
+								lobbyParent.validate();
+								lobbyParent.repaint();
+								s.setVisible(true);
+								s.startSearch();
+							 }
+						}
+					});
+					
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					Log.WarningLog("-->Could not connect to " + server.getServerName() + "(" + server.getAddress().getHostAddress()+ ") as " + desiredNick);
-					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden", "Connection Error", JOptionPane.ERROR_MESSAGE);
+					Log.WarningLog("-->connection broken, could not connect");
+					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
 					s.setVisible(true);
 					s.startSearch();
 					

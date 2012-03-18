@@ -64,15 +64,6 @@ public class ChatPanel extends JPanel {
 		  
 		/* The styled Document which holds the actual chat messages*/
 		chatContent = new DefaultStyledDocument();
-		try 
-		{
-			chatContent.insertString(chatContent.getLength(), "<client> Hello \n", chatContent.getStyle("HTMLDocument"));
-		} 
-		catch (Exception e)
-		{
-			Log.ErrorLog("Chat Error");
-		}
-
 
 		chatPane = new JTextPane();
 		chatPane.setEditable(false);
@@ -170,8 +161,16 @@ public class ChatPanel extends JPanel {
 					message = InputValidator.ChatMessage(inputChat.getText());
 					if (message.subSequence(0, 1).equals("/"))
 					{
+						switch (message.substring(0, 4))
+						{
+							case "/msg":
+								Log.InformationLog("Chat sending private message: " + message.substring(1));
+								socket.sendChatMessage(message);
+								break;
+						default:
 						Log.InformationLog("Chat sending command: " + message.substring(1));
-						socket.sendData(message);	
+						socket.sendData(message.substring(1));	
+						}
 					}
 					else
 					{

@@ -242,4 +242,23 @@ implements Runnable
 	{
 		this.p_player = p_player;
 	}
+	
+	/**
+	 * flushes & closes this socket
+	 */
+	public void close()
+	{
+		
+		try 
+		{
+			this.OOS_MSG.flush();
+			this.S_socket.close();
+			this.OOS_MSG.close();
+			this.OIS_MSG.close();
+		}
+		catch (IOException e) 
+		{
+			Log.WarningLog("Failed to close a socket/stream: "+e.getMessage());
+		}
+	}
 }

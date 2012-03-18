@@ -1,6 +1,7 @@
 package server.parser;
 
 import java.util.Formatter;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import server.MainServer;
@@ -45,8 +46,17 @@ public class Parser
 			else
 			{
 				String uuid = UUID.randomUUID().toString();
-				ps_sock.setPlayer(new Player(uuid, ps_sock));
-				ps_sock.sendData("VHASH "+uuid);
+				try
+				{
+					ps_sock.setPlayer(new Player(uuid, ps_sock, MainServer.getPlayerManager().reserveID()));
+					ps_sock.sendData("VHASH "+uuid);
+				}
+				catch(NoSuchElementException e)
+				{
+					ps_sock.sendData("VERRO All seats taken - server is full!");
+					ps_sock.sendData("VEXIT");
+					ps_sock.close();
+				}
 			}
 			break;
 			
@@ -80,6 +90,15 @@ public class Parser
 			Log.DebugLog(ret);
 			ps_sock.getPlayer().setNick(s_MSG);
 			MainServer.getPlayerManager().broadcastMessage(ret, ps_sock.getPlayer());
+			break;
+			
+		case "VEXIT":
+			ps_sock.sendData("VEXIT");
+			ps_sock.close();
+			break;
+			
+		case "VMYID":
+			ps_sock.sendData(this.f_fmt.format("VMYID %02d", ps_sock.getPlayer().getID()).toString());
 			break;
 			
 		case "CCHAT"://tested & works ~Frank

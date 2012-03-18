@@ -73,8 +73,8 @@ implements Comparable<Server>
 	{
 		p_player.setServer(null);
 		process(p_player, false);
-		MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.i_ServerID+" "+p_player.getID()+" "+p_player.getNick());
 		MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+p_player.getID());
+		MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.i_ServerID+" "+p_player.getID()+" "+p_player.getNick());
 		if(this.getPlayerAmount() == 0)
 		{
 			MainServer.getServerManager().removeServer(this);

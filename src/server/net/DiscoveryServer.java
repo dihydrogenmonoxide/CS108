@@ -26,12 +26,14 @@ implements Runnable
 	private int i_ServerPort;
 	private InetAddress IA_MultiCastGroup;
 	
+	private static Thread t_thread;
+	private boolean b_active = true;
+	
 	/**
 	 * This is the constructor for the Server-Discovery-Implementation.
 	 * <p>
 	 * It automatically acquires the ServerIP, only the Serverport needs to be passed on.
-	 * <p> 
-	 * IMPORTANT: Don't forget to start it after creating the class!
+	 * 
 	 * @param i_ServerPort your Server's Port
 	 */
 	public DiscoveryServer (int i_ServerPort)
@@ -41,6 +43,17 @@ implements Runnable
 			Log.DebugLog(i_ServerPort + " isn't a Valid Port - the datagram creation will throw an Error");
 		}
 		this.i_ServerPort = i_ServerPort;
+		
+		t_thread = new Thread(this);
+		t_thread.start();
+	}
+	
+	/**
+	 * Stops the discovery Server
+	 */
+	public void stop_()
+	{
+		b_active = false;
 	}
 	
 	
@@ -57,7 +70,7 @@ implements Runnable
 			byte[] ab_MSG = ("SERV "+this.i_ServerPort+" "+this.s_ServerName).getBytes();
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			
-			while(true)
+			while(b_active)
 			{
 				
 				try 

@@ -1,6 +1,7 @@
 package server.GamePlayObjects;
 
 import shared.*;
+import shared.game.Coordinates;
 
 public interface GamePlayObject {
 	//Loads the Image and displays it on the client GUI

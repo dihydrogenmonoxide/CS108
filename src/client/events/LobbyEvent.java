@@ -7,7 +7,7 @@ public class LobbyEvent extends NetEvent {
 
 	public LobbyEvent(Object arg0, int Id) {
 		super(arg0, Id);
-		// TODO Auto-generated constructor stub
+		// TODO make Constructor and devide Content
 	}
 
 }

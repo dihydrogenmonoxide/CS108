@@ -4,12 +4,20 @@ package client.lobby;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import client.events.InfoEvent;
+import client.events.LobbyEvent;
+import client.events.LobbyEventListener;
+import client.events.NetEvent;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
+import client.events.InfoEventListener;
 import client.net.Clientsocket;
+import client.net.NetworkException;
 
 import shared.Log;
 import shared.ServerAddress;
+import shared.SocketCreationException;
+import shared.User;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -33,14 +41,20 @@ public class ClientLobby extends JFrame {
 	/**height of the lobby in pixel.*/
 	private int iLobbyY = 575;
 
-	private PopupFactory factory=PopupFactory.getSharedInstance();
+	/**The Server Selecting Dialog.*/
 	private SelectServer s;
+	/**the Connection made to the Server.*/
 	private Clientsocket socket;
+	/**the Lobby.*/
 	private InnerLobby l;
+	/**the User which holds all User based Infos.*/
+	private User user;
 	
 	/**creates the lobby.*/
-	public ClientLobby()
+	public ClientLobby(User u)
 	{
+		this.user = u;
+		
 		/*
 		 * Get Infos about the screen
 		 * */
@@ -49,7 +63,7 @@ public class ClientLobby extends JFrame {
 		DisplayMode disp = screen.getDisplayMode();
 		screenX = disp.getWidth();
 		screenY = disp.getHeight();
-
+		
 
 
 		/*
@@ -86,7 +100,7 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
 		lobbyParent.setContentPane(bg);
 		
-		s = new SelectServer();
+		s = new SelectServer(user);
 		s.addServerSelectedListener(new ServerSelectedListener()
 		{
 			public void serverSelected(final ServerSelectedEvent ev)
@@ -97,24 +111,45 @@ public class ClientLobby extends JFrame {
 				{
 					Log.InformationLog("-->Connecting to " + ev.getServer().getServerName() + "(" + server.getAddress().getHostAddress() + ") as " + ev.getUsername() + "(desired Username)");
 					
-					//make Connection
-					socket = new Clientsocket(server);
-					JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
-					
-
+					//stop discovery
 					s.stopSearch();
 					s.setVisible(false);
 					
-					l = new InnerLobby(socket);
+					//make Connection
+					socket = new Clientsocket(server);
+					//JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
+					
+					l = new InnerLobby(socket, user);
 					lobbyParent.add(l);
 					
-					/*add game listener here*/
+					//request nick
+					socket.sendData("VNICK " + desiredNick);
+					
+					//TODO Game Listener to start game here.
+					
+					socket.addInfoEventListener(new InfoEventListener()
+					{
+						@Override
+						public void received(InfoEvent evt){
+							 if(evt.getId()==-1)
+							 {
+								Log.InformationLog("Connection to server broken, starting ServerSelect");
+								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
+								lobbyParent.remove(l);
+								lobbyParent.validate();
+								lobbyParent.repaint();
+								s.setVisible(true);
+								s.startSearch();
+							 }
+						}
+					});
 					
 				}
 				catch (Exception e)
 				{
-					Log.WarningLog("-->Could not connect to " + server.getServerName() + "(" + server.getAddress().getHostAddress()+ ") as " + desiredNick);
-					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden", "Connection Error", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+					Log.WarningLog("-->connection broken, could not connect");
+					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
 					s.setVisible(true);
 					s.startSearch();
 					
@@ -128,6 +163,7 @@ public class ClientLobby extends JFrame {
 
 		lobbyParent.setVisible(true);
 	}
+
 
 
 }

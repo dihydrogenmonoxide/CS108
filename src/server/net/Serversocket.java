@@ -2,10 +2,7 @@ package server.net;
 
 import shared.*;
 import server.parser.*;
-
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -19,8 +16,6 @@ implements Runnable
 	private ServerSocket SS_Socket;
 	private Parser P_Parser;
 	private int i_Port;
-	private List<Socket> lS_Socks = new java.util.LinkedList<Socket>();
-	
 	
 	/**
 	 * Sets up a Server socket on the desired Port
@@ -55,7 +50,6 @@ implements Runnable
 		}
 		
 		T_Thread = new Thread(this);
-		lS_Socks.clear();
 	}
 	
 	/**
@@ -120,7 +114,7 @@ implements Runnable
 			return;			
 		}
 		
-		Log.DebugLog("Listeing to connection attempts on "+this.i_Port);
+		Log.DebugLog("Listening to connection attempts on "+this.i_Port);
 		
 		while(true)
 		{
@@ -128,28 +122,10 @@ implements Runnable
 			{
 				//listening to connection attempts and opening a Socket
 				Socket S_Sock = this.SS_Socket.accept();
-				lS_Socks.add(S_Sock);
-				new ConnectionHandler(S_Sock, P_Parser);
+				new PlayerSocket(S_Sock, P_Parser);
 			} 
 			catch (IOException e) 
 			{
-				//Closing all Sockets in Case the Server was terminated
-				if(SS_Socket.isClosed())
-				{
-					for(Socket S_Socket : lS_Socks)
-					{
-						try 
-						{
-							S_Socket.close();
-						}
-						catch (IOException e1)
-						{
-							Log.WarningLog("Clouldn\'t close a Socket: "+e1.getMessage());							
-						}
-					}
-					Log.InformationLog("Closed all Sockets (and therefore terminated all connections)");
-					return;
-				}
 				Log.WarningLog("Failed Creating a Socket: "+e.getMessage());
 			}
 			
@@ -157,72 +133,4 @@ implements Runnable
 		
 		
 	}
-}
-
-
-class ConnectionHandler
-implements Runnable
-{
-	private Socket S_socket;
-	private Parser P_Parser;
-	
-	public ConnectionHandler(Socket S_Sock, Parser P_Parser)
-	{
-		this.S_socket = S_Sock;
-		this.P_Parser = P_Parser;
-		Thread T_Thread = new Thread(this);
-		T_Thread.start();
-		Log.DebugLog("New Socket open: "+S_socket.getInetAddress());
-	}
-
-	
-	public void run()
-	{
-		boolean b_active = true;
-
-		try 
-		{
-			ObjectInputStream OIS_MSG = new ObjectInputStream(S_socket.getInputStream());
-			ObjectOutputStream OOS_MSG = new ObjectOutputStream(S_socket.getOutputStream());
-			S_socket.setKeepAlive(true);
-			
-			do
-			{
-				try
-				{
-					//reading what we received
-					String s_MSG = OIS_MSG.readUTF();
-					//parsing&handling it
-					String s_Answer = P_Parser.Parse(s_MSG);
-					//Confirming
-					OOS_MSG.writeUTF(s_Answer);				
-					OOS_MSG.flush();
-				}
-				catch(IOException e)
-				{
-					if(S_socket.isClosed())
-					{
-						Log.InformationLog("CLosed a socket");
-						OIS_MSG.close();
-						OOS_MSG.close();
-						return;
-					}
-					if(!S_socket.isConnected())
-					{
-						Log.InformationLog("Someone just disconnected: " +S_socket.getInetAddress().getHostAddress());
-						S_socket.close();
-						OIS_MSG.close();
-						OOS_MSG.close();
-						return;
-					}
-					Log.WarningLog("Failed to recive or send");
-				}
-			}
-			while(b_active);
-		}
-		catch (IOException e1) 
-		{
-			Log.ErrorLog("Clouldn't create an input or output-stream: "+e1.getMessage());
-		}
-	}	
 }

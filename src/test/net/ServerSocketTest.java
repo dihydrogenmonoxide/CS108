@@ -32,7 +32,6 @@ public class ServerSocketTest
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		}

@@ -152,9 +152,11 @@ public class ClientParser {
 				switch(commandG)
 				{
 				case "GAME":
-					
+					Log.DebugLog("-->game broadcast: " + msg);
+					this.lobbyReceived(new LobbyEvent(msg, 12, "GAME", msg.substring(6)));
 					break;
 				case "JOIN":
+					
 					break;
 				
 				case "QUIT":
@@ -174,7 +176,7 @@ public class ClientParser {
 				/*All messages concerning the Lobby / userstatus
 				 * implemented:
 				 * QUIT : a user has quit the lobby
-				 * JOIN : a user has joined the lobby
+				 * JOIN : a user has joined the lobby -> announce in chat
 				 * 
 				 * */
 				Log.DebugLog("->lobby: " + msg);
@@ -183,8 +185,8 @@ public class ClientParser {
 				switch(commandL){
 				case "QUIT":
 					if(users.get(msg.subSequence(6,8))==null){return;}
-					Log.DebugLog("-->User quit " );
-					this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User quit: "+users.get(msg.subSequence(6,8)), attrs));
+					Log.DebugLog("-->User quit lobby" );
+					//this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User joined a game: "+users.get(msg.subSequence(6,8)), attrs));
 					break;
 				case "JOIN":
 					if(users.get(msg.subSequence(6,8))==null){return;}
@@ -197,7 +199,7 @@ public class ClientParser {
 					this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg, attrs));
 				}
 				
-				this.lobbyReceived(new LobbyEvent(msg, 12));
+				
 				
 			
 				break;
@@ -311,7 +313,7 @@ public class ClientParser {
 	 */
 	public void addLobbyEventListener(LobbyEventListener listener) 
 	{
-		chatListeners.add(LobbyEventListener.class, listener);
+		lobbyListeners.add(LobbyEventListener.class, listener);
 	}
 
 	/**
@@ -320,7 +322,7 @@ public class ClientParser {
 	 */
 	public void removeLobbyEventListener(LobbyEventListener listener) 
 	{
-		chatListeners.remove(LobbyEventListener.class, listener);
+		lobbyListeners.remove(LobbyEventListener.class, listener);
 	}
 
 	/**

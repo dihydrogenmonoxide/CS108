@@ -34,7 +34,11 @@ public class ClientParser {
 	/**List of GameEventListener.  */
 	private javax.swing.event.EventListenerList gameListeners =  new javax.swing.event.EventListenerList();
 
-
+	/**receives a String and fires the appropiate Event.
+	 * This method receives a String from the socket and then determines
+	 * the correct event / action to be taken.
+	 * @param msg the message to be evaluated.
+	 * */
 	public void parse(String msg){
 
 		//catch empty messages
@@ -54,11 +58,27 @@ public class ClientParser {
 			msg = msg.substring(1);
 			SimpleAttributeSet attrs = new SimpleAttributeSet();
 
-
+			/*
+			 * Here the message is split up and the appropiate event is fired.
+			 * Type of messages:
+			 * V : message concerning the connection between client and server
+			 * G : message concerning the game
+			 * L : message conecerning the lobby
+			 * C : chat messages
+			 * */
 			switch(region)
 			{
 
-			case "V": // Connection messages
+			case "V":
+				/*
+				 * All the messages concernning the connection
+				 * already implemented:
+				 * NICK : when the client changes its nickname -> inform via chat
+				 * PONG : send by the server to test the connection, is disabled
+				 * TOUT : connection timeout -> inform via chat
+				 * FAIL : connection broken -> return to SelectServer
+				 * EXIT : connection closed by server or client -> return to SelectServer
+				 * */
 				Log.DebugLog("->connection: " + msg);
 				StyleConstants.setForeground(attrs, Color.red);
 
@@ -99,7 +119,12 @@ public class ClientParser {
 				break;
 
 
-			case "G": //Game messages
+			case "G": 
+				/*messages for the game:
+				 * implemented: 
+				 * none
+				 * 
+				 * */
 				Log.DebugLog("->game: " + msg);
 
 				this.gameReceived(new GameEvent(msg, 12));
@@ -107,7 +132,12 @@ public class ClientParser {
 				break;
 
 
-			case "L": //Lobby messages
+			case "L": 
+				/*All messages concerning the Lobby / userstatus
+				 * implemented:
+				 * none
+				 * 
+				 * */
 				Log.DebugLog("->lobby: " + msg);
 
 				this.lobbyReceived(new LobbyEvent(msg, 12));
@@ -117,11 +147,19 @@ public class ClientParser {
 
 
 
-			case "C":	//Chat messages	
+			case "C":
+				/*
+				 * chat messages
+				 * Server messages are colored red.
+				 * Private messages blue
+				 * */
 				Log.DebugLog("->chat: " + msg);
 
 				if(msg.subSequence(0,13).equals("CHAT [SERVER]")){
 					StyleConstants.setBackground(attrs, Color.red);
+				}
+				if(msg.subSequence(0,10).equals("CHAT [from")){
+					StyleConstants.setForeground(attrs, Color.blue);
 				}
 
 				//fire Event

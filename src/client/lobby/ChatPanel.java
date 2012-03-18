@@ -164,7 +164,7 @@ public class ChatPanel extends JPanel {
 						switch (message.substring(0, 4))
 						{
 							case "/msg":
-								Log.InformationLog("Chat sending private message: " + message.substring(1));
+								Log.InformationLog("Chat sending private message: " + message);
 								socket.sendChatMessage(message);
 								break;
 						default:

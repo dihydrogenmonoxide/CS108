@@ -85,6 +85,10 @@ public class ClientParser {
 					Log.ErrorLog("--> Connection failed, returning to Select server");
 					this.infoReceived(new InfoEvent(msg,-1,"<server disconnected>"));
 					break;
+				case "EXIT":
+					Log.ErrorLog("-->connection was closed");
+					this.infoReceived(new InfoEvent(msg,-1,"<server closed the connection>"));
+					break;	
 				default:
 
 					this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg, attrs));

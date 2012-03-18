@@ -1,5 +1,6 @@
 package server.parser;
 
+import java.util.Formatter;
 import java.util.UUID;
 
 import server.MainServer;
@@ -9,6 +10,11 @@ import shared.Log;
 
 public class Parser 
 {
+	private Formatter f_fmt;
+	public Parser()
+	{
+		f_fmt = new Formatter();
+	}
 	
 	/**
 	 * Parses the given Message and sends the corresponding answers
@@ -52,6 +58,10 @@ public class Parser
 			s_MSG = s_MSG.substring(6, s_MSG.length());
 			//remove anything that isn't a-z or 0-9
 			s_MSG = s_MSG.replaceAll("[^a-zA-Z0-9]", "");
+			if(s_MSG.length() < 4)
+				s_MSG = "anon";
+			if(s_MSG.length() > 15)
+				s_MSG = s_MSG.substring(0, 15);
 		
 			// make sure no nicks are used twice
 			Player p = MainServer.getPlayerManager().findPlayer(s_MSG);
@@ -65,9 +75,11 @@ public class Parser
 				}
 				s_MSG = s_MSG+i;
 			}
-			
+			String ret = this.f_fmt.format("VNICK %2i %s", ps_sock.getPlayer().getID(), s_MSG).toString();
+			//TODO remove this
+			Log.DebugLog(ret);
 			ps_sock.getPlayer().setNick(s_MSG);
-			ps_sock.sendData("VNICK "+s_MSG);
+			MainServer.getPlayerManager().broadcastMessage(ret, ps_sock.getPlayer());
 			break;
 			
 		case "CCHAT":

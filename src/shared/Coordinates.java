@@ -16,5 +16,25 @@ public class Coordinates {
 				(this.y-other.y)*(this.y-other.y));
 		
 	}
+	
+	public void moveX(int diffx){
+		this.x+=diffx;
+		
+	}
+	
+	public void moveY(int diffy){
+		this.y+=diffy;
+		
+	}
+	
+	public int getX(){
+		
+		return this.x;
+	}
+	
+public int getY(){
+		
+		return this.y;
+	}
 
 }

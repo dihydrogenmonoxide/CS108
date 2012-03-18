@@ -40,12 +40,14 @@ implements Comparable<Player>
 	 */
 	public void setNick(String s_Nick)
 	{
+		this.s_Nick = s_Nick;
 		if(!b_NameSet)
 		{
 			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
 			for(Player play : MainServer.getPlayerManager().getPlayers())
 			{
-				ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+				if(play != this)
+					ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
 			}
 			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
 		}
@@ -53,7 +55,6 @@ implements Comparable<Player>
 		{
 			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+this.s_Nick+"\' -> \'"+s_Nick+"\'");
 		}
-		this.s_Nick = s_Nick;
 	}
 
 	/**

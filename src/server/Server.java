@@ -114,6 +114,22 @@ implements Comparable<Server>
 	{
 		return this.s_servername;
 	}
+	
+	/**
+	 * pauses the server. it's called when a player loses the connection
+	 */
+	public void pause()
+	{
+		//TODO implement
+	}
+	
+	/**
+	 * resumes the server. it is called when a player reconnects or times out
+	 */
+	public void resume()
+	{
+		//TODO implement
+	}
 
 
 	/**

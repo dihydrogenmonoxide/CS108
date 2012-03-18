@@ -7,6 +7,7 @@ import server.net.*;
 public class Player 
 implements Comparable<Player>
 {
+	private final static int i_Timeout = 15000;
 	private String s_Nick = "JohnDoe";
 	private String s_PlayerToken;
 	private Server s_server;
@@ -14,6 +15,7 @@ implements Comparable<Player>
 	private int i_ID;
 	private boolean b_NameSet = false;
 	private boolean b_quit = false;
+	private boolean b_ConnectionLost = false;
 	/**
 	 * Creates a new Player on the Server;
 	 * @param s_ID The unique token the Server assigned
@@ -142,7 +144,30 @@ implements Comparable<Player>
 	{
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
-		//TODO implement
+
+		b_ConnectionLost = true;
+		ps_sock.close();
+		if(this.s_server != null)
+			this.s_server.pause();
+		try 
+		{
+			Thread.sleep(i_Timeout);
+		}
+		catch (InterruptedException e)
+		{
+			
+		}
+		
+		if(this.b_ConnectionLost)
+		{
+			if(this.s_server != null)
+			{
+				this.s_server.removePlayer(this);
+				this.s_server.resume();
+			}
+			this.disconnect();
+		}
+			
 	}
 
 	/**
@@ -151,10 +176,10 @@ implements Comparable<Player>
 	 */
 	public void reconnect(PlayerSocket ps_socket) 
 	{
-		// TODO what to do when the player reconnects?
 		this.ps_sock = ps_socket;
 		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" reconnected!", this);
-		
+		if(this.s_server != null)
+			this.s_server.resume();
 	}
 
 	/**
@@ -166,9 +191,15 @@ implements Comparable<Player>
 		if(!b_quit)
 		{
 			MainServer.getPlayerManager().removePlayer(this);
+			if(this.b_ConnectionLost)
+				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" timed out.", this);
+			else
+				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
 			
-			MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
-			MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+this.i_ID+" "+this.s_Nick);
+			if(this.isInLobby())
+				MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+this.i_ID+" "+this.s_Nick);
+			else
+				MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
 			b_quit = true;
 		}
 	}

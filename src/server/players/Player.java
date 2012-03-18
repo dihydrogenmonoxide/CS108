@@ -14,19 +14,17 @@ implements Comparable<Player>
 	private int i_ID;
 	private boolean b_NameSet = false;
 	
-	private static int i_numplayers = 0;
-	
 	/**
 	 * Creates a new Player on the Server;
 	 * @param s_ID The unique token the Server assigned
 	 */
-	public Player(String s_ID, PlayerSocket ps_sock)
+	public Player(String s_ID, PlayerSocket ps_sock, int i_ID)
 	{
 		this.s_PlayerToken = s_ID;
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
 		//TODO : free a number once someone quits and make sure there aren't more then 99 players
-		this.i_ID = i_numplayers++;
+		this.i_ID = i_ID;
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
 
@@ -105,6 +103,8 @@ implements Comparable<Player>
 	public void connectionLost()
 	{
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
+		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
+		
 		//TODO implement
 	}
 
@@ -112,6 +112,13 @@ implements Comparable<Player>
 	{
 		// TODO what to do when the player reconnects?
 		this.ps_sock = ps_socket;
+		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" reconnected!", this);
+	}
+
+	public void disconnect() 
+	{
+		// TODO what to send out when a player quits?
+		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
 	}
 
 

@@ -21,7 +21,7 @@ implements Runnable
 {
 	private final static int i_Timeout = 4000;
 	private final static int i_Wait = 500;
-	private final static int i_MaxReconnect = 5;
+	private final static int i_MaxReconnect = 2;
 	
 	private int i_ReconnectionsFailed = 0;
 	
@@ -336,8 +336,8 @@ implements Runnable
 			try 
 			{
 				this.S_sock = new Socket(this.SA_Server.getAddress(), this.SA_Server.getPort());
+				S_sock.setSoTimeout(i_Timeout);
 				S_sock.setKeepAlive(true);
-				S_sock.setSoTimeout(i_Timeout);			
 			} 
 			catch (IOException e) 
 			{

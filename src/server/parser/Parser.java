@@ -25,7 +25,7 @@ public class Parser
 	{
 		switch(s_MSG.substring(0, 5).toUpperCase())
 		{
-		case "VAUTH":
+		case "VAUTH"://tested & works ~frank
 			if(s_MSG.length()>6)
 			{
 				String s_PlayerID = s_MSG.substring(6, s_MSG.length());
@@ -50,11 +50,11 @@ public class Parser
 			}
 			break;
 			
-		case "VPING":
+		case "VPING"://tested & works ~frank
 			ps_sock.sendData("VPONG");
 			break;
 			
-		case "VNICK":
+		case "VNICK"://tested & works ~frank
 			s_MSG = s_MSG.substring(6, s_MSG.length());
 			//remove anything that isn't a-z or 0-9
 			s_MSG = s_MSG.replaceAll("[^a-zA-Z0-9]", "");

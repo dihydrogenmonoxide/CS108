@@ -1,6 +1,7 @@
 package client.net;
 
 import java.awt.Color;
+import java.util.HashMap;
 
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -21,6 +22,11 @@ import client.events.ServerSelectedListener;
  * Parser for all Messages, fires the correct Event.
  * */
 public class ClientParser {
+	
+	/**assigns each userid a nickname*/
+	HashMap<String, String> users = new HashMap<String, String>();
+	/**assigns each gameID a gameName*/
+	HashMap<String, String> games = new HashMap<String, String>();
 
 	/**List of ChatEventListener.  */
 	private javax.swing.event.EventListenerList infoListeners =  new javax.swing.event.EventListenerList();
@@ -73,7 +79,7 @@ public class ClientParser {
 				/*
 				 * All the messages concernning the connection
 				 * already implemented:
-				 * NICK : when the client changes its nickname -> inform via chat
+				 * NICK : when the client changes its nickname -> inform via chat, replace in hashmap
 				 * PONG : send by the server to test the connection, is disabled
 				 * TOUT : connection timeout -> inform via chat
 				 * FAIL : connection broken -> return to SelectServer
@@ -83,13 +89,24 @@ public class ClientParser {
 				StyleConstants.setForeground(attrs, Color.red);
 
 				//get the subcommand
-				String command = (String) msg.subSequence(0, 4);
+				String commandV = (String) msg.subSequence(0, 4);
 
-				switch(command)
+				switch(commandV)
 				{
 				case "NICK":
-					Log.DebugLog("-->request nick: " + msg);
-					this.chatMsgReceived(new ChatEvent(msg, 12, "<client>Requested Nick: "+msg, attrs));
+					
+					String oldNick = users.get(msg.subSequence(6, 8));
+					if(oldNick != null)
+					{	
+						Log.DebugLog("--> nickchange: " + oldNick + " to " + msg.substring(9));
+						this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>changed Nick: " + oldNick+ " to " + msg.substring(9), attrs));
+					}
+					else
+					{
+						Log.DebugLog("--> new nick: " + msg.substring(9));
+						this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>new User : " + msg.substring(9), attrs));
+					}
+					users.put((String)msg.subSequence(6, 8),(String) msg.substring(9));
 					break;
 
 
@@ -122,27 +139,67 @@ public class ClientParser {
 			case "G": 
 				/*messages for the game:
 				 * implemented: 
-				 * none
+				 * QUIT : a player leaves the game 
+				 * GAME : actual status of a game
+				 * JOIN : a player has joined a game
 				 * 
 				 * */
 				Log.DebugLog("->game: " + msg);
+				
+				//get the subcommand
+				String commandG = (String) msg.subSequence(0, 4);
 
-				this.gameReceived(new GameEvent(msg, 12));
+				switch(commandG)
+				{
+				case "GAME":
+					
+					break;
+				case "JOIN":
+					break;
+				
+				case "QUIT":
+					break;
+					
+				default:
+					Log.ErrorLog("--> wrong formatted " + msg);
+				
+				}
+				//this.gameReceived(new GameEvent(msg, 12));
 
+				
 				break;
 
 
 			case "L": 
 				/*All messages concerning the Lobby / userstatus
 				 * implemented:
-				 * none
+				 * QUIT : a user has quit the lobby
+				 * JOIN : a user has joined the lobby
 				 * 
 				 * */
 				Log.DebugLog("->lobby: " + msg);
-
+				String commandL = (String) msg.subSequence(0, 4);
+				
+				switch(commandL){
+				case "QUIT":
+					if(users.get(msg.subSequence(6,8))==null){return;}
+					Log.DebugLog("-->User quit " );
+					this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User quit: "+users.get(msg.subSequence(6,8)), attrs));
+					break;
+				case "JOIN":
+					if(users.get(msg.subSequence(6,8))==null){return;}
+					Log.DebugLog("-->User joined");
+					this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User joined: "+users.get(msg.subSequence(6,8)), attrs));
+					break;
+				default:
+					Log.DebugLog("-->wrong format");
+					
+					this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>"+msg, attrs));
+				}
+				
 				this.lobbyReceived(new LobbyEvent(msg, 12));
-
-
+				
+			
 				break;
 
 
@@ -158,7 +215,7 @@ public class ClientParser {
 				if(msg.subSequence(0,13).equals("CHAT [SERVER]")){
 					StyleConstants.setBackground(attrs, Color.red);
 				}
-				if(msg.subSequence(0,10).equals("CHAT [from")){
+				if(msg.subSequence(0,10).equals("CHAT [from")||msg.subSequence(0,8).equals("CHAT [to")){
 					StyleConstants.setForeground(attrs, Color.blue);
 				}
 

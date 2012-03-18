@@ -44,7 +44,9 @@ public class GamesPanel extends JPanel {
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
+		
+		
+		//TODO move the game listing in a separate class
 		gamesScroll = new JScrollPane();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 80;
@@ -57,7 +59,7 @@ public class GamesPanel extends JPanel {
 		this.add(gamesScroll, c);
 
 		gameSettings = new JLabel();
-		gameSettings.setText("Infos zum ausgew�hlten Spiel");		//Spieldaten einf�gen
+		gameSettings.setText("Infos zum ausgew�hlten Spiel");		
 		gamesScroll.setPreferredSize(new Dimension(400, 80));
 		gameSettings.setBackground(new Color(255, 255, 255));
 		gameSettings.setOpaque(true);
@@ -105,9 +107,9 @@ public class GamesPanel extends JPanel {
 		this.add(createScroll, c);
 
 
-
+		//TODO move the game creating to a separate class
 		createSetting = new JLabel();
-		createSetting.setText("daten zum erstellenden Spiel");		//Spieldaten kreieren
+		createSetting.setText("daten zum erstellenden Spiel");
 		createSetting.setBackground(new Color(255, 255, 255));
 		createSetting.setOpaque(true);
 		createSetting.setForeground(new Color(50, 50, 50));

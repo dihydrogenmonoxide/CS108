@@ -24,7 +24,7 @@ implements Comparable<Player>
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
 		//TODO : free a number once someone quits and make sure there aren't more then 99 players
-		this.i_ID = i_ID;
+		this.i_ID = i_ID+100;
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
 
@@ -58,7 +58,7 @@ implements Comparable<Player>
 	
 	/**
 	 * This is a number the player and his actions can be linked to. 
-	 * @return the unique playerID
+	 * @return the playerID
 	 */
 	public int getID()
 	{
@@ -82,6 +82,15 @@ implements Comparable<Player>
 	{
 		return this.s_server;
 	}
+	
+	/**
+	 * sets the server for the current player
+	 * @param s_serv the server
+	 */
+	public void setServer(Server s_serv) 
+	{
+		this.s_server = s_serv;
+	}
 
 	/**
 	 * Sends the Data to the specified Player
@@ -92,6 +101,10 @@ implements Comparable<Player>
 		ps_sock.sendData(s_MSG);
 	}
 	
+	/**
+	 * Returns whether the player is in the lobby or not
+	 * @return whether the player is in the lobby or not
+	 */
 	public boolean isInLobby()
 	{
 		return (this.s_server == null);
@@ -104,26 +117,34 @@ implements Comparable<Player>
 	{
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
-		
 		//TODO implement
 	}
 
+	/**
+	 * This is called when the player reconnects
+	 * @param ps_socket the new socket
+	 */
 	public void reconnect(PlayerSocket ps_socket) 
 	{
 		// TODO what to do when the player reconnects?
 		this.ps_sock = ps_socket;
 		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" reconnected!", this);
+		
 	}
 
+	/**
+	 * This is called when the player disconnects
+	 */
 	public void disconnect() 
 	{
 		// TODO what to send out when a player quits?
 		if(!b_quit)
 		{
-			MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
 			MainServer.getPlayerManager().removePlayer(this);
+			
+			MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
+			MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+this.i_ID+" "+this.s_Nick);
+			b_quit = true;
 		}
 	}
-
-
 }

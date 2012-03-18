@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import server.MainServer;
+import server.Server;
 import server.net.PlayerSocket;
 import server.players.Player;
 import shared.Log;
@@ -27,7 +28,7 @@ public class Parser
 		switch(s_MSG.substring(0, 5).toUpperCase())
 		{
 		case "VAUTH"://tested & works ~frank
-			if(s_MSG.length()>6)
+			if(s_MSG.length()>7)
 			{
 				String s_PlayerID = s_MSG.substring(6, s_MSG.length());
 				Player p = MainServer.getPlayerManager().findUUID(s_PlayerID);
@@ -41,6 +42,7 @@ public class Parser
 				else
 				{
 					ps_sock.sendData("VERRO Unknown UUID, you're not allowed to reconnect");
+					break;
 				}
 			}
 			else
@@ -58,6 +60,13 @@ public class Parser
 					ps_sock.close();
 				}
 			}
+			
+			//TODO move this to the place when the user sets his first nick
+			for(Player play : MainServer.getPlayerManager().getPlayers())
+			{
+				ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+			}
+			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
 			break;
 			
 		case "VPING"://tested & works ~frank
@@ -65,14 +74,22 @@ public class Parser
 			break;
 			
 		case "VNICK"://tested & works ~frank
-			s_MSG = s_MSG.substring(6, s_MSG.length());
-			//remove anything that isn't a-z or 0-9
-			s_MSG = s_MSG.replaceAll("[^a-zA-Z0-9]", "");
+			if(s_MSG.length() < 7)
+			{
+				s_MSG = "anon";
+			}
+			else
+			{
+				s_MSG = s_MSG.substring(6, s_MSG.length());
+				//remove anything that isn't a-z or 0-9
+				s_MSG = s_MSG.replaceAll("[^a-zA-Z0-9]", "");
+				if(s_MSG.length() > 15)
+					s_MSG = s_MSG.substring(0, 15);
+			}
+			
 			if(s_MSG.length() < 4)
 				s_MSG = "anon";
-			if(s_MSG.length() > 15)
-				s_MSG = s_MSG.substring(0, 15);
-		
+			
 			// make sure no nicks are used twice
 			Player p = MainServer.getPlayerManager().findPlayer(s_MSG);
 			if(p != null)
@@ -85,21 +102,92 @@ public class Parser
 				}
 				s_MSG = s_MSG+i;
 			}
-			//TODO use this in future
-			Formatter f_fm = new Formatter();
-			String ret = f_fm.format("VNICK %02d %s", ps_sock.getPlayer().getID(), s_MSG).toString();
-			Log.DebugLog(ret);
+			
 			ps_sock.getPlayer().setNick(s_MSG);
-			MainServer.getPlayerManager().broadcastMessage(ret, ps_sock.getPlayer());
+			MainServer.getPlayerManager().broadcastMessage_everyone("VNICK "+ps_sock.getPlayer().getID()+" "+s_MSG);
 			break;
 			
-		case "VEXIT":
+		case "VEXIT"://tested & working ~frank
 			ps_sock.close();
 			break;
 			
-		case "VMYID":
-			Formatter f_fmt = new Formatter();
-			ps_sock.sendData(f_fmt.format("VMYID %02d", ps_sock.getPlayer().getID()).toString());
+		case "VMYID"://tested & working ~frank
+			ps_sock.sendData("WMYID "+ps_sock.getPlayer().getID());
+			break;
+			
+		case "GMAKE":
+			try
+			{
+				if(s_MSG.length() > 7)
+				{
+					s_MSG = s_MSG.substring(6, s_MSG.length());
+					if(s_MSG.length() > 15)
+						s_MSG = s_MSG.substring(0, 15);
+				}
+				else
+				{
+					s_MSG = "UnknownGame";
+				}
+				
+				if(s_MSG.length() < 4)
+					s_MSG = "UnknownGame";
+
+				Server serv = new Server(s_MSG ,MainServer.getServerManager().reserveID());
+				serv.addPlayer(ps_sock.getPlayer());
+				ps_sock.sendData("CCHAT *chatting in server \'"+serv.getServername()+"\'*");
+			}
+			catch(NoSuchElementException e)
+			{
+				ps_sock.sendData("VERRO Maximum amount of Servers reached, please join an existing one.");
+			}
+			break;
+			
+		case "GJOIN":
+			
+			if(ps_sock.getPlayer().getServer() != null)
+			{
+				ps_sock.sendData("VERRO ALready on a server!");
+				break;
+			}
+			
+			
+			if(s_MSG.length() > 6)
+			{
+				s_MSG = s_MSG.substring(6, s_MSG.length());
+				try
+				{
+					int id = Integer.parseInt(s_MSG);
+					Server serv = MainServer.getServerManager().findServer(id);
+					if(serv != null)
+					{
+						if(serv.getPlayerAmount() >= 5)
+						{
+							ps_sock.sendData("VERRO this server is full!");
+						}
+						else
+						{
+							serv.addPlayer(ps_sock.getPlayer());
+							ps_sock.sendData("CCHAT *chatting in server \'"+serv.getServername()+"\'*");
+						}
+						break;
+					}
+				}
+				catch(NumberFormatException e)
+				{
+				}
+			}
+			
+			ps_sock.sendData("VERRO the specified server was not found");			
+			break;
+			
+		case "GQUIT":
+			if(ps_sock.getPlayer().getServer() != null)
+			{
+				ps_sock.getPlayer().getServer().removePlayer(ps_sock.getPlayer());
+				ps_sock.sendData("CCHAT *chatting in lobby*");
+				break;
+			}
+			ps_sock.sendData("VERRO you can't leave a server you're not in");
 			break;
 			
 		case "CCHAT"://tested & works ~Frank

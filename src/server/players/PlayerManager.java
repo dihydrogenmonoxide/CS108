@@ -144,4 +144,16 @@ public class PlayerManager
 	{
 		return this.qi_AvailableIDs.remove();
 	}
+
+	/**
+	 * Broadcasts the message to everyone, no matter whether they're int he lobby or a server
+	 * @param s_MSG the message to broadcast
+	 */
+	public void broadcastMessage_everyone(String s_MSG)
+	{
+		for(Player p : l_players)
+		{
+			p.sendData(s_MSG);
+		}		
+	}
 }

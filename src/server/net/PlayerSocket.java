@@ -96,7 +96,7 @@ implements Runnable
 								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
 								Thread.currentThread().wait(i_Timeout);
 								
-								if(bq_Queue.isEmpty() && !this.S_socket.isClosed())
+								if(bq_Queue.isEmpty() && !this.S_socket.isClosed() && b_active)
 								{
 									//the wait was interrupted by a timeout, this client has lost the connection!
 									this.P_Parser.Parse("VTOUT "+i_Timeout, this);
@@ -129,8 +129,8 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					this.S_socket.close();
-					MainServer.getPlayerManager().removePlayer(this.p_player);
+					this.p_player.disconnect();
+					this.b_active = false;
 					return;
 				}
 				catch(IOException e)
@@ -175,8 +175,8 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					MainServer.getPlayerManager().removePlayer(this.p_player);
-					this.S_socket.close();
+					this.p_player.disconnect();
+					this.b_active = false;
 					return;
 				}
 				catch(IOException e)
@@ -249,6 +249,8 @@ implements Runnable
 	public void close()
 	{
 		this.sendData("VEXIT");
+		this.p_player.disconnect();
 		this.b_active = false;
+		
 	}
 }

@@ -108,6 +108,11 @@ public class Parser
 			break;
 			
 		case "GMAKE"://tested & works ~frank
+			if(ps_sock.getPlayer().getServer() != null)
+			{
+				ps_sock.sendData("VERRO already on a server, leave this one to create another one");
+				break;
+			}
 			try
 			{
 				if(s_MSG.length() > 7)

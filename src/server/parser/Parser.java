@@ -75,28 +75,27 @@ public class Parser
 				}
 				s_MSG = s_MSG+i;
 			}
-			String ret = this.f_fmt.format("VNICK %2i %s", ps_sock.getPlayer().getID(), s_MSG).toString();
-			//TODO remove this
+			//TODO use this in future
+			String ret = this.f_fmt.format("VNICK %02d %s", ps_sock.getPlayer().getID(), s_MSG).toString();
 			Log.DebugLog(ret);
 			ps_sock.getPlayer().setNick(s_MSG);
 			MainServer.getPlayerManager().broadcastMessage(ret, ps_sock.getPlayer());
 			break;
 			
-		case "CCHAT":
+		case "CCHAT"://tested & works ~Frank
 			s_MSG = s_MSG.substring(6, s_MSG.length());
 			
 			if(s_MSG.toUpperCase().startsWith("/MSG"))
 			{
-				// TODO test pvt chatting
-				s_MSG = s_MSG.substring(4, s_MSG.length());
+				s_MSG = s_MSG.substring(5, s_MSG.length());
 				//Split by one or more whitespaces
 				String[] s = s_MSG.split("\\s+");
 				Player p_player = MainServer.getPlayerManager().findPlayer(s[0]);
 				if(p_player != null)
 				{
 					s_MSG = s_MSG.substring(s[0].length(), s_MSG.length());
-					p_player.sendData("CCHAT [from "+p_player.getNick()+"]\t"+s_MSG);
 					ps_sock.sendData("CCHAT [to "+p_player.getNick()+"]\t"+s_MSG);
+					p_player.sendData("CCHAT [from "+p_player.getNick()+"]\t"+s_MSG);
 				}
 				else
 				{

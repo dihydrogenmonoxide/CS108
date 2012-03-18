@@ -87,19 +87,6 @@ implements Runnable
 			{
 				try
 				{
-					while(!bq_Queue.isEmpty())
-					{
-						try 
-						{
-							OOS_MSG.writeUTF(bq_Queue.take());
-						} 
-						catch (InterruptedException e)
-						{
-							Log.ErrorLog("This shouldn't be interrupted!");
-						}
-					}
-					OOS_MSG.flush();
-					
 					if(bq_Queue.isEmpty())	
 					{
 						synchronized(this.t_thread_send)
@@ -123,7 +110,20 @@ implements Runnable
 								Log.DebugLog("Waiting in the send Thread was interrupted");
 							}		
 						}
-					}			
+					}
+					
+					while(!bq_Queue.isEmpty())
+					{
+						try 
+						{
+							OOS_MSG.writeUTF(bq_Queue.take());
+						} 
+						catch (InterruptedException e)
+						{
+							Log.ErrorLog("This shouldn't be interrupted!");
+						}
+					}
+					OOS_MSG.flush();
 				}
 				catch(EOFException e)
 				{
@@ -248,17 +248,7 @@ implements Runnable
 	 */
 	public void close()
 	{
-		
-		try 
-		{
-			this.OOS_MSG.flush();
-			this.S_socket.close();
-			this.OOS_MSG.close();
-			this.OIS_MSG.close();
-		}
-		catch (IOException e) 
-		{
-			Log.WarningLog("Failed to close a socket/stream: "+e.getMessage());
-		}
+		this.sendData("VEXIT");
+		this.b_active = false;
 	}
 }

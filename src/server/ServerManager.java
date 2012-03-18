@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Vector;
 
-import server.players.Player;
 
 public class ServerManager
 {

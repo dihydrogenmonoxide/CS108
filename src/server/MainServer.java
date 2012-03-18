@@ -1,7 +1,5 @@
 package server;
 
-import java.awt.EventQueue;
-
 import shared.*;
 import server.net.*;
 import server.parser.*;

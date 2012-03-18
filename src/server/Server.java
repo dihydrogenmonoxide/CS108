@@ -1,7 +1,6 @@
 package server;
 
 import java.util.Collections;
-import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -23,6 +22,7 @@ implements Comparable<Server>
 		l_locked = Collections.unmodifiableList(l_players);
 		i_ServerID = i_ID+200;
 		MainServer.getServerManager().addServer(this);
+		MainServer.printInformation("New server '"+s_servername+"' created");
 		MainServer.getPlayerManager().broadcastMessage_everyone("GGAME "+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
@@ -78,8 +78,9 @@ implements Comparable<Server>
 		if(this.getPlayerAmount() == 0)
 		{
 			MainServer.getServerManager().removeServer(this);
+			MainServer.printInformation("Server '"+s_servername+"' closed");
 		}			
-			MainServer.getPlayerManager().broadcastMessage_everyone("GGAME "+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
+		MainServer.getPlayerManager().broadcastMessage_everyone("GGAME "+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
 	private synchronized void process(Player p_player, boolean b_add)

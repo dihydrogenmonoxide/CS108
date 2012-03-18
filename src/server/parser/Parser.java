@@ -34,7 +34,7 @@ public class Parser
 				{
 					MainServer.printInformation("The Player "+p.getNick()+" just reconnected");
 					ps_sock.sendData("VHASH "+s_PlayerID);
-					p.reconnect();
+					p.reconnect(ps_sock);
 					ps_sock.setPlayer(p);
 				}
 				else
@@ -83,6 +83,11 @@ public class Parser
 			break;
 			
 		case "CCHAT"://tested & works ~Frank
+			if(s_MSG.length() < 7)
+			{
+				ps_sock.sendData("CCHAT [SERVER]\tYou're a quiet person, are you?");
+				break;
+			}
 			s_MSG = s_MSG.substring(6, s_MSG.length());
 			
 			if(s_MSG.toUpperCase().startsWith("/MSG"))
@@ -94,12 +99,22 @@ public class Parser
 				if(p_player != null)
 				{
 					s_MSG = s_MSG.substring(s[0].length(), s_MSG.length());
-					ps_sock.sendData("CCHAT [to "+p_player.getNick()+"]\t"+s_MSG);
-					p_player.sendData("CCHAT [from "+p_player.getNick()+"]\t"+s_MSG);
+					if(p_player == ps_sock.getPlayer())
+					{
+						ps_sock.sendData("CCHAT [SERVER]\tLast time I checked, you were sane... player.IsTalkingWithOneself = true;");
+						break;
+					}
+					else
+					{
+						ps_sock.sendData("CCHAT [to "+p_player.getNick()+"]\t"+s_MSG);
+						p_player.sendData("CCHAT [from "+p_player.getNick()+"]\t"+s_MSG);
+						break;
+					}
 				}
 				else
 				{
 					ps_sock.sendData("CCHAT [SERVER]\t Player \'"+s[0]+"\' isn't playing on this server...");
+					break;
 				}
 			}
 			else

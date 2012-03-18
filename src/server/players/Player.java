@@ -25,6 +25,7 @@ implements Comparable<Player>
 		this.s_PlayerToken = s_ID;
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
+		//TODO : free a number once someone quits and make sure there aren't more then 99 players
 		this.i_ID = i_numplayers++;
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
@@ -107,10 +108,10 @@ implements Comparable<Player>
 		//TODO implement
 	}
 
-	public void reconnect() 
+	public void reconnect(PlayerSocket ps_socket) 
 	{
 		// TODO what to do when the player reconnects?
-		
+		this.ps_sock = ps_socket;
 	}
 
 

@@ -1,6 +1,5 @@
 package server.parser;
 
-import java.util.Formatter;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -60,13 +59,6 @@ public class Parser
 					ps_sock.close();
 				}
 			}
-			
-			//TODO move this to the place when the user sets his first nick
-			for(Player play : MainServer.getPlayerManager().getPlayers())
-			{
-				ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
-			}
-			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
 			break;
 			
 		case "VPING"://tested & works ~frank
@@ -115,7 +107,7 @@ public class Parser
 			ps_sock.sendData("WMYID "+ps_sock.getPlayer().getID());
 			break;
 			
-		case "GMAKE":
+		case "GMAKE"://tested & works ~frank
 			try
 			{
 				if(s_MSG.length() > 7)
@@ -142,7 +134,7 @@ public class Parser
 			}
 			break;
 			
-		case "GJOIN":
+		case "GJOIN"://tested & works ~frank
 			
 			if(ps_sock.getPlayer().getServer() != null)
 			{
@@ -180,7 +172,7 @@ public class Parser
 			ps_sock.sendData("VERRO the specified server was not found");			
 			break;
 			
-		case "GQUIT":
+		case "GQUIT"://tested & works ~frank
 			if(ps_sock.getPlayer().getServer() != null)
 			{
 				ps_sock.getPlayer().getServer().removePlayer(ps_sock.getPlayer());

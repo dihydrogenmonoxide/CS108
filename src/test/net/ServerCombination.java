@@ -10,7 +10,7 @@ public class ServerCombination
 	{
 		MainServer.startServer(9003);
 		
-		MainClient m = new MainClient();
-		MainClient m2 = new MainClient();
+		new MainClient();
+		new MainClient();
 	}
 }

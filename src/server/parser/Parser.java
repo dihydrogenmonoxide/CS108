@@ -131,7 +131,7 @@ public class Parser
 
 				Server serv = new Server(s_MSG ,MainServer.getServerManager().reserveID());
 				serv.addPlayer(ps_sock.getPlayer());
-				ps_sock.sendData("CCHAT *chatting in server \'"+serv.getServername()+"\'*");
+				ps_sock.sendData("CCHAT *now chatting in the server \'"+serv.getServername()+"\'*");
 			}
 			catch(NoSuchElementException e)
 			{
@@ -164,7 +164,7 @@ public class Parser
 						else
 						{
 							serv.addPlayer(ps_sock.getPlayer());
-							ps_sock.sendData("CCHAT *chatting in server \'"+serv.getServername()+"\'*");
+							ps_sock.sendData("CCHAT *now chatting in the server \'"+serv.getServername()+"\'*");
 						}
 						break;
 					}
@@ -181,7 +181,7 @@ public class Parser
 			if(ps_sock.getPlayer().getServer() != null)
 			{
 				ps_sock.getPlayer().getServer().removePlayer(ps_sock.getPlayer());
-				ps_sock.sendData("CCHAT *chatting in lobby*");
+				ps_sock.sendData("CCHAT *now chatting in the lobby*");
 				break;
 			}
 			ps_sock.sendData("VERRO you can't leave a server you're not in");

@@ -1,6 +1,7 @@
 package server.GamePlayObjects;
 
 import shared.*;
+import shared.game.Coordinates;
 
 public class Test {
 	

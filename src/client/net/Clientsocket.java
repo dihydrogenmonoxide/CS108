@@ -3,7 +3,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.BlockingQueue;
@@ -12,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import client.events.ChatEventListener;
 import client.events.GameEventListener;
 import client.events.LobbyEventListener;
+import client.events.InfoEventListener;
 
 import shared.*;
 
@@ -19,8 +19,10 @@ public class Clientsocket
 implements Runnable
 {
 	private final static int i_Timeout = 4000;
-	private final static int i_ConnectingTimeout = 4000;
 	private final static int i_Wait = 500;
+	private final static int i_MaxReconnect = 2;
+	
+	private int i_ReconnectionsFailed = 0;
 	
 	private Socket S_sock;
 	private ServerAddress SA_Server;
@@ -73,7 +75,7 @@ implements Runnable
 			if(s_Answer.startsWith("VHASH "))
 			{
 				s_Answer = s_Answer.substring(6);
-				Log.InformationLog("Received the hash: " + s_Answer);
+				Log.InformationLog("Received the hash: \'" + s_Answer+"\'");
 				this.s_PlayerID = s_Answer;
 			}
 			else
@@ -83,6 +85,10 @@ implements Runnable
 			
 			bq_Queue.clear();			
 		} 
+		catch(EOFException e)
+		{
+			throw new SocketCreationException("The server closed the connection: "+e.getMessage());
+		}
 		catch (IOException e)
 		{
 			throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
@@ -96,125 +102,174 @@ implements Runnable
 	}
 
 	
-	public void run() 
+	public void run()
+	{
+		if(Thread.currentThread() == this.T_Thread_rec)
+		{
+			Log.InformationLog("Started a Receiver");
+			Receiver();
+			Log.InformationLog("Shut down a Receiver");
+		}
+		else if(Thread.currentThread() == this.T_Thread_send)
+		{
+			Log.InformationLog("Started a Sender");
+			Sender();
+			Log.InformationLog("Shut down a Sender");
+		}
+		else
+		{
+			Log.DebugLog("RTFM - Socket not running");
+			return;
+		}
+	}
+	
+	private void Receiver()
 	{
 		try
 		{
-			if(Thread.currentThread() == this.T_Thread_rec)
+			do
 			{
-				//<Receiver Thread>
-				do
+				try
 				{
+					String s = OIS_MSG.readUTF();
+					parser.parse(s);					
+				}
+				catch(EOFException e2)
+				{
+					Log.ErrorLog("Reading Error: "+e2.getMessage());
+					this.S_sock.close();
+					
+					parser.parse("VTOUT "+i_Timeout);
 					try
 					{
-						String s = OIS_MSG.readUTF();
-						parser.parse(s);		
-						
+						this.reconnect();
+						i_ReconnectionsFailed = 0;
 					}
-					catch(EOFException e2)
+					catch(SocketCreationException e1)
 					{
-						Log.ErrorLog("Reading Error: "+e2.getMessage());
-						this.S_sock.close();
+						Log.WarningLog("A reconnect failed: "+e1.getMessage());
+						if(i_ReconnectionsFailed >= i_MaxReconnect)
+						{
+							parser.parse("VFAIL");
+							b_connected = false;
+							this.S_sock.close();
+							Log.ErrorLog("Failed to reconnect too often, shutting down");
+						}
+						i_ReconnectionsFailed++;
+					}
+				}
+				catch(SocketTimeoutException  e3)
+				{
+					//A timeout occurred!
+					Log.ErrorLog("Disconnected! Initiating reconnect! "+e3.getMessage());
+					this.S_sock.close();
+				}
+				catch(IOException e1)
+				{
+					if(!b_connected)
+					{
+						S_sock.close();
+						Log.DebugLog("Socket closed - exiting");
 						return;
 					}
-					catch(SocketTimeoutException  e3)
+					
+					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
 					{
-						//A timeout occurred!
-						Log.ErrorLog("Disconnected! Initiating reconnect! "+e3.getMessage());
+						Log.ErrorLog("Socket Closed unexpectedly: "+e1.getMessage());
 						parser.parse("VTOUT "+i_Timeout);
-					}
-					catch(IOException e1)
-					{
-						if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
+						try
 						{
-							Log.ErrorLog("Disconnected! Initiating reconnect! "+e1.getMessage());
-							parser.parse("VTOUT "+i_Timeout);
-							return;
+							this.reconnect();
+							i_ReconnectionsFailed = 0;
 						}
-						
-						if(!b_connected)
+						catch(SocketCreationException e2)
 						{
-							S_sock.close();
-							Log.DebugLog("Socket closed - exiting");
-							return;
-						}
-						
-						Log.ErrorLog("Socket IO Error : "+e1.getMessage()+" & "+e1.getClass());
-						return;
-					}
-				}
-				while(b_connected);
-				//</Receiver Thread>
-			}
-			else if(Thread.currentThread() == this.T_Thread_send)
-			{
-				//<Sender Thread>
-				do
-				{
-					try
-					{
-						if(bq_Queue.isEmpty()) 
-							OOS_MSG.writeUTF("VPING");
-						
-						while(!bq_Queue.isEmpty())
-						{
-							try 
+							Log.WarningLog("A reconnect failed: "+e2.getMessage());
+							if(i_ReconnectionsFailed >= i_MaxReconnect)
 							{
-								OOS_MSG.writeUTF(bq_Queue.take());
-							} 
-							catch (InterruptedException e)
-							{
-								Log.ErrorLog("This shouldn't be interrupted!");
+								parser.parse("VFAIL");
+								b_connected = false;
+								this.S_sock.close();
+								Log.ErrorLog("Failed to reconnect too often, shutting down");
 							}
+							i_ReconnectionsFailed++;
 						}
-						OOS_MSG.flush();
-						
-						if(bq_Queue.isEmpty())	
-						{
-							try 
-							{
-								// TODO don't use interrupt() to continue... needs fixingz!
-								Thread.sleep(i_Wait);
-							} catch (InterruptedException e) 
-							{
-								Log.DebugLog("Waiting in the send Thread was interrupted");
-							}							
-						}						
 					}
-					catch(IOException e1)
-					{
-						if(!b_connected)
-						{
-							S_sock.close();
-							Log.DebugLog("Socket closed - exiting");
-							return;
-						}
-						
-						if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
-						{
-							Log.ErrorLog("Disconnected! Initiating reconnect! "+e1.getMessage());
-							parser.parse("VTOUT "+i_Timeout);
-							return;
-						}
-						
-						Log.ErrorLog("Socket IO Error: "+e1.getMessage());
-						return;
-					}
+					Log.ErrorLog("Socket IO Error : "+e1.getMessage());
 				}
-				while(b_connected);
-				//</Sender Thread>
 			}
-			else
-			{
-				Log.DebugLog("RTFM - Socket not running");
-				return;
-			}
+			while(b_connected);
 		}
 		catch(IOException e)
 		{
-			Log.WarningLog("Failed to close a Socket: "+e.getMessage());
+			Log.ErrorLog("Failed to close a Socket: "+e.getMessage());
 		}
-				
+	}
+
+	private void Sender()
+	{
+		try
+		{
+			do
+			{
+				try
+				{
+					if(bq_Queue.isEmpty()) 
+						OOS_MSG.writeUTF("VPING");
+					
+					while(!bq_Queue.isEmpty())
+					{
+						try 
+						{
+							OOS_MSG.writeUTF(bq_Queue.take());
+						} 
+						catch (InterruptedException e)
+						{
+							Log.ErrorLog("This shouldn't be interrupted!");
+						}
+					}
+					OOS_MSG.flush();
+					
+					if(bq_Queue.isEmpty())	
+					{
+						synchronized(this.T_Thread_send)
+						{
+							try 
+							{
+								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
+								Thread.currentThread().wait(i_Wait);
+							} catch (InterruptedException e) 
+							{
+								Log.DebugLog("Waiting in the send Thread was interrupted");
+							}		
+						}
+					}						
+				}
+				catch(IOException e1)
+				{
+					if(!b_connected)
+					{
+						S_sock.close();
+						Log.DebugLog("Socket closed - exiting");
+						return;
+					}
+					
+					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
+					{
+						Log.ErrorLog("Socket is closed! "+e1.getMessage());
+						return;
+					}
+					
+					Log.ErrorLog("Socket IO Error: "+e1.getMessage());
+					return;
+				}
+			}
+			while(b_connected);
+		}
+		catch(IOException e)
+		{
+			Log.ErrorLog("Failed to close a Socket : "+e.getMessage());
+		}
 	}
 	
 	/**
@@ -228,7 +283,10 @@ implements Runnable
 		try 
 		{
 			bq_Queue.put(s_Data);
-			this.T_Thread_send.interrupt();
+			synchronized(this.T_Thread_send)
+			{
+				T_Thread_send.notify();
+			}
 		}
 		catch (InterruptedException e) 
 		{
@@ -245,17 +303,15 @@ implements Runnable
 	 * 
 	 * @param s_MSG the Chat message
 	 */
-	/*TODO man kann keine strings mit leerzeichen senden (hinzugefŸgt von Oli)
-	 *TODO die Nachricht wird vom parser wieder gelesen -> evtl. einfach ignorieren 
-	 *(so wie bim irc, auf gesendete Nachrichten (der Server sendet einfach die Nachricht an den Addressaten))
-	 *bei fragen --> see you in the irc
-	 */
 	public void sendChatMessage(String s_MSG)
 	{
 		try 
 		{
 			bq_Queue.put("CCHAT " + s_MSG);
-			this.T_Thread_send.interrupt();
+			synchronized(this.T_Thread_send)
+			{
+				T_Thread_send.notify();
+			}
 		}
 		catch (InterruptedException e) 
 		{
@@ -279,8 +335,8 @@ implements Runnable
 			try 
 			{
 				this.S_sock = new Socket(this.SA_Server.getAddress(), this.SA_Server.getPort());
+				S_sock.setSoTimeout(i_Timeout);
 				S_sock.setKeepAlive(true);
-				S_sock.setSoTimeout(i_Timeout);			
 			} 
 			catch (IOException e) 
 			{
@@ -296,20 +352,44 @@ implements Runnable
 				OOS_MSG.writeUTF("VAUTH "+this.s_PlayerID);
 				OOS_MSG.flush();
 				String s_Answer = OIS_MSG.readUTF();
-				if(s_Answer.startsWith("VHASH "+this.s_PlayerID))
+				if(s_Answer.equals("VHASH "+this.s_PlayerID))
 				{
 					Log.InformationLog("Reconnected!");
+				}
+				else
+				{
+					throw new SocketCreationException("Failed to reconnect: the Server didn't accept the playerID "+s_Answer);
 				}
 				
 				bq_Queue.clear();			
 			} 
+			catch(EOFException e)
+			{
+				throw new SocketCreationException("The server closed the connection: "+e.getMessage());
+			}
 			catch (IOException e)
 			{
 				throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
 			}
 			
-			this.T_Thread_rec.start();
-			this.T_Thread_send.start();
+			//restarting both threads in case one of them shut down
+			try
+			{
+				this.T_Thread_send.start();
+			}
+			catch(IllegalThreadStateException e)
+			{
+				Log.InformationLog("Receiver Thread is still running!");
+			}
+			
+			try
+			{
+				this.T_Thread_send.start();
+			}
+			catch(IllegalThreadStateException e)
+			{
+				Log.InformationLog("Sender Thread is still running!");
+			}
 		}
 		
 		
@@ -359,5 +439,13 @@ implements Runnable
 	public void removeGameEventListener(GameEventListener e){
 		parser.removeGameEventListener(e);
 	}
+
+
+	public void addInfoEventListener(InfoEventListener infoEventListener) {
+		parser.addInfoEventListener(infoEventListener);
+	}
 	
+	public void removeInfoEventListener(InfoEventListener e) {
+		parser.removeInfoEventListener(e);
+	}
 }

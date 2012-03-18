@@ -1,30 +1,16 @@
 package test.net;
 
-import server.net.DiscoveryServer;
-import server.net.Serversocket;
-import server.parser.Parser;
-import shared.SocketCreationException;
+import client.MainClient;
+import server.MainServer;
 
-public class ServerCombination {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// create discovery Server
-		DiscoveryServer discS = new DiscoveryServer(9002);
-		Thread t = new Thread(discS);
-		t.start();
+public class ServerCombination
+{
+	public static void main(String[] args)
+	{
+		MainServer.startServer(9003);
 		
-		//create socket Server
-		Parser p = new Parser();
-		try {
-			Serversocket sockS = new Serversocket(9002, p);
-			sockS.start_();
-		} catch (SocketCreationException e) {
-			e.printStackTrace();
-		}
-		
+		new MainClient();
+		new MainClient();
 	}
-
 }

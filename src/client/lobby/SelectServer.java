@@ -26,6 +26,7 @@ import javax.swing.event.*;
 
 import shared.Log;
 import shared.ServerAddress;
+import shared.User;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
 import client.net.DiscoveryClient;
@@ -52,13 +53,18 @@ public class SelectServer extends JPanel {
 	private JFormattedTextField inputUsername;
 	/**message to display if no server found.*/
 	private String[] msgNoServers = {"suchen ...", "bitte haben Sie Geduld"};
+	/** holds all User relevant infos.*/
+	private User user;
 
 	/**Displays the UI to select a server.
 	 * Needs now arguments
+	 * @param u the assigned User
 	 * 
 	 * */
-	public SelectServer()
+	public SelectServer(User u)
 	{
+		this.user = u;
+
 		Log.DebugLog("Choose a server");
 
 		this.setLayout(new GridBagLayout());
@@ -121,8 +127,9 @@ public class SelectServer extends JPanel {
 					buttonJoin.doClick();
 				}
 			}
-			
+
 		});
+
 		JScrollPane serverScroll = new JScrollPane(listServers);
 		serverScroll.setPreferredSize(new Dimension(250, 80));
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -151,7 +158,14 @@ public class SelectServer extends JPanel {
 
 		inputUsername = new JFormattedTextField();
 		inputUsername.setColumns(10);
-		inputUsername.setText(checkUsername(System.getProperty("user.name")));
+		if(0<user.getUserName().length())
+		{
+			inputUsername.setText(InputValidator.UserName(user.getUserName()));
+		}
+		else
+		{
+			inputUsername.setText(InputValidator.UserName(System.getProperty("user.name")));
+		}
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = -1;
 		c.weightx = 0.0;
@@ -177,7 +191,7 @@ public class SelectServer extends JPanel {
 				String sUsername;
 				try
 				{
-					sUsername = checkUsername(inputUsername.getText());
+					sUsername = InputValidator.UserName(inputUsername.getText());
 				}
 				catch (NullPointerException e)
 				{
@@ -191,7 +205,6 @@ public class SelectServer extends JPanel {
 					ServerAddress a = foundServers.elementAt(listServers.getSelectedIndex());
 					//connect to server
 					serverSelected(new ServerSelectedEvent("Server selected", a, sUsername));
-	
 				}
 				catch (ArrayIndexOutOfBoundsException e)
 				{
@@ -232,21 +245,14 @@ public class SelectServer extends JPanel {
 
 	}
 
-	/**sanitize the given username.
-	 * @param sUsername to check
-	 * @return sanitized username*/
-	private String checkUsername(final String sUsername)
-	{		
-		return sUsername.replaceAll("[^A-Za-z0-9]", "");
-	}
 	/**
 	 *This method sets a Timer, so we will scan every 6sec for new servers.
 	 *Servers found are copied in vs_Servers and displayed then
 	 *in the SelectList
-	*/
+	 */
 	public void startSearch()
 	{
-		
+
 		timer = new Timer();
 		int scanDelay = 1000;   
 		int scanPeriod = 6000;
@@ -286,7 +292,7 @@ public class SelectServer extends JPanel {
 			}
 		}, scanDelay, scanPeriod);
 	}
-	
+
 	/**
 	 * Stops the timer, so it will not search for servers.
 	 * */
@@ -294,34 +300,34 @@ public class SelectServer extends JPanel {
 	{
 		timer.cancel();
 	}
-	
+
 	/** 
 	 * adds serverSelected listeners.
 	 * @param listener
 	 */
-    public void addServerSelectedListener(ServerSelectedListener listener) {
-        listenerList.add(ServerSelectedListener.class, listener);
-    }
+	public void addServerSelectedListener(ServerSelectedListener listener) {
+		listenerList.add(ServerSelectedListener.class, listener);
+	}
 
-    /**
-     * removes serverSelected listeners.
-     * @param listener
-     */
-    public void removeServerSelectedListener(ServerSelectedListener listener) {
-        listenerList.remove(ServerSelectedListener.class, listener);
-    }
+	/**
+	 * removes serverSelected listeners.
+	 * @param listener
+	 */
+	public void removeServerSelectedListener(ServerSelectedListener listener) {
+		listenerList.remove(ServerSelectedListener.class, listener);
+	}
 
-   /**
-    * Fires the ServerSelectedEvent to all the Listeners
-    * @param evt
-    */
-    void serverSelected(ServerSelectedEvent evt) {
-        Object[] listeners = listenerList.getListenerList();
-        for (int i=0; i<listeners.length; i+=2) {
-            if (listeners[i]==ServerSelectedListener.class) {
-                ServerSelectedListener listener = (ServerSelectedListener)listeners[i+1];
+	/**
+	 * Fires the ServerSelectedEvent to all the Listeners
+	 * @param evt
+	 */
+	void serverSelected(ServerSelectedEvent evt) {
+		Object[] listeners = listenerList.getListenerList();
+		for (int i=0; i<listeners.length; i+=2) {
+			if (listeners[i]==ServerSelectedListener.class) {
+				ServerSelectedListener listener = (ServerSelectedListener)listeners[i+1];
 				listener.serverSelected(evt);
-            }
-        }
-    }
+			}
+		}
+	}
 }

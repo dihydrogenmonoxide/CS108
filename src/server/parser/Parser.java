@@ -26,9 +26,10 @@ public class Parser
 				Player p = MainServer.getPlayerManager().findUUID(s_PlayerID);
 				if(p != null)
 				{
-					MainServer.printInformation("THe Player "+p.getNick()+" just reconnected");
+					MainServer.printInformation("The Player "+p.getNick()+" just reconnected");
 					ps_sock.sendData("VHASH "+s_PlayerID);
 					p.reconnect();
+					ps_sock.setPlayer(p);
 				}
 				else
 				{
@@ -56,11 +57,11 @@ public class Parser
 			Player p = MainServer.getPlayerManager().findPlayer(s_MSG);
 			if(p != null)
 			{
-				int i = 1;
+				int i = 0;
 				while(p != null)
 				{
-					p = MainServer.getPlayerManager().findPlayer(s_MSG+i);
 					i++;
+					p = MainServer.getPlayerManager().findPlayer(s_MSG+i);
 				}
 				s_MSG = s_MSG+i;
 			}

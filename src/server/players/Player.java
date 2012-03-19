@@ -180,6 +180,25 @@ implements Comparable<Player>
 		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" reconnected!", this);
 		if(this.s_server != null)
 			this.s_server.resume();
+		
+		//TODO test if the client receives this
+		for(Player play : MainServer.getPlayerManager().getPlayers())
+		{
+			if(play != this)
+			{
+				if(play.isInLobby())
+					ps_sock.sendData("LJOIN "+play.getID()+" "+play.getNick());
+				ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+			}			
+		}
+		for(Server s : MainServer.getServerManager().getServers())
+		{
+			ps_sock.sendData("GGAME "+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+			for(Player p : s.getPlayers())
+			{
+				ps_sock.sendData("GJOIN "+s.getID()+" "+p.getID()+" "+p.getNick()); 
+			}
+		}
 	}
 
 	/**

@@ -136,6 +136,7 @@ public class ClientLobby extends JFrame {
 								Log.InformationLog("Connection to server broken, starting ServerSelect");
 								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
 								// TODO remove the game if it exists.
+								socket.disconnect();
 								lobbyParent.remove(l);
 								lobbyParent.validate();
 								lobbyParent.repaint();
@@ -151,6 +152,7 @@ public class ClientLobby extends JFrame {
 					e.printStackTrace();
 					Log.WarningLog("-->connection broken, could not connect");
 					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
+					socket.disconnect();
 					s.setVisible(true);
 					s.startSearch();
 					

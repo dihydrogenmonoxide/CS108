@@ -62,7 +62,9 @@ public class SelectServer extends JPanel {
 	private String[] msgNoServers = {"suchen ...", "bitte haben Sie Geduld"};
 	/** holds all User relevant infos.*/
 	private User user;
-
+	/**boolean for DiscoveryClient*/
+	private boolean isSearching = false;
+	
 	/**Displays the UI to select a server.
 	 * Needs now arguments
 	 * @param u the assigned User
@@ -286,7 +288,10 @@ public class SelectServer extends JPanel {
 	 */
 	public void startSearch()
 	{
-
+		if(isSearching){return;}
+		
+		isSearching = true;
+		
 		timer = new Timer();
 		int scanDelay = 1000;   
 		int scanPeriod = 6000;
@@ -333,6 +338,8 @@ public class SelectServer extends JPanel {
 	public void stopSearch() 
 	{
 		timer.cancel();
+		timer.purge();
+		isSearching = false;
 	}
 
 	/** 

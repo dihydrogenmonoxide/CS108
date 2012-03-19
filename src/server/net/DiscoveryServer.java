@@ -46,6 +46,8 @@ implements Runnable
 		
 		t_thread = new Thread(this);
 		t_thread.start();
+		//TODO heavily optimize this!
+		t_thread.setPriority(Thread.MIN_PRIORITY);
 	}
 	
 	/**

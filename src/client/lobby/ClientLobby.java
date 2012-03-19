@@ -135,6 +135,7 @@ public class ClientLobby extends JFrame {
 							 {
 								Log.InformationLog("Connection to server broken, starting ServerSelect");
 								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
+								// TODO remove the game if it exists.
 								lobbyParent.remove(l);
 								lobbyParent.validate();
 								lobbyParent.repaint();

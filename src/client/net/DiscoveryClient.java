@@ -220,19 +220,16 @@ implements Runnable
 					MS_socket.setNetworkInterface(NA_Interface);
 					MS_socket.receive(DP_packet);
 					this.DC_Client.Parse(DP_packet);
-					i_Success++;					
+					i_Success++;	
+					Thread.sleep(i_sleep);
+				}
+				catch (InterruptedException e) 
+				{
+					return;
 				}
 				catch(IOException e)
 				{
 					Log.WarningLog("Couldn't send packet(out of "+i_Total+" "+i_Success+"were sent successful");
-					
-				}
-				
-				try 
-				{
-					Thread.sleep(i_sleep);
-				} catch (InterruptedException e) 
-				{
 					
 				}
 			}

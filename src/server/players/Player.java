@@ -7,26 +7,26 @@ import server.net.*;
 public class Player 
 implements Comparable<Player>
 {
+	private final static int i_Timeout = 15000;
 	private String s_Nick = "JohnDoe";
 	private String s_PlayerToken;
 	private Server s_server;
 	private PlayerSocket ps_sock;
 	private int i_ID;
 	private boolean b_NameSet = false;
-	
-	private static int i_numplayers = 0;
-	
+	private boolean b_quit = false;
+	private boolean b_ConnectionLost = false;
 	/**
 	 * Creates a new Player on the Server;
 	 * @param s_ID The unique token the Server assigned
 	 */
-	public Player(String s_ID, PlayerSocket ps_sock)
+	public Player(String s_ID, PlayerSocket ps_sock, int i_ID)
 	{
 		this.s_PlayerToken = s_ID;
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
 		//TODO : free a number once someone quits and make sure there aren't more then 99 players
-		this.i_ID = i_numplayers++;
+		this.i_ID = i_ID+100;
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
 
@@ -42,11 +42,36 @@ implements Comparable<Player>
 	 */
 	public void setNick(String s_Nick)
 	{
-		if(!b_NameSet)
-			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
-		else
-			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+this.s_Nick+"\' -> \'"+s_Nick+"\'");
 		this.s_Nick = s_Nick;
+		if(!b_NameSet)
+		{
+			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
+			for(Player play : MainServer.getPlayerManager().getPlayers())
+			{
+				if(play != this)
+				{
+					if(play.isInLobby())
+						ps_sock.sendData("LJOIN "+play.getID()+" "+play.getNick());
+					ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+				}
+					
+					
+				
+			}
+			for(Server s : MainServer.getServerManager().getServers())
+			{
+				ps_sock.sendData("GGAME "+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+				for(Player p : s.getPlayers())
+				{
+					ps_sock.sendData("GJOIN "+s.getID()+" "+p.getID()+" "+p.getNick()); 
+				}
+			}
+			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
+		}
+		else
+		{
+			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+this.s_Nick+"\' -> \'"+s_Nick+"\'");
+		}
 	}
 
 	/**
@@ -60,7 +85,7 @@ implements Comparable<Player>
 	
 	/**
 	 * This is a number the player and his actions can be linked to. 
-	 * @return the unique playerID
+	 * @return the playerID
 	 */
 	public int getID()
 	{
@@ -84,6 +109,15 @@ implements Comparable<Player>
 	{
 		return this.s_server;
 	}
+	
+	/**
+	 * sets the server for the current player
+	 * @param s_serv the server
+	 */
+	public void setServer(Server s_serv) 
+	{
+		this.s_server = s_serv;
+	}
 
 	/**
 	 * Sends the Data to the specified Player
@@ -94,6 +128,10 @@ implements Comparable<Player>
 		ps_sock.sendData(s_MSG);
 	}
 	
+	/**
+	 * Returns whether the player is in the lobby or not
+	 * @return whether the player is in the lobby or not
+	 */
 	public boolean isInLobby()
 	{
 		return (this.s_server == null);
@@ -105,14 +143,83 @@ implements Comparable<Player>
 	public void connectionLost()
 	{
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
-		//TODO implement
+		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
+
+		b_ConnectionLost = true;
+		ps_sock.close();
+		if(this.s_server != null)
+			this.s_server.pause();
+		try 
+		{
+			Thread.sleep(i_Timeout);
+		}
+		catch (InterruptedException e)
+		{
+			
+		}
+		
+		if(this.b_ConnectionLost)
+		{
+			if(this.s_server != null)
+			{
+				this.s_server.removePlayer(this);
+				this.s_server.resume();
+			}
+			this.disconnect();
+		}
+			
 	}
 
+	/**
+	 * This is called when the player reconnects
+	 * @param ps_socket the new socket
+	 */
 	public void reconnect(PlayerSocket ps_socket) 
 	{
-		// TODO what to do when the player reconnects?
 		this.ps_sock = ps_socket;
+		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" reconnected!", this);
+		if(this.s_server != null)
+			this.s_server.resume();
+		
+		//TODO test if the client receives this
+		for(Player play : MainServer.getPlayerManager().getPlayers())
+		{
+			if(play != this)
+			{
+				if(play.isInLobby())
+					ps_sock.sendData("LJOIN "+play.getID()+" "+play.getNick());
+				ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+			}			
+		}
+		for(Server s : MainServer.getServerManager().getServers())
+		{
+			ps_sock.sendData("GGAME "+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+			for(Player p : s.getPlayers())
+			{
+				ps_sock.sendData("GJOIN "+s.getID()+" "+p.getID()+" "+p.getNick()); 
+			}
+		}
 	}
 
-
+	/**
+	 * This is called when the player disconnects
+	 */
+	public void disconnect() 
+	{
+		// TODO what to send out when a player quits?
+		if(!b_quit)
+		{
+			MainServer.getPlayerManager().removePlayer(this);
+			if(this.b_ConnectionLost)
+				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" timed out.", this);
+			else
+				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
+			
+			if(this.isInLobby())
+				MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+this.i_ID+" "+this.s_Nick);
+			else
+				MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
+			b_quit = true;
+		}
+	}
 }

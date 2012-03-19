@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import server.MainServer;
 import server.parser.Parser;
 import server.players.Player;
 import shared.Log;
@@ -101,7 +102,10 @@ implements Runnable
 									this.P_Parser.Parse("VTOUT "+i_Timeout, this);
 									this.b_active = false;
 									this.S_socket.close();
-									this.getPlayer().connectionLost();
+									if(this.getPlayer() != null)
+										this.getPlayer().connectionLost();
+									else
+										Log.WarningLog("A player disconnected before he was really connected");
 									return;
 								}
 							} catch (InterruptedException e) 
@@ -174,7 +178,10 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					this.p_player.disconnect();
+					if(this.getPlayer() != null)
+						this.getPlayer().connectionLost();
+					else
+						Log.WarningLog("A player disconnected before he was really connected");
 					this.b_active = false;
 					return;
 				}

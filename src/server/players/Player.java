@@ -67,6 +67,7 @@ implements Comparable<Player>
 				}
 			}
 			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
+			b_NameSet = true;
 		}
 		else
 		{

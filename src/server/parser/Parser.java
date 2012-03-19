@@ -212,7 +212,7 @@ public class Parser
 					else
 					{
 						ps_sock.sendData("CCHAT [to "+p_player.getNick()+"]\t"+s_MSG);
-						p_player.sendData("CCHAT [from "+p_player.getNick()+"]\t"+s_MSG);
+						p_player.sendData("CCHAT [from "+ps_sock.getPlayer().getNick()+"]\t"+s_MSG);
 						break;
 					}
 				}

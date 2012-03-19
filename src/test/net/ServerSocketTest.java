@@ -8,6 +8,6 @@ public class ServerSocketTest
 
 	public static void main(String[] args) 
 	{
-		MainServer.startServer(37612);
+		MainServer.startServer(9003);
 	}
 }

@@ -61,8 +61,11 @@ public enum Protocol {
 		 this.message = section.toString() + str;
 	}
 	
-	/**Translate a String to an enum.*/
-	public static Protocol fromString(String str) {
+	/**Translate a String to an enum.
+	 * @return b the enum matching your string.
+	 * @param str the Command you are searching for.
+	 * */
+	public static Protocol fromString(final String str) {
 	    if (str != null) {
 	      for (Protocol b : Protocol.values()) {
 	        if (str.equalsIgnoreCase(b.message)) {
@@ -78,5 +81,12 @@ public enum Protocol {
 	public String toString()
 	{
 		return message;
+	}
+	
+	/**return the COMMAND+" ", better readable than toString().
+	 * @return message the COMMAND plus one space.s*/
+	public String str()
+	{
+		return message + " ";
 	}
 }

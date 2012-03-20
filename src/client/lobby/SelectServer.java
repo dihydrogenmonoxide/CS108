@@ -116,8 +116,8 @@ public class SelectServer extends JPanel {
 			}
 		});
 
-		listServers.addKeyListener(new KeyListener(){
-
+		listServers.addKeyListener(new KeyListener()
+		{
 			@Override
 			public void keyPressed(final KeyEvent arg0) 
 			{	
@@ -257,10 +257,11 @@ public class SelectServer extends JPanel {
 			public void actionPerformed(final ActionEvent arg0) 
 			{
 				Log.DebugLog("User wants to enter its own IP, take care...");
-				String stringIP=JOptionPane.showInputDialog("Enter an IP");
+				String[] stringIP=JOptionPane.showInputDialog("Enter an IP:PORT (usually 9003)").split(":");
 				try {
-					InetAddress addressIP = InetAddress.getByName(stringIP);
-					ServerAddress addressServer = new ServerAddress(addressIP, 9003, NetworkInterface.getByInetAddress(addressIP));
+					InetAddress addressIP = InetAddress.getByName(stringIP[0]);
+					int port = Integer.valueOf(stringIP[1]);
+					ServerAddress addressServer = new ServerAddress(addressIP, port, NetworkInterface.getByInetAddress(addressIP));
 					serverSelected(new ServerSelectedEvent("Server selected", addressServer , InputValidator.UserName(inputUsername.getText())));
 				} catch (UnknownHostException|NullPointerException | SocketException e) {
 					Log.DebugLog("PEBKAC -> user to stupid to enter ip --> abort");

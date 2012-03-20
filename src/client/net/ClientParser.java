@@ -219,11 +219,12 @@ public class ClientParser {
 		Log.DebugLog("->lobby: " + msg);
 		Protocol command = Protocol.fromString((String) msg.subSequence(0, 5));
 		
-		switch(command){
+		switch(command)
+		{
 		case LOBBY_QUIT:
 			if (users.get(msg.subSequence(7, 9)) == null) { return; }
 			Log.DebugLog("-->User quit lobby");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User left for a game: "+users.get(msg.subSequence(7,9)), attrs));
+			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User left for a game: " + users.get(msg.subSequence(7, 9)), attrs));
 			break;
 		case LOBBY_JOIN:
 			if (users.get(msg.subSequence(7, 9)) == null) { return; }
@@ -245,7 +246,7 @@ public class ClientParser {
 	 * @param attrs default syling
 	 * */
 	private void handleChat(final String msg, SimpleAttributeSet attrs) {
-		//NOTNICE solve this with a switch 
+		//XXX solve this with a switch 
 		Log.DebugLog("->chat: " + msg);
 
 		if (msg.subSequence(1, 14).equals("CHAT [SERVER]"))

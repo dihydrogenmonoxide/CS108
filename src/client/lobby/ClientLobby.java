@@ -15,6 +15,7 @@ import client.net.Clientsocket;
 import client.net.NetworkException;
 
 import shared.Log;
+import shared.Protocol;
 import shared.ServerAddress;
 import shared.SocketCreationException;
 import shared.User;
@@ -123,7 +124,7 @@ public class ClientLobby extends JFrame {
 					lobbyParent.add(l);
 					
 					//request nick
-					socket.sendData("VNICK " + desiredNick);
+					socket.sendData(Protocol.CON_NICK.toString()+" " + desiredNick);
 					
 					//TODO Game Listener to start game here.
 					

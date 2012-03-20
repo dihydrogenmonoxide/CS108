@@ -69,10 +69,10 @@ implements Runnable
 			OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
 			
 			//Authenticating with the server
-			OOS_MSG.writeUTF("VAUTH");
+			OOS_MSG.writeUTF(Protocol.CON_AUTH.toString());
 			OOS_MSG.flush();
 			String s_Answer = OIS_MSG.readUTF();
-			if(s_Answer.startsWith("VHASH "))
+			if(s_Answer.startsWith(Protocol.CON_HASH.toString()+" "))
 			{
 				s_Answer = s_Answer.substring(6);
 				Log.InformationLog("Received the hash: \'" + s_Answer+"\'");
@@ -139,7 +139,7 @@ implements Runnable
 					Log.ErrorLog("Reading Error: "+e2.getMessage());
 					this.S_sock.close();
 					
-					parser.parse("VTOUT "+i_Timeout);
+					parser.parse(Protocol.CON_TIMEOUT.toString()+" "+i_Timeout);
 					try
 					{
 						this.reconnect();
@@ -150,7 +150,7 @@ implements Runnable
 						Log.WarningLog("A reconnect failed: "+e1.getMessage());
 						if(i_ReconnectionsFailed >= i_MaxReconnect)
 						{
-							parser.parse("VFAIL");
+							parser.parse(Protocol.CON_FAIL.toString());
 							b_connected = false;
 							this.S_sock.close();
 							Log.ErrorLog("Failed to reconnect too often, shutting down");
@@ -176,7 +176,7 @@ implements Runnable
 					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
 					{
 						Log.ErrorLog("Socket Closed unexpectedly: "+e1.getMessage());
-						parser.parse("VTOUT "+i_Timeout);
+						parser.parse(Protocol.CON_TIMEOUT.toString()+" "+i_Timeout);
 						try
 						{
 							this.reconnect();
@@ -187,7 +187,7 @@ implements Runnable
 							Log.WarningLog("A reconnect failed: "+e2.getMessage());
 							if(i_ReconnectionsFailed >= i_MaxReconnect)
 							{
-								parser.parse("VFAIL");
+								parser.parse(Protocol.CON_FAIL.toString());
 								b_connected = false;
 								this.S_sock.close();
 								Log.ErrorLog("Failed to reconnect too often, shutting down");
@@ -215,7 +215,7 @@ implements Runnable
 				try
 				{
 					if(bq_Queue.isEmpty()) 
-						OOS_MSG.writeUTF("VPING");
+						OOS_MSG.writeUTF(Protocol.CON_PING.toString());
 					
 					while(!bq_Queue.isEmpty())
 					{
@@ -307,7 +307,7 @@ implements Runnable
 	{
 		try 
 		{
-			bq_Queue.put("CCHAT " + s_MSG);
+			bq_Queue.put(Protocol.CHAT_MESSAGE.toString()+" " + s_MSG);
 			synchronized(this.T_Thread_send)
 			{
 				T_Thread_send.notify();
@@ -350,10 +350,10 @@ implements Runnable
 				OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
 				
 				//Authenticating with the server
-				OOS_MSG.writeUTF("VAUTH "+this.s_PlayerID);
+				OOS_MSG.writeUTF(Protocol.CON_AUTH.toString()+" "+this.s_PlayerID);
 				OOS_MSG.flush();
 				String s_Answer = OIS_MSG.readUTF();
-				if(s_Answer.equals("VHASH "+this.s_PlayerID))
+				if(s_Answer.equals(Protocol.CON_HASH+" "+this.s_PlayerID))
 				{
 					Log.InformationLog("Reconnected!");
 				}
@@ -397,7 +397,7 @@ implements Runnable
 		try 
 		{
 			Log.InformationLog("Sennding a Ping");
-			OOS_MSG.writeUTF("VPING");
+			OOS_MSG.writeUTF(Protocol.CON_PING.toString());
 			OOS_MSG.flush();
 		} 
 		catch (IOException e) 
@@ -413,7 +413,7 @@ implements Runnable
 	 */
 	public void disconnect()
 	{
-		this.sendData("VEXIT");
+		this.sendData(Protocol.CON_EXIT.toString());
 		this.b_connected = false;
 	}
 	

@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import shared.Log;
+import shared.Protocol;
 
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
@@ -27,7 +28,7 @@ import client.net.Clientsocket;
 
 public class GamesPanel extends JPanel {
 
-	/**the connection socket*/
+	/**the connection socket.*/
 	private Clientsocket socket;
 	/**button to join a game.*/
 	private JButton joinButton;
@@ -38,7 +39,7 @@ public class GamesPanel extends JPanel {
 	/**button to create a new game.*/
 	private JButton createButton;
 
-	/**holds all the open games*/
+	/**holds all the open games.*/
 	private Vector<Vector> gamesData = new Vector();
 
 	/**table with all the games.*/
@@ -56,7 +57,7 @@ public class GamesPanel extends JPanel {
 	/**label where game options are shown.*/
 	private JLabel gameSettings;
 
-	/**creates a dialog where the user can join, create and start games*/
+	/**creates a dialog where the user can join, create and start games.*/
 	public GamesPanel(Clientsocket s) 
 	{
 		this.socket = s;
@@ -181,7 +182,7 @@ public class GamesPanel extends JPanel {
 				if(0<=gamesTable.getSelectedRow())
 				{
 					Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
-					socket.sendData("GJOIN 2"+temp.get(0));
+					socket.sendData(Protocol.GAME_JOIN.toString()+" 2"+temp.get(0));
 					gamesTable.setEnabled(false);
 				}
 
@@ -192,7 +193,7 @@ public class GamesPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					socket.sendData("GQUIT");
+					socket.sendData(Protocol.GAME_QUIT.toString());
 					gamesTable.setEnabled(true);
 			}
 		});

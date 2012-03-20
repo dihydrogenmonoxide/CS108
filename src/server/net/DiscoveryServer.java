@@ -12,6 +12,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
+import client.lobby.InputValidator;
+
 public class DiscoveryServer
 implements Runnable
 {
@@ -21,7 +23,7 @@ implements Runnable
 	private static final String s_Address = "225.6.7.8";
 
 	//assigns serverName, has to improved (likely by regex to eliminate spaces, etc.)
-	private String s_ServerName = System.getProperty("user.name");
+	private String s_ServerName = InputValidator.UserName(System.getProperty("user.name"));
 	
 	private int i_ServerPort;
 	private InetAddress IA_MultiCastGroup;
@@ -69,7 +71,7 @@ implements Runnable
 			int i_Success = 0;
 			int i_Total = 0;
 			
-			byte[] ab_MSG = ("SERV "+this.i_ServerPort+" "+this.s_ServerName).getBytes();
+			byte[] ab_MSG = (Protocol.DISC_SERVER.str()+this.i_ServerPort+" "+this.s_ServerName).getBytes();
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			
 			while(b_active)

@@ -18,10 +18,13 @@ import shared.*;
 public class Clientsocket 
 implements Runnable
 {
-	private final static int i_Timeout = 4000;
-	private final static int i_Wait = 500;
-	private final static int i_MaxReconnect = 2;
-	
+	/**the connection timeout in microseconds.*/
+	private static final int i_Timeout = 4000;
+	/**the time to wait between reconnects.*/
+	private static final int i_Wait = 500;
+	/**how many reconnects.*/
+	private static final int i_MaxReconnect = 2;
+	/**how many reconnects failed so far.*/
 	private int i_ReconnectionsFailed = 0;
 	
 	private Socket S_sock;
@@ -72,7 +75,7 @@ implements Runnable
 			OOS_MSG.writeUTF(Protocol.CON_AUTH.toString());
 			OOS_MSG.flush();
 			String s_Answer = OIS_MSG.readUTF();
-			if(s_Answer.startsWith(Protocol.CON_HASH.toString()+" "))
+			if(s_Answer.startsWith(Protocol.CON_HASH.str()))
 			{
 				s_Answer = s_Answer.substring(6);
 				Log.InformationLog("Received the hash: \'" + s_Answer+"\'");
@@ -139,7 +142,7 @@ implements Runnable
 					Log.ErrorLog("Reading Error: "+e2.getMessage());
 					this.S_sock.close();
 					
-					parser.parse(Protocol.CON_TIMEOUT.toString()+" "+i_Timeout);
+					parser.parse(Protocol.CON_TIMEOUT.str()+i_Timeout);
 					try
 					{
 						this.reconnect();
@@ -176,7 +179,7 @@ implements Runnable
 					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
 					{
 						Log.ErrorLog("Socket Closed unexpectedly: "+e1.getMessage());
-						parser.parse(Protocol.CON_TIMEOUT.toString()+" "+i_Timeout);
+						parser.parse(Protocol.CON_TIMEOUT.str()+i_Timeout);
 						try
 						{
 							this.reconnect();
@@ -307,7 +310,7 @@ implements Runnable
 	{
 		try 
 		{
-			bq_Queue.put(Protocol.CHAT_MESSAGE.toString()+" " + s_MSG);
+			bq_Queue.put(Protocol.CHAT_MESSAGE.str() + s_MSG);
 			synchronized(this.T_Thread_send)
 			{
 				T_Thread_send.notify();
@@ -350,7 +353,7 @@ implements Runnable
 				OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
 				
 				//Authenticating with the server
-				OOS_MSG.writeUTF(Protocol.CON_AUTH.toString()+" "+this.s_PlayerID);
+				OOS_MSG.writeUTF(Protocol.CON_AUTH.str()+this.s_PlayerID);
 				OOS_MSG.flush();
 				String s_Answer = OIS_MSG.readUTF();
 				if(s_Answer.equals(Protocol.CON_HASH+" "+this.s_PlayerID))

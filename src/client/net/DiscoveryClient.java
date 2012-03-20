@@ -112,19 +112,20 @@ implements Runnable
 	protected synchronized void Parse(DatagramPacket DP_MSG)
 	{
 		String s_MSG = new String(DP_MSG.getData(), 0, DP_MSG.getLength());
-		if(s_MSG.toUpperCase().startsWith("ALIV"))
+		
+		if(s_MSG.toUpperCase().startsWith(Protocol.DISC_ALIVE.toString()))
 		{
 			return;
 		}
 		String[] as_MSG = s_MSG.split("\\s");
-		if(as_MSG.length == 3)
+		if (as_MSG.length == 3)
 		{
 			try 
 			{
 				InetAddress IA_Address = DP_MSG.getAddress();
 				int i_Port = Integer.parseInt(as_MSG[1]);
 				String s_ServerName = as_MSG[2];
-				if(!AlreadyFound(IA_Address, i_Port))
+				if( ! AlreadyFound(IA_Address, i_Port) )
 				{
 					lSA_Servers.add(new ServerAddress(IA_Address, i_Port, null, s_ServerName));
 					Log.DebugLog("Found a new Server: "+IA_Address+":"+i_Port+" Servername: "+s_ServerName);
@@ -207,7 +208,7 @@ implements Runnable
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length);
 			int i_Success = 0;
 			int i_Total = 0;
-			DatagramPacket DP_alive = new DatagramPacket("ALIV".getBytes(), "ALIV".getBytes().length, IA_MultiCastGroup, i_Port);
+			DatagramPacket DP_alive = new DatagramPacket(Protocol.DISC_ALIVE.toString().getBytes(), Protocol.DISC_ALIVE.toString().getBytes().length, IA_MultiCastGroup, i_Port);
 
 			MS_socket.setNetworkInterface(NA_Interface);
 			MS_socket.send(DP_alive);

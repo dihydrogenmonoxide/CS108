@@ -1,6 +1,8 @@
 package shared;
 /**Provides the actual messages to be send in the Protocol.*/
 public enum Protocol {
+	/**for the discovery service.*/
+	DISCOVERY("D"),
 	/**start of all connection messages.*/
 	CONNECTION("V"),
 	/**start of all lobby messages.*/
@@ -9,6 +11,10 @@ public enum Protocol {
 	CHAT("C"),
 	/**start of all game messages.*/
 	GAME("G"),
+	/**alive beacon.*/
+	DISC_ALIVE(DISCOVERY, "ALIV"),
+	/**server beacon.*/
+	DISC_SERVER(DISCOVERY, "SERV"),
 	/**when the connection has a timeout.*/
 	CON_TIMEOUT(CONNECTION, "TOUT"),
 	/**authentication messages.*/

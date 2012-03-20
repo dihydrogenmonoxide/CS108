@@ -40,6 +40,10 @@ import client.net.DiscoveryClient;
  * @return the Server which to Connect to.
  * */
 public class SelectServer extends JPanel {
+	/**Scan period between the scans of the Discovery client.*/
+	private static final int SCAN_PERIOD = 6000;
+	/**Default server port for the "enter ip" dialog.*/
+	private static final int DEFAULT_SERVER_PORT = 9003;
 	/**serialid.*/
 	private static final long serialVersionUID = 1L;
 	/**List of listeners.  */
@@ -48,7 +52,7 @@ public class SelectServer extends JPanel {
 	private Timer timer;
 	/**List to hold all the found Server.*/
 	private Vector<ServerAddress> foundServers;
-	/**optionlist which displays all the servers.*/
+	/**optionlist which displays all the servers. Content not specified because its an Vector or an Array (depends on servers)*/
 	private JList listServers;
 	/**button to join the server.*/
 	private JButton buttonJoin;
@@ -62,7 +66,7 @@ public class SelectServer extends JPanel {
 	private String[] msgNoServers = {"suchen ...", "bitte haben Sie Geduld"};
 	/** holds all User relevant infos.*/
 	private User user;
-	/**boolean for DiscoveryClient*/
+	/**boolean if DiscoveryClient already started.*/
 	private boolean isSearching = false;
 	
 	/**Displays the UI to select a server.
@@ -80,7 +84,7 @@ public class SelectServer extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 
 		JLabel labelDialog = new JLabel();
-		labelDialog.setText("W�hlen Sie ihren Server:");
+		labelDialog.setText("WÔøΩhlen Sie ihren Server:");
 		labelDialog.setBackground(new Color(255, 255, 255));
 		labelDialog.setOpaque(true);
 		labelDialog.setForeground(new Color(50, 50, 50));
@@ -152,7 +156,7 @@ public class SelectServer extends JPanel {
 
 
 		JLabel labelUser = new JLabel();
-		labelUser.setText("W�hlen Sie ihren Benutzernamen:");
+		labelUser.setText("WÔøΩhlen Sie ihren Benutzernamen:");
 		labelUser.setBackground(new Color(255, 255, 255));
 		labelUser.setOpaque(true);
 		labelUser.setForeground(new Color(50, 50, 50));
@@ -220,7 +224,7 @@ public class SelectServer extends JPanel {
 					Log.DebugLog("--Tried to choose an invalid/inactive Server");
 					if (listServers.getSelectedIndex() < 0)
 					{
-						labelError.setText("kein Server ausgewählt");
+						labelError.setText("kein Server ausgew√§hlt");
 						labelError.setVisible(true);
 					}
 				}
@@ -257,13 +261,22 @@ public class SelectServer extends JPanel {
 			public void actionPerformed(final ActionEvent arg0) 
 			{
 				Log.DebugLog("User wants to enter its own IP, take care...");
-				String[] stringIP=JOptionPane.showInputDialog("Enter an IP:PORT (usually 9003)").split(":");
+				String[] stringIP=JOptionPane.showInputDialog("Enter an IP:PORT (default "+DEFAULT_SERVER_PORT+")").split(":");
 				try {
+					if (InputValidator.isIP(stringIP[0]) == false)
+					{
+						JOptionPane.showMessageDialog(buttonIp, "Warum konnte der inhaftierte Programmierer nicht aus dem Gefängnis ausbrechen? \n \n \n 404 Feil not found \n \n (not an ip)", "ID 10 T - Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 					InetAddress addressIP = InetAddress.getByName(stringIP[0]);
-					int port = Integer.valueOf(stringIP[1]);
+					int port = DEFAULT_SERVER_PORT;
+					if (stringIP.length >= 2)
+					{
+						Integer.valueOf(stringIP[1]);
+					}
 					ServerAddress addressServer = new ServerAddress(addressIP, port, NetworkInterface.getByInetAddress(addressIP));
 					serverSelected(new ServerSelectedEvent("Server selected", addressServer , InputValidator.UserName(inputUsername.getText())));
-				} catch (UnknownHostException|NullPointerException | SocketException e) {
+				} catch (UnknownHostException|NullPointerException | SocketException  e) {
 					Log.DebugLog("PEBKAC -> user to stupid to enter ip --> abort");
 					Log.ErrorLog("User not worthy of this game");
 				}
@@ -295,7 +308,6 @@ public class SelectServer extends JPanel {
 		
 		timer = new Timer();
 		int scanDelay = 1000;   
-		int scanPeriod = 6000;
 
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
@@ -330,13 +342,13 @@ public class SelectServer extends JPanel {
 				listServers.repaint();
 				t.interrupt();
 			}
-		}, scanDelay, scanPeriod);
+		}, scanDelay, SCAN_PERIOD);
 	}
 
 	/**
 	 * Stops the timer, so it will not search for servers.
 	 * */
-	public void stopSearch() 
+	public final void stopSearch() 
 	{
 		timer.cancel();
 		timer.purge();

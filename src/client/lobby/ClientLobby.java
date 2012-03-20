@@ -109,8 +109,8 @@ public class ClientLobby extends JFrame {
 					socket.addInfoEventListener(new InfoEventListener()
 					{
 						@Override
-						public void received(InfoEvent evt){
-							 if(evt.getId()==-1)
+						public void received(final InfoEvent evt){
+							 if (evt.getId() == -1)
 							 {
 								Log.InformationLog("Connection to server broken, starting ServerSelect");
 								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
@@ -128,10 +128,10 @@ public class ClientLobby extends JFrame {
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					//e.printStackTrace();
 					Log.WarningLog("-->connection broken, could not connect");
 					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
-					socket.disconnect();
+					if (socket != null) { socket.disconnect(); }
 					s.setVisible(true);
 					s.startSearch();
 					

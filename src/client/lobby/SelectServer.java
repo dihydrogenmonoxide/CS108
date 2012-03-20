@@ -10,6 +10,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -19,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -47,6 +52,8 @@ public class SelectServer extends JPanel {
 	private JList listServers;
 	/**button to join the server.*/
 	private JButton buttonJoin;
+	/**button to open a dialog to enter a custom ip.*/
+	private JButton buttonIp;
 	/**displays errors.*/
 	private JLabel labelError;
 	/**input for the desired username.*/
@@ -55,7 +62,9 @@ public class SelectServer extends JPanel {
 	private String[] msgNoServers = {"suchen ...", "bitte haben Sie Geduld"};
 	/** holds all User relevant infos.*/
 	private User user;
-
+	/**boolean for DiscoveryClient*/
+	private boolean isSearching = false;
+	
 	/**Displays the UI to select a server.
 	 * Needs now arguments
 	 * @param u the assigned User
@@ -241,8 +250,35 @@ public class SelectServer extends JPanel {
 		c.insets = new Insets(10, 5, 2, 5);
 		this.add(labelError, c);
 
-		this.setOpaque(false);
+		buttonIp = new JButton("IP eingeben ...");
+		buttonIp.setEnabled(true);
+		buttonIp.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(final ActionEvent arg0) 
+			{
+				Log.DebugLog("User wants to enter its own IP, take care...");
+				String stringIP=JOptionPane.showInputDialog("Enter an IP");
+				try {
+					InetAddress addressIP = InetAddress.getByName(stringIP);
+					ServerAddress addressServer = new ServerAddress(addressIP, 9003, NetworkInterface.getByInetAddress(addressIP));
+					serverSelected(new ServerSelectedEvent("Server selected", addressServer , InputValidator.UserName(inputUsername.getText())));
+				} catch (UnknownHostException|NullPointerException | SocketException e) {
+					Log.DebugLog("PEBKAC -> user to stupid to enter ip --> abort");
+					Log.ErrorLog("User not worthy of this game");
+				}
+			}
+		});
 
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 5;
+		c.weightx = 0.0;
+		c.gridwidth = 1;
+		c.gridx = 2;
+		c.gridy = 7;
+		this.add(buttonIp, c);
+		
+		
+		this.setOpaque(false);
 	}
 
 	/**
@@ -252,7 +288,10 @@ public class SelectServer extends JPanel {
 	 */
 	public void startSearch()
 	{
-
+		if(isSearching){return;}
+		
+		isSearching = true;
+		
 		timer = new Timer();
 		int scanDelay = 1000;   
 		int scanPeriod = 6000;
@@ -299,6 +338,8 @@ public class SelectServer extends JPanel {
 	public void stopSearch() 
 	{
 		timer.cancel();
+		timer.purge();
+		isSearching = false;
 	}
 
 	/** 

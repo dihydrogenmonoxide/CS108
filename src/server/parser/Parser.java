@@ -24,7 +24,25 @@ public class Parser
 	 */
 	public void Parse(String s_MSG, PlayerSocket ps_sock)
 	{
-		switch(s_MSG.substring(0, 5).toUpperCase())
+		String s_ParseMSG;
+		
+		if(s_MSG.length() >= 5)
+		{
+			s_ParseMSG = s_MSG.substring(0, 5).toUpperCase();
+			if(ps_sock.getPlayer() == null && s_ParseMSG.compareTo("VAUTH") != 0)
+			{
+				Log.ErrorLog("Critical: A player wasn't connected propperly");
+				return;
+			}
+		}
+		else
+		{
+			Log.WarningLog("Received a too short command");
+			return;
+		}
+
+		
+		switch(s_ParseMSG)
 		{
 		case "VAUTH"://tested & works ~frank
 			if(s_MSG.length()>7)
@@ -212,7 +230,7 @@ public class Parser
 					else
 					{
 						ps_sock.sendData("CCHAT [to "+p_player.getNick()+"]\t"+s_MSG);
-						p_player.sendData("CCHAT [from "+p_player.getNick()+"]\t"+s_MSG);
+						p_player.sendData("CCHAT [from "+ps_sock.getPlayer().getNick()+"]\t"+s_MSG);
 						break;
 					}
 				}

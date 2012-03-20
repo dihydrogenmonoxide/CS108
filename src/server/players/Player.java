@@ -3,11 +3,12 @@ package server.players;
 import server.MainServer;
 import server.Server;
 import server.net.*;
+import shared.Log;
 
 public class Player 
 implements Comparable<Player>
 {
-	private final static int i_Timeout = 15000;
+	private final static int i_Timeout = 20000;
 	private String s_Nick = "JohnDoe";
 	private String s_PlayerToken;
 	private Server s_server;
@@ -42,6 +43,7 @@ implements Comparable<Player>
 	 */
 	public void setNick(String s_Nick)
 	{
+		String s_oldNick = this.s_Nick;
 		this.s_Nick = s_Nick;
 		if(!b_NameSet)
 		{
@@ -67,10 +69,11 @@ implements Comparable<Player>
 				}
 			}
 			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
+			b_NameSet = true;
 		}
 		else
 		{
-			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+this.s_Nick+"\' -> \'"+s_Nick+"\'");
+			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+s_oldNick+"\' -> \'"+s_Nick+"\'");
 		}
 	}
 
@@ -142,6 +145,7 @@ implements Comparable<Player>
 	 */
 	public void connectionLost()
 	{
+		// TODO check why the player is instantly disconnected after losing the connection
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
 
@@ -155,7 +159,7 @@ implements Comparable<Player>
 		}
 		catch (InterruptedException e)
 		{
-			
+			Log.WarningLog("Failed to sleep and therefore immediatly disconnected the player");
 		}
 		
 		if(this.b_ConnectionLost)
@@ -204,11 +208,12 @@ implements Comparable<Player>
 	/**
 	 * This is called when the player disconnects
 	 */
-	public void disconnect() 
+	public synchronized void disconnect() 
 	{
 		// TODO what to send out when a player quits?
 		if(!b_quit)
 		{
+			b_quit = true;
 			MainServer.getPlayerManager().removePlayer(this);
 			if(this.b_ConnectionLost)
 				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" timed out.", this);
@@ -219,7 +224,6 @@ implements Comparable<Player>
 				MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+this.i_ID+" "+this.s_Nick);
 			else
 				MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
-			b_quit = true;
 		}
 	}
 }

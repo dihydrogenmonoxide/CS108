@@ -122,7 +122,8 @@ public class ServerUI {
 		};
 		
 		System.setOut(new PrintStream(stdout, true));
-		System.setErr(new PrintStream(stdout, true));
+		//TODO uncomment
+	//	System.setErr(new PrintStream(stdout, true));
 		this.frmSwissDefconServer.pack();
 	}
 

@@ -41,6 +41,8 @@ public enum Protocol {
 	LOBBY_JOIN(LOBBY, "JOIN"),
 	/**chat messages.*/
 	CHAT_MESSAGE(CHAT, "CHAT"),
+	/**prefix for private messages.*/
+	CHAT_PREF_PRIVATE("/MSG"),
 	/**make a game.*/
 	GAME_MAKE(GAME,  "MAKE"),
 	/**join a game.*/

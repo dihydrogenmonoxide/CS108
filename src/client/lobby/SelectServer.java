@@ -261,7 +261,13 @@ public class SelectServer extends JPanel {
 			public void actionPerformed(final ActionEvent arg0) 
 			{
 				Log.DebugLog("User wants to enter its own IP, take care...");
-				String[] stringIP=JOptionPane.showInputDialog("Gebe eine Serveraddresse an: \n IP:PORT (z.Bsp. 192.168.1.1:9003)\n (Standardport "+DEFAULT_SERVER_PORT+")").split(":");
+				String[] stringIP = JOptionPane.showInputDialog(
+						"Gebe eine Serveraddresse an: \n IP (zBsp. 192.168.1.1 , Port standardmässig " 
+						+ DEFAULT_SERVER_PORT 
+						+ ")\n IP:PORT (z.Bsp. 192.168.1.1:9003)\n " 
+						+ DEFAULT_SERVER_PORT + ")"
+						).split(":");
+				
 				try {
 					if (InputValidator.isIP(stringIP[0]) == false)
 					{
@@ -272,7 +278,8 @@ public class SelectServer extends JPanel {
 					int port = DEFAULT_SERVER_PORT;
 					if (stringIP.length >= 2)
 					{
-						Integer.valueOf(stringIP[1]);
+						port = Integer.valueOf(stringIP[1]);
+						if (port >= 9000) { Log.DebugLog("No matter what I try, I just can't kill this stupid boss! IT'S OVER NINE THOUSAND! I give up!"); }
 					}
 					ServerAddress addressServer = new ServerAddress(addressIP, port, NetworkInterface.getByInetAddress(addressIP));
 					serverSelected(new ServerSelectedEvent("Server selected", addressServer , InputValidator.UserName(inputUsername.getText())));

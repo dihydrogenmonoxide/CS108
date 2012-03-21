@@ -19,8 +19,8 @@ implements Runnable
 {
 	private static final int i_retries = 10;
 	private static final int i_sleep = 250;
-	private static final int i_Port = 9001;
-	private static final String s_Address = "225.6.7.8";
+	private static final int i_Port = Settings.DISCOVERY_DEFAULT_PORT;
+	private static final String s_Address = Settings.DISCOVERY_MULITCAST_GROUP;
 
 	//assigns serverName, has to improved (likely by regex to eliminate spaces, etc.)
 	private String s_ServerName = InputValidator.UserName(System.getProperty("user.name"));

@@ -1,6 +1,7 @@
 package client.lobby;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,6 +32,7 @@ import javax.swing.event.*;
 
 import shared.Log;
 import shared.ServerAddress;
+import shared.Settings;
 import shared.User;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
@@ -41,9 +43,9 @@ import client.net.DiscoveryClient;
  * */
 public class SelectServer extends JPanel {
 	/**Scan period between the scans of the Discovery client.*/
-	private static final int SCAN_PERIOD = 6000;
+	private static final int SCAN_PERIOD = Settings.DISCOVERY_CLIENT_SCAN_PERIOD;
 	/**Default server port for the "enter ip" dialog.*/
-	private static final int DEFAULT_SERVER_PORT = 9003;
+	private static final int DEFAULT_SERVER_PORT = Settings.SERVER_DEFAULT_PORT;
 	/**serialid.*/
 	private static final long serialVersionUID = 1L;
 	/**List of listeners.  */
@@ -98,10 +100,11 @@ public class SelectServer extends JPanel {
 		listServers.setVisibleRowCount(5);
 		listServers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listServers.setLayoutOrientation(JList.VERTICAL);
+		listServers.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 
 		foundServers = new Vector<ServerAddress>();
-
 		listServers.setListData(msgNoServers);
+		
 		listServers.setEnabled(false); //because no server found yet
 
 		this.startSearch();

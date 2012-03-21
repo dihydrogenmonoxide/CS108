@@ -132,7 +132,7 @@ public class GamesPanel extends JPanel {
 		c.ipady = 1;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
-		c.gridx = 3;
+		c.gridx = 2;
 		c.gridy = 14;
 		this.add(leaveButton, c);
 		

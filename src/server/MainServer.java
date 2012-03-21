@@ -8,7 +8,7 @@ import server.players.*;
 
 public class MainServer 
 {
-	private static int i_Serverport = 9002;
+	private static int i_Serverport = Settings.SERVER_DEFAULT_PORT;
 	private static Serversocket ss_sock;
 	private static Parser p_parser;
 	private static DiscoveryServer ds_serv;
@@ -29,9 +29,9 @@ public class MainServer
 	 */
 	public static void startServer(int i_Port)
 	{
-		if(i_Port < 1024 || i_Port >= 0xFFFF)
+		if (i_Port < 1024 || i_Port >= 0xFFFF)
 		{
-			MainServer.printInformation("No Port specified, defaulting to 9002");
+			MainServer.printInformation("No Port specified, defaulting to " + i_Serverport);
 		}
 		else
 		{

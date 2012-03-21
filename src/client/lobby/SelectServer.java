@@ -84,7 +84,7 @@ public class SelectServer extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 
 		JLabel labelDialog = new JLabel();
-		labelDialog.setText("WÔøΩhlen Sie ihren Server:");
+		labelDialog.setText("Wählen Sie ihren Server:");
 		labelDialog.setBackground(new Color(255, 255, 255));
 		labelDialog.setOpaque(true);
 		labelDialog.setForeground(new Color(50, 50, 50));
@@ -156,7 +156,7 @@ public class SelectServer extends JPanel {
 
 
 		JLabel labelUser = new JLabel();
-		labelUser.setText("WÔøΩhlen Sie ihren Benutzernamen:");
+		labelUser.setText("Wählen Sie ihren Benutzernamen:");
 		labelUser.setBackground(new Color(255, 255, 255));
 		labelUser.setOpaque(true);
 		labelUser.setForeground(new Color(50, 50, 50));
@@ -224,7 +224,7 @@ public class SelectServer extends JPanel {
 					Log.DebugLog("--Tried to choose an invalid/inactive Server");
 					if (listServers.getSelectedIndex() < 0)
 					{
-						labelError.setText("kein Server ausgew√§hlt");
+						labelError.setText("kein Server ausgewählt");
 						labelError.setVisible(true);
 					}
 				}
@@ -261,7 +261,7 @@ public class SelectServer extends JPanel {
 			public void actionPerformed(final ActionEvent arg0) 
 			{
 				Log.DebugLog("User wants to enter its own IP, take care...");
-				String[] stringIP=JOptionPane.showInputDialog("Enter an IP:PORT (default "+DEFAULT_SERVER_PORT+")").split(":");
+				String[] stringIP=JOptionPane.showInputDialog("Gebe eine Serveraddresse an: \n IP:PORT (z.Bsp. 192.168.1.1:9003)\n (Standardport "+DEFAULT_SERVER_PORT+")").split(":");
 				try {
 					if (InputValidator.isIP(stringIP[0]) == false)
 					{

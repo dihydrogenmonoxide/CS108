@@ -102,7 +102,7 @@ public class ClientLobby extends JFrame {
 					lobbyParent.add(l);
 					
 					//request nick
-					socket.sendData(Protocol.CON_NICK.toString()+" " + desiredNick);
+					socket.sendData(Protocol.CON_NICK.str() + desiredNick);
 					
 					//TODO Game Listener to start game here.
 					

@@ -101,7 +101,7 @@ public class GamesPanel extends JPanel {
 		this.add(gamesScroll, c);
 
 		gameSettings = new JLabel();
-		gameSettings.setText("Infos zum ausgewählten Spiel");		
+		gameSettings.setText("Infos zum ausgew√§hlten Spiel");		
 		gamesScroll.setPreferredSize(new Dimension(300, 80));
 		gameSettings.setBackground(new Color(255, 255, 255));
 		gameSettings.setOpaque(true);
@@ -114,7 +114,7 @@ public class GamesPanel extends JPanel {
 		c.insets = new Insets(10, 0, 0, 0);
 		this.add(gameSettings, c);
 
-		joinButton = new JButton("join");
+		joinButton = new JButton("beitreten");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		joinButton.setEnabled(false);
 		c.ipady = 1;
@@ -126,7 +126,7 @@ public class GamesPanel extends JPanel {
 
 		
 
-		leaveButton = new JButton("leave");
+		leaveButton = new JButton("verlassen");
 		leaveButton.setEnabled(true);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 1;
@@ -159,7 +159,7 @@ public class GamesPanel extends JPanel {
 		c.gridy = 24;
 		this.add(createSetting, c);
 
-		createButton = new JButton("create");
+		createButton = new JButton("erstellen");
 		createButton.setEnabled(true);
 		createScroll.setPreferredSize(new Dimension(20, 20));
 

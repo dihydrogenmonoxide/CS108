@@ -215,7 +215,7 @@ public class ChatPanel extends JPanel {
 			@Override
 			public void keyReleased(final KeyEvent arg0) 
 			{
-				boolean chatMsgValid = 3 < inputChat.getText().length();
+				boolean chatMsgValid = 1 <= inputChat.getText().length();
 				sendButton.setEnabled(chatMsgValid);
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER && chatMsgValid)
 				{

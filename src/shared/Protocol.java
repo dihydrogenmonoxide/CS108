@@ -1,6 +1,8 @@
 package shared;
 /**Provides the actual messages to be send in the Protocol.*/
 public enum Protocol {
+	/**command not known:*/
+	UNKNOWN_COMMAND("command not known"),
 	/**for the discovery service.*/
 	DISCOVERY("D"),
 	/**start of all connection messages.*/
@@ -81,7 +83,7 @@ public enum Protocol {
 	        }
 	      }
 	    }
-	    return null;
+	    return UNKNOWN_COMMAND;
 	  }
 	
 	/**Overides the toString method.

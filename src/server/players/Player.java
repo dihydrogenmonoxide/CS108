@@ -4,6 +4,7 @@ import server.MainServer;
 import server.Server;
 import server.net.*;
 import shared.Log;
+import shared.Protocol;
 
 public class Player 
 implements Comparable<Player>
@@ -53,8 +54,8 @@ implements Comparable<Player>
 				if(play != this)
 				{
 					if(play.isInLobby())
-						ps_sock.sendData("LJOIN "+play.getID()+" "+play.getNick());
-					ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+						ps_sock.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
+					ps_sock.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
 				}
 					
 					
@@ -62,13 +63,13 @@ implements Comparable<Player>
 			}
 			for(Server s : MainServer.getServerManager().getServers())
 			{
-				ps_sock.sendData("GGAME "+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+				ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
 				for(Player p : s.getPlayers())
 				{
-					ps_sock.sendData("GJOIN "+s.getID()+" "+p.getID()+" "+p.getNick()); 
+					ps_sock.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
 				}
 			}
-			MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
+			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
 			b_NameSet = true;
 		}
 		else
@@ -147,7 +148,7 @@ implements Comparable<Player>
 	{
 		// TODO check why the player is instantly disconnected after losing the connection
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
-		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
+		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
 
 		b_ConnectionLost = true;
 		ps_sock.close();
@@ -181,7 +182,7 @@ implements Comparable<Player>
 	public void reconnect(PlayerSocket ps_socket) 
 	{
 		this.ps_sock = ps_socket;
-		MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" reconnected!", this);
+		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" reconnected!", this);
 		if(this.s_server != null)
 			this.s_server.resume();
 		
@@ -191,16 +192,16 @@ implements Comparable<Player>
 			if(play != this)
 			{
 				if(play.isInLobby())
-					ps_sock.sendData("LJOIN "+play.getID()+" "+play.getNick());
-				ps_sock.sendData("VNICK "+play.getID()+" "+play.getNick());
+					ps_sock.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
+				ps_sock.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
 			}			
 		}
 		for(Server s : MainServer.getServerManager().getServers())
 		{
-			ps_sock.sendData("GGAME "+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+			ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
 			for(Player p : s.getPlayers())
 			{
-				ps_sock.sendData("GJOIN "+s.getID()+" "+p.getID()+" "+p.getNick()); 
+				ps_sock.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
 			}
 		}
 	}
@@ -216,14 +217,14 @@ implements Comparable<Player>
 			b_quit = true;
 			MainServer.getPlayerManager().removePlayer(this);
 			if(this.b_ConnectionLost)
-				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" timed out.", this);
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" timed out.", this);
 			else
-				MainServer.getPlayerManager().broadcastMessage("CCHAT [SERVER]\t"+this.s_Nick+" quit.", this);
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" quit.", this);
 			
 			if(this.isInLobby())
-				MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+this.i_ID+" "+this.s_Nick);
+				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+this.i_ID+" "+this.s_Nick);
 			else
-				MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
+				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
 		}
 	}
 }

@@ -100,7 +100,6 @@ implements Comparable<Server>
 				if(p == p_player)
 				{
 					i_players.remove();
-					//TODO close the server if it was the last guy and broadcast that
 					MainServer.printInformation("Removed "+p.getNick()+" from "+this.s_servername);					
 				}
 			}

@@ -8,7 +8,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -16,10 +23,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import shared.Log;
 import shared.Protocol;
 
+import client.events.GameEvent;
+import client.events.GameEventListener;
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
 import client.events.NetEvent;
@@ -40,8 +51,11 @@ public class GamesPanel extends JPanel {
 	private JButton createButton;
 
 	/**holds all the open games.*/
-	private Vector<Vector> gamesData = new Vector();
-
+	private HashMap<Integer,GameOverview> games = new HashMap<Integer,GameOverview>();
+	
+	/**holding the info for the UI, just a simplified version of games*/
+	private Vector<Vector<String>> gamesData = new Vector<Vector<String>>();
+	
 	/**table with all the games.*/
 	private JTable gamesTable;
 
@@ -56,6 +70,74 @@ public class GamesPanel extends JPanel {
 
 	/**label where game options are shown.*/
 	private JLabel gameSettings;
+	
+
+	/**Inner class holding all the Infos about a game.*/
+	private class GameOverview {
+		/**the id of the game.*/
+		private int id;
+		/**how many players are in the game.*/
+		private int playerCount;
+		/**which players are in there.*/
+		private HashMap<Integer, String> players = new HashMap<Integer, String>();
+		/**the name of game ^^.*/
+		private String name;
+
+
+		/**initializes the game info from the Eventparser.
+		 * @param init the message from the parser.
+		 * */
+		public GameOverview(final String init)
+		{
+			id = Integer.valueOf((String) init.subSequence(0, 2));
+			playerCount = Integer.valueOf((String) init.subSequence(3, 4));
+			name = init.substring(5);
+			Log.DebugLog("GameOverview created: " + this.toString());
+		}
+		
+		/**returns an Vector containing the id, the playercount and the name.
+		 * @return the vector for the GUI.*/
+		public Vector<String> makeInfo()
+		{
+			Vector<String> r = new Vector<String>();
+			r.add(String.valueOf(id));
+			r.add(String.valueOf(playerCount));
+			r.add(name);
+			return r;
+		}
+		/**returns the id of the game.
+		 * @return id the id*/
+		public int getId()
+		{
+			return id;
+		}
+		/**returns how many players are in this game.
+		 * @return playerCount how many Players are in the game.*/
+		public int getPlayerCount()
+		{
+			return playerCount;
+		}
+		/**converts this to a String for logging.
+		 * @return String representation.*/
+		public String toString()
+		{
+			return id + " " + playerCount + " " + name;
+		}
+
+		/**adds a player to a game.
+		 * @param msg the message received by the parser.*/
+		public void addPlayer(String msg) {
+			Log.DebugLog("player added to game " + name + ":" + msg);
+			int playerId = Integer.valueOf((String) msg.subSequence(1, 3));
+			players.put(playerId, msg.substring(4));
+		}
+		/**removes a player from a game.
+		 * @param msg the message received by the parser.*/
+		public void removePlayer(String msg) {
+			int playerId = Integer.valueOf((String) msg.subSequence(1, 3));
+			players.remove(playerId);
+		}
+	}
 
 	/**creates a dialog where the user can join, create and start games.*/
 	public GamesPanel(Clientsocket s) 
@@ -175,6 +257,26 @@ public class GamesPanel extends JPanel {
 		
 		
 		// LISTENERS
+		gamesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
+				GameOverview g = games.get(Integer.valueOf(temp.get(0)));
+				if (g != null)
+				{
+					gameSettings.setText(g.toString());
+				}
+				else
+				{
+					gameSettings.setText("and now for something completely different");
+				}
+				//gameSettings.setText(temp.get(0) + " : " + temp.get(1) + " : " + temp.get(2));
+				
+			}
+			
+		});
+		
 		joinButton.addActionListener(new ActionListener(){
 
 			@Override
@@ -197,25 +299,46 @@ public class GamesPanel extends JPanel {
 					gamesTable.setEnabled(true);
 			}
 		});
+		
+		socket.addGameEventListener(new GameEventListener() {
+			@Override
+			public void received(GameEvent evt) {
+				Log.DebugLog("GamePanel received message "+evt.getMsg());
+				
+				GameOverview g = games.get(evt.getGame());
+				switch (evt.getType()){
+				case GAME_JOIN:
+					g.addPlayer(evt.getMsg());
+					break;
+				case GAME_QUIT:
+					g.removePlayer(evt.getMsg());
+					break;
+				default:
+					break;
+				}
+				
+			}
+
+			@Override
+			public void received(NetEvent evt) {
+			}
+			
+		});
 
 		socket.addLobbyEventListener(new LobbyEventListener()
 		{
 			@Override
 			public void received(final LobbyEvent evt) throws Exception 
 			{
-				Log.DebugLog("GAMELIST: " + evt.getSection());
-				Log.DebugLog("GAMELIST: " + evt.getMsg());
+				Log.DebugLog("GameList: " + evt.getSection() + " " + evt.getMsg());
 				String section = evt.getSection();
 				String message = evt.getMsg();
 				switch(section)
 				{
-				case "GAME":
-					Vector<String> temp = new Vector<String>();
-					temp.add((String) message.subSequence(0, 2));
-					temp.add((String) message.subSequence(3, 4));
-					temp.add(message.substring(5));
-					Log.DebugLog("Added game to list: " + temp.toString());
-					addToGameTable(temp);
+				case "GAME": //XXX not nice
+					GameOverview g = new GameOverview(message);
+					games.put(g.getId(), g);
+					refreshGameList();
 					break;
 				default:
 					break;
@@ -228,30 +351,34 @@ public class GamesPanel extends JPanel {
 			}
 		});
 	}
-	/**adds a server to the list.
-	 * Checks if there are duplicates and deletes them
-	 * @param v the vector to be added
+	/**refreshes a game to the list.
+	 * Checks if there are games with 0 players and deletes them
 	 * */
-	private void addToGameTable(final Vector<String> v)
-	{
-		Vector<String> temp = new Vector<String>();
-		//for the duplicates
-		for (Vector<String> t:gamesData)
+	private void refreshGameList() {
+		
+		Collection<GameOverview> c = games.values();
+		Iterator<GameOverview> gIter = c.iterator();
+
+		gamesData.clear();
+		//iterate through all games
+		while (gIter.hasNext())
 		{
-			if (t.get(0).equals(v.get(0)))
+			GameOverview g = gIter.next();
+
+			//remove all empty games
+			if (g.getPlayerCount() <= 0)
 			{
-				temp = t;
+				games.remove(g.getId());
 			}
-		}
-		gamesData.remove(temp);
-		if ( ! v.get(1).equals("0")) //only add if more than 0 player ^
-		{
-			gamesData.add(v);
+			else
+			{
+				gamesData.add(g.makeInfo());
+			}
 		}
 
 		gamesTable.updateUI();
 		gamesTable.repaint();
-		if(0<gamesTable.getRowCount())
+		if (0 < gamesTable.getRowCount())
 		{
 			joinButton.setEnabled(true);
 		}
@@ -259,5 +386,7 @@ public class GamesPanel extends JPanel {
 		{
 			joinButton.setEnabled(false);
 		}
+		
 	}
+	
 }

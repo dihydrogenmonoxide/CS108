@@ -220,10 +220,13 @@ public class ClientParser {
 			this.lobbyReceived(new LobbyEvent(msg, 12, "GAME", msg.substring(7)));
 			break;
 		case GAME_JOIN:
-			
+			Log.DebugLog("-->user joined game: " + msg);
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_JOIN, msg));
 			break;
 		
 		case GAME_QUIT:
+			Log.DebugLog("-->user quit game: " + msg);
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_QUIT, msg));
 			break;
 			
 		default:
@@ -400,7 +403,7 @@ public class ClientParser {
 	 */
 	public void addGameEventListener(GameEventListener listener) 
 	{
-		chatListeners.add(GameEventListener.class, listener);
+		gameListeners.add(GameEventListener.class, listener);
 	}
 
 	/**
@@ -409,7 +412,7 @@ public class ClientParser {
 	 */
 	public void removeGameEventListener(GameEventListener listener) 
 	{
-		chatListeners.remove(GameEventListener.class, listener);
+		gameListeners.remove(GameEventListener.class, listener);
 	}
 
 	/**

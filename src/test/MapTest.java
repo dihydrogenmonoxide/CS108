@@ -29,6 +29,7 @@ import shared.game.MapManager;
 
 public class MapTest
 {
+	private final static int xSize = 1300;
 
 	private JFrame frame;
 	private IMG iw;
@@ -72,7 +73,7 @@ public class MapTest
 		frame.setTitle("Map Test");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		iw = new IMG(1500);
+		iw = new IMG(xSize);
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
 		contentPane.setLayout(new BorderLayout(0, 0));

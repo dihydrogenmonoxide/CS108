@@ -51,9 +51,9 @@ public class GamesPanel extends JPanel {
 	private JButton createButton;
 
 	/**holds all the open games.*/
-	private HashMap<Integer,GameOverview> games = new HashMap<Integer,GameOverview>();
+	private HashMap<Integer, GameOverview> games = new HashMap<Integer, GameOverview>();
 	
-	/**holding the info for the UI, just a simplified version of games*/
+	/**holding the info for the UI, just a simplified version of games.*/
 	private Vector<Vector<String>> gamesData = new Vector<Vector<String>>();
 	
 	/**table with all the games.*/
@@ -126,14 +126,14 @@ public class GamesPanel extends JPanel {
 
 		/**adds a player to a game.
 		 * @param msg the message received by the parser.*/
-		public void addPlayer(String msg) {
+		public void addPlayer(final String msg) {
 			Log.DebugLog("player added to game " + name + ":" + msg);
 			int playerId = Integer.valueOf((String) msg.subSequence(1, 3));
 			players.put(playerId, msg.substring(4));
 		}
 		/**removes a player from a game.
 		 * @param msg the message received by the parser.*/
-		public void removePlayer(String msg) {
+		public void removePlayer(final String msg) {
 			int playerId = Integer.valueOf((String) msg.subSequence(1, 3));
 			players.remove(playerId);
 		}
@@ -269,7 +269,7 @@ public class GamesPanel extends JPanel {
 				}
 				else
 				{
-					gameSettings.setText("and now for something completely different");
+					gameSettings.setText("Please Select a game");
 				}
 				//gameSettings.setText(temp.get(0) + " : " + temp.get(1) + " : " + temp.get(2));
 				
@@ -284,7 +284,7 @@ public class GamesPanel extends JPanel {
 				if(0<=gamesTable.getSelectedRow())
 				{
 					Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
-					socket.sendData(Protocol.GAME_JOIN.toString()+" 2"+temp.get(0));
+					socket.sendData(Protocol.GAME_JOIN.str() + makeGameId(Integer.valueOf(temp.get(0))));
 					gamesTable.setEnabled(false);
 				}
 
@@ -388,5 +388,13 @@ public class GamesPanel extends JPanel {
 		}
 		
 	}
-	
+	/**formats an int to an correct gameId eg 2XX.
+	 * @param i the int.
+	 * @return the proper GameId.
+	 * */
+	public final String makeGameId(final int i)
+	{
+		String str = "2" + String.format("%02d", i);
+		return str;
+	}
 }

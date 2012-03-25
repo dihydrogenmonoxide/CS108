@@ -16,7 +16,7 @@ public class MapManager
 	private final static Color polyFillColor = new Color(0, 0, 0);
 	private final static Color highlightLineColor = new Color(0, 255, 0);
 	private final static Color highlightFillColor = new Color(0, 0, 125);
-	private final static int numSteps = 20;
+	private final static int numSteps = 10;
 	private final static int stepSize = 1000;
 
 

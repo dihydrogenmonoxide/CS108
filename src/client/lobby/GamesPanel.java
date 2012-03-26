@@ -292,7 +292,7 @@ public class GamesPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game=new GameFrame();
+				game=new GameFrame(lobbyParent);
 				lobbyParent.setVisible(false);
 				
 			}

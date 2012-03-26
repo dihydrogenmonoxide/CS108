@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import server.players.*;
+import shared.Protocol;
 public class Server 
 implements Comparable<Server>
 {
@@ -23,7 +24,7 @@ implements Comparable<Server>
 		i_ServerID = i_ID+200;
 		MainServer.getServerManager().addServer(this);
 		MainServer.printInformation("New server '"+s_servername+"' created");
-		MainServer.getPlayerManager().broadcastMessage_everyone("GGAME "+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
 	
@@ -50,9 +51,9 @@ implements Comparable<Server>
 	{	
 		p_Player.setServer(this);
 		process(p_Player, true);
-		MainServer.getPlayerManager().broadcastMessage_everyone("GJOIN "+this.i_ServerID+" "+p_Player.getID()+" "+p_Player.getNick());
-		MainServer.getPlayerManager().broadcastMessage_everyone("LQUIT "+p_Player.getID());
-		MainServer.getPlayerManager().broadcastMessage_everyone("GGAME "+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_JOIN.str()+this.i_ServerID+" "+p_Player.getID()+" "+p_Player.getNick());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+p_Player.getID());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
 	/**
@@ -73,14 +74,14 @@ implements Comparable<Server>
 	{
 		p_player.setServer(null);
 		process(p_player, false);
-		MainServer.getPlayerManager().broadcastMessage_everyone("LJOIN "+p_player.getID());
-		MainServer.getPlayerManager().broadcastMessage_everyone("GQUIT "+this.i_ServerID+" "+p_player.getID()+" "+p_player.getNick());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+p_player.getID());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.i_ServerID+" "+p_player.getID()+" "+p_player.getNick());
 		if(this.getPlayerAmount() == 0)
 		{
 			MainServer.getServerManager().removeServer(this);
 			MainServer.printInformation("Server '"+s_servername+"' closed");
 		}			
-		MainServer.getPlayerManager().broadcastMessage_everyone("GGAME "+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
 	private synchronized void process(Player p_player, boolean b_add)
@@ -99,7 +100,6 @@ implements Comparable<Server>
 				if(p == p_player)
 				{
 					i_players.remove();
-					//TODO close the server if it was the last guy and broadcast that
 					MainServer.printInformation("Removed "+p.getNick()+" from "+this.s_servername);					
 				}
 			}

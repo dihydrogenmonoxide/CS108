@@ -15,6 +15,7 @@ import client.net.Clientsocket;
 import client.net.NetworkException;
 
 import shared.Log;
+import shared.Protocol;
 import shared.ServerAddress;
 import shared.SocketCreationException;
 import shared.User;
@@ -66,29 +67,7 @@ public class ClientLobby extends JFrame {
 		
 
 
-		/*
-		 * Set up background
-		 * The bg-image is drawn in a JPanel which is laid under all the other panes with User-IO
-		 * */
-		JPanel bg = new JPanel()
-		{
-			private static final long serialVersionUID = 1L;
-			
-			/**paint the swiss map in the background*/
-			public void paintComponent(Graphics g)
-			{
-				BufferedImage img = null;
-				try 
-				{
-					img = ImageIO.read(new File("lobby_bg.jpg"));
-					g.drawImage(img, 0, 0, iLobbyX, iLobbyY, 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		};
+		JPanel bg = createBackground();
 		
 		/*
 		 * Set up lobby / inputs
@@ -97,7 +76,7 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lobbyParent.setSize(iLobbyX, iLobbyY);
 		lobbyParent.setResizable(false);
-		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
+		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyY / 2);
 		lobbyParent.setContentPane(bg);
 		
 		s = new SelectServer(user);
@@ -123,15 +102,15 @@ public class ClientLobby extends JFrame {
 					lobbyParent.add(l);
 					
 					//request nick
-					socket.sendData("VNICK " + desiredNick);
+					socket.sendData(Protocol.CON_NICK.str() + desiredNick);
 					
 					//TODO Game Listener to start game here.
 					
 					socket.addInfoEventListener(new InfoEventListener()
 					{
 						@Override
-						public void received(InfoEvent evt){
-							 if(evt.getId()==-1)
+						public void received(final InfoEvent evt){
+							 if (evt.getId() == -1)
 							 {
 								Log.InformationLog("Connection to server broken, starting ServerSelect");
 								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
@@ -149,10 +128,10 @@ public class ClientLobby extends JFrame {
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					//e.printStackTrace();
 					Log.WarningLog("-->connection broken, could not connect");
 					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
-					socket.disconnect();
+					if (socket != null) { socket.disconnect(); }
 					s.setVisible(true);
 					s.startSearch();
 					
@@ -165,6 +144,35 @@ public class ClientLobby extends JFrame {
 
 
 		lobbyParent.setVisible(true);
+	}
+
+	/**
+	 * Set up background.
+	 * The bg-image is drawn in a JPanel which is laid under all the other panes with User-IO
+	 * @return bg a panel with the desired background.
+	 */
+	private JPanel createBackground() {
+		
+		JPanel bg = new JPanel()
+		{
+			private static final long serialVersionUID = 1L;
+			
+			/**paint the swiss map in the background*/
+			public void paintComponent(Graphics g)
+			{
+				BufferedImage img = null;
+				try 
+				{
+					img = ImageIO.read(new File("lobby_bg.jpg"));
+					g.drawImage(img, 0, 0, iLobbyX, iLobbyY, 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
+				} 
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		};
+		return bg;
 	}
 
 

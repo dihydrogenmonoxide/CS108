@@ -13,6 +13,7 @@ import server.MainServer;
 import server.parser.Parser;
 import server.players.Player;
 import shared.Log;
+import shared.Protocol;
 
 public class PlayerSocket
 implements Runnable
@@ -99,7 +100,7 @@ implements Runnable
 								if(bq_Queue.isEmpty() && !this.S_socket.isClosed() && b_active)
 								{
 									//the wait was interrupted by a timeout, this client has lost the connection!
-									this.P_Parser.Parse("VTOUT "+i_Timeout, this);
+									this.P_Parser.Parse(Protocol.CON_TIMEOUT.str()+i_Timeout, this);
 									this.b_active = false;
 									this.S_socket.close();
 									if(this.getPlayer() != null)
@@ -254,7 +255,7 @@ implements Runnable
 	 */
 	public void close()
 	{
-		this.sendData("VEXIT");
+		this.sendData(Protocol.CON_EXIT.toString());
 		this.p_player.disconnect();
 		this.b_active = false;
 		

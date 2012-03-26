@@ -22,6 +22,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
 
 import shared.Log;
+import shared.Protocol;
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.NetEvent;
@@ -161,13 +162,13 @@ public class ChatPanel extends JPanel {
 					message = InputValidator.ChatMessage(inputChat.getText());
 					if (message.subSequence(0, 1).equals("/"))
 					{
-						switch (message.substring(0, 4))
+						if (message.substring(0, 4).equalsIgnoreCase(Protocol.CHAT_PREF_PRIVATE.toString()))
 						{
-							case "/msg":
 								Log.InformationLog("Chat sending private message: " + message);
 								socket.sendChatMessage(message);
-								break;
-						default:
+						}
+						else
+						{
 						Log.InformationLog("Chat sending command: " + message.substring(1));
 						socket.sendData(message.substring(1));	
 						}
@@ -214,7 +215,7 @@ public class ChatPanel extends JPanel {
 			@Override
 			public void keyReleased(final KeyEvent arg0) 
 			{
-				boolean chatMsgValid = 3 < inputChat.getText().length();
+				boolean chatMsgValid = 1 <= inputChat.getText().length();
 				sendButton.setEnabled(chatMsgValid);
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER && chatMsgValid)
 				{

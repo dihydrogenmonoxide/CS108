@@ -74,13 +74,15 @@ public class GamesPanel extends JPanel {
 	/**Button to start a game*/
 	private JButton startButton;
 	
+	/**how many players are in the game.*/
+	public int playerCount;
+	
 
 	/**Inner class holding all the Infos about a game.*/
 	private class GameOverview {
 		/**the id of the game.*/
 		private int id;
-		/**how many players are in the game.*/
-		private int playerCount;
+
 		/**which players are in there.*/
 		private HashMap<Integer, String> players = new HashMap<Integer, String>();
 		/**the name of game ^^.*/
@@ -269,6 +271,26 @@ public class GamesPanel extends JPanel {
 		
 
 		this.setOpaque(false);
+		
+		
+		createButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				socket.sendData(Protocol.GAME_MAKE.toString());
+				
+			}
+		});
+		
+		startButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new GameFrame();
+				ClientLobby.close();
+				
+			}
+		});
 		
 		
 		// LISTENERS

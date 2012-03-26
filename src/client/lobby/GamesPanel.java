@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -76,6 +77,9 @@ public class GamesPanel extends JPanel {
 	
 	/**how many players are in the game.*/
 	public int playerCount;
+	
+	/**Frame which contains the GUI for the Game*/
+	GameFrame game;
 	
 
 	/**Inner class holding all the Infos about a game.*/
@@ -144,8 +148,9 @@ public class GamesPanel extends JPanel {
 		}
 	}
 
-	/**creates a dialog where the user can join, create and start games.*/
-	public GamesPanel(Clientsocket s) 
+	/**creates a dialog where the user can join, create and start games.
+	 * @param lobbyParent */
+	public GamesPanel(Clientsocket s, final JFrame lobbyParent) 
 	{
 		this.socket = s;
 
@@ -286,8 +291,8 @@ public class GamesPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new GameFrame();
-				ClientLobby.close();
+				game=new GameFrame();
+				lobbyParent.setVisible(false);
 				
 			}
 		});

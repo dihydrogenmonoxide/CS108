@@ -2,6 +2,7 @@ package client.lobby;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

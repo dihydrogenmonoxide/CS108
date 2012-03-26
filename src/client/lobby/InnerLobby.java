@@ -15,6 +15,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -55,14 +56,14 @@ public class InnerLobby extends JPanel {
 	/**initializes the Lobby.
 	 * @param s the socket to the server
 	 * @param u the current user*/
-	public InnerLobby(final Clientsocket s, final User u){
+	public InnerLobby(final Clientsocket s, final User u, JFrame lobbyParent){
 		this.user = u;
 		this.socket = s;
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
-		GamesPanel games = new GamesPanel(socket);
+		GamesPanel games = new GamesPanel(socket, lobbyParent);
 		c.ipady = 2;
 		c.weightx = 0.0;
 		c.gridwidth = 1;

@@ -37,7 +37,7 @@ public class ClientLobby extends JFrame {
 	private int screenY;
 
 	/**JFrame which contains the GUI for the Lobby.*/
-	private static JFrame lobbyParent;
+	public JFrame lobbyParent;
 	/**width of the lobby in pixel.*/
 	private int iLobbyX = 900; 
 	/**height of the lobby in pixel.*/
@@ -100,7 +100,7 @@ public class ClientLobby extends JFrame {
 					socket = new Clientsocket(server);
 					//JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
 					
-					l = new InnerLobby(socket, user);
+					l = new InnerLobby(socket, user, lobbyParent);
 					lobbyParent.add(l);
 					
 					//request nick
@@ -178,9 +178,7 @@ public class ClientLobby extends JFrame {
 		};
 		return bg;
 	}
-	public static void close(){
-		lobbyParent.dispose();
-	}
+
 
 
 }

@@ -71,6 +71,9 @@ public class GamesPanel extends JPanel {
 	/**label where game options are shown.*/
 	private JLabel gameSettings;
 	
+	/**Button to start a game*/
+	private JButton startButton;
+	
 
 	/**Inner class holding all the Infos about a game.*/
 	private class GameOverview {
@@ -197,12 +200,13 @@ public class GamesPanel extends JPanel {
 		this.add(gameSettings, c);
 
 		joinButton = new JButton("beitreten");
+		//gamesScroll.setPreferredSize(new Dimension(20, 20));
 		c.fill = GridBagConstraints.HORIZONTAL;
 		joinButton.setEnabled(false);
 		c.ipady = 1;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 14;
 		this.add(joinButton, c);
 
@@ -214,7 +218,7 @@ public class GamesPanel extends JPanel {
 		c.ipady = 1;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
-		c.gridx = 2;
+		c.gridx = 3;
 		c.gridy = 14;
 		this.add(leaveButton, c);
 		
@@ -246,12 +250,23 @@ public class GamesPanel extends JPanel {
 		createScroll.setPreferredSize(new Dimension(20, 20));
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 2;
+		c.ipady = 1;
 		c.weightx = 0.0;
 		c.gridwidth = 1;
-		c.gridx = 2;
+		c.gridx = 1;
 		c.gridy = 27;
 		this.add(createButton, c);
+		
+		startButton = new JButton("Spiel starten");
+		startButton.setEnabled(true);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx=0.0;
+		c.gridwidth=1;
+		c.gridx=3;
+		c.gridy=27;
+		this.add(startButton,c);
+		
+		
 
 		this.setOpaque(false);
 		

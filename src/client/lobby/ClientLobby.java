@@ -76,7 +76,7 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lobbyParent.setSize(iLobbyX, iLobbyY);
 		lobbyParent.setResizable(false);
-		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
+		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyY / 2);
 		lobbyParent.setContentPane(bg);
 		
 		s = new SelectServer(user);

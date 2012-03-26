@@ -21,6 +21,7 @@ import shared.SocketCreationException;
 import shared.User;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -36,7 +37,7 @@ public class ClientLobby extends JFrame {
 	private int screenY;
 
 	/**JFrame which contains the GUI for the Lobby.*/
-	private JFrame lobbyParent;
+	private static JFrame lobbyParent;
 	/**width of the lobby in pixel.*/
 	private int iLobbyX = 900; 
 	/**height of the lobby in pixel.*/
@@ -51,11 +52,12 @@ public class ClientLobby extends JFrame {
 	/**the User which holds all User based Infos.*/
 	private User user;
 	
+	
 	/**creates the lobby.*/
 	public ClientLobby(User u)
 	{
 		this.user = u;
-		
+
 		/*
 		 * Get Infos about the screen
 		 * */
@@ -76,7 +78,7 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lobbyParent.setSize(iLobbyX, iLobbyY);
 		lobbyParent.setResizable(false);
-		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyX / 2);
+		lobbyParent.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyY / 2);
 		lobbyParent.setContentPane(bg);
 		
 		s = new SelectServer(user);
@@ -145,6 +147,8 @@ public class ClientLobby extends JFrame {
 
 		lobbyParent.setVisible(true);
 	}
+	
+	
 
 	/**
 	 * Set up background.
@@ -174,7 +178,9 @@ public class ClientLobby extends JFrame {
 		};
 		return bg;
 	}
-
+	public static void close(){
+		lobbyParent.dispose();
+	}
 
 
 }

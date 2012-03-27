@@ -1,20 +1,22 @@
 package client.events;
 
+import shared.Protocol;
+
 /**
  * Event which is fired when the clientsocket receives information for the lobby.
  * */
 public class LobbyEvent extends NetEvent 
 {
-	private String section;
+	private Protocol section;
 	private String message;
 	
-	public LobbyEvent(Object arg0, int Id, String id, String msg) 
+	public LobbyEvent(Object arg0, int Id, Protocol lobbyUpdate, String msg) 
 	{
 		super(arg0, Id);
-		this.section = id;
+		this.section = lobbyUpdate;
 		this.message = msg;
 	}
-	public String getSection(){
+	public Protocol getSection(){
 		return section;
 	}
 	public String getMsg(){

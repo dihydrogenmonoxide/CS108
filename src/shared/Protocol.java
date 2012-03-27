@@ -37,6 +37,8 @@ public enum Protocol {
 	CON_ERROR(CONNECTION, "ERRO"),
 	/**requesting the id.*/
 	CON_MY_ID(CONNECTION, "MYID"),
+	/**update the Lobby.*/
+	LOBBY_UPDATE(LOBBY, "UPDT"),
 	/**quit the lobby.*/
 	LOBBY_QUIT(LOBBY, "QUIT"),
 	/**join the lobby.*/

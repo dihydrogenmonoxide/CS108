@@ -8,6 +8,7 @@ import javax.swing.text.StyleConstants;
 
 import shared.Log;
 import shared.Protocol;
+import client.data.PlayerManager;
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.GameEvent;
@@ -24,8 +25,6 @@ import client.events.ServerSelectedListener;
  * */
 public class ClientParser {
 	
-	/**assigns each userid a nickname.*/
-	private HashMap<String, String> users = new HashMap<String, String>();
 	/**assigns each gameID a gameName.*/
 	private HashMap<String, String> games = new HashMap<String, String>();
 
@@ -44,7 +43,7 @@ public class ClientParser {
 	/**holds the default attributes for messages.*/
 	private SimpleAttributeSet defaultStyle;
 
-	/**receives a String and fires the appropiate Event.
+	/**receives a String and fires the apropiate Event.
 	 * This method receives a String from the socket and then determines
 	 * the correct event / action to be taken.
 	 * @param msg the message to be evaluated.
@@ -81,7 +80,7 @@ public class ClientParser {
 			 * Type of messages:
 			 * V : message concerning the connection between client and server
 			 * G : message concerning the game
-			 * L : message conecerning the lobby
+			 * L : message concerning the lobby
 			 * C : chat messages
 			 * */
 			switch(section)
@@ -105,6 +104,8 @@ public class ClientParser {
 		catch (final Exception e)
 		{
 			Log.ErrorLog("Parser, error could not parse message");
+			Log.ErrorLog("--- " + msg + " ---");
+			//e.printStackTrace();
 		}
 	}
 
@@ -183,18 +184,37 @@ public class ClientParser {
 	 * */
 	private void handleNickChange(final String msg, SimpleAttributeSet attrs) {
 		Log.DebugLog(msg);
-		String oldNick = users.get(msg.subSequence(7, 9));
+		String oldNick = PlayerManager.getNamebyId(getId(msg));
 		if (oldNick != null)
 		{	
-			Log.DebugLog("--> nickchange: " + oldNick + " to " + msg.substring(10));
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>changed Nick: " + oldNick + " to " + msg.substring(10), attrs));
+			if(oldNick.equals(getArgument(msg)))
+			{
+				Log.DebugLog("--> nickchange, but same nick as before: " + oldNick);
+			}
+			else
+			{
+				Log.DebugLog("--> nickchange: " + oldNick + " to " + getArgument(msg));
+				this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>changed Nick: " + oldNick + " to " + getArgument(msg), attrs));
+			}
 		}
 		else
 		{
-			Log.DebugLog("--> new nick: " + msg.substring(10));
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>new User : " + msg.substring(10), attrs));
+			Log.DebugLog("--> new nick: " + getArgument(msg));
+			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>new User : " + getArgument(msg), attrs));
 		}
-		users.put((String) msg.subSequence(7, 9), (String) msg.substring(10));
+		PlayerManager.addPlayer(getId(msg), (String) getArgument(msg));
+	}
+
+	/**Extracts the Argument of a received message after the id.*/
+	private String getArgument(final String msg) {
+		return msg.substring(10);
+	}
+
+	/**extracts the first Game / User or Object id from a message
+	 * e.g. "GJOIN 101 oliver"   --> result will be "101" 
+	 * @param msg the message received by the parser, with the command.*/
+	private String getId(final String msg) {
+		return (String) msg.subSequence(6, 9);
 	}
 
 
@@ -251,14 +271,14 @@ public class ClientParser {
 		switch(command)
 		{
 		case LOBBY_QUIT:
-			if (users.get(msg.subSequence(7, 9)) == null) { return; }
+			if (PlayerManager.getNamebyId(getId(msg)) == null) { return; }
 			Log.DebugLog("-->User quit lobby");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User left for a game: " + users.get(msg.subSequence(7, 9)), defaultStyle));
+			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User left for a game: " + PlayerManager.getNamebyId(getId(msg)), defaultStyle));
 			break;
 		case LOBBY_JOIN:
-			if (users.get(msg.subSequence(7, 9)) == null) { return; }
+			if (PlayerManager.getNamebyId((String) msg.subSequence(7, 9)) == null) { return; }
 			Log.DebugLog("-->User joined");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User joined lobby: " + users.get(msg.subSequence(7, 9)), defaultStyle));
+			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User joined lobby: " + PlayerManager.getNamebyId(getId(msg)), defaultStyle));
 			break;
 		default:
 			Log.DebugLog("-->wrong format");

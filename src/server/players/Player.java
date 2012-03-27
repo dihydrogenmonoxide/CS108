@@ -18,6 +18,8 @@ implements Comparable<Player>
 	private boolean b_NameSet = false;
 	private boolean b_quit = false;
 	private boolean b_ConnectionLost = false;
+	private int fieldID = 0;
+	private long money = 0;
 	/**
 	 * Creates a new Player on the Server;
 	 * @param s_ID The unique token the Server assigned
@@ -35,6 +37,42 @@ implements Comparable<Player>
 	public int compareTo(Player o)
 	{
 		return o.i_ID-this.i_ID;
+	}
+	
+	/**
+	 * Returns the Field ID if the Player is on a Server (otherwise returns 0)
+	 * @return the field ID
+	 */
+	public int getFieldID()
+	{
+		return this.fieldID;
+	}
+	
+	/**
+	 * Returns the amount of money a player owns
+	 * @return the amount of money
+	 */
+	public long getMoney()
+	{
+		return money;
+	}
+	
+	/**
+	 * Removes the specified amount of money off this players account (does not check whether this player still owns, this is checked by the object constructor)
+	 * @param money removes this amount of money off the players account
+	 */
+	public void removeMoney(long money)
+	{
+		this.money -= money;
+	}
+	
+	/**
+	 * Adds this amount of money the the players account
+	 * @param money adds it to the players account
+	 */
+	public void addMoney(long money)
+	{
+		this.money += money;
 	}
 	
 	/**

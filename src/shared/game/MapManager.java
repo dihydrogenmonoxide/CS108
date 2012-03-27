@@ -211,7 +211,7 @@ public class MapManager
 	 * @param yCoordinate the y Coordinate (100'000 - 300'000)
 	 * @return whether it is inside the field or not
 	 */
-	private static boolean isInside(int fieldNumber, int xCoordinate, int yCoordinate)
+	public static boolean isInside(int fieldNumber, int xCoordinate, int yCoordinate)
 	{
 		float x = xCoordinate - 450000;
 		float y = yCoordinate - 100000;
@@ -229,7 +229,7 @@ public class MapManager
 	 * @param yCoordinate the y Coordinate (100'000 - 300'000)
 	 * @return the fieldID
 	 */
-	private static int getFieldNumber(int xCoordinate, int yCoordinate)
+	public static int getFieldNumber(int xCoordinate, int yCoordinate)
 	{
 		float x = xCoordinate - 450000;
 		float y = yCoordinate - 100000;

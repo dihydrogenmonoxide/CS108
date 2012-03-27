@@ -1,7 +1,10 @@
-<<<<<<< HEAD
 package server.GamePlayObjects;
 
-import shared.Coordinates;
+import java.util.LinkedList;
+
+import server.exceptions.GameObjectBuildException;
+import shared.game.Coordinates;
+import shared.game.MapManager;
 import shared.User;
 
 /**
@@ -11,7 +14,8 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Tank extends Unit implements GamePlayObject, InterAct {
+public class Tank extends Defensive implements GamePlayObject, InterAct {
+	private int id;
 	private Coordinates position;
 	private int healthPoints;
 	private int range;
@@ -19,36 +23,79 @@ public class Tank extends Unit implements GamePlayObject, InterAct {
 	private Coordinates target;
 	private int movingRange;
 	private User Owner;
+	private LinkedList<GamePlayObject> possibleTargets;
+	public GamePlayObjectManager Manager;
+	private int ammunation;
+	private int price;
+	private Coordinates PosAtEnd;
 
-	public Tank(Coordinates pos, User owner) {
+	public Tank(Coordinates pos, User owner, GamePlayObjectManager manager)
+			throws GameObjectBuildException {
+
 		this.position = pos;
-		this.healthPoints = 1000;
-		this.range = 10;
-		this.attackPoints = 20;
-		this.build();
-		this.Owner = owner;
-		this.movingRange = 50;
+		this.healthPoints = Settings.Tank.healthPoints;
+		this.range = Settings.Tank.attackRange;
+		this.attackPoints = Settings.Tank.attackPoints;
 
+		this.Owner = owner;
+		this.movingRange = Settings.Tank.movingRange;
+		this.Manager = manager;
+		this.possibleTargets = new LinkedList<GamePlayObject>();
+		this.ammunation = Settings.Tank.ammunation;
+		this.price = Settings.Tank.price;
+		this.build();
+
+	}
+
+	/**
+	 * Funktionsrumpf für die Drawfunktion des Clients.
+	 * 
+	 */
+	public int getId() {
+		return this.id;
 	}
 
 	public void draw() {
 	}
 
+	/**
+	 * Returns the Coordinates
+	 */
 	public Coordinates getPos() {
 		return this.position;
+	}
+
+	/**
+	 * Returns the Position the Tank will have at the of the Round.
+	 * 
+	 * @return Position at the End of the Round.
+	 */
+	public Coordinates getPosAtEnd() {
+		return this.PosAtEnd;
+
 	}
 
 	/**
 	 * Asks the Server if the Object can be build here. //If true, the Object
 	 * gets build.
 	 * 
+	 * @throws GameObjectBuildException
+	 * 
 	 */
-	public void build() {
-		/*
-		 * To Do: Ask the Server if a Tank can be build at this.position if
-		 * True, build the Object. if false, destroi it and message to Client:
-		 * Can't be build here
-		 */
+	public void build() throws GameObjectBuildException {
+
+		// To Do, CHeck if the Coordinates are in the Players Territorry.
+
+		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+				|| this.position.getY() <= 100000
+				|| this.position.getY() >= 300000) {
+			throw new GameObjectBuildException("Wrong Position");
+
+		} else if (false) {
+		} else {
+			Manager.addDefensive(this);
+			Manager.addUnit(this);
+		}
 
 	}
 
@@ -56,8 +103,20 @@ public class Tank extends Unit implements GamePlayObject, InterAct {
 	 * Deletes all References //that the GarbageCollector kills the Object.
 	 * 
 	 */
+	public void saveLiving(){
+		if(this.getHealthPoints()>0)
+		{
+			Manager.addDefensive(this);
+			Manager.addUnit(this);
+		}
+		
+	}
+	/**
+	 * never used.
+	 */
 	public void destruct() {
-		// To do: set all references to null
+		Manager.removeDefensive(this);
+		Manager.removeUnit(this);
 
 	}
 
@@ -76,9 +135,7 @@ public class Tank extends Unit implements GamePlayObject, InterAct {
 	 */
 	public void damage(int damPoints) {
 		this.healthPoints -= damPoints;
-		if (this.getHealthPoints() <= 0) {
-			this.destruct();
-		}
+		
 
 	}
 
@@ -95,13 +152,59 @@ public class Tank extends Unit implements GamePlayObject, InterAct {
 	 * Attack the target
 	 * 
 	 */
+	public GamePlayObject selectTarget() {
+		if (this.possibleTargets.isEmpty())
+			return null;
+		
+		GamePlayObject G = this.possibleTargets.peek();
+		while(G.getHealthPoints()<=0 && !this.possibleTargets.isEmpty())
+		{
+			G=this.possibleTargets.pop();
+			
+		}
+		if (this.possibleTargets.isEmpty())
+			return null;
+		return G;
 
-	public void attack(GamePlayObject target) {
-		if (this.isAttackableObject(target) && this.isInRange(target)) {
-			target.damage(this.getAttackPoints());
+	}
 
+	public void addToPossibleTargets(GamePlayObject O) {
+		if (this.possibleTargets.contains(O)) {
 		}
 
+		else {
+			if (this.isAttackableObject(O)) {
+				this.possibleTargets.add(O);
+
+			}
+		}
+
+	}
+	/**
+	 * Clears the Targetlist
+	 */
+	public void clearTargetList() {
+		this.possibleTargets.clear();
+
+	}
+
+	/**
+	 * Attacks the first Target in the List while it isnt dead and the ammunation is >0
+	 */
+	public void attack() {
+		try {
+			while (this.ammunation > 0) {
+				while(this.selectTarget().getHealthPoints()<0)
+				{}
+				this.selectTarget().damage(getAttackPoints());
+				System.out.println("Attacked");
+				this.ammunation--;
+				System.out.println(this.getOwner().getUserName()+" attacked" +this.selectTarget().getOwner().getUserName());
+			}
+		} catch (NullPointerException e) {
+		} finally {
+			this.ammunation = Settings.Tank.ammunation;
+		}
 	}
 
 	/**
@@ -168,170 +271,120 @@ public class Tank extends Unit implements GamePlayObject, InterAct {
 	}
 
 	/**
-	 * Moves the Object to its Target. Because of DivisionbynullException and
-	 * Overflowing he moves as long as the X or Y coordinates are not Reached
-	 * with a Stepsize of 10 for X, and an Y Stepsize of deltaY/deltaX*10
+	 * Send the Move to all other Defensive Objects
+	 * Moves the Object to its Target. 
 	 * 
 	 */
 	public void move() {
-		int direction = 1;
-		int alreadyMovedSquared = 0;
-		double deltaY = this.target.getY() - this.position.getY();
-		double deltaX = this.target.getX() - this.position.getX();
+		this.Manager.sendMoving(this.getPosAtEnd(), this);
+		this.position = this.getPosAtEnd();
+	}
+	/**
+	 * Calculates the Move of this Round.
+	 */
+	public void moveProv() {
+		
+		
+		if (this.getTarget() == null || this.getTarget().equals(this.getPos())) {
+			this.setTarget(this.getPos());
+			this.PosAtEnd = this.getPos();
 
-		if (deltaY < 0 && deltaX < 0)
-			direction = -1;
-		while (target != null
-				&& !(this.target.getX() == this.position.getX() && this.target
-						.getY() == this.position.getY())
-				&& alreadyMovedSquared <= this.movingRange * this.movingRange) {
-
-			if (this.target.getX() == this.position.getX()) {
-				this.position.moveY(1);
-				alreadyMovedSquared++;
-
-			} else if (this.target.getY() == this.position.getY()) {
-				this.position.moveX(1);
-				alreadyMovedSquared++;
-
-			} else {
-
-				this.position.moveX(10*direction);
-
-				int mY = (int) Math.round(deltaY / deltaX * direction * 10);
-
-				this.position.moveY(mY);
-
-				alreadyMovedSquared += 100 + mY;
-			}
+		}
+		if (this.position.getDistance(getTarget()) <= this.movingRange) {
+			
+			this.PosAtEnd = new Coordinates(getTarget().getX(), getTarget()
+					.getY());
 
 		}
 
-	}
-}
-=======
-package server.GamePlayObjects;
+		else {
+			
+			double direction = (getTarget().getY() - this.position.getY())
+					/ (getTarget().getX() - this.position.getX());
+			
+			int deltaX = (int) Math.round(Math.sqrt((this.movingRange*this.movingRange)
+					/ (1 + (direction*direction))));
+			int deltaY = (int) Math.round(deltaX * direction);
+			
+			
 
-import shared.User;
-import shared.game.Coordinates;
+			 if(getTarget().getY() - this.position.getY()<0)
+			 {
+				 if(deltaY<0)
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveY(deltaY);
+				 }
+				 else
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveY(-deltaY);
+				 }
+					 
+			 }
+			 else
+				 if(deltaY<0)
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveY(-deltaY);
+				 }
+				 else
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveY(deltaY);
+				 }
+			 if(getTarget().getX() - this.position.getX()<0)
+			 {
+				 if(deltaX<0)
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveX(deltaX);
+				 }
+				 else
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveX(-deltaX);
+				 }
+					 
+			 }
+			 else
+				 if(deltaX<0)
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveX(-deltaX);
+				 }
+				 else
+				 {
+					 this.PosAtEnd=this.getPos();
+					 this.PosAtEnd.moveX(deltaX);
+				 }
+				
+			
+			
 
-public class Tank extends Unit implements GamePlayObject, InterAct{
-	private Coordinates position;
-	private int healthPoints;
-	private int range;
-	private int attackPoints;
-	private Coordinates target;
-	private int movingRange;
-	private User Owner;
-	
-	public Tank(Coordinates pos, User owner){
-		this.position=pos;
-		this.healthPoints=1000;
-		this.range=10;
-		this.attackPoints=20;
-		this.build();
-		this.Owner=owner;
-		
-	}
-	public void draw(){}
-	
-	public Coordinates getPos(){
-		return this.position;
-	}
-	
-	//Asks the Server if the Object can be build here.
-	//If true, the Object gets build.
-	public void build(){
-		/*To Do: Ask the Server if a Tank can be build at this.position
-		 * if True, build the Object.
-		 * if false, destroi it and message to Client: Can't be build here
-		 */
-		
-	}
-	
-	//Loads the Animation of its destruction and deletes all References
-	//that the GarbageCollector kills the Object.
-	public void destruct(){
-		// To do: set all references to null
-		
-		
-	}
-	
-	//Returns the Health Points of the Object
-	public int getHealthPoints(){
-		
-		return this.healthPoints;
-	}
-	
-	//Hits this Object with Damage.
-	public void damage(int damPoints){
-		this.healthPoints-=damPoints;
-		if(this.getHealthPoints()<=0)
-		{
-			this.destruct();
 		}
 		
 	}
-	
-	//get the Range of the Tank
-	public int getRange() {
+	/**
+	 * CHecks if the GamePlayObject O moves through its Range, and adds it to the possibleTargetList if its so
+	 */
+	public void checkLine(Coordinates Target, GamePlayObject O) {
 		
-		return this.range;
-	}
-	
-	//Attack the target
-	@Override
-	public void attack(GamePlayObject target) {
-		if(this.isAttackableObject(target) && this.isInRange(target))
-		{
-			target.damage(this.getAttackPoints());
+		if (CircleTest.checkLine(Target.getX(), Target.getY(), O.getPos()
+				.getX(), O.getPos().getY(), this.PosAtEnd.getX(), this.PosAtEnd
+				.getY(), this.getRange())
+				&& this.isAttackableObject(O)) {
+			this.possibleTargets.add(O);
+			System.out.println(O.getOwner().getUserName()+"added to the List of "+this.getOwner().getUserName());
+			
 			
 		}
-		
-	}
-	
-	//get the Tank's AttackPoints
-	private int getAttackPoints() {
-		
-		return this.attackPoints;
-	}
-	
-	//is the target in the Tank's Range
-	@Override
-	public boolean isInRange(GamePlayObject target) {
-		if(this.range>=this.position.getDistance(target.getPos()))return true;
-		return false;
-	}
-	
-	//is the target Attackable by a Tank
-	@Override
-	public boolean isAttackableObject(GamePlayObject target) {
-		
-		return true;//this is for Testing, that Tank1 can Attack Tank2 in the Test.
-					//Remark that Tank3 is out of Range!!!
-		
-		//The Code below works too.
-		//if( target instanceof Building && this.getOwner()!=target.getOwner())return true;
-		//return false;
-	}
-	
-	//get the current Target of the Tank.
-	public Coordinates getTarget(){
-		
-		return this.target;
-		
-	}
-	
-	
-	public void setTarget(Coordinates target){
-		
-			this.target=target;
-	}
-	
 
-	public User getOwner(){
-		return this.Owner;
-		
+	}
+
+	/**
+	 * sensless, but must be implemented.
+	 */
+	public void attack(GamePlayObject O) {
 	}
 }
->>>>>>> 6f4846c53e727d95dffc80aa2c0a1c6d0c33097a

@@ -16,7 +16,7 @@ public class MapManager
 	private final static Color polyFillColor = new Color(0, 0, 0);
 	private final static Color highlightLineColor = new Color(0, 255, 0);
 	private final static Color highlightFillColor = new Color(0, 0, 125);
-	private final static int numSteps = 20;
+	private final static int numSteps = 10;
 	private final static int stepSize = 1000;
 
 
@@ -211,7 +211,7 @@ public class MapManager
 	 * @param yCoordinate the y Coordinate (100'000 - 300'000)
 	 * @return whether it is inside the field or not
 	 */
-	private static boolean isInside(int fieldNumber, int xCoordinate, int yCoordinate)
+	public static boolean isInside(int fieldNumber, int xCoordinate, int yCoordinate)
 	{
 		float x = xCoordinate - 450000;
 		float y = yCoordinate - 100000;
@@ -229,7 +229,7 @@ public class MapManager
 	 * @param yCoordinate the y Coordinate (100'000 - 300'000)
 	 * @return the fieldID
 	 */
-	private static int getFieldNumber(int xCoordinate, int yCoordinate)
+	public static int getFieldNumber(int xCoordinate, int yCoordinate)
 	{
 		float x = xCoordinate - 450000;
 		float y = yCoordinate - 100000;

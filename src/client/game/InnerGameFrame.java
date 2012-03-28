@@ -22,7 +22,7 @@ public class InnerGameFrame extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 
 	
-		GameFieldFrame gameField = new GameFieldFrame();
+		GameFieldPanel gameField = new GameFieldPanel();
 		c.ipady = 2;
 		c.weightx = 0.0;
 		c.gridwidth = 1;

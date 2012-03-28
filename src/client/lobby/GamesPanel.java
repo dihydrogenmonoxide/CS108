@@ -35,6 +35,7 @@ import client.events.GameEventListener;
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
 import client.events.NetEvent;
+import client.game.GameFrame;
 import client.net.Clientsocket;
 
 
@@ -292,7 +293,7 @@ public class GamesPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game=new GameFrame(lobbyParent);
+				game=new GameFrame(lobbyParent,socket);
 				lobbyParent.setVisible(false);
 				
 			}

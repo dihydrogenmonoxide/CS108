@@ -3,6 +3,8 @@ package server;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
@@ -89,16 +91,20 @@ public class ServerUI {
 		txtrServeroutput.setText("Serveroutput:");
 		
 		scrollPane = new JScrollPane();
-		frmSwissDefconServer.getContentPane().add(scrollPane, BorderLayout.EAST);
 		scrollPane.setViewportView(txtpnStdout);
-		scrollPane.setPreferredSize(new Dimension(550, 450));
+		scrollPane.setPreferredSize(new Dimension(400, 450));
 		scrollPane.setAutoscrolls(true);
 		
 		scrollPane_1 = new JScrollPane();
-		frmSwissDefconServer.getContentPane().add(scrollPane_1, BorderLayout.CENTER);
 		scrollPane_1.setViewportView(txtrServeroutput);
 		scrollPane_1.setPreferredSize(new Dimension(400, 450));
 		scrollPane_1.setAutoscrolls(true);
+		
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, scrollPane_1);
+		splitPane.setResizeWeight(0.5);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setContinuousLayout(true);
+		frmSwissDefconServer.getContentPane().add(splitPane, BorderLayout.CENTER);
 		
 		OutputStream stdout = new OutputStream()
 		{

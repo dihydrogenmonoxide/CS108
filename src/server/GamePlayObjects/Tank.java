@@ -3,6 +3,7 @@ package server.GamePlayObjects;
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
+import server.players.Player;
 import shared.game.Coordinates;
 import shared.game.MapManager;
 import shared.User;
@@ -22,14 +23,14 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 	private int attackPoints;
 	private Coordinates target;
 	private int movingRange;
-	private User Owner;
+	private Player Owner;
 	private LinkedList<GamePlayObject> possibleTargets;
 	public GamePlayObjectManager Manager;
 	private int ammunation;
 	private int price;
 	private Coordinates PosAtEnd;
 
-	public Tank(Coordinates pos, User owner, GamePlayObjectManager manager)
+	public Tank(Coordinates pos, Player owner, GamePlayObjectManager manager)
 			throws GameObjectBuildException {
 
 		this.position = pos;
@@ -76,7 +77,7 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 	}
 
 	/**
-	 * Asks the Server if the Object can be build here. //If true, the Object
+	 * Checks if the Object can be build here. //If true, the Object
 	 * gets build.
 	 * 
 	 * @throws GameObjectBuildException
@@ -84,19 +85,34 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 	 */
 	public void build() throws GameObjectBuildException {
 
-		// To Do, CHeck if the Coordinates are in the Players Territorry.
+		
 
 		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
-				|| this.position.getY() >= 300000) {
+				|| this.position.getY() >= 300000
+				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
 			throw new GameObjectBuildException("Wrong Position");
 
-		} else if (false) {
+		} else if (Owner.getMoney()<price) {
+			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addDefensive(this);
 			Manager.addUnit(this);
+			this.getOwner().removeMoney(this.getPrice());
 		}
 
+	}
+	
+	public long getPrice(){
+		return (long)this.price;
+	}
+	
+	public void setID(int id){
+		if(id<1000000 || id>9999999)
+			throw new IllegalArgumentException();
+		else
+		this.id=id;
+		
 	}
 
 	/**
@@ -135,6 +151,7 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 	 */
 	public void damage(int damPoints) {
 		this.healthPoints -= damPoints;
+		
 		
 
 	}
@@ -197,9 +214,10 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 				while(this.selectTarget().getHealthPoints()<0)
 				{}
 				this.selectTarget().damage(getAttackPoints());
-				System.out.println("Attacked");
+				this.getOwner().addMoney((long)this.getAttackPoints());
+				
 				this.ammunation--;
-				System.out.println(this.getOwner().getUserName()+" attacked" +this.selectTarget().getOwner().getUserName());
+				
 			}
 		} catch (NullPointerException e) {
 		} finally {
@@ -265,7 +283,7 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 	/**
 	 * returns the Owner of this Object.
 	 */
-	public User getOwner() {
+	public Player getOwner() {
 		return this.Owner;
 
 	}
@@ -375,7 +393,7 @@ public class Tank extends Defensive implements GamePlayObject, InterAct {
 				.getY(), this.getRange())
 				&& this.isAttackableObject(O)) {
 			this.possibleTargets.add(O);
-			System.out.println(O.getOwner().getUserName()+"added to the List of "+this.getOwner().getUserName());
+			
 			
 			
 		}

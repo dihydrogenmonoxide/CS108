@@ -1,5 +1,5 @@
-<<<<<<< HEAD:src/shared/Coordinates.java
-package shared;
+
+package shared.game;
 
 public class Coordinates {
 	private int x;
@@ -13,14 +13,30 @@ public class Coordinates {
 	
 	public double getDistance(Coordinates other)
 	{
-		return Math.cbrt((this.x-other.x)*(this.x-other.x) + 
-				(this.y-other.y)*(this.y-other.y));
+		double a=this.getX()-other.getX();
+		
+		double a2=a*a;
+		
+		double b=this.getY()-other.getY();
+		
+		double b2=b*b;
+		
+		double c= Math.sqrt(a2+b2);
+		 return c;
 		
 	}
 	
 	public void moveX(int diffx){
 		this.x+=diffx;
 		
+	}
+	
+	public boolean equals(Coordinates other){
+		if(this.getX()==other.getX() && this.getY()==other.getY())
+			return true;
+		
+		else
+			return false;
 	}
 	
 	public void moveY(int diffy){
@@ -39,25 +55,3 @@ public int getY(){
 	}
 
 }
-=======
-package shared.game;
-
-public class Coordinates {
-	private int x;
-	private int y;
-	
-	public Coordinates(int x, int y){
-		this.x=x;
-		this.y=y;
-		
-	}
-	
-	public double getDistance(Coordinates other)
-	{
-		return Math.cbrt((this.x-other.x)*(this.x-other.x) + 
-				(this.y-other.y)*(this.y-other.y));
-		
-	}
-
-}
->>>>>>> 6f4846c53e727d95dffc80aa2c0a1c6d0c33097a:src/shared/game/Coordinates.java

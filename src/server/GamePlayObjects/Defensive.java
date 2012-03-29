@@ -4,10 +4,11 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Ellipse2D.Double;
 
 import server.exceptions.GameObjectBuildException;
+import server.players.Player;
 import shared.User;
 import shared.game.Coordinates;
 public class Defensive extends Unit implements GamePlayObject {
-	private Ellipse2D.Double Range;
+	
 	
 	Defensive()
 	{}
@@ -21,6 +22,7 @@ public class Defensive extends Unit implements GamePlayObject {
 		// TODO Auto-generated method stub
 		
 	}
+	public void setId(int id){}
 	public void clearTargetList(){}
 	@Override
 	public int getId() {
@@ -33,7 +35,7 @@ public class Defensive extends Unit implements GamePlayObject {
 		return null;
 	}
 	@Override
-	public User getOwner() {
+	public Player getOwner() {
 		// TODO Auto-generated method stub
 		return null;
 	}

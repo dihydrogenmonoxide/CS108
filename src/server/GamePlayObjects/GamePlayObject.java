@@ -1,6 +1,7 @@
 package server.GamePlayObjects;
 
 import server.exceptions.GameObjectBuildException;
+import server.players.Player;
 import shared.*;
 import shared.game.Coordinates;
 
@@ -16,7 +17,7 @@ public interface GamePlayObject {
 		Coordinates getPos();
 		
 		//Returns the Owner of the Object.
-		User getOwner();
+		Player getOwner();
 		
 		//Asks the Server if the Object can be build here.
 		//If true, the Object gets build.
@@ -31,6 +32,8 @@ public interface GamePlayObject {
 		
 		//Hits the Object with Damage.
 		void damage(int damPoints);
+		
+		void setId(int id);
 		
 		
 		

@@ -2,10 +2,13 @@ package server;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Vector;
 
 import server.players.*;
+import shared.Log;
 import shared.Protocol;
 public class Server 
 implements Comparable<Server>
@@ -14,11 +17,16 @@ implements Comparable<Server>
 	private List<Player> l_locked;
 	private String s_servername;
 	private int i_ServerID;
+	private Queue<Integer> availableFieldIDs = new LinkedList<Integer>();
 	
 	public Server(String s_Servername, int i_ID)
 	
 	{
 		// TODO implement the whole server a user can start when he's in the lobby
+		for(int i = 1; i != 6; i++)
+		{
+			availableFieldIDs.offer(i);
+		}
 		s_servername = s_Servername;
 		l_locked = Collections.unmodifiableList(l_players);
 		i_ServerID = i_ID+200;
@@ -51,6 +59,7 @@ implements Comparable<Server>
 	{	
 		p_Player.setServer(this);
 		process(p_Player, true);
+		p_Player.setFieldID(availableFieldIDs.remove());
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_JOIN.str()+this.i_ServerID+" "+p_Player.getID()+" "+p_Player.getNick());
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+p_Player.getID());
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
@@ -74,6 +83,14 @@ implements Comparable<Server>
 	{
 		p_player.setServer(null);
 		process(p_player, false);
+		if(p_player.getFieldID() >= 1 && p_player.getFieldID() <= 5)
+		{
+			availableFieldIDs.offer(p_player.getFieldID());
+		}
+		else
+		{
+			Log.ErrorLog("Error: this player hadn't had a valit field ID");
+		}
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+p_player.getID());
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.i_ServerID+" "+p_player.getID()+" "+p_player.getNick());
 		if(this.getPlayerAmount() == 0)

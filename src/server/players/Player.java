@@ -32,6 +32,16 @@ implements Comparable<Player>
 		this.i_ID = i_ID+100;
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
+	
+	
+	/**
+	 * Sets the FieldID
+	 * @param ID the field ID
+	 */
+	public void setFieldID(int ID)
+	{
+		fieldID = ID;
+	}
 
 	@Override
 	public int compareTo(Player o)

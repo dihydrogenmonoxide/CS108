@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 
 import server.players.Player;
 import shared.Log;
+import shared.Protocol;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -152,7 +153,7 @@ public class ServerUI {
 				Player p = playerList.get(list.getSelectedIndex());
 				if(p != null)
 				{
-					p.sendData("VEXIT The Sereradmin kicked you");
+					p.sendData(Protocol.CON_EXIT.str()+"The Sereradmin kicked you");
 					p.disconnect();
 				}
 				else

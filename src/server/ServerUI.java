@@ -2,7 +2,9 @@ package server;
 
 import java.awt.Dimension;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -44,7 +46,7 @@ public class ServerUI {
 	private void initialize() {
 		frmSwissDefconServer = new JFrame();
 		frmSwissDefconServer.setTitle("SwissDefcon Server");
-		frmSwissDefconServer.setBounds(100, 100, 950, 400);
+		frmSwissDefconServer.setBounds(100, 100, 276, 287);
 		frmSwissDefconServer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		txtServerconsole = new JTextField();
@@ -77,7 +79,7 @@ public class ServerUI {
 			}
 		});
 		txtServerconsole.setText("Enter any Commands here and they\'re broadcasted to everyone");
-		frmSwissDefconServer.getContentPane().add(txtServerconsole, BorderLayout.SOUTH);
+		
 		txtServerconsole.setColumns(10);
 		
 		txtpnStdout = new JTextArea();
@@ -99,12 +101,23 @@ public class ServerUI {
 		scrollPane_1.setViewportView(txtrServeroutput);
 		scrollPane_1.setPreferredSize(new Dimension(400, 450));
 		scrollPane_1.setAutoscrolls(true);
-		
+		JPanel contentPane = new JPanel();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, scrollPane_1);
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(splitPane, BorderLayout.CENTER);
+		contentPane.add(txtServerconsole, BorderLayout.SOUTH);
+/*	
+		JList list = new JList();
+		list.setLayoutOrientation(JList.VERTICAL);
+		JScrollPane scrollPane2 = new JScrollPane(list);
+		scrollPane2.setPreferredSize(new Dimension(120, 450));
+		contentPane.add(scrollPane2, BorderLayout.WEST);
+		*///TODO add playerlist (maybe?)
+		
 		splitPane.setResizeWeight(0.5);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
-		frmSwissDefconServer.getContentPane().add(splitPane, BorderLayout.CENTER);
+		frmSwissDefconServer.setContentPane(contentPane);
 		
 		OutputStream stdout = new OutputStream()
 		{

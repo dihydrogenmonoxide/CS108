@@ -182,7 +182,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		time= new TimePanel();
 		c.gridwidth=3;
-		c.gridheight=1;
+		c.gridheight=2;
 		c.gridx=5;
 		c.gridy=0;
 		this.add(time, c);

@@ -23,7 +23,10 @@ public class TimePanel extends JPanel{
 	JTextField tf;
 	JButton buttonMin;
 	Timer timer;
-
+	int zahl;
+	int zero;
+	int sec;
+	int min;
 	
 	public TimePanel(){
 		
@@ -37,19 +40,20 @@ public class TimePanel extends JPanel{
 		c.ipadx=40;
 		c.ipady=40;
 		timerLabel.setForeground(Color.red);
-		timerLabel.setBackground(Color.black);
+		timerLabel.setBorder(null);
 		this.add(timerLabel,c);		
 		
 		Font curFont = timerLabel.getFont();
-		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 35));
+		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));
+		this.setOpaque(false);
 		
 		
-		int zahl = 122;  //rundenzeit
-		int min=0;
+		zahl = 132;  //rundenzeit
+		min=0;
 		min=zahl/60;
-		int sec=zahl%60;
+		sec=zahl%60;
 		
-		timerLabel.setText(min +": " + sec);
+		//timerLabel.setText(min +"   :   " +zero+ sec);
 		TimeClassMin tcMin = new TimeClassMin(zahl);
 		timer = new Timer(1000, tcMin);
 		timer.start();
@@ -63,6 +67,7 @@ public class TimePanel extends JPanel{
 		int sec;
 		int min;
 		int zahl;
+		int zero;
 
 		public TimeClassMin(int zahl){
 			this.zahl=zahl;
@@ -72,11 +77,16 @@ public class TimePanel extends JPanel{
 			zahl--;
 			min=zahl/60;
 			sec=zahl%60;
-			if(sec>=1||min >= 1){
-				timerLabel.setText(min +": " + sec);
-			} else {
-				timer.stop();
-				timerLabel.setText("Ende!");
+			if(zahl%60<10){
+				timerLabel.setText(min+"   :   "+zero+sec);
+				zero=0;
+			}else{
+				if(sec>=1||min >= 1){
+					timerLabel.setText(min +"   :   "+ sec);
+				} else {
+					timer.stop();
+					timerLabel.setText("Ende!");
+				}
 			}
 		}
 

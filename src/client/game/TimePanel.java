@@ -1,5 +1,6 @@
 package client.game;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,7 +23,6 @@ public class TimePanel extends JPanel{
 	JTextField tf;
 	JButton buttonMin;
 	Timer timer;
-	Timer timer2;
 
 	
 	public TimePanel(){
@@ -36,10 +36,12 @@ public class TimePanel extends JPanel{
 		timerLabel = new JLabel("Waiting…");
 		c.ipadx=40;
 		c.ipady=40;
+		timerLabel.setForeground(Color.red);
+		timerLabel.setBackground(Color.black);
 		this.add(timerLabel,c);		
 		
 		Font curFont = timerLabel.getFont();
-		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 22));
+		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 35));
 		
 		
 		int zahl = 122;  //rundenzeit

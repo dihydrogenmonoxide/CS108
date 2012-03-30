@@ -76,7 +76,7 @@ public class GamesPanel extends JPanel {
 	/**creates a dialog where the user can join, create and start games.
 	 * @param s the socket used for the connection.
 	 * @param lobbyParent the parent of the lobby.*/
-	public GamesPanel(Clientsocket s, final JFrame lobbyParent) 
+	public GamesPanel(final Clientsocket s, final JFrame lobbyParent) 
 	{
 		this.socket = s;
 
@@ -209,15 +209,14 @@ public class GamesPanel extends JPanel {
 			}
 		});
 		
-	/*	startButton.addActionListener(new ActionListener() {
+		startButton.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(final ActionEvent e) {
-				game = new GameFrame(lobbyParent);
+				game = new GameFrame(lobbyParent,s);
 				lobbyParent.setVisible(false);
 				
 			}
-		});*/
+		});
 		
 		
 		// LISTENERS

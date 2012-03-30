@@ -20,6 +20,8 @@ implements Comparable<Player>
 	private boolean b_ConnectionLost = false;
 	private int fieldID = 0;
 	private long money = 0;
+	private long population = 0;
+	
 	/**
 	 * Creates a new Player on the Server;
 	 * @param s_ID The unique token the Server assigned
@@ -83,6 +85,33 @@ implements Comparable<Player>
 	public void addMoney(long money)
 	{
 		this.money += money;
+	}
+	
+	/**
+	 * gets the population count
+	 * @return the population
+	 */
+	public long getPopulation()
+	{
+		return population;
+	}
+	
+	/**
+	 * Removes the specified population off a players field
+	 * @param deaths the population to remove
+	 */
+	public void removePopulation(long deaths)
+	{
+		population -= deaths;
+	}
+	
+	/**
+	 * Adds the specified amount of people to the population
+	 * @param births the amount of people to add
+	 */
+	public void addPopulation(long births)
+	{
+		population += births;
 	}
 	
 	/**

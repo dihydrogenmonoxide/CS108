@@ -1,5 +1,7 @@
 package server.GamePlayObjects;
 
+
+
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -15,7 +17,7 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Jet extends Defensive implements GamePlayObject, InterAct {
+public class Flak extends Defensive implements GamePlayObject, InterAct {
 	private int id;
 	private Coordinates position;
 	private int healthPoints;
@@ -30,20 +32,20 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 	private int price;
 	private Coordinates PosAtEnd;
 
-	public Jet(Coordinates pos, Player owner, GamePlayObjectManager manager)
+	public Flak(Coordinates pos, Player owner, GamePlayObjectManager manager)
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Jet.healthPoints;
-		this.range = Settings.Jet.attackRange;
-		this.attackPoints = Settings.Jet.attackPoints;
+		this.healthPoints = Settings.Flak.healthPoints;
+		this.range = Settings.Flak.attackRange;
+		this.attackPoints = Settings.Flak.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Jet.movingRange;
+		this.movingRange = Settings.Flak.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Jet.ammunation;
-		this.price = Settings.Jet.price;
+		this.ammunation = Settings.Flak.ammunation;
+		this.price = Settings.Flak.price;
 		this.build();
 
 	}
@@ -55,7 +57,10 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 	public int getId() {
 		return this.id;
 	}
-
+	/**
+	 * Funktionsrumpf für die Drawfunktion des Clients.
+	 * 
+	 */
 	public void draw() {
 	}
 
@@ -97,7 +102,7 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addDefensive(this);
-			Manager.addUnit(this);
+			
 			this.getOwner().removeMoney(this.getPrice());
 		}
 
@@ -123,7 +128,7 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 		if(this.getHealthPoints()>0)
 		{
 			Manager.addDefensive(this);
-			Manager.addUnit(this);
+			
 		}
 		
 	}
@@ -132,7 +137,7 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 	 */
 	public void destruct() {
 		Manager.removeDefensive(this);
-		Manager.removeUnit(this);
+		
 
 	}
 
@@ -221,7 +226,7 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 			}
 		} catch (NullPointerException e) {
 		} finally {
-			this.ammunation = Settings.Jet.ammunation;
+			this.ammunation = Settings.Flak.ammunation;
 		}
 	}
 
@@ -303,85 +308,10 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 	public void moveProv() {
 		
 		
-		if (this.getTarget() == null || this.getTarget().equals(this.getPos())) {
+		
 			this.setTarget(this.getPos());
 			this.PosAtEnd = this.getPos();
 
-		}
-		if (this.position.getDistance(getTarget()) <= this.movingRange) {
-			
-			this.PosAtEnd = new Coordinates(getTarget().getX(), getTarget()
-					.getY());
-
-		}
-
-		else {
-			
-			double direction = (getTarget().getY() - this.position.getY())
-					/ (getTarget().getX() - this.position.getX());
-			
-			int deltaX = (int) Math.round(Math.sqrt((this.movingRange*this.movingRange)
-					/ (1 + (direction*direction))));
-			int deltaY = (int) Math.round(deltaX * direction);
-			
-			
-
-			 if(getTarget().getY() - this.position.getY()<0)
-			 {
-				 if(deltaY<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(deltaY);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(-deltaY);
-				 }
-					 
-			 }
-			 else
-				 if(deltaY<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(-deltaY);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(deltaY);
-				 }
-			 if(getTarget().getX() - this.position.getX()<0)
-			 {
-				 if(deltaX<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(deltaX);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(-deltaX);
-				 }
-					 
-			 }
-			 else
-				 if(deltaX<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(-deltaX);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(deltaX);
-				 }
-				
-			
-			
-
-		}
-		
 	}
 	/**
 	 * CHecks if the GamePlayObject O moves through its Range, and adds it to the possibleTargetList if its so
@@ -405,14 +335,5 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 	 */
 	public void attack(GamePlayObject O) {
 	}
-
-	@Override
-	public void setId(int id) {
-		if(id<1000000 || id>9999999)
-			throw new IllegalArgumentException();
-		else
-		this.id=id;
-		
-		
-	}
 }
+

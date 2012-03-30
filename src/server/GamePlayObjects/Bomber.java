@@ -1,8 +1,11 @@
 package server.GamePlayObjects;
 
+import java.util.LinkedList;
 
-
+import server.exceptions.GameObjectBuildException;
+import server.players.Player;
 import shared.game.Coordinates;
+import shared.game.MapManager;
 import shared.User;
 
 /**
@@ -13,43 +16,104 @@ import shared.User;
  * 
  */
 public class Bomber extends Unit implements GamePlayObject, InterAct {
+
+	private int id;
 	private Coordinates position;
 	private int healthPoints;
 	private int range;
 	private int attackPoints;
 	private Coordinates target;
-	private double movingRangeSquared;
-	private User Owner;
+	private Building BuildingTarget;
+	private int movingRange;
+	private Player Owner;
+	private LinkedList<GamePlayObject> possibleTargets;
+	public GamePlayObjectManager Manager;
+	private int ammunation;
+	private int price;
+	private Coordinates PosAtEnd;
 
-	public Bomber(Coordinates pos, User owner) {
+	public Bomber(Coordinates pos, Player owner, GamePlayObjectManager manager)
+			throws GameObjectBuildException {
+
 		this.position = pos;
-		this.healthPoints = 1000;
-		this.range = 10;
-		this.attackPoints = 20;
-		this.build();
-		this.Owner = owner;
-		this.movingRangeSquared = 500;
+		this.healthPoints = Settings.Bomber.healthPoints;
+		this.range = Settings.Bomber.attackRange;
+		this.attackPoints = Settings.Bomber.attackPoints;
 
+		this.Owner = owner;
+		this.movingRange = Settings.Bomber.movingRange;
+		this.Manager = manager;
+		// never Used, delete if every Using is deleted
+		this.possibleTargets = new LinkedList<GamePlayObject>();
+
+		this.ammunation = Settings.Bomber.ammunation;
+		this.price = Settings.Bomber.price;
+		this.build();
+
+	}
+
+	/**
+	 * Funktionsrumpf für die Drawfunktion des Clients.
+	 * 
+	 */
+	public int getId() {
+		return this.id;
 	}
 
 	public void draw() {
 	}
 
+	/**
+	 * Returns the Coordinates
+	 */
 	public Coordinates getPos() {
 		return this.position;
 	}
 
 	/**
-	 * Asks the Server if the Object can be build here. //If true, the Object
-	 * gets build.
+	 * Returns the Position the Tank will have at the of the Round.
+	 * 
+	 * @return Position at the End of the Round.
+	 */
+	public Coordinates getPosAtEnd() {
+		return this.PosAtEnd;
+
+	}
+
+	/**
+	 * Checks if the Object can be build here. //If true, the Object gets build.
+	 * 
+	 * @throws GameObjectBuildException
 	 * 
 	 */
-	public void build() {
-		/*
-		 * To Do: Ask the Server if a Tank can be build at this.position if
-		 * True, build the Object. if false, destroi it and message to Client:
-		 * Can't be build here
-		 */
+	public void build() throws GameObjectBuildException {
+
+		if (this.position.getX() <= 300000
+				|| this.position.getX() >= 800000
+				|| this.position.getY() <= 100000
+				|| this.position.getY() >= 300000
+				|| MapManager.isInside(this.getOwner().getFieldID(), this
+						.getPos().getX(), this.getPos().getY())) {
+			throw new GameObjectBuildException("Wrong Position");
+
+		} else if (Owner.getMoney() < price) {
+			throw new GameObjectBuildException("No Money");
+		} else {
+			Manager.addUnit(this);
+			this.getOwner().removeMoney(this.getPrice());
+		}
+
+	}
+
+	public long getPrice() {
+		return (long) this.price;
+	}
+
+	public void setID(int id) {
+		if (id < 1000000 || id > 9999999)
+			throw new IllegalArgumentException();
+		else
+			this.id = id;
 
 	}
 
@@ -57,8 +121,20 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 	 * Deletes all References //that the GarbageCollector kills the Object.
 	 * 
 	 */
+	public void saveLiving() {
+		if (this.getHealthPoints() > 0) {
+
+			Manager.addUnit(this);
+		}
+
+	}
+
+	/**
+	 * never used.
+	 */
 	public void destruct() {
-		// To do: set all references to null
+
+		Manager.removeUnit(this);
 
 	}
 
@@ -77,14 +153,11 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 	 */
 	public void damage(int damPoints) {
 		this.healthPoints -= damPoints;
-		if (this.getHealthPoints() <= 0) {
-			this.destruct();
-		}
 
 	}
 
 	/**
-	 * get the Range of the Tank
+	 * get the Range of the Bomber
 	 * 
 	 */
 	public int getRange() {
@@ -93,16 +166,86 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 	}
 
 	/**
-	 * Attack the target
+	 * Never Used
 	 * 
 	 */
+	public GamePlayObject selectTarget() {
+		if (this.possibleTargets.isEmpty())
+			return null;
 
-	public void attack(GamePlayObject target) {
-		if (this.isAttackableObject(target) && this.isInRange(target)) {
-			target.damage(this.getAttackPoints());
+		GamePlayObject G = this.possibleTargets.peek();
+		while (G.getHealthPoints() <= 0 && !this.possibleTargets.isEmpty()) {
+			G = this.possibleTargets.pop();
 
 		}
+		if (this.possibleTargets.isEmpty())
+			return null;
+		return G;
 
+	}
+
+	public void addToPossibleTargets(GamePlayObject O) {
+		if (this.possibleTargets.contains(O)) {
+		}
+
+		else {
+			if (this.isAttackableObject(O)) {
+				this.possibleTargets.add(O);
+
+			}
+		}
+
+	}
+
+	/**
+	 * Clears the Targetlist
+	 */
+	public void clearTargetList() {
+		this.possibleTargets.clear();
+
+	}
+
+	/**
+	 * Attacks the first Target in the List while it isnt dead and the
+	 * ammunation is >0
+	 */
+	public void attack() {
+		try {
+			while (this.ammunation > 0) {
+				if (this.getBuildingTarget() != null) {
+					if (this.getBuildingTarget().getHealthPoints() < 0) {
+						this.BuildingTarget=null;
+					} else {
+						this.getBuildingTarget().damage(getAttackPoints());
+						this.getOwner().addMoney((long)getAttackPoints());
+
+					}
+				}
+				else if (this.BuildingTarget == null && this.getTarget() != null) {
+						for (Player P : this.Manager.getServer().getPlayers()) {
+							if (MapManager.isInside(P.getFieldID(), this
+									.getTarget().getX(), this.getTarget()
+									.getX())
+									&& P != this.getOwner()) {
+								//To Do: Kill People
+								this.getOwner().addMoney((long)getAttackPoints());
+							}
+								
+							}
+
+						}
+
+					
+				else{}
+
+					this.ammunation--;
+				}
+		
+			
+		} catch (NullPointerException e) {
+		} finally {
+			this.ammunation = Settings.Bomber.ammunation;
+		}
 	}
 
 	/**
@@ -125,6 +268,12 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 			return true;
 		return false;
 	}
+	
+	public boolean isInRange(Coordinates target) {
+		if (this.range >= this.position.getDistance(target))
+			return true;
+		return false;
+	}
 
 	/**
 	 * is the target Attackable by a Tank (Planes are not attackable by a
@@ -133,7 +282,7 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 
 	public boolean isAttackableObject(GamePlayObject target) {
 
-		if ((target instanceof Building || target instanceof Tank)
+		if ((target instanceof Building)
 				&& this.getOwner() != target.getOwner())
 			return true;
 		return false;
@@ -149,6 +298,10 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 		return this.target;
 
 	}
+	
+	public Building getBuildingTarget(){
+		return this.BuildingTarget;
+	}
 
 	/**
 	 * Set Coordinates as Moving Target
@@ -159,70 +312,137 @@ public class Bomber extends Unit implements GamePlayObject, InterAct {
 
 		this.target = target;
 	}
+	/**
+	 * If a Building is set as Target
+	 * @param target
+	 */
+	public void setTarget(Building target) {
+
+		this.BuildingTarget = target;
+	}
+	/**
+	 * If a stupid fool gives Any GamePlayObject as Target
+	 * @param target
+	 */
+	public void setTarget(GamePlayObject target) {
+		if(this.isAttackableObject(target))
+		this.BuildingTarget = (Building)target;
+	}
 
 	/**
 	 * returns the Owner of this Object.
 	 */
-	public User getOwner() {
+	public Player getOwner() {
 		return this.Owner;
 
 	}
 
 	/**
-	 * Moves the Object to its Target. Because of DivisionbynullException and
-	 * Overflowing he moves as long as the X or Y coordinates are not Reached
-	 * with a Stepsize of 10 for X, and an Y Stepsize of deltaY/deltaX*10
+	 * Send the Move to all other Defensive Objects Moves the Object to its
+	 * Target.
 	 * 
 	 */
-	public boolean move() {
-		int direction = 1;
-		int directionY=1;
-		
-		double deltaY = this.target.getY() - this.position.getY();
-		double deltaX = this.target.getX() - this.position.getX();
+	public void move() {
+		this.Manager.sendMoving(this.getPosAtEnd(), this);
+		this.position = this.getPosAtEnd();
+	}
 
-		if (deltaX < 0)
-			direction = -1;
-		
-		if(deltaY<0)
-			directionY=-1;
-		if (target != null
-				&& !(this.target.getX() == this.position.getX() && this.target
-						.getY() == this.position.getY())
-				&& this.movingRangeSquared>0) {
-
-			if (this.target.getX() == this.position.getX()) {
-				this.position.moveY(5*directionY);
-				System.out.println("Moved 5 in X");
-				this.movingRangeSquared-=5;
-				System.out.println("this.movingRangeSquared ist : "+ this.movingRangeSquared);
-				return true;
-
-			} else if (this.target.getY() == this.position.getY()) {
-				this.position.moveX(5*direction);
-				System.out.println("Moved 5 in Y");
-				this.movingRangeSquared-=5;
-				System.out.println("this.movingRangeSquared ist : "+ this.movingRangeSquared);
-				return true;
-			} else {
-
-				this.position.moveX(5*direction);
-				System.out.println("Steigung ist: "+deltaY/deltaX);
-				int mY = (int) Math.round(deltaY / deltaX * direction*5 );
-
-				this.position.moveY(mY);
-				System.out.println("Moved "+5*direction+" in X Direction and "+mY+" in Y Direction");
-
-				this.movingRangeSquared -= Math.cbrt((double)25 + mY*mY);
-				System.out.println("this.movingRangeSquared ist : "+ this.movingRangeSquared);
-				return true;
-			}
-			
-			
+	/**
+	 * Calculates the Move of this Round.
+	 */
+	public void moveProv() {
+		if(this.getTarget()==null &&this.getBuildingTarget()!=null)
+		{
+			this.setTarget(this.getBuildingTarget().getPos());
 		}
+		if (this.getTarget() == null || this.getTarget().equals(this.getPos())) {
+			this.setTarget(this.getPos());
+			this.PosAtEnd = this.getPos();
+
+		}
+		if (this.position.getDistance(getTarget()) <= this.movingRange) {
+
+			this.PosAtEnd = new Coordinates(getTarget().getX(), getTarget()
+					.getY());
+
+		}
+
+		else {
+
+			double direction = (getTarget().getY() - this.position.getY())
+					/ (getTarget().getX() - this.position.getX());
+
+			int deltaX = (int) Math.round(Math
+					.sqrt((this.movingRange * this.movingRange)
+							/ (1 + (direction * direction))));
+			int deltaY = (int) Math.round(deltaX * direction);
+
+			if (getTarget().getY() - this.position.getY() < 0) {
+				if (deltaY < 0) {
+					this.PosAtEnd = this.getPos();
+					this.PosAtEnd.moveY(deltaY);
+				} else {
+					this.PosAtEnd = this.getPos();
+					this.PosAtEnd.moveY(-deltaY);
+				}
+
+			} else if (deltaY < 0) {
+				this.PosAtEnd = this.getPos();
+				this.PosAtEnd.moveY(-deltaY);
+			} else {
+				this.PosAtEnd = this.getPos();
+				this.PosAtEnd.moveY(deltaY);
+			}
+			if (getTarget().getX() - this.position.getX() < 0) {
+				if (deltaX < 0) {
+					this.PosAtEnd = this.getPos();
+					this.PosAtEnd.moveX(deltaX);
+				} else {
+					this.PosAtEnd = this.getPos();
+					this.PosAtEnd.moveX(-deltaX);
+				}
+
+			} else if (deltaX < 0) {
+				this.PosAtEnd = this.getPos();
+				this.PosAtEnd.moveX(-deltaX);
+			} else {
+				this.PosAtEnd = this.getPos();
+				this.PosAtEnd.moveX(deltaX);
+			}
+
+		}
+
+	}
+
+	/**
+	 * CHecks if the GamePlayObject O moves through its Range, and adds it to
+	 * the possibleTargetList if its so
+	 * Never Used By Bomber
+	 */
+	public void checkLine(Coordinates Target, GamePlayObject O) {
+
+		if (CircleTest.checkLine(Target.getX(), Target.getY(), O.getPos()
+				.getX(), O.getPos().getY(), this.PosAtEnd.getX(), this.PosAtEnd
+				.getY(), this.getRange())
+				&& this.isAttackableObject(O)) {
+			this.possibleTargets.add(O);
+
+		}
+
+	}
+
+	/**
+	 * sensless, but must be implemented.
+	 */
+	public void attack(GamePlayObject O) {
+	}
+
+	@Override
+	public void setId(int id) {
+		if (id < 1000000 || id > 9999999)
+			throw new IllegalArgumentException();
 		else
-			return false;
+			this.id = id;
 
 	}
 }
-

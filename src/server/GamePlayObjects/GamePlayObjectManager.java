@@ -2,6 +2,7 @@ package server.GamePlayObjects;
 
 import java.util.LinkedList;
 
+import server.Server;
 import server.players.Player;
 import shared.game.Coordinates;
 
@@ -12,13 +13,20 @@ public class GamePlayObjectManager {
 	private LinkedList<Building> Buildings;
 	private LinkedList<Unit> Units;
 	private int maxid;
+	private Server Server;
 
-	GamePlayObjectManager() {
+	GamePlayObjectManager(Server server) {
 		this.AllObjects = new LinkedList<GamePlayObject>();
 		this.Defensives = new LinkedList<Defensive>();
 		this.Buildings = new LinkedList<Building>();
 		this.Units = new LinkedList<Unit>();
 		this.maxid=1000000;
+		this.Server=server;
+	}
+	
+	public Server getServer(){
+		return this.Server;
+		
 	}
 	
 	public void distributeId(GamePlayObject o){

@@ -1,5 +1,6 @@
 package client.game;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
@@ -36,6 +37,9 @@ public class TimePanel extends JPanel{
 		c.ipadx=40;
 		c.ipady=40;
 		this.add(timerLabel,c);		
+		
+		Font curFont = timerLabel.getFont();
+		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 22));
 		
 		
 		int zahl = 122;  //rundenzeit

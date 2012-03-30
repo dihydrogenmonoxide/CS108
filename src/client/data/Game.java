@@ -97,6 +97,7 @@ class Game {
 		{
 			Player p = pIter.next();
 			s[3 + count] = p.getName();
+			count++;
 		}
 		return s;
 	}

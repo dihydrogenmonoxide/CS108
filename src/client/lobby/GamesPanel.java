@@ -1,24 +1,30 @@
 package client.lobby;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import shared.Log;
@@ -36,40 +42,48 @@ public class GamesPanel extends JPanel {
 
 	/**serial id, obviously must have ^^. but never pi.*/
 	private static final long serialVersionUID = 314159265358979L;
-	
+
 	/**the connection socket.*/
 	private Clientsocket socket;
-	/**button to join a game.*/
-	private JButton joinButton;
-
-	/**button to leave a  game.*/
-	private JButton leaveButton;
-	
-	/**button to create a new game.*/
-	private JButton createButton;
-	
+	/**button to join or leave a game.*/
+	private JButton toggleButton;
 	/**holding the info for the UI, just a simplified version of games.*/
 	private Vector<Vector<String>> gamesData = new Vector<Vector<String>>();
-	
 	/**table with all the games.*/
 	private JTable gamesTable;
-
 	/**scrollable list for the games.*/
 	private JScrollPane gamesScroll;
+	/**whether the Player has joined a game or not.*/
+	private boolean isJoined = false;
+	/**the number of the joined game.*/
+	private int joinedGame = 0;
+	/**game name about the joined game.*/
+	private JList<String> infoName = new JList<String>();
+	/**vector holding the infos.*/
+	private Vector<String> infoNameV = new Vector<String>();
+	/**player count of the joined game.*/
+	private JList<String> infoCount = new JList<String>();
+	/**vector holding the infos.*/
+	private Vector<String> infoCountV = new Vector<String>();
+	/**Player of the joined game.*/
+	private JList<String> infoPlayers = new JList<String>();
+	/**vector holding the infos.*/
+	private Vector<String> infoPlayersV = new Vector<String>();
+
+
 
 	/**panel where for creating a new game.*/
 	private JScrollPane createScroll;
-
+	/**button to create a new game.*/
+	private JButton createButton;
 	/**label where creation settings are shown.*/
 	private JLabel createSetting;
-
 	/**label where game options are shown.*/
-	private JLabel gameSettings;
-	
+	private JPanel gameInfo;
 	/**Button to start a game.*/
 	private JButton startButton;
-	
-	
+
+
 	/**Frame which contains the GUI for the Game.*/
 	GameFrame game;
 
@@ -83,9 +97,117 @@ public class GamesPanel extends JPanel {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
+		makeGameChooser(c);
+		makeGameCreator(c);
 
-		//TODO move the game listing in a separate class
+		this.setOpaque(false);
 
+
+		createButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				socket.sendData(Protocol.GAME_MAKE.toString());
+
+			}
+		});
+		startButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(final ActionEvent e) {
+				game = new GameFrame(lobbyParent, s);
+				lobbyParent.setVisible(false);
+
+			}
+		});
+
+
+
+		socket.addLobbyEventListener(new LobbyEventListener()
+		{
+			@Override
+			public void received(final LobbyEvent evt) throws Exception 
+			{
+				Log.DebugLog("GameList: " + evt.getSection() + " " + evt.getMsg());
+				switch(evt.getSection())
+				{
+				case LOBBY_UPDATE:
+					refreshGameList();
+					if(isJoined)
+					{
+						refreshJoinedGame(joinedGame);
+					}
+					
+					break;
+				default:
+					break;
+				}
+			}
+
+			//TODO Listener which frees the GUI when one could not join a game.
+			
+			@Override
+			public void received(final NetEvent evt) 
+			{
+			}
+		});
+	}
+	/**This function creates an UI where the player can create new games.
+	 * @param c the layoutmanager
+	 */
+	private void makeGameCreator(GridBagConstraints c) {
+		createScroll = new JScrollPane();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 80;
+		c.weightx = 3;
+		c.gridwidth = 4;
+		c.gridx = 0;
+		c.gridy = 17;
+		this.add(createScroll, c);
+
+		createSetting = new JLabel();
+		createSetting.setText("daten zum erstellenden Spiel");
+		createSetting.setBackground(new Color(255, 255, 255));
+		createSetting.setOpaque(true);
+		createSetting.setForeground(new Color(50, 50, 50));
+		c.fill = GridBagConstraints.CENTER;
+		c.gridwidth = 4;
+		c.gridheight = 3;
+		c.gridx = 0;
+		c.gridy = 24;
+		this.add(createSetting, c);
+
+		createButton = new JButton("erstellen");
+		createButton.setEnabled(true);
+		createScroll.setPreferredSize(new Dimension(20, 20));
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 1;
+		c.weightx = 0.0;
+		c.gridwidth = 2;
+		c.gridx = 0;
+		c.gridy = 27;
+		this.add(createButton, c);
+
+		startButton = new JButton("Spiel starten");
+		startButton.setEnabled(true);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.0;
+		c.gridwidth = 2;
+		c.gridx = 2;
+		c.gridy = 28;
+		this.add(startButton, c);
+		
+	}
+	
+	
+	/**Creates the Panel in which a user can choose a game and join it.
+	 * @param c
+	 */
+	private void makeGameChooser(GridBagConstraints c) {
+		/*
+		 * Create the Listing with all the Games
+		 * */
+		
 		Vector<String> columns = new Vector<String>();
 		columns.add("ID");
 		columns.add("Spieler");
@@ -106,6 +228,8 @@ public class GamesPanel extends JPanel {
 		gamesTable.setFillsViewportHeight(true);
 
 		gamesScroll = new JScrollPane(gamesTable);
+		gamesScroll.setPreferredSize(new Dimension(300, 80));
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 50;
 		c.ipadx = 50;
@@ -115,174 +239,147 @@ public class GamesPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(gamesScroll, c);
+		
+		/*
+		 * Create the Panel with all the Infos if the player joined the game.
+		 * */
 
-		gameSettings = new JLabel();
-		gameSettings.setText("Infos zum ausgewählten Spiel");		
-		gamesScroll.setPreferredSize(new Dimension(300, 80));
-		gameSettings.setBackground(new Color(255, 255, 255));
-		gameSettings.setOpaque(true);
-		gameSettings.setForeground(new Color(50, 50, 50));
-		c.fill = GridBagConstraints.CENTER;
+		gameInfo = new JPanel();
+		gameInfo.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+		gameInfo.setBackground(new Color(255, 255, 255));
+		gameInfo.setOpaque(true);
+		gameInfo.setForeground(new Color(50, 50, 50));
+		gameInfo.setVisible(false);
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 4;
-		c.gridheight = 3;
+		c.gridheight = 2;
 		c.gridx = 0;
 		c.gridy = 11;
 		c.insets = new Insets(10, 0, 0, 0);
-		this.add(gameSettings, c);
+		this.add(gameInfo, c);
+		
+		
+		JButton voteButton = new JButton();
+		voteButton.setText("ich bin bereit");
+		//TODO implement this button
+		
+		
+		infoName.setListData(infoNameV);
+		infoCount.setListData(infoCountV);
+		infoPlayers.setListData(infoPlayersV);
+		
+		//hack to disable selection.
+		infoName.setCellRenderer(new DefaultListCellRenderer() {
+            public Component getListCellRendererComponent(JList list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, false, false);
+                return this;
+            }
+        });
+		infoCount.setCellRenderer(new DefaultListCellRenderer() {
 
-		joinButton = new JButton("beitreten");
-		//gamesScroll.setPreferredSize(new Dimension(20, 20));
+            public Component getListCellRendererComponent(JList list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, false, false);
+                return this;
+            }
+        });
+		infoPlayers.setCellRenderer(new DefaultListCellRenderer() {
+
+            public Component getListCellRendererComponent(JList list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, false, false);
+                return this;
+            }
+        });
+		
+		gameInfo.setPreferredSize(new Dimension(300, 65));
+		gameInfo.setLayout(new BorderLayout(50, 0));
+		gameInfo.add(BorderLayout.WEST, infoName);
+		gameInfo.add(BorderLayout.CENTER, infoCount);
+		gameInfo.add(BorderLayout.EAST, infoPlayers);
+		gameInfo.add(BorderLayout.SOUTH, voteButton);
+		
+		gameInfo.validate();
+		
+		/*
+		 * Create the toggle button
+		 * */
+		toggleButton = new JButton("beitreten");
 		c.fill = GridBagConstraints.HORIZONTAL;
-		joinButton.setEnabled(false);
+		toggleButton.setEnabled(false);
 		c.ipady = 1;
-		c.gridwidth = 1;
-		c.weightx = 0.0;
+		c.gridwidth = 4;
+		
 		c.gridx = 0;
 		c.gridy = 14;
-		this.add(joinButton, c);
+		this.add(toggleButton, c);
 
-		
-
-		leaveButton = new JButton("verlassen");
-		leaveButton.setEnabled(true);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 1;
-		c.gridwidth = 1;
-		c.weightx = 0.0;
-		c.gridx = 3;
-		c.gridy = 14;
-		this.add(leaveButton, c);
-		
-		createScroll = new JScrollPane();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 80;
-		c.weightx = 3;
-		c.gridwidth = 4;
-		c.gridx = 0;
-		c.gridy = 17;
-		this.add(createScroll, c);
-
-
-		//TODO move the game creating to a separate class
-		createSetting = new JLabel();
-		createSetting.setText("daten zum erstellenden Spiel");
-		createSetting.setBackground(new Color(255, 255, 255));
-		createSetting.setOpaque(true);
-		createSetting.setForeground(new Color(50, 50, 50));
-		c.fill = GridBagConstraints.CENTER;
-		c.gridwidth = 4;
-		c.gridheight = 3;
-		c.gridx = 0;
-		c.gridy = 24;
-		this.add(createSetting, c);
-
-		createButton = new JButton("erstellen");
-		createButton.setEnabled(true);
-		createScroll.setPreferredSize(new Dimension(20, 20));
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 1;
-		c.weightx = 0.0;
-		c.gridwidth = 1;
-		c.gridx = 1;
-		c.gridy = 27;
-		this.add(createButton, c);
-		
-		startButton = new JButton("Spiel starten");
-		startButton.setEnabled(true);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.0;
-		c.gridwidth = 1;
-		c.gridx = 3;
-		c.gridy = 27;
-		this.add(startButton, c);
-		
-		this.setOpaque(false);
-		
-		
-		createButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				socket.sendData(Protocol.GAME_MAKE.toString());
-				
-			}
-		});
-		
-		startButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(final ActionEvent e) {
-				game = new GameFrame(lobbyParent,s);
-				lobbyParent.setVisible(false);
-				
-			}
-		});
-		
-		
 		// LISTENERS
-		gamesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		gamesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
 			@Override
-			public void valueChanged(final ListSelectionEvent e) {
-				Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
-				String[] info = GamesManager.getInfo(Integer.valueOf(temp.get(0)));
-				if (info != null)
+			public void valueChanged(final ListSelectionEvent e)
+			{
+				if (0 < gamesTable.getSelectedRow())
 				{
-					gameSettings.setText(info.toString());
+					Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
+					String[] info = GamesManager.getInfo(Integer.valueOf(temp.get(0)));
+					if (info != null)
+					{
+						//do nothing
+						
+					}
+					else
+					{
+						//do nothing
+					}
+					//gameSettings.setText(temp.get(0) + " : " + temp.get(1) + " : " + temp.get(2));
+				}
+			}
+
+		});
+
+		toggleButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+
+
+				if (!isJoined)
+				{
+					if (0 <= gamesTable.getSelectedRow())
+					{
+						//get the game which was joined
+						Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
+						joinedGame = Integer.valueOf(temp.get(0));
+						
+						refreshJoinedGame(joinedGame);
+						
+						//send the command
+						socket.sendData(Protocol.GAME_JOIN.str() + joinedGame);
+
+						//toggle
+						gameInfo.setVisible(true);
+						gamesScroll.setVisible(false);
+						toggleButton.setText("verlassen");
+						isJoined = true;
+					}
 				}
 				else
 				{
-					gameSettings.setText("Please Select a game");
+					socket.sendData(Protocol.GAME_QUIT.str());
+					gameInfo.setVisible(false);
+					gamesScroll.setVisible(true);	
+					toggleButton.setText("beitreten");
+					isJoined = false;
 				}
-				//gameSettings.setText(temp.get(0) + " : " + temp.get(1) + " : " + temp.get(2));
-				
-			}
-			
-		});
-		
-		joinButton.addActionListener(new ActionListener(){
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (0 <= gamesTable.getSelectedRow())
-				{
-					Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
-					socket.sendData(Protocol.GAME_JOIN.str() + makeGameId(Integer.valueOf(temp.get(0))));
-					gamesTable.setEnabled(false);
-				}
 
 			}
 		});
 		
-		leaveButton.addActionListener(new ActionListener(){
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-					socket.sendData(Protocol.GAME_QUIT.toString());
-					gamesTable.setEnabled(true);
-			}
-		});
-
-		socket.addLobbyEventListener(new LobbyEventListener()
-		{
-			@Override
-			public void received(final LobbyEvent evt) throws Exception 
-			{
-				Log.DebugLog("GameList: " + evt.getSection() + " " + evt.getMsg());
-				switch(evt.getSection())
-				{
-				case LOBBY_UPDATE:
-					refreshGameList();
-					break;
-				default:
-					break;
-				}
-			}
-
-			@Override
-			public void received(final NetEvent evt) 
-			{
-			}
-		});
 	}
 	/**refreshes a game to the list.
 	 * Checks if there are games with 0 players and deletes them
@@ -292,10 +389,10 @@ public class GamesPanel extends JPanel {
 		gamesData = GamesManager.makeVector();
 		Log.DebugLog("-->repaint, How many games here: " + gamesData.size());
 		updateGameTable();
-		
-		
+
+
 	}
-	
+
 	/**updates the gameTable.*/
 	public final void updateGameTable()
 	{
@@ -303,10 +400,10 @@ public class GamesPanel extends JPanel {
 		columns.add("ID");
 		columns.add("Spieler");
 		columns.add("Name");
-		
+
 
 		DefaultTableModel model = (DefaultTableModel) gamesTable.getModel();
-		
+
 		if (gamesData != null && 0 < gamesData.size())
 		{
 			Log.DebugLog("paint gamelist");
@@ -317,27 +414,44 @@ public class GamesPanel extends JPanel {
 			Log.DebugLog("empty gamelist");
 			model.setDataVector(new Vector<Vector<String>>(), columns);
 		}
-		
+
 		gamesTable.revalidate();
 		gamesTable.updateUI();
 		gamesTable.repaint();
 		if (0 < gamesTable.getRowCount())
 		{
-			joinButton.setEnabled(true);
+			toggleButton.setEnabled(true);
 		}
 		else
 		{
-			joinButton.setEnabled(false);
+			toggleButton.setEnabled(false);
 		}
 	}
-	
-	/**formats an int to an correct gameId eg 2XX.
-	 * @param i the int.
-	 * @return the proper GameId.
-	 * */
-	public final String makeGameId(final int i)
-	{
-		String str = "2" + String.format("%02d", i);
-		return str;
+	/**
+	 * @param gameId
+	 */
+	private void refreshJoinedGame(int gameId) {
+		//set the infos
+		infoNameV.clear();
+		infoCountV.clear();
+		infoPlayersV.clear();
+		
+		String[] infos = GamesManager.getInfo(gameId);
+		infoNameV.add("Spiel:");
+		infoNameV.add(infos[1]);
+		infoCountV.add("Mitspieler:");
+		infoCountV.add(infos[2]);
+		
+		gameInfo.setPreferredSize(new Dimension(300,15+(7*infos.length-3)));
+		
+		for (int i = 0; i < infos.length - 3; i++)
+		{
+			infoPlayersV.add(infos[3 + i]);
+			Log.DebugLog("added"+infos[3+i]);
+		}
+		
+		infoName.updateUI();
+		infoCount.updateUI();
+		infoPlayers.updateUI();
 	}
 }

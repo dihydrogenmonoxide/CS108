@@ -111,7 +111,7 @@ public class MapMakingAssistance extends JFrame
 		if (fc1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
 			if (iw != null)
-				contentPane.remove(iw);
+				this.getContentPane().remove(iw);
 
 			iw = new IM(fc1.getSelectedFile().getAbsolutePath());
 			iw.setIgnoreRepaint(false);
@@ -124,8 +124,8 @@ public class MapMakingAssistance extends JFrame
 				@Override
 				public void mouseClicked(MouseEvent arg0)
 				{
-					int x = (int) ((arg0.getLocationOnScreen().getX() - iw.getX() - getX() - getContentPane().getX() - 8) * 350000 /iw.getWidth()  + 450000); 
-					int y = (int) ((arg0.getLocationOnScreen().getY() - iw.getY() - getY() - getContentPane().getY() - 30) * 200000 /iw.getHeight() + 100000);
+					int x = (int) ((arg0.getX()) * 350000 /iw.getWidth()  + 450000); 
+					int y = (int) ((arg0.getY()) * 200000 /iw.getHeight() + 100000);
 					System.out.println(" {"+x+"/"+y+"},");
 				}
 			});

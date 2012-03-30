@@ -8,14 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -26,20 +18,25 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableModel;
 
 import shared.Log;
 import shared.Protocol;
 
-import client.events.GameEvent;
-import client.events.GameEventListener;
+import client.data.GamesManager;
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
 import client.events.NetEvent;
+import client.game.GameFrame;
 import client.net.Clientsocket;
 
-
+/**a panel which offers the option to join and list games. You can also create games.*/
 public class GamesPanel extends JPanel {
 
+	/**serial id, obviously must have ^^. but never pi.*/
+	private static final long serialVersionUID = 314159265358979L;
+	
 	/**the connection socket.*/
 	private Clientsocket socket;
 	/**button to join a game.*/
@@ -50,9 +47,6 @@ public class GamesPanel extends JPanel {
 	
 	/**button to create a new game.*/
 	private JButton createButton;
-
-	/**holds all the open games.*/
-	private HashMap<Integer, GameOverview> games = new HashMap<Integer, GameOverview>();
 	
 	/**holding the info for the UI, just a simplified version of games.*/
 	private Vector<Vector<String>> gamesData = new Vector<Vector<String>>();
@@ -72,85 +66,16 @@ public class GamesPanel extends JPanel {
 	/**label where game options are shown.*/
 	private JLabel gameSettings;
 	
-	/**Button to start a game*/
+	/**Button to start a game.*/
 	private JButton startButton;
 	
 	
-	/**Frame which contains the GUI for the Game*/
+	/**Frame which contains the GUI for the Game.*/
 	GameFrame game;
-	
-
-	/**Inner class holding all the Infos about a game.*/
-	private class GameOverview {
-		/**the id of the game.*/
-		private int id;
-		
-		/**how many players are in the game.*/
-		public int playerCount;
-
-		/**which players are in there.*/
-		private HashMap<Integer, String> players = new HashMap<Integer, String>();
-		/**the name of game ^^.*/
-		private String name;
-
-
-		/**initializes the game info from the Eventparser.
-		 * @param init the message from the parser.
-		 * */
-		public GameOverview(final String init)
-		{
-			id = Integer.valueOf((String) init.subSequence(0, 2));
-			playerCount = Integer.valueOf((String) init.subSequence(3, 4));
-			name = init.substring(5);
-			Log.DebugLog("GameOverview created: " + this.toString());
-		}
-		
-		/**returns an Vector containing the id, the playercount and the name.
-		 * @return the vector for the GUI.*/
-		public Vector<String> makeInfo()
-		{
-			Vector<String> r = new Vector<String>();
-			r.add(String.valueOf(id));
-			r.add(String.valueOf(playerCount));
-			r.add(name);
-			return r;
-		}
-		/**returns the id of the game.
-		 * @return id the id*/
-		public int getId()
-		{
-			return id;
-		}
-		/**returns how many players are in this game.
-		 * @return playerCount how many Players are in the game.*/
-		public int getPlayerCount()
-		{
-			return playerCount;
-		}
-		/**converts this to a String for logging.
-		 * @return String representation.*/
-		public String toString()
-		{
-			return id + " " + playerCount + " " + name;
-		}
-
-		/**adds a player to a game.
-		 * @param msg the message received by the parser.*/
-		public void addPlayer(final String msg) {
-			Log.DebugLog("player added to game " + name + ":" + msg);
-			int playerId = Integer.valueOf((String) msg.subSequence(1, 3));
-			players.put(playerId, msg.substring(4));
-		}
-		/**removes a player from a game.
-		 * @param msg the message received by the parser.*/
-		public void removePlayer(final String msg) {
-			int playerId = Integer.valueOf((String) msg.subSequence(1, 3));
-			players.remove(playerId);
-		}
-	}
 
 	/**creates a dialog where the user can join, create and start games.
-	 * @param lobbyParent */
+	 * @param s the socket used for the connection.
+	 * @param lobbyParent the parent of the lobby.*/
 	public GamesPanel(Clientsocket s, final JFrame lobbyParent) 
 	{
 		this.socket = s;
@@ -170,7 +95,8 @@ public class GamesPanel extends JPanel {
 		{
 			//hack to disable editing
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(final int rowIndex, final int vColIndex) {
+			public boolean isCellEditable(final int rowIndex, final int vColIndex) 
+			{
 				return false;
 			}
 		};
@@ -178,9 +104,6 @@ public class GamesPanel extends JPanel {
 		gamesTable.setRowSelectionAllowed(true);
 		gamesTable.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		gamesTable.setFillsViewportHeight(true);
-
-
-		
 
 		gamesScroll = new JScrollPane(gamesTable);
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -268,21 +191,19 @@ public class GamesPanel extends JPanel {
 		startButton = new JButton("Spiel starten");
 		startButton.setEnabled(true);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx=0.0;
-		c.gridwidth=1;
-		c.gridx=3;
-		c.gridy=27;
-		this.add(startButton,c);
+		c.weightx = 0.0;
+		c.gridwidth = 1;
+		c.gridx = 3;
+		c.gridy = 27;
+		this.add(startButton, c);
 		
-		
-
 		this.setOpaque(false);
 		
 		
 		createButton.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				socket.sendData(Protocol.GAME_MAKE.toString());
 				
 			}
@@ -291,8 +212,13 @@ public class GamesPanel extends JPanel {
 		startButton.addActionListener(new ActionListener() {
 			
 			@Override
+<<<<<<< HEAD
 			public void actionPerformed(ActionEvent e) {
-				game=new GameFrame(lobbyParent);
+				game=new GameFrame(lobbyParent,socket);
+=======
+			public void actionPerformed(final ActionEvent e) {
+				game = new GameFrame(lobbyParent);
+>>>>>>> 41513c398ea7758c28ef49335c1c5c9c0ab6d924
 				lobbyParent.setVisible(false);
 				
 			}
@@ -301,14 +227,13 @@ public class GamesPanel extends JPanel {
 		
 		// LISTENERS
 		gamesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
+			public void valueChanged(final ListSelectionEvent e) {
 				Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
-				GameOverview g = games.get(Integer.valueOf(temp.get(0)));
-				if (g != null)
+				String[] info = GamesManager.getInfo(Integer.valueOf(temp.get(0)));
+				if (info != null)
 				{
-					gameSettings.setText(g.toString());
+					gameSettings.setText(info.toString());
 				}
 				else
 				{
@@ -324,7 +249,7 @@ public class GamesPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(0<=gamesTable.getSelectedRow())
+				if (0 <= gamesTable.getSelectedRow())
 				{
 					Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
 					socket.sendData(Protocol.GAME_JOIN.str() + makeGameId(Integer.valueOf(temp.get(0))));
@@ -342,31 +267,6 @@ public class GamesPanel extends JPanel {
 					gamesTable.setEnabled(true);
 			}
 		});
-		
-		socket.addGameEventListener(new GameEventListener() {
-			@Override
-			public void received(GameEvent evt) {
-				Log.DebugLog("GamePanel received message "+evt.getMsg());
-				
-				GameOverview g = games.get(evt.getGame());
-				switch (evt.getType()){
-				case GAME_JOIN:
-					g.addPlayer(evt.getMsg());
-					break;
-				case GAME_QUIT:
-					g.removePlayer(evt.getMsg());
-					break;
-				default:
-					break;
-				}
-				
-			}
-
-			@Override
-			public void received(NetEvent evt) {
-			}
-			
-		});
 
 		socket.addLobbyEventListener(new LobbyEventListener()
 		{
@@ -374,13 +274,9 @@ public class GamesPanel extends JPanel {
 			public void received(final LobbyEvent evt) throws Exception 
 			{
 				Log.DebugLog("GameList: " + evt.getSection() + " " + evt.getMsg());
-				String section = evt.getSection();
-				String message = evt.getMsg();
-				switch(section)
+				switch(evt.getSection())
 				{
-				case "GAME": //XXX not nice
-					GameOverview g = new GameOverview(message);
-					games.put(g.getId(), g);
+				case LOBBY_UPDATE:
 					refreshGameList();
 					break;
 				default:
@@ -398,27 +294,37 @@ public class GamesPanel extends JPanel {
 	 * Checks if there are games with 0 players and deletes them
 	 * */
 	private void refreshGameList() {
+		Log.DebugLog("GamesPanel: refresh game list.");
+		gamesData = GamesManager.makeVector();
+		Log.DebugLog("-->repaint, How many games here: " + gamesData.size());
+		updateGameTable();
 		
-		Collection<GameOverview> c = games.values();
-		Iterator<GameOverview> gIter = c.iterator();
+		
+	}
+	
+	/**updates the gameTable.*/
+	public final void updateGameTable()
+	{
+		Vector<String> columns = new Vector<String>();
+		columns.add("ID");
+		columns.add("Spieler");
+		columns.add("Name");
+		
 
-		gamesData.clear();
-		//iterate through all games
-		while (gIter.hasNext())
+		DefaultTableModel model = (DefaultTableModel) gamesTable.getModel();
+		
+		if (gamesData != null && 0 < gamesData.size())
 		{
-			GameOverview g = gIter.next();
-
-			//remove all empty games
-			if (g.getPlayerCount() <= 0)
-			{
-				games.remove(g.getId());
-			}
-			else
-			{
-				gamesData.add(g.makeInfo());
-			}
+			Log.DebugLog("paint gamelist");
+			model.setDataVector(gamesData, columns);
 		}
-
+		else
+		{
+			Log.DebugLog("empty gamelist");
+			model.setDataVector(new Vector<Vector<String>>(), columns);
+		}
+		
+		gamesTable.revalidate();
 		gamesTable.updateUI();
 		gamesTable.repaint();
 		if (0 < gamesTable.getRowCount())
@@ -429,8 +335,8 @@ public class GamesPanel extends JPanel {
 		{
 			joinButton.setEnabled(false);
 		}
-		
 	}
+	
 	/**formats an int to an correct gameId eg 2XX.
 	 * @param i the int.
 	 * @return the proper GameId.

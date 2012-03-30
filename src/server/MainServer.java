@@ -79,6 +79,15 @@ public class MainServer
 	}
 	
 	/**
+	 * returns the UI
+	 * @return the UI
+	 */
+	public static ServerUI getGUI()
+	{
+		return sui_UI;
+	}
+	
+	/**
 	 * returns the ServerManager	
 	 * @return the ServerManager
 	 */

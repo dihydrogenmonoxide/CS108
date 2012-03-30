@@ -16,8 +16,8 @@ public class MapManager
 	private final static Color polyFillColor = new Color(0, 0, 0);
 	private final static Color highlightLineColor = new Color(0, 255, 0);
 	private final static Color highlightFillColor = new Color(0, 0, 125);
-	private final static int numSteps = 10;
-	private final static int stepSize = 1000;
+	private final static int numSteps = 6;
+	private final static int stepSize = 3500;
 
 
 	private final static Polygon[] fields =
@@ -198,6 +198,7 @@ public class MapManager
 	 */
 	private static Color makeColor(Color lineColor, Color fillColor, int step)
 	{
+		int numSteps = MapManager.numSteps -1;
 		float red = ((float) lineColor.getRed())/numSteps*step + ((float) fillColor.getRed())/numSteps*(numSteps-step);
 		float green = ((float) lineColor.getGreen())/numSteps*step + ((float) fillColor.getGreen())/numSteps*(numSteps-step);
 		float blue = ((float) lineColor.getBlue())/numSteps*step+ ((float) fillColor.getBlue())/numSteps*(numSteps-step);

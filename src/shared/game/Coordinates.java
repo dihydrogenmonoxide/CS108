@@ -1,4 +1,5 @@
 
+
 package shared.game;
 
 public class Coordinates {

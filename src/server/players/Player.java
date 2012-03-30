@@ -32,6 +32,16 @@ implements Comparable<Player>
 		this.i_ID = i_ID+100;
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
+	
+	
+	/**
+	 * Sets the FieldID
+	 * @param ID the field ID
+	 */
+	public void setFieldID(int ID)
+	{
+		fieldID = ID;
+	}
 
 	@Override
 	public int compareTo(Player o)
@@ -107,6 +117,7 @@ implements Comparable<Player>
 				}
 			}
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
+			MainServer.getGUI().addPlayer(this);
 			b_NameSet = true;
 		}
 		else
@@ -251,6 +262,7 @@ implements Comparable<Player>
 		// TODO what to send out when a player quits?
 		if(!b_quit)
 		{
+			MainServer.getGUI().removePlayer(this);
 			b_quit = true;
 			MainServer.getPlayerManager().removePlayer(this);
 			if(this.b_ConnectionLost)
@@ -263,5 +275,13 @@ implements Comparable<Player>
 			else
 				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
 		}
+	}
+	
+	
+	@Override
+	public String toString()
+	{
+		return this.s_Nick;
+		
 	}
 }

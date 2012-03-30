@@ -8,6 +8,7 @@ import javax.swing.text.StyleConstants;
 
 import shared.Log;
 import shared.Protocol;
+import client.data.GamesManager;
 import client.data.PlayerManager;
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
@@ -27,18 +28,6 @@ public class ClientParser {
 	
 	/**assigns each gameID a gameName.*/
 	private HashMap<String, String> games = new HashMap<String, String>();
-
-	/**List of ChatEventListener.  */
-	private javax.swing.event.EventListenerList infoListeners =  new javax.swing.event.EventListenerList();
-
-	/**List of ChatEventListener.  */
-	private javax.swing.event.EventListenerList chatListeners =  new javax.swing.event.EventListenerList();
-
-	/**List of LobbyEventListener.  */
-	private javax.swing.event.EventListenerList lobbyListeners =  new javax.swing.event.EventListenerList();
-
-	/**List of GameEventListener.  */
-	private javax.swing.event.EventListenerList gameListeners =  new javax.swing.event.EventListenerList();
 	
 	/**holds the default attributes for messages.*/
 	private SimpleAttributeSet defaultStyle;
@@ -101,11 +90,12 @@ public class ClientParser {
 				Log.DebugLog("-> wrong format" + msg);
 			}
 		}
+		//never ever gonna give you up:
 		catch (final Exception e)
 		{
 			Log.ErrorLog("Parser, error could not parse message");
 			Log.ErrorLog("--- " + msg + " ---");
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -131,6 +121,21 @@ public class ClientParser {
 		return Protocol.fromString((String) msg.subSequence(0, 5));
 	}
 	
+	/**Extracts the Argument of a received message after the id.
+	 * @param msg the message
+	 * @return the argument after the id*/
+	private String getArgument(final String msg) 
+	{
+		return msg.substring(10);
+	}
+
+	/**extracts the first Game / User or Object id from a message
+	 * e.g. "GJOIN 101 oliver"   --> result will be "101" 
+	 * @param msg the message received by the parser, with the command.
+	 * @return the id */
+	private String getId(final String msg) {
+		return (String) msg.subSequence(6, 9);
+	}
 	
 	/**handles the connection messages.
 	 * @param msg the message*/
@@ -187,7 +192,7 @@ public class ClientParser {
 		String oldNick = PlayerManager.getNamebyId(getId(msg));
 		if (oldNick != null)
 		{	
-			if(oldNick.equals(getArgument(msg)))
+			if (oldNick.equals(getArgument(msg)))
 			{
 				Log.DebugLog("--> nickchange, but same nick as before: " + oldNick);
 			}
@@ -203,18 +208,6 @@ public class ClientParser {
 			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>new User : " + getArgument(msg), attrs));
 		}
 		PlayerManager.addPlayer(getId(msg), (String) getArgument(msg));
-	}
-
-	/**Extracts the Argument of a received message after the id.*/
-	private String getArgument(final String msg) {
-		return msg.substring(10);
-	}
-
-	/**extracts the first Game / User or Object id from a message
-	 * e.g. "GJOIN 101 oliver"   --> result will be "101" 
-	 * @param msg the message received by the parser, with the command.*/
-	private String getId(final String msg) {
-		return (String) msg.subSequence(6, 9);
 	}
 
 
@@ -237,16 +230,21 @@ public class ClientParser {
 		{
 		case GAME_BROADCAST:
 			Log.DebugLog("-->game broadcast: " + msg);
-			this.lobbyReceived(new LobbyEvent(msg, 12, "GAME", msg.substring(7)));
+			GamesManager.addGame(msg);
+			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg.substring(6)));
 			break;
 		case GAME_JOIN:
 			Log.DebugLog("-->user joined game: " + msg);
+			GamesManager.addPlayer(getId(msg), (String) getArgument(msg).subSequence(0, 3));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_JOIN, msg));
+			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg.substring(6)));
 			break;
 		
 		case GAME_QUIT:
 			Log.DebugLog("-->user quit game: " + msg);
+			GamesManager.removePlayer(getId(msg), (String) getArgument(msg).subSequence(0, 3));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_QUIT, msg));
+			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg.substring(6)));
 			break;
 			
 		default:
@@ -313,6 +311,19 @@ public class ClientParser {
 
 	////********************************** LISTENERS
 
+	/**List of ChatEventListener.  */
+	private javax.swing.event.EventListenerList infoListeners =  new javax.swing.event.EventListenerList();
+
+	/**List of ChatEventListener.  */
+	private javax.swing.event.EventListenerList chatListeners =  new javax.swing.event.EventListenerList();
+
+	/**List of LobbyEventListener.  */
+	private javax.swing.event.EventListenerList lobbyListeners =  new javax.swing.event.EventListenerList();
+
+	/**List of GameEventListener.  */
+	private javax.swing.event.EventListenerList gameListeners =  new javax.swing.event.EventListenerList();
+
+	
 	/** 
 	 * adds ChatEvent listeners.
 	 * @param listener

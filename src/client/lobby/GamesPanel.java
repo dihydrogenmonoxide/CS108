@@ -209,15 +209,20 @@ public class GamesPanel extends JPanel {
 			}
 		});
 		
-	/*	startButton.addActionListener(new ActionListener() {
+		startButton.addActionListener(new ActionListener() {
 			
 			@Override
+<<<<<<< HEAD
+			public void actionPerformed(ActionEvent e) {
+				game=new GameFrame(lobbyParent,socket);
+=======
 			public void actionPerformed(final ActionEvent e) {
 				game = new GameFrame(lobbyParent);
+>>>>>>> 41513c398ea7758c28ef49335c1c5c9c0ab6d924
 				lobbyParent.setVisible(false);
 				
 			}
-		});*/
+		});
 		
 		
 		// LISTENERS

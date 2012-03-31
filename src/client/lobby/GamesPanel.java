@@ -12,17 +12,25 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -77,7 +85,7 @@ public class GamesPanel extends JPanel {
 	/**button to create a new game.*/
 	private JButton createButton;
 	/**label where creation settings are shown.*/
-	private JLabel createSetting;
+	private JPanel createPanel;
 	/**label where game options are shown.*/
 	private JPanel gameInfo;
 	/**Button to start a game.*/
@@ -155,47 +163,90 @@ public class GamesPanel extends JPanel {
 	 * @param c the layoutmanager
 	 */
 	private void makeGameCreator(GridBagConstraints c) {
-		createScroll = new JScrollPane();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 80;
-		c.weightx = 3;
-		c.gridwidth = 4;
-		c.gridx = 0;
-		c.gridy = 17;
-		this.add(createScroll, c);
 
-		createSetting = new JLabel();
-		createSetting.setText("daten zum erstellenden Spiel");
-		createSetting.setBackground(new Color(255, 255, 255));
-		createSetting.setOpaque(true);
-		createSetting.setForeground(new Color(50, 50, 50));
+		createPanel = new JPanel();
+		createPanel.setBackground(new Color(255, 255, 255));
+		createPanel.setOpaque(true);
+		createPanel.setForeground(new Color(50, 50, 50));
+		createPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+		createPanel.setSize(new Dimension(300, 300));
+		createPanel.setPreferredSize(new Dimension(300, 150));
+		createPanel.setLayout(new BoxLayout(createPanel, BoxLayout.PAGE_AXIS));
 		c.fill = GridBagConstraints.CENTER;
 		c.gridwidth = 4;
-		c.gridheight = 3;
+		c.gridheight = 10;
 		c.gridx = 0;
 		c.gridy = 24;
-		this.add(createSetting, c);
+		this.add(createPanel, c);
+		
+		
+		 /*
+	     * set the name:
+	     * */
+		JLabel lblName = new JLabel("Spielname: ");
+		JTextField fldName = new JTextField();
+		fldName.setPreferredSize(new Dimension(100, 20));
+	    
+		JPanel name = new JPanel();
+		name.add(lblName);
+		name.add(fldName);
+		createPanel.add(name);
+		
+		
+		/*
+		 * create the dialog to choose the difficulty:
+		 * */
 
-		createButton = new JButton("erstellen");
-		createButton.setEnabled(true);
-		createScroll.setPreferredSize(new Dimension(20, 20));
+		JLabel title = new JLabel("Wähle den Schwierigkeitsgrad:");
+		title.setHorizontalTextPosition(SwingConstants.CENTER);
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		title.setPreferredSize(new Dimension(300, 30));
+		
+		JRadioButton normal = new JRadioButton("normal");
+	    normal.setMnemonic(KeyEvent.VK_B);
+	    normal.setPreferredSize(new Dimension(100, 30));
+	    normal.setActionCommand("normal");
+	    normal.setSelected(true);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipady = 1;
-		c.weightx = 0.0;
-		c.gridwidth = 2;
-		c.gridx = 0;
-		c.gridy = 27;
-		this.add(createButton, c);
+	    JRadioButton middle = new JRadioButton("mittel");
+	    middle.setMnemonic(KeyEvent.VK_C);
+	    middle.setHorizontalAlignment(SwingConstants.CENTER);
+	    middle.setPreferredSize(new Dimension(100, 30));
+	    middle.setActionCommand("mittel");
 
+	    JRadioButton chuckNorris = new JRadioButton("Chuck Norris");
+	    chuckNorris.setMnemonic(KeyEvent.VK_R);
+	    //chuckNorris.setPreferredSize(new Dimension(100, 30));
+	    chuckNorris.setActionCommand("Chuck Norris");
+
+	    ButtonGroup group = new ButtonGroup();
+	    group.add(normal);
+	    group.add(middle);
+	    group.add(chuckNorris);
+
+	    JPanel difficulty = new JPanel();
+	    difficulty.setLayout(new BorderLayout());
+	    difficulty.add(BorderLayout.NORTH, title);
+	    difficulty.add(BorderLayout.WEST, normal);
+	    difficulty.add(BorderLayout.CENTER, middle);
+	    difficulty.add(BorderLayout.EAST, chuckNorris);
+	    createPanel.add(difficulty);
+	    
+	   
+		/*
+		 * the buttons
+		 * */
+	    
+	    createButton = new JButton("erstellen");
+		
 		startButton = new JButton("Spiel starten");
-		startButton.setEnabled(true);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.0;
-		c.gridwidth = 2;
-		c.gridx = 2;
-		c.gridy = 28;
-		this.add(startButton, c);
+		
+	    JPanel buttons = new JPanel();
+	    buttons.add(createButton);
+	    buttons.add(startButton);
+	    
+	    createPanel.add(buttons);
+		
 		
 	}
 	
@@ -308,12 +359,20 @@ public class GamesPanel extends JPanel {
 		toggleButton = new JButton("beitreten");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		toggleButton.setEnabled(false);
-		c.ipady = 1;
+		c.ipady = 0;
 		c.gridwidth = 4;
 		
 		c.gridx = 0;
 		c.gridy = 14;
 		this.add(toggleButton, c);
+		
+		JSeparator separator = new JSeparator();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 0;
+		c.gridwidth = 4;		
+		c.gridx = 0;
+		c.gridy = 16;
+		this.add(separator, c);
 
 		// LISTENERS
 		gamesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()

@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -39,6 +40,7 @@ import shared.Log;
 import shared.Protocol;
 
 import client.data.GamesManager;
+import client.data.PlayerManager;
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
 import client.events.NetEvent;
@@ -79,21 +81,18 @@ public class GamesPanel extends JPanel {
 	private Vector<String> infoPlayersV = new Vector<String>();
 
 
-
-	/**panel where for creating a new game.*/
-	private JScrollPane createScroll;
-	/**button to create a new game.*/
-	private JButton createButton;
-	/**label where creation settings are shown.*/
-	private JPanel createPanel;
-	/**label where game options are shown.*/
+	/**Panel which hold all the infos of a joined game.*/
 	private JPanel gameInfo;
-	/**Button to start a game.*/
-	private JButton startButton;
+	/**Panel to create  a new game.*/
+	private JPanel createPanel;
 
 
 	/**Frame which contains the GUI for the Game.*/
-	GameFrame game;
+	public GameFrame game;
+
+	private JTextField newGameName = new JTextField();
+
+	private JFrame lobbyParent;
 
 	/**creates a dialog where the user can join, create and start games.
 	 * @param s the socket used for the connection.
@@ -101,6 +100,7 @@ public class GamesPanel extends JPanel {
 	public GamesPanel(final Clientsocket s, final JFrame lobbyParent) 
 	{
 		this.socket = s;
+		this.lobbyParent = lobbyParent;
 
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -111,48 +111,51 @@ public class GamesPanel extends JPanel {
 		this.setOpaque(false);
 
 
-		createButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				socket.sendData(Protocol.GAME_MAKE.toString());
-
-			}
-		});
-		startButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(final ActionEvent e) {
-				game = new GameFrame(lobbyParent, s);
-				lobbyParent.setVisible(false);
-
-			}
-		});
-
-
-
 		socket.addLobbyEventListener(new LobbyEventListener()
 		{
 			@Override
 			public void received(final LobbyEvent evt) throws Exception 
 			{
-				Log.DebugLog("GameList: " + evt.getSection() + " " + evt.getMsg());
+				Log.DebugLog("GameList: " + evt.getSection().str() + " " + evt.getMsg() + " " + Protocol.fromString(evt.getMsg()).str());
 				switch(evt.getSection())
 				{
 				case LOBBY_UPDATE:
 					refreshGameList();
-					if(isJoined)
+					if (isJoined)
 					{
 						refreshJoinedGame(joinedGame);
 					}
-					
+					else
+					{
+						if (Protocol.fromString(evt.getMsg()) == Protocol.GAME_JOIN)
+						{
+							try
+							{
+								Log.DebugLog("HANSHANS");
+								int playerId = Integer.valueOf((String) evt.getMsg().subSequence(10, 13));
+								Log.DebugLog(playerId+"");
+								if(PlayerManager.myId() == playerId)
+								{
+									joinedGame = Integer.valueOf((String) evt.getMsg().subSequence(6, 9));
+									refreshJoinedGame(joinedGame);
+									displayJoinedGame();
+									Log.DebugLog("You created a game: "+joinedGame);
+								}
+							}catch(Exception e){
+								Log.ErrorLog("GameList: wrong formatted message");
+							}
+						}
+					}
+
 					break;
+
 				default:
 					break;
 				}
 			}
 
 			//TODO Listener which frees the GUI when one could not join a game.
-			
+
 			@Override
 			public void received(final NetEvent evt) 
 			{
@@ -163,6 +166,8 @@ public class GamesPanel extends JPanel {
 	 * @param c the layoutmanager
 	 */
 	private void makeGameCreator(GridBagConstraints c) {
+
+		JButton startButton;
 
 		createPanel = new JPanel();
 		createPanel.setBackground(new Color(255, 255, 255));
@@ -178,21 +183,20 @@ public class GamesPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 24;
 		this.add(createPanel, c);
-		
-		
-		 /*
-	     * set the name:
-	     * */
+
+
+		/*
+		 * set the name:
+		 * */
 		JLabel lblName = new JLabel("Spielname: ");
-		JTextField fldName = new JTextField();
-		fldName.setPreferredSize(new Dimension(100, 20));
-	    
+		newGameName.setPreferredSize(new Dimension(100, 20));
+
 		JPanel name = new JPanel();
 		name.add(lblName);
-		name.add(fldName);
+		name.add(newGameName);
 		createPanel.add(name);
-		
-		
+
+
 		/*
 		 * create the dialog to choose the difficulty:
 		 * */
@@ -201,56 +205,78 @@ public class GamesPanel extends JPanel {
 		title.setHorizontalTextPosition(SwingConstants.CENTER);
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		title.setPreferredSize(new Dimension(300, 30));
-		
+
 		JRadioButton normal = new JRadioButton("normal");
-	    normal.setMnemonic(KeyEvent.VK_B);
-	    normal.setPreferredSize(new Dimension(100, 30));
-	    normal.setActionCommand("normal");
-	    normal.setSelected(true);
+		normal.setMnemonic(KeyEvent.VK_B);
+		normal.setPreferredSize(new Dimension(100, 30));
+		normal.setActionCommand("normal");
+		normal.setSelected(true);
 
-	    JRadioButton middle = new JRadioButton("mittel");
-	    middle.setMnemonic(KeyEvent.VK_C);
-	    middle.setHorizontalAlignment(SwingConstants.CENTER);
-	    middle.setPreferredSize(new Dimension(100, 30));
-	    middle.setActionCommand("mittel");
+		JRadioButton middle = new JRadioButton("mittel");
+		middle.setMnemonic(KeyEvent.VK_C);
+		middle.setHorizontalAlignment(SwingConstants.CENTER);
+		middle.setPreferredSize(new Dimension(100, 30));
+		middle.setActionCommand("mittel");
 
-	    JRadioButton chuckNorris = new JRadioButton("Chuck Norris");
-	    chuckNorris.setMnemonic(KeyEvent.VK_R);
-	    //chuckNorris.setPreferredSize(new Dimension(100, 30));
-	    chuckNorris.setActionCommand("Chuck Norris");
+		JRadioButton chuckNorris = new JRadioButton("Chuck Norris");
+		chuckNorris.setMnemonic(KeyEvent.VK_R);
+		//chuckNorris.setPreferredSize(new Dimension(100, 30));
+		chuckNorris.setActionCommand("Chuck Norris");
 
-	    ButtonGroup group = new ButtonGroup();
-	    group.add(normal);
-	    group.add(middle);
-	    group.add(chuckNorris);
+		ButtonGroup group = new ButtonGroup();
+		group.add(normal);
+		group.add(middle);
+		group.add(chuckNorris);
 
-	    JPanel difficulty = new JPanel();
-	    difficulty.setLayout(new BorderLayout());
-	    difficulty.add(BorderLayout.NORTH, title);
-	    difficulty.add(BorderLayout.WEST, normal);
-	    difficulty.add(BorderLayout.CENTER, middle);
-	    difficulty.add(BorderLayout.EAST, chuckNorris);
-	    createPanel.add(difficulty);
-	    
-	   
+		JPanel difficulty = new JPanel();
+		difficulty.setLayout(new BorderLayout());
+		difficulty.add(BorderLayout.NORTH, title);
+		difficulty.add(BorderLayout.WEST, normal);
+		difficulty.add(BorderLayout.CENTER, middle);
+		difficulty.add(BorderLayout.EAST, chuckNorris);
+		createPanel.add(difficulty);
+
+
 		/*
 		 * the buttons
 		 * */
-	    
-	    createButton = new JButton("erstellen");
-		
+
+		JButton createButton = new JButton("erstellen");
+
 		startButton = new JButton("Spiel starten");
-		
-	    JPanel buttons = new JPanel();
-	    buttons.add(createButton);
-	    buttons.add(startButton);
-	    
-	    createPanel.add(buttons);
-		
-		
+
+		JPanel buttons = new JPanel();
+		buttons.add(createButton);
+		buttons.add(startButton);
+
+		createPanel.add(buttons);
+
+
+		createButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				if (newGameName.getText() != null && 2 < newGameName.getText().length())
+				{
+					socket.sendData(Protocol.GAME_MAKE.str() + newGameName.getText());
+				}
+			}
+		});
+
+		//TODO remove this after testing, game should start automatic.
+		// game should then be started from an GameEvent listener in the ClientLobby. (therefore the lobbyParent parameter is not needed then.)
+		startButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(final ActionEvent e) {
+				game = new GameFrame(lobbyParent, socket);
+				lobbyParent.setVisible(false);
+			}
+		});
+
+
 	}
-	
-	
+
+
 	/**Creates the Panel in which a user can choose a game and join it.
 	 * @param c
 	 */
@@ -258,7 +284,7 @@ public class GamesPanel extends JPanel {
 		/*
 		 * Create the Listing with all the Games
 		 * */
-		
+
 		Vector<String> columns = new Vector<String>();
 		columns.add("ID");
 		columns.add("Spieler");
@@ -290,7 +316,7 @@ public class GamesPanel extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(gamesScroll, c);
-		
+
 		/*
 		 * Create the Panel with all the Infos if the player joined the game.
 		 * */
@@ -308,51 +334,51 @@ public class GamesPanel extends JPanel {
 		c.gridy = 11;
 		c.insets = new Insets(10, 0, 0, 0);
 		this.add(gameInfo, c);
-		
-		
+
+
 		JButton voteButton = new JButton();
 		voteButton.setText("ich bin bereit");
 		//TODO implement this button
-		
-		
+
+
 		infoName.setListData(infoNameV);
 		infoCount.setListData(infoCountV);
 		infoPlayers.setListData(infoPlayersV);
-		
+
 		//hack to disable selection.
 		infoName.setCellRenderer(new DefaultListCellRenderer() {
-            public Component getListCellRendererComponent(JList list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, false, false);
-                return this;
-            }
-        });
+			public Component getListCellRendererComponent(JList list, Object value, int index,
+					boolean isSelected, boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, false, false);
+				return this;
+			}
+		});
 		infoCount.setCellRenderer(new DefaultListCellRenderer() {
 
-            public Component getListCellRendererComponent(JList list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, false, false);
-                return this;
-            }
-        });
+			public Component getListCellRendererComponent(JList list, Object value, int index,
+					boolean isSelected, boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, false, false);
+				return this;
+			}
+		});
 		infoPlayers.setCellRenderer(new DefaultListCellRenderer() {
 
-            public Component getListCellRendererComponent(JList list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, false, false);
-                return this;
-            }
-        });
-		
+			public Component getListCellRendererComponent(JList list, Object value, int index,
+					boolean isSelected, boolean cellHasFocus) {
+				super.getListCellRendererComponent(list, value, index, false, false);
+				return this;
+			}
+		});
+
 		gameInfo.setPreferredSize(new Dimension(300, 65));
 		gameInfo.setLayout(new BorderLayout(50, 0));
 		gameInfo.add(BorderLayout.WEST, infoName);
 		gameInfo.add(BorderLayout.CENTER, infoCount);
 		gameInfo.add(BorderLayout.EAST, infoPlayers);
 		gameInfo.add(BorderLayout.SOUTH, voteButton);
-		
+
 		gameInfo.validate();
-		
+
 		/*
 		 * Create the toggle button
 		 * */
@@ -361,11 +387,11 @@ public class GamesPanel extends JPanel {
 		toggleButton.setEnabled(false);
 		c.ipady = 0;
 		c.gridwidth = 4;
-		
+
 		c.gridx = 0;
 		c.gridy = 14;
 		this.add(toggleButton, c);
-		
+
 		JSeparator separator = new JSeparator();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 0;
@@ -387,7 +413,7 @@ public class GamesPanel extends JPanel {
 					if (info != null)
 					{
 						//do nothing
-						
+
 					}
 					else
 					{
@@ -412,38 +438,54 @@ public class GamesPanel extends JPanel {
 						//get the game which was joined
 						Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
 						joinedGame = Integer.valueOf(temp.get(0));
-						
-						refreshJoinedGame(joinedGame);
-						
+
+
+
 						//send the command
 						socket.sendData(Protocol.GAME_JOIN.str() + joinedGame);
 
 						//toggle
-						gameInfo.setVisible(true);
-						gamesScroll.setVisible(false);
-						toggleButton.setText("verlassen");
-						isJoined = true;
+						displayJoinedGame();
 					}
 				}
 				else
 				{
 					socket.sendData(Protocol.GAME_QUIT.str());
-					gameInfo.setVisible(false);
-					gamesScroll.setVisible(true);	
-					toggleButton.setText("beitreten");
-					isJoined = false;
+					displayAllGames();
 				}
-
-
 			}
 		});
-		
-
 	}
+	/**
+	 * 
+	 */
+	private void displayAllGames() 
+	{
+		gameInfo.setVisible(false);
+		gamesScroll.setVisible(true);	
+		toggleButton.setText("beitreten");
+		createPanel.setVisible(true);
+		isJoined = false;
+	}
+
+	/**
+	 * 
+	 */
+	private void displayJoinedGame() 
+	{
+		refreshJoinedGame(joinedGame);
+		gameInfo.setVisible(true);
+		gamesScroll.setVisible(false);
+		toggleButton.setText("verlassen");
+		createPanel.setVisible(false);
+		isJoined = true;
+	}
+
 	/**refreshes a game to the list.
 	 * Checks if there are games with 0 players and deletes them
 	 * */
-	private void refreshGameList() {
+	private void refreshGameList() 
+	{
 		Log.DebugLog("GamesPanel: refresh game list.");
 		gamesData = GamesManager.makeVector();
 		Log.DebugLog("-->repaint, How many games here: " + gamesData.size());
@@ -494,21 +536,21 @@ public class GamesPanel extends JPanel {
 		infoNameV.clear();
 		infoCountV.clear();
 		infoPlayersV.clear();
-		
+
 		String[] infos = GamesManager.getInfo(gameId);
 		infoNameV.add("Spiel:");
 		infoNameV.add(infos[1]);
 		infoCountV.add("Mitspieler:");
 		infoCountV.add(infos[2]);
-		
-		gameInfo.setPreferredSize(new Dimension(300,15+(7*infos.length-3)));
-		
+
+		gameInfo.setPreferredSize(new Dimension(300, 15 + (7 * infos.length - 3)));
+
 		for (int i = 0; i < infos.length - 3; i++)
 		{
 			infoPlayersV.add(infos[3 + i]);
-			Log.DebugLog("added"+infos[3+i]);
+			Log.DebugLog("added" + infos[3 + i]);
 		}
-		
+
 		infoName.updateUI();
 		infoCount.updateUI();
 		infoPlayers.updateUI();

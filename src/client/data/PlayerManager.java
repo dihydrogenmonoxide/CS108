@@ -9,6 +9,7 @@ public class PlayerManager {
 	/**the Hashmap where all the players are saved in. 
 	 * key is the playerId.*/
 	private static ConcurrentHashMap<Integer, Player> players= new ConcurrentHashMap<Integer, Player>();
+	private static int myId = 0;
 	
 	/**remove a player from the Hashmap.
 	 * (likely not to be used)
@@ -79,5 +80,17 @@ public class PlayerManager {
 	{
 		return players.get(id);
 	}
-	
+	/**the id of this Player.
+	 * @return the id of this Player*/
+	public static int myId() 
+	{
+		return myId;
+	}
+	/**sets the id.
+	 * @param id the id */
+	public static void setMyId(final int id) 
+	{
+		Log.DebugLog("My User Id is : " + id);
+		myId = id;
+	}
 }

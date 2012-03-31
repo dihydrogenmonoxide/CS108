@@ -106,6 +106,9 @@ public class ClientLobby extends JFrame {
 					//request nick
 					socket.sendData(Protocol.CON_NICK.str() + desiredNick);
 					
+					//get my id
+					socket.sendData(Protocol.CON_MY_ID.str());
+					
 					//TODO Game Listener to start game here.
 					
 					socket.addInfoEventListener(new InfoEventListener()

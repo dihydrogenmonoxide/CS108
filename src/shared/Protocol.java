@@ -55,46 +55,61 @@ public enum Protocol {
 	GAME_BROADCAST(GAME, "GAME"),
 	/**quit a game.*/
 	GAME_QUIT(GAME, "QUIT");
-	
+
 	/**holds the String belonging to the Enum.*/
 	private final String message;
-	
+
 	/**just the Konstruktor to assign the String to the Enum.
 	 * @param str the String belonging to the enum.*/
 	private Protocol(final String str)
 	{
-		 this.message = str;
+		this.message = str;
 	}
 	/**just the Konstruktor to assign the String to the Enum.
 	 * @param section the section belonging to the command
 	 * @param str the String belonging to the enum.*/
 	private Protocol(final Protocol section, final String str)
 	{
-		 this.message = section.toString() + str;
+		this.message = section.toString() + str;
 	}
-	
+
 	/**Translate a String to an enum.
 	 * @return b the enum matching your string.
 	 * @param str the Command you are searching for.
 	 * */
 	public static Protocol fromString(final String str) {
-	    if (str != null) {
-	      for (Protocol b : Protocol.values()) {
-	        if (str.equalsIgnoreCase(b.message)) {
-	          return b;
-	        }
-	      }
-	    }
-	    return UNKNOWN_COMMAND;
-	  }
-	
+		String command;
+		if (str != null) {
+			if (5 <= str.length())
+			{
+				command = (String) str.subSequence(0, 5);
+			}
+			else
+			{
+				command = str;
+			}
+			for (Protocol b : Protocol.values()) {
+				if (command.equalsIgnoreCase(b.message)) 
+				{
+					return b;
+				}
+			}
+
+
+		
+
+
+		}
+		return UNKNOWN_COMMAND;
+	}
+
 	/**Overides the toString method.
 	 * @return message the String belonging to the enum.*/
 	public String toString()
 	{
 		return message;
 	}
-	
+
 	/**return the COMMAND+" ", better readable than toString().
 	 * @return message the COMMAND plus one space.s*/
 	public String str()

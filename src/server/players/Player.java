@@ -21,6 +21,7 @@ implements Comparable<Player>
 	private int fieldID = 0;
 	private long money = 0;
 	private long population = 0;
+	private boolean voted = false;
 	
 	/**
 	 * Creates a new Player on the Server;
@@ -303,6 +304,8 @@ implements Comparable<Player>
 				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+this.i_ID+" "+this.s_Nick);
 			else
 				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
+		
+			ps_sock.close();
 		}
 	}
 	
@@ -312,5 +315,49 @@ implements Comparable<Player>
 	{
 		return this.s_Nick;
 		
+	}
+	
+	/**
+	 * casts this {@link Player}'s vote to start the {@link Server}
+	 */
+	public void voteStart()
+	{
+		if(voted)
+		{
+			sendData(Protocol.CON_ERROR+"Already voted!");
+		}
+		else
+		{
+			if(s_server == null)
+			{
+				sendData(Protocol.CON_ERROR+"Can't vote as you're not in a server");
+			}
+			else
+			{
+				s_server.addVote();
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE+"\t"+this.getNick()+" voted to start the game.", this);
+				voted = true;
+			}
+		}
+	}
+
+
+	/**
+	 * returns whether the {@link Player} voted to start the {@link Server} yet or not
+	 * @return whether the {@link Player} voted or not
+	 */
+	public boolean voted()
+	{
+		return voted;
+	}
+
+
+	/**
+	 * resets the voted() to false<p>
+	 * this is automatically called when a {@link Player} quits a {@link Server}
+	 */
+	public void resetVoted()
+	{
+		voted = false;		
 	}
 }

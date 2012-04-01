@@ -271,6 +271,8 @@ public class SelectServer extends JPanel {
 						+ DEFAULT_SERVER_PORT + ")"
 						).split(":");
 				
+				//FIXME null ptr exception if you hit cancel occurs at .split(":");
+				
 				try {
 					if (InputValidator.isIP(stringIP[0]) == false)
 					{

@@ -11,6 +11,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import client.lobby.InputValidator;
 
@@ -68,41 +71,49 @@ implements Runnable
 		try
 		{
 			MS_socket = SetUp(); 
-			int i_Success = 0;
-			int i_Total = 0;
 			
 			byte[] ab_MSG = (Protocol.DISC_SERVER.str()+this.i_ServerPort+" "+this.s_ServerName).getBytes();
 			DatagramPacket DP_packet = new DatagramPacket(ab_MSG,ab_MSG.length,IA_MultiCastGroup,i_Port);
 			
+			Enumeration<NetworkInterface> eNI_Interface = NetworkInterface.getNetworkInterfaces();
+			List<NetworkInterface> interfaces = new Vector<NetworkInterface>();
+			while(eNI_Interface.hasMoreElements())
+			{
+				NetworkInterface networkInterface = eNI_Interface.nextElement();
+				if(networkInterface.isLoopback()||!networkInterface.isUp())
+					continue;
+				interfaces.add(networkInterface);
+			}
+			
+			if(interfaces.size() == 0)
+			{
+				Log.ErrorLog("No valid network interface found, multicast discovery offline");
+				return;
+			}
+			
 			while(b_active)
 			{
 				
-				try 
+				Iterator<NetworkInterface> iter = interfaces.iterator();
+				while (iter.hasNext())
 				{
-					Enumeration<NetworkInterface> eNI_Interface = NetworkInterface.getNetworkInterfaces();
-					while (eNI_Interface.hasMoreElements())
+					NetworkInterface networkInterface = iter.next();
+					try
 					{
-						NetworkInterface NI_Interface =eNI_Interface.nextElement();
-						if(NI_Interface.isLoopback()||!NI_Interface.isUp())
-							continue;
-						i_Total++;
-						try
+						//Sending it on all Network Interfaces (even into the virtual box)
+						MS_socket.setNetworkInterface(networkInterface);
+						MS_socket.send(DP_packet);
+					}
+					catch(IOException e)
+					{
+						Log.DebugLog("Faulty Adapter : "+networkInterface.getDisplayName()+ " - removing it");
+						iter.remove();
+						if(interfaces.size() == 0)
 						{
-							//Sending it on all Network Interfaces (even into the virtual box)
-							MS_socket.setNetworkInterface(NI_Interface);
-							MS_socket.send(DP_packet);
-							i_Success++;
-						}
-						catch(IOException e)
-						{
-							Log.DebugLog("Faulty Adapter : "+NI_Interface.getDisplayName()+ " - out of "+i_Total+" "+i_Success+" Packets were sent");
-							//We don't care about that... 
+							Log.ErrorLog("All network interfaces failed, discovery offline");
+							return;
 						}
 					}
-				}
-				catch (SocketException e) 
-				{
-					Log.WarningLog("SocketException occured "+e.getMessage());
 				}
 
 				
@@ -115,7 +126,7 @@ implements Runnable
 				}							
 			}
 		}
-		catch(MCSException e)
+		catch(MCSException | SocketException e)
 		{
 			Log.ErrorLog("Couldn't create the MulticastSocket: "+e.getMessage());
 		}		

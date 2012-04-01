@@ -112,6 +112,22 @@ public class Parser
 		case CHAT_MESSAGE://tested & works ~Frank
 			handleChat(s_MSG, ps_sock);
 			break;
+		case GAME_RESET:
+			//TODO implement reset
+			break;
+		case GAME_SPAWN_OBJECT:
+			//TODO implement
+			break;
+		case GAME_UPDATE_OBJECT:
+			//TODO implement
+			break;
+		case GAME_LAUNCH_MISSILE:
+			//TODO implement
+			break;
+			
+		case GAME_VOTESTART:
+			ps_sock.getPlayer().voteStart();
+			break;
 			
 		default:
 			Log.InformationLog("Received: \'"+s_MSG+"\'" );

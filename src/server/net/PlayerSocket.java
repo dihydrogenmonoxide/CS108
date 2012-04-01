@@ -190,16 +190,8 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					if(connectionLost)
-						return;
-					
-					connectionLost = true;
-					if(this.getPlayer() != null)
-						this.getPlayer().connectionLost();
-					else
-						Log.WarningLog("A player disconnected before he was really connected");
-					this.b_active = false;
-					return;
+					close();
+ 					return;
 				}
 				catch(IOException e)
 				{

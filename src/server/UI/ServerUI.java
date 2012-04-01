@@ -237,7 +237,7 @@ public class ServerUI {
 	 * Adds or updates the player in the list on the ServerUI
 	 * @param p the player
 	 */
-	public void addPlayer(Player p)
+	public synchronized void addPlayer(Player p)
 	{
 		playerList.add(p.getID()-101, p);
 	}
@@ -246,7 +246,7 @@ public class ServerUI {
 	 * Removes the specified player
 	 * @param p the player to remove
 	 */
-	public void removePlayer(Player p)
+	public synchronized void removePlayer(Player p)
 	{
 		playerList.remove(p.getID()-101);
 	}

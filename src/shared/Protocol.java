@@ -13,6 +13,22 @@ public enum Protocol {
 	CHAT("C"),
 	/**start of all game messages.*/
 	GAME("G"),
+	/**start of all game objects.*/
+	OBJECT("OB"),
+	/**the tank*/
+	OBJECT_TANK(OBJECT, "TNK"),
+	/**the fighter plane*/
+	OBJECT_FIGHTER_JET(OBJECT, "JET"),
+	/**the bomber*/
+	OBJECT_BOMBER(OBJECT, "BMB"),
+	/**the reproduction center*/
+	OBJECT_REPRODUCTION_CENTER(OBJECT, "REP"),
+	/**the stationary antitank*/
+	OBJECT_STATIONARY_ANTI_TANK(OBJECT, "SAT"),
+	/**the stationary anti aircraft weapon*/
+	OBJECT_STATIONARY_ANTI_AIR(OBJECT, "SAA"),
+	/**the missile silo*/
+	OBJECT_MISSILE_SILO(OBJECT, "MSS"),
 	/**alive beacon.*/
 	DISC_ALIVE(DISCOVERY, "ALIV"),
 	/**server beacon.*/
@@ -51,21 +67,42 @@ public enum Protocol {
 	GAME_MAKE(GAME,  "MAKE"),
 	/**join a game.*/
 	GAME_JOIN(GAME, "JOIN"),
-	/**game infos broadcastet to all.*/
+	/**game information broadcasted to all.*/
 	GAME_BROADCAST(GAME, "GAME"),
 	/**quit a game.*/
-	GAME_QUIT(GAME, "QUIT");
+	GAME_QUIT(GAME, "QUIT"),
+	/**pause a game	 */
+	GAME_PAUSE(GAME, "PAUS"),
+	/**resume a game	 */
+	GAME_RESUME(GAME, "RESU"),
+	/**vote to start the game */
+	GAME_VOTESTART(GAME, "VOTE"),
+	/**forces the server to send all unit/building data */
+	GAME_RESET(GAME, "RSET"),
+	/**Tells the client to start/end a build phase */
+	GAME_BUILD_PHASE(GAME, "BUIL"),
+	/**Tells the client to start/end an animation phase */
+	GAME_ANIMATION_PHASE(GAME, "ANIM"),
+	/**Tells the client how much money it owns */
+	GAME_MONEY(GAME, "MONY"),
+	/**Tells the server to spawn the specified object at the given location */
+	GAME_SPAWN_OBJECT(GAME, "SPWN"),
+	/**Updates the given object */
+	GAME_UPDATE_OBJECT(GAME, "UPDT"),
+	/**Launches a missile */
+	GAME_LAUNCH_MISSILE(GAME, "MISL");	
+	
 
 	/**holds the String belonging to the Enum.*/
 	private final String message;
 
-	/**just the Konstruktor to assign the String to the Enum.
+	/**just the Constructor to assign the String to the Enum.
 	 * @param str the String belonging to the enum.*/
 	private Protocol(final String str)
 	{
 		this.message = str;
 	}
-	/**just the Konstruktor to assign the String to the Enum.
+	/**just the Constructor to assign the String to the Enum.
 	 * @param section the section belonging to the command
 	 * @param str the String belonging to the enum.*/
 	private Protocol(final Protocol section, final String str)

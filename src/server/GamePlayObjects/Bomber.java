@@ -15,7 +15,7 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Bomber extends Unit implements GamePlayObject, InterAct {
+public class Bomber implements GamePlayObject, Unit, Flying {
 
 	private int id;
 	private Coordinates position;

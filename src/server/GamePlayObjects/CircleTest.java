@@ -19,7 +19,12 @@ class CircleTest {
 			int y3, int r) {
 		double hm1 = (y2 - y1);
 		double hm2 = (x2 - x1);
-		double m = hm1 / hm2;
+		double m;
+		try{
+		m = hm1 / hm2;
+		}
+		catch(Exception e)
+		{ m=1;}
 		double q = y1 - m * x1;
 		double c = y3 + 1 / m * x3;
 		double h1 = c - q;

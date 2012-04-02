@@ -35,7 +35,16 @@ public interface GamePlayObject {
 		
 		void setId(int id);
 		
+		int getRange();
 		
+		//Damages the target which is another GamePlayObject owned by an enemy.
+		void attack(GamePlayObject target);
+		
+		//Checks if an Object can be attacked.
+		boolean isInRange(GamePlayObject target);
+		
+		//Checks if the targeted Object can be Attacked( A Bomber cannot attack a Jet)
+		boolean isAttackableObject(GamePlayObject target);
 		
 		
 		

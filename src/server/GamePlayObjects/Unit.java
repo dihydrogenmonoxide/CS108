@@ -1,16 +1,16 @@
 package server.GamePlayObjects;
 
 
-import shared.game.Coordinates;
 
-public abstract class Unit implements GamePlayObject{
+
+public interface Unit extends GamePlayObject{
 	
-	void move(){}
+	void move();
 	
 	
-	void moveProv(){}
+	void moveProv();
 	
-	void attack(){}
+	void attack();
 	
 	
 	

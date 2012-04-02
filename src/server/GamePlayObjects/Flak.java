@@ -17,7 +17,7 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Flak extends Defensive implements GamePlayObject, InterAct {
+public class Flak implements GamePlayObject, Defensive, Building {
 	private int id;
 	private Coordinates position;
 	private int healthPoints;
@@ -112,31 +112,14 @@ public class Flak extends Defensive implements GamePlayObject, InterAct {
 		return (long)this.price;
 	}
 	
-	public void setID(int id){
-		if(id<1000000 || id>9999999)
-			throw new IllegalArgumentException();
-		else
-		this.id=id;
-		
-	}
+	
 
-	/**
-	 * Deletes all References //that the GarbageCollector kills the Object.
-	 * 
-	 */
-	public void saveLiving(){
-		if(this.getHealthPoints()>0)
-		{
-			Manager.addDefensive(this);
-			
-		}
-		
-	}
+	
 	/**
 	 * never used.
 	 */
 	public void destruct() {
-		Manager.removeDefensive(this);
+		
 		
 
 	}
@@ -258,16 +241,14 @@ public class Flak extends Defensive implements GamePlayObject, InterAct {
 
 	public boolean isAttackableObject(GamePlayObject target) {
 
-		if ((target instanceof Jet || target instanceof Bomber)
+		if ((target instanceof Flying)
 				&& this.getOwner() != target.getOwner())
 			return true;
 		return false;
 	}
 
 	/**
-	 * get the current Target of the Tank.
-	 * 
-	 * @return Coordinates of the Target to Move
+	 * Senseless for Buildings
 	 */
 	public Coordinates getTarget() {
 
@@ -277,7 +258,7 @@ public class Flak extends Defensive implements GamePlayObject, InterAct {
 
 	/**
 	 * Set Coordinates as Moving Target
-	 * 
+	 * Senseless for Buildings, but is in the Interface
 	 * @param target
 	 */
 	public void setTarget(Coordinates target) {
@@ -334,6 +315,21 @@ public class Flak extends Defensive implements GamePlayObject, InterAct {
 	 * sensless, but must be implemented.
 	 */
 	public void attack(GamePlayObject O) {
+	}
+
+	@Override
+	public void addToTargets(Unit U) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setId(int id) {
+		if(id<1000000 || id>9999999)
+			throw new IllegalArgumentException();
+		else
+		this.id=id;
+		
 	}
 }
 

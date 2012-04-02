@@ -15,7 +15,7 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Jet extends Defensive implements GamePlayObject, InterAct {
+public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	private int id;
 	private Coordinates position;
 	private int healthPoints;
@@ -107,26 +107,10 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 		return (long)this.price;
 	}
 	
-	public void setID(int id){
-		if(id<1000000 || id>9999999)
-			throw new IllegalArgumentException();
-		else
-		this.id=id;
-		
-	}
+	
 
-	/**
-	 * Deletes all References //that the GarbageCollector kills the Object.
-	 * 
-	 */
-	public void saveLiving(){
-		if(this.getHealthPoints()>0)
-		{
-			Manager.addDefensive(this);
-			Manager.addUnit(this);
-		}
-		
-	}
+	
+	
 	/**
 	 * never used.
 	 */
@@ -253,7 +237,7 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 
 	public boolean isAttackableObject(GamePlayObject target) {
 
-		if ((target instanceof Jet || target instanceof Bomber)
+		if ((target instanceof Flying)
 				&& this.getOwner() != target.getOwner())
 			return true;
 		return false;
@@ -413,6 +397,12 @@ public class Jet extends Defensive implements GamePlayObject, InterAct {
 		else
 		this.id=id;
 		
+		
+	}
+
+	@Override
+	public void addToTargets(Unit U) {
+		// TODO Auto-generated method stub
 		
 	}
 }

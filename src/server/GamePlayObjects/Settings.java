@@ -46,8 +46,8 @@ public class Settings {
 	{
 		final static int movingRange=10000;
 		final static int attackRange=5000;
-		final static String[] attackable = {"Tank", "Building"};
-		final static int attackPoints=100;
+		final static String[] attackable = {""};
+		final static int attackPoints=100;//Hier, Reproduktionsrate
 		final static int healthPoints=1000;
 		final static int ammunation=10;
 		final static int price=7000;
@@ -58,7 +58,7 @@ public class Settings {
 	{
 		final static int movingRange=10000;
 		final static int attackRange=5000;
-		final static String[] attackableBy = {"Tank", "Building"};
+		final static String[] attackable = {"Flying"};
 		final static int attackPoints=100;
 		final static int healthPoints=1000;
 		final static int ammunation=10;
@@ -70,12 +70,26 @@ public class Settings {
 	{
 		final static int movingRange=10000;
 		final static int attackRange=5000;
-		final static String[] attackableBy = {"Tank", "Building"};
+		final static String[] attackableBy = {"Tank"};
 		final static int attackPoints=100;
 		final static int healthPoints=1000;
 		final static int ammunation=10;
 		final static int price=7000;
 		
 	}
+	
+	public static class Bank
+	{
+		final static int movingRange=10000;
+		final static int attackRange=5000;
+		final static String[] attackable = {};
+		final static int attackPoints=100;//Hier:GeldRate
+		final static int healthPoints=1000;
+		final static int ammunation=10;
+		final static int price=7000;
+		
+	}
+	
+	
 
 }

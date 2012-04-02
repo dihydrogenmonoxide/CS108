@@ -1,5 +1,7 @@
 package server.GamePlayObjects;
 
+
+
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -15,7 +17,7 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Tank implements GamePlayObject, Defensive, Unit{
+public class ATT implements GamePlayObject, Defensive, Building, Unit {
 	private int id;
 	private Coordinates position;
 	private int healthPoints;
@@ -30,20 +32,20 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 	private int price;
 	private Coordinates PosAtEnd;
 
-	public Tank(Coordinates pos, Player owner, GamePlayObjectManager manager)
+	public ATT(Coordinates pos, Player owner, GamePlayObjectManager manager)
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Tank.healthPoints;
-		this.range = Settings.Tank.attackRange;
-		this.attackPoints = Settings.Tank.attackPoints;
+		this.healthPoints = Settings.ATT.healthPoints;
+		this.range = Settings.ATT.attackRange;
+		this.attackPoints = Settings.ATT.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Tank.movingRange;
+		this.movingRange = Settings.ATT.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Tank.ammunation;
-		this.price = Settings.Tank.price;
+		this.ammunation = Settings.ATT.ammunation;
+		this.price = Settings.ATT.price;
 		this.build();
 
 	}
@@ -55,7 +57,10 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 	public int getId() {
 		return this.id;
 	}
-
+	/**
+	 * Funktionsrumpf für die Drawfunktion des Clients.
+	 * 
+	 */
 	public void draw() {
 	}
 
@@ -97,7 +102,7 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addDefensive(this);
-			Manager.addUnit(this);
+			
 			this.getOwner().removeMoney(this.getPrice());
 		}
 
@@ -109,24 +114,13 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 	
 	
 
-	/**
-	 * Deletes all References //that the GarbageCollector kills the Object.
-	 * 
-	 */
-	public void saveLiving(){
-		if(this.getHealthPoints()>0)
-		{
-			Manager.addDefensive(this);
-			Manager.addUnit(this);
-		}
-		
-	}
+	
 	/**
 	 * never used.
 	 */
 	public void destruct() {
-		Manager.removeDefensive(this);
-		Manager.removeUnit(this);
+		
+		
 
 	}
 
@@ -215,7 +209,7 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 			}
 		} catch (NullPointerException e) {
 		} finally {
-			this.ammunation = Settings.Tank.ammunation;
+			this.ammunation = Settings.ATT.ammunation;
 		}
 	}
 
@@ -247,16 +241,14 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 
 	public boolean isAttackableObject(GamePlayObject target) {
 
-		if ((target instanceof Building || target instanceof Tank)
+		if ((target instanceof Tank)
 				&& this.getOwner() != target.getOwner())
 			return true;
 		return false;
 	}
 
 	/**
-	 * get the current Target of the Tank.
-	 * 
-	 * @return Coordinates of the Target to Move
+	 * Senseless for Buildings
 	 */
 	public Coordinates getTarget() {
 
@@ -266,7 +258,7 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 
 	/**
 	 * Set Coordinates as Moving Target
-	 * 
+	 * Senseless for Buildings, but is in the Interface
 	 * @param target
 	 */
 	public void setTarget(Coordinates target) {
@@ -297,85 +289,10 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 	public void moveProv() {
 		
 		
-		if (this.getTarget() == null || this.getTarget().equals(this.getPos())) {
+		
 			this.setTarget(this.getPos());
 			this.PosAtEnd = this.getPos();
 
-		}
-		if (this.position.getDistance(getTarget()) <= this.movingRange) {
-			
-			this.PosAtEnd = new Coordinates(getTarget().getX(), getTarget()
-					.getY());
-
-		}
-
-		else {
-			
-			double direction = (getTarget().getY() - this.position.getY())
-					/ (getTarget().getX() - this.position.getX());
-			
-			int deltaX = (int) Math.round(Math.sqrt((this.movingRange*this.movingRange)
-					/ (1 + (direction*direction))));
-			int deltaY = (int) Math.round(deltaX * direction);
-			
-			
-
-			 if(getTarget().getY() - this.position.getY()<0)
-			 {
-				 if(deltaY<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(deltaY);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(-deltaY);
-				 }
-					 
-			 }
-			 else
-				 if(deltaY<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(-deltaY);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(deltaY);
-				 }
-			 if(getTarget().getX() - this.position.getX()<0)
-			 {
-				 if(deltaX<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(deltaX);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(-deltaX);
-				 }
-					 
-			 }
-			 else
-				 if(deltaX<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(-deltaX);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(deltaX);
-				 }
-				
-			
-			
-
-		}
-		
 	}
 	/**
 	 * CHecks if the GamePlayObject O moves through its Range, and adds it to the possibleTargetList if its so
@@ -407,7 +324,7 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 	}
 
 	@Override
-	public void setId(int id){
+	public void setId(int id) {
 		if(id<1000000 || id>9999999)
 			throw new IllegalArgumentException();
 		else
@@ -415,3 +332,5 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 		
 	}
 }
+
+

@@ -106,19 +106,7 @@ public class GamePlayObjectManager {
 	 *            U
 	 * 
 	 */
-	public void addDefensive(Building B) {
-		if (B instanceof Building) {
-			Buildings.add(B);
 
-			if (AllObjects.contains(B)) {
-			} else
-			{
-				AllObjects.add(B);
-				this.distributeId(B);
-			}
-		} else
-			throw new IllegalArgumentException();
-	}
 
 	/**
 	 * never used
@@ -152,13 +140,7 @@ public class GamePlayObjectManager {
 	 * 
 	 * @param O
 	 */
-	public void removeDefensive(Building B) {
-		if (B instanceof Building) {
-			Buildings.remove(B);
-			AllObjects.remove(B);
-		} else
-			throw new IllegalArgumentException();
-	}
+	
 
 	/**
 	 * Sends the Move the Object O will do in the Next round to all Defensives

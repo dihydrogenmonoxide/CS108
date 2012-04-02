@@ -76,8 +76,8 @@ implements Comparable<Server>
 	
 	private void startGame()
 	{
-		// TODO Auto-generated method stub
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+0+"  "+this.getServername());
+		logicManager.startGame();
 		isGameRunning = true;
 	}
 

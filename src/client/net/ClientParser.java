@@ -95,7 +95,8 @@ public class ClientParser {
 		{
 			Log.ErrorLog("Parser, error could not parse message");
 			Log.ErrorLog("--- " + msg + " ---");
-			e.printStackTrace();
+			//XXX uncomment for debugging:
+			//e.printStackTrace();
 		}
 	}
 
@@ -175,6 +176,10 @@ public class ClientParser {
 			Log.ErrorLog("-->connection was closed");
 			this.infoReceived(new InfoEvent(msg, -1, "<server closed the connection>"));
 			break;	
+		case CON_MY_ID:
+			Log.DebugLog("-->received my id");
+			PlayerManager.setMyId(Integer.valueOf((String) msg.subSequence(6, 9)));
+			break;
 		default:
 			this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>" + msg, defaultStyle));
 			break;
@@ -237,14 +242,14 @@ public class ClientParser {
 			Log.DebugLog("-->user joined game: " + msg);
 			GamesManager.addPlayer(getId(msg), (String) getArgument(msg).subSequence(0, 3));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_JOIN, msg));
-			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg.substring(6)));
+			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
 		
 		case GAME_QUIT:
 			Log.DebugLog("-->user quit game: " + msg);
 			GamesManager.removePlayer(getId(msg), (String) getArgument(msg).subSequence(0, 3));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_QUIT, msg));
-			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg.substring(6)));
+			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
 			
 		default:

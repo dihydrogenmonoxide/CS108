@@ -11,6 +11,7 @@ public class ServerCombination
 		MainServer.startServer(9003);
 		
 		new MainClient();
-		new MainClient();
+		// sorry, not supported
+		//new MainClient();
 	}
 }

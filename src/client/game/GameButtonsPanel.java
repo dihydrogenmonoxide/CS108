@@ -55,44 +55,48 @@ public class GameButtonsPanel extends JPanel{
 		this.add(attack, c);
 		
 		
-		rakete = new JToggleButton("rakete");
+		rakete = new JToggleButton("Bild");
+		rakete.setToolTipText("Rakete");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=0;
 		c.gridy=1;
-		c.insets = new Insets(0,5,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(rakete, c);
 		
-		tank = new JToggleButton("Panzer");
+		tank = new JToggleButton("Bild");
+		tank.setToolTipText("Panzer");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=0;
 		c.gridy=2;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(tank, c);
 
-		jagd = new JToggleButton("Jagdflugzeug");
+		jagd = new JToggleButton("Bild");
+		jagd.setToolTipText("Jagdflugzeug");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=1;
 		c.gridy=1;
-		c.insets = new Insets(0,5,0,0);
+		c.insets = new Insets(2,5,0,0);
 		this.add(jagd, c);
 		
-		bomber = new JToggleButton("Bomber");
+		bomber = new JToggleButton("Bild");
+		bomber.setToolTipText("Bomber");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=1;
 		c.gridy=2;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(2,5,0,0);
 		this.add(bomber, c);
 		
 		
@@ -105,35 +109,40 @@ public class GameButtonsPanel extends JPanel{
 		c.gridwidth = 2;
 		c.gridx = 2;
 		c.gridy = 0;
+		c.insets = new Insets(0,20,0,0);
 		this.add(defense, c);
 		
-		radar= new JToggleButton("Radar");
+		radar= new JToggleButton("Bild");
+		radar.setToolTipText("Radar");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=2;
 		c.gridy=1;
+		c.insets = new Insets(2,20,0,0);
 		this.add(radar, c);
 		
-		luftabwehr = new JToggleButton("Luftabwehr");
+		luftabwehr = new JToggleButton("Bild");
+		luftabwehr.setToolTipText("Luftabwehr");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=2;
 		c.gridy=2;
-		c.insets = new Insets(5,5,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(luftabwehr, c);
 		
-		landabwehr = new JToggleButton("Landabwehr");
+		landabwehr = new JToggleButton("Bild");
+		landabwehr.setToolTipText("Landabwehr");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=3;
 		c.gridy=1;
-		c.insets = new Insets(0,5,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(landabwehr, c);
 		
 		JLabel gebaude = new JLabel();
@@ -145,28 +154,31 @@ public class GameButtonsPanel extends JPanel{
 		c.gridwidth = 2;
 		c.gridx = 4;
 		c.gridy = 0;
+		c.insets = new Insets(2,20,0,0);
 		this.add(gebaude, c);
 		
 		
-		repro = new JToggleButton("Reproduktionszentrum");
+		repro = new JToggleButton("Bild");
+		repro.setToolTipText("Reproduktionszentrum");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=4;
 		c.gridy=1;
-		c.insets = new Insets(0,20,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(repro, c);
 		
 		
-		geld = new JToggleButton("Regionalbank");
+		geld = new JToggleButton("Bild");
+		geld.setToolTipText("Regionalbank");
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
 		c.gridx=4;
 		c.gridy=2;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(geld, c);
 		
 		
@@ -182,7 +194,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		time= new TimePanel();
 		c.gridwidth=3;
-		c.gridheight=2;
+		c.gridheight=3;
 		c.gridx=5;
 		c.gridy=0;
 		this.add(time, c);

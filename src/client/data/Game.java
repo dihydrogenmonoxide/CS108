@@ -75,7 +75,7 @@ class Game {
 		players.remove(playerId);
 		if (players.size() <= 0)
 		{
-			//XXX GamesManager.removeGame(this.id);
+			//amesManager.removeGame(this.id);
 		}
 	}
 	
@@ -97,6 +97,7 @@ class Game {
 		{
 			Player p = pIter.next();
 			s[3 + count] = p.getName();
+			count++;
 		}
 		return s;
 	}

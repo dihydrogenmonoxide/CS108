@@ -23,6 +23,8 @@ implements Runnable
 	private Parser P_Parser;
 	private Player p_player;
 	
+	private boolean connectionLost = false;
+	
 	private Thread t_thread_send;
 	private Thread t_thread_rec;
 	private ObjectInputStream OIS_MSG;
@@ -103,6 +105,10 @@ implements Runnable
 									this.P_Parser.Parse(Protocol.CON_TIMEOUT.str()+i_Timeout, this);
 									this.b_active = false;
 									this.S_socket.close();
+									if(connectionLost)
+										return;
+											
+									connectionLost = true;
 									if(this.getPlayer() != null)
 										this.getPlayer().connectionLost();
 									else
@@ -133,8 +139,13 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					this.p_player.disconnect();
 					this.b_active = false;
+					
+					if(connectionLost)
+						return;
+							
+					connectionLost = true;
+					this.p_player.disconnect();
 					return;
 				}
 				catch(IOException e)
@@ -179,12 +190,8 @@ implements Runnable
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					if(this.getPlayer() != null)
-						this.getPlayer().connectionLost();
-					else
-						Log.WarningLog("A player disconnected before he was really connected");
-					this.b_active = false;
-					return;
+					close();
+ 					return;
 				}
 				catch(IOException e)
 				{
@@ -255,8 +262,11 @@ implements Runnable
 	 */
 	public void close()
 	{
-		this.sendData(Protocol.CON_EXIT.toString());
-		this.p_player.disconnect();
+		if(!connectionLost)
+		{
+			this.sendData(Protocol.CON_EXIT.toString());
+			this.p_player.disconnect();
+		}
 		this.b_active = false;
 		
 	}

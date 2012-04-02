@@ -106,6 +106,9 @@ public class ClientLobby extends JFrame {
 					//request nick
 					socket.sendData(Protocol.CON_NICK.str() + desiredNick);
 					
+					//get my id
+					socket.sendData(Protocol.CON_MY_ID.str());
+					
 					//TODO Game Listener to start game here.
 					
 					socket.addInfoEventListener(new InfoEventListener()
@@ -130,7 +133,7 @@ public class ClientLobby extends JFrame {
 				}
 				catch (Exception e)
 				{
-					//e.printStackTrace();
+					e.printStackTrace();
 					Log.WarningLog("-->connection broken, could not connect");
 					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
 					if (socket != null) { socket.disconnect(); }

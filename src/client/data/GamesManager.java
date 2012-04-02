@@ -129,7 +129,7 @@ public class GamesManager {
 	 * @param gameId the id of the game.
 	 * @param playerId the id of the player.*/
 	public static void removePlayer(final String gameId, final String playerId) {
-		Log.DebugLog("GameManager reomved Player " + playerId + "from game " + gameId);
+		Log.DebugLog("GameManager removed Player " + playerId + " from game " + gameId);
 		removePlayer(Integer.valueOf(gameId), Integer.valueOf(playerId));
 	}
 }

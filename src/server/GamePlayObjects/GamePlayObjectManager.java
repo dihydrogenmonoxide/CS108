@@ -1,3 +1,4 @@
+
 package server.GamePlayObjects;
 
 import java.util.LinkedList;
@@ -135,11 +136,7 @@ public class GamePlayObjectManager {
 			throw new IllegalArgumentException();
 	}
 
-	/**
-	 * never used
-	 * 
-	 * @param O
-	 */
+
 	
 
 	/**

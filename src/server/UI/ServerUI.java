@@ -1,4 +1,4 @@
-package server;
+package server.UI;
 
 import java.awt.Dimension;
 import java.awt.MenuItem;
@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 
+import server.MainServer;
 import server.players.Player;
 import shared.Log;
 import shared.Protocol;
@@ -77,10 +78,8 @@ public class ServerUI {
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER)
 				{
-					for(Player p : MainServer.getPlayerManager().getPlayers())
-					{
-						p.sendData(txtServerconsole.getText());
-					}
+					MainServer.getPlayerManager().broadcastMessage_everyone(txtServerconsole.getText());
+					
 					printText("Send \'"+txtServerconsole.getText()+"\' to "+MainServer.getPlayerManager().getPlayers().size()+" Players");
 					txtServerconsole.setText("");
 				}
@@ -102,7 +101,7 @@ public class ServerUI {
 		});
 		txtServerconsole.setText("Enter any Commands here and they\'re broadcasted to everyone");
 		
-		txtServerconsole.setColumns(10);
+		txtServerconsole.setColumns(1);
 		
 		txtpnStdout = new JTextArea();
 		txtpnStdout.setForeground(Color.GREEN);
@@ -238,7 +237,7 @@ public class ServerUI {
 	 * Adds or updates the player in the list on the ServerUI
 	 * @param p the player
 	 */
-	public void addPlayer(Player p)
+	public synchronized void addPlayer(Player p)
 	{
 		playerList.add(p.getID()-101, p);
 	}
@@ -247,7 +246,7 @@ public class ServerUI {
 	 * Removes the specified player
 	 * @param p the player to remove
 	 */
-	public void removePlayer(Player p)
+	public synchronized void removePlayer(Player p)
 	{
 		playerList.remove(p.getID()-101);
 	}

@@ -1,9 +1,5 @@
 package server.GamePlayObjects;
 
-
-
-
-
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -34,8 +30,8 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	private int price;
 	private Coordinates PosAtEnd;
 
-	public Reproductioncenter(Coordinates pos, Player owner, GamePlayObjectManager manager)
-			throws GameObjectBuildException {
+	public Reproductioncenter(Coordinates pos, Player owner,
+			GamePlayObjectManager manager) throws GameObjectBuildException {
 
 		this.position = pos;
 		this.healthPoints = Settings.ATT.healthPoints;
@@ -59,6 +55,7 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	public int getId() {
 		return this.id;
 	}
+
 	/**
 	 * Funktionsrumpf für die Drawfunktion des Clients.
 	 * 
@@ -84,45 +81,39 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	}
 
 	/**
-	 * Checks if the Object can be build here. //If true, the Object
-	 * gets build.
+	 * Checks if the Object can be build here. //If true, the Object gets build.
 	 * 
 	 * @throws GameObjectBuildException
 	 * 
 	 */
 	public void build() throws GameObjectBuildException {
 
-		
-
-		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+		if (this.position.getX() <= 300000
+				|| this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
-				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
+				|| MapManager.isInside(this.getOwner().getFieldID(), this
+						.getPos().getX(), this.getPos().getY())) {
 			throw new GameObjectBuildException("Wrong Position");
 
-		} else if (Owner.getMoney()<price) {
+		} else if (Owner.getMoney() < price) {
 			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addUnit(this);
-			
+
 			this.getOwner().removeMoney(this.getPrice());
 		}
 
 	}
-	
-	public long getPrice(){
-		return (long)this.price;
-	}
-	
-	
 
-	
+	public long getPrice() {
+		return (long) this.price;
+	}
+
 	/**
 	 * never used.
 	 */
 	public void destruct() {
-		
-		
 
 	}
 
@@ -141,8 +132,6 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	 */
 	public void damage(int damPoints) {
 		this.healthPoints -= damPoints;
-		
-		
 
 	}
 
@@ -165,23 +154,24 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	}
 
 	public void addToPossibleTargets(GamePlayObject O) {
-		
 
 	}
+
 	/**
 	 * Clears the Targetlist
 	 */
 	public void clearTargetList() {
-	
 
 	}
 
 	/**
-	 * Attacks the first Target in the List while it isnt dead and the ammunation is >0
+	 * Reproducts the Population
 	 */
 	public void attack() {
-		//To do: Add population.
-		
+		this.getOwner().addPopulation(
+				this.getOwner().getPopulation()
+						* this.getAttackPoints());
+
 	}
 
 	/**
@@ -224,8 +214,9 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	}
 
 	/**
-	 * Set Coordinates as Moving Target
-	 * Senseless for Buildings, but is in the Interface
+	 * Set Coordinates as Moving Target Senseless for Buildings, but is in the
+	 * Interface
+	 * 
 	 * @param target
 	 */
 	public void setTarget(Coordinates target) {
@@ -242,38 +233,37 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	}
 
 	/**
-	 * Send the Move to all other Defensive Objects
-	 * Moves the Object to its Target. 
+	 * Send the Move to all other Defensive Objects Moves the Object to its
+	 * Target.
 	 * 
 	 */
 	public void move() {
 		this.Manager.sendMoving(this.getPosAtEnd(), this);
 		this.position = this.getPosAtEnd();
 	}
+
 	/**
 	 * Calculates the Move of this Round.
 	 */
 	public void moveProv() {
-		
-		
-		
-			this.setTarget(this.getPos());
-			this.PosAtEnd = this.getPos();
+
+		this.setTarget(this.getPos());
+		this.PosAtEnd = this.getPos();
 
 	}
+
 	/**
-	 * CHecks if the GamePlayObject O moves through its Range, and adds it to the possibleTargetList if its so
+	 * CHecks if the GamePlayObject O moves through its Range, and adds it to
+	 * the possibleTargetList if its so
 	 */
 	public void checkLine(Coordinates Target, GamePlayObject O) {
-		
+
 		if (CircleTest.checkLine(Target.getX(), Target.getY(), O.getPos()
 				.getX(), O.getPos().getY(), this.PosAtEnd.getX(), this.PosAtEnd
 				.getY(), this.getRange())
 				&& this.isAttackableObject(O)) {
 			this.possibleTargets.add(O);
-			
-			
-			
+
 		}
 
 	}
@@ -284,18 +274,12 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	public void attack(GamePlayObject O) {
 	}
 
-	
-	
-
 	@Override
 	public void setId(int id) {
-		if(id<1000000 || id>9999999)
+		if (id < 1000000 || id > 9999999)
 			throw new IllegalArgumentException();
 		else
-		this.id=id;
-		
+			this.id = id;
+
 	}
 }
-
-
-

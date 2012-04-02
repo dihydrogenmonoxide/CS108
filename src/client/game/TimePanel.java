@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,22 +13,20 @@ import javax.swing.Timer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.TimeoutException;
 
 
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 
 public class TimePanel extends JPanel{
     
     
-	JLabel promptLabel, timerLabel;
-	JTextField tf;
-	JButton buttonMin;
+	JLabel timerLabel;
 	Timer timer;
 	int zahl;
-	int zero;
-	int sec;
-	int min;
 	
 	public TimePanel(){
 		
@@ -36,24 +36,21 @@ public class TimePanel extends JPanel{
 
 
 
-		timerLabel = new JLabel("Waiting…");
-		c.ipadx=40;
-		c.ipady=40;
+		timerLabel = new JLabel("   Start  ");
 		timerLabel.setForeground(Color.red);
-		timerLabel.setBorder(null);
+		timerLabel.setBackground(Color.black);
+		timerLabel.setOpaque(true);
+	    Border thickBorder = new LineBorder(Color.red, 7);
+		timerLabel.setBorder(thickBorder);
+		timerLabel.setAlignmentX(CENTER_ALIGNMENT);
+		timerLabel.setAlignmentY(CENTER_ALIGNMENT);
 		this.add(timerLabel,c);		
 		
 		Font curFont = timerLabel.getFont();
 		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));
-		this.setOpaque(false);
 		
+		zahl=120;//Rundenzeit
 		
-		zahl = 132;  //rundenzeit
-		min=0;
-		min=zahl/60;
-		sec=zahl%60;
-		
-		//timerLabel.setText(min +"   :   " +zero+ sec);
 		TimeClassMin tcMin = new TimeClassMin(zahl);
 		timer = new Timer(1000, tcMin);
 		timer.start();

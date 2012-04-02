@@ -4,13 +4,18 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+
+import client.net.Clientsocket;
 
 	
 	
@@ -37,11 +42,17 @@ public class GameButtonsPanel extends JPanel{
 	private JToggleButton geld;
 	
 	TimePanel time;
+
+	private Clientsocket socket;
+
 	
-	public GameButtonsPanel(){
+	public GameButtonsPanel(Clientsocket s){
+		
+		this.socket = s;
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		
 		
 		JLabel attack = new JLabel();
 		attack.setText("Angriffelemente:");
@@ -182,20 +193,14 @@ public class GameButtonsPanel extends JPanel{
 		this.add(geld, c);
 		
 		
-		ready= new JButton("ready");
-		c.ipadx=1;
-		c.ipady=1;
-		c.gridwidth=1;
-		c.gridheight=1;
-		c.gridx=10;
-		c.gridy=1;
-		c.insets = new Insets(0,100,0,0);
-		this.add(ready, c);
+		
+		
+		
 		
 		time= new TimePanel();
 		c.gridwidth=3;
 		c.gridheight=3;
-		c.gridx=5;
+		c.gridx=6;
 		c.gridy=0;
 		this.add(time, c);
 		

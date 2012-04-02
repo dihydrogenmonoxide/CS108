@@ -53,13 +53,13 @@ public class GameFrame extends JDialog {
 		game.setSize(iLobbyX, iLobbyY);
 		game.setLocation(screenX / 2 - iLobbyX / 2, screenY / 2 - iLobbyY / 2);
 		game.setContentPane(bg);
-		gameFrame= new InnerGameFrame(socket);
+		gameFrame= new InnerGameFrame(game, socket);
 		game.add(gameFrame);
 		
 		game.setResizable(false);
 		game.setVisible(true);
 		
-		/**WindowClosingEvent to return ro InnerLobby*/
+		/**WindowClosingEvent to return to InnerLobby*/
 		game.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				game.dispose();

@@ -151,16 +151,9 @@ public class PlayerManager
 	 */
 	public void broadcastMessage_everyone(String s_MSG)
 	{
-		try
+		for(Player p : l_players)
 		{
-			for(Player p : l_players)
-			{
-				p.sendData(s_MSG);
-			}
-		}
-		catch(NullPointerException e)
-		{
-			Log.WarningLog("A player socket was null");
+			p.sendData(s_MSG);
 		}
 	}
 }

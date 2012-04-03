@@ -1,6 +1,7 @@
 package server.logic;
 
 import server.Server;
+import shared.Protocol;
 
 
 
@@ -26,5 +27,6 @@ implements Runnable
 	public void startGame()
 	{
 		thread.start();
+		server.broadcastMessage(Protocol.GAME_BEGIN);
 	}
 }

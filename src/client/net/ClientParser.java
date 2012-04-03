@@ -252,6 +252,11 @@ public class ClientParser {
 			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
 			
+		case GAME_BEGIN:
+			//TODO CLIENTPARSER start game 
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_BEGIN, msg));
+			break;
+			
 		case GAME_PAUSE:
 			//TODO CLIENTPARSER implement freeze 
 			

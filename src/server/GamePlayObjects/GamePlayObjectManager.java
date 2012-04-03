@@ -15,7 +15,7 @@ public class GamePlayObjectManager {
 	private int maxid;
 	private Server Server;
 
-	GamePlayObjectManager(Server server) {
+	public GamePlayObjectManager(Server server) {
 		this.AllObjects = new LinkedList<GamePlayObject>();
 		this.Defensives = new LinkedList<Defensive>();
 		

@@ -85,7 +85,7 @@ public class GameChatPanel extends JPanel {
 		inputChat = new JFormattedTextField("Nachricht hier eingeben");
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = 1;
-		//c.ipadx = 0;
+		inputChat.setPreferredSize(new Dimension(10,20));
 		c.weightx = 0.0;
 		c.weighty=0.0;
 		c.gridwidth = 8;

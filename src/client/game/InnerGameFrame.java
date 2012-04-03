@@ -59,8 +59,6 @@ public class InnerGameFrame extends JPanel {
 		this.add(gameChat, c);
 		
 		GameButtonsPanel buttons = new GameButtonsPanel( socket);
-		c.ipady=2;
-		c.ipadx=1;
 		c.weightx= 0.0;
 		c.gridwidth=3;
 		c.gridx=0;
@@ -69,6 +67,7 @@ public class InnerGameFrame extends JPanel {
 		
 		JToggleButton ready= new JToggleButton("ready");
 		ready.setSelected(false);
+		c.gridwidth=1;
 		c.gridx=3;
 		c.gridy=2;
 		this.add(ready, c);

@@ -90,7 +90,9 @@ public enum Protocol {
 	/**Updates the given object */
 	GAME_UPDATE_OBJECT(GAME, "UPDT"),
 	/**Launches a missile */
-	GAME_LAUNCH_MISSILE(GAME, "MISL");	
+	GAME_LAUNCH_MISSILE(GAME, "MISL"),
+	/**Starts the game*/
+	GAME_BEGIN(GAME, "BEGI");	
 	
 
 	/**holds the String belonging to the Enum.*/

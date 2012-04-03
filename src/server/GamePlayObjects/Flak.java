@@ -17,7 +17,7 @@ import shared.User;
  * @author lucius
  * 
  */
-public class Flak implements GamePlayObject, Defensive, Building {
+public class Flak implements GamePlayObject, Defensive, Building, Unit {
 	private int id;
 	private Coordinates position;
 	private int healthPoints;
@@ -92,7 +92,7 @@ public class Flak implements GamePlayObject, Defensive, Building {
 
 		
 
-		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+		if (this.position.getX() <= 450000 || this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
 				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
@@ -102,6 +102,7 @@ public class Flak implements GamePlayObject, Defensive, Building {
 			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addDefensive(this);
+			Manager.addUnit(this);
 			
 			this.getOwner().removeMoney(this.getPrice());
 		}
@@ -290,26 +291,46 @@ public class Flak implements GamePlayObject, Defensive, Building {
 		
 		
 		
-			this.setTarget(this.getPos());
-			this.PosAtEnd = this.getPos();
+			this.setTarget(new Coordinates(this.getPos().getX(), this.getPos().getY()));
+			
+			this.PosAtEnd = new Coordinates(this.getPos().getX(), this.getPos().getY());
 
 	}
 	/**
 	 * CHecks if the GamePlayObject O moves through its Range, and adds it to the possibleTargetList if its so
 	 */
 	public void checkLine(Coordinates Target, GamePlayObject O) {
+		if(Target == null)
+		{
+			System.out.println("Target ist null");
+		}
+		if(O == null)
+		{
+			System.out.println("O ist null");
+		}
+		
+		if(this.PosAtEnd == null)
+		{
+			System.out.println("This.posAtEnd ist null");
+		}
+		if(this.position == null)
+		{
+			System.out.println("This.posAtEnd ist null");
+		}
+		
 		
 		if (CircleTest.checkLine(Target.getX(), Target.getY(), O.getPos()
 				.getX(), O.getPos().getY(), this.PosAtEnd.getX(), this.PosAtEnd
 				.getY(), this.getRange())
 				&& this.isAttackableObject(O)) {
 			this.possibleTargets.add(O);
-			
+		}
+		
 			
 			
 		}
 
-	}
+	
 
 	/**
 	 * sensless, but must be implemented.

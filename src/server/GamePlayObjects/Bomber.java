@@ -88,7 +88,7 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 	 */
 	public void build() throws GameObjectBuildException {
 
-		if (this.position.getX() <= 300000
+		if (this.position.getX() <= 450000
 				|| this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
@@ -224,10 +224,10 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 				else if (this.BuildingTarget == null && this.getTarget() != null) {
 						for (Player P : this.Manager.getServer().getPlayers()) {
 							if (MapManager.isInside(P.getFieldID(), this
-									.getTarget().getX(), this.getTarget()
-									.getX())
+									.getPosAtEnd().getX(), this.getPosAtEnd()
+									.getY())
 									&& P != this.getOwner()) {
-								//To Do: Kill People
+								P.removePopulation((long)this.getAttackPoints());
 								this.getOwner().addMoney((long)getAttackPoints());
 							}
 								

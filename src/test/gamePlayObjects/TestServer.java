@@ -15,7 +15,7 @@ public class TestServer
 		startTestServer();
 	}
 	
-	public static void startTestServer()
+	public static Server startTestServer()
 	{
 		MainServer.startServer(9009);
 		for(int i = 1; i != 6; i++)
@@ -28,6 +28,7 @@ public class TestServer
 		{
 			s.addPlayer(p);
 		}
+		return s;
 	}
 
 }

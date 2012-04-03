@@ -87,7 +87,7 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 
 		
 
-		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+		if (this.position.getX() <= 450000 || this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
 				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
@@ -288,8 +288,10 @@ public class Tank implements GamePlayObject, Defensive, Unit{
 	 * 
 	 */
 	public void move() {
+		
 		this.Manager.sendMoving(this.getPosAtEnd(), this);
 		this.position = this.getPosAtEnd();
+		
 	}
 	/**
 	 * Calculates the Move of this Round.

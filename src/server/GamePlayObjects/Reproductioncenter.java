@@ -20,7 +20,7 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	private Coordinates position;
 	private int healthPoints;
 	private int range;
-	private int attackPoints;
+	private double attackPoints;
 	private Coordinates target;
 	private int movingRange;
 	private Player Owner;
@@ -34,16 +34,16 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 			GamePlayObjectManager manager) throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.ATT.healthPoints;
-		this.range = Settings.ATT.attackRange;
-		this.attackPoints = Settings.ATT.attackPoints;
+		this.healthPoints = Settings.Reproductioncenter.healthPoints;
+		this.range = Settings.Reproductioncenter.attackRange;
+		this.attackPoints = Settings.Reproductioncenter.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.ATT.movingRange;
+		this.movingRange = Settings.Reproductioncenter.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.ATT.ammunation;
-		this.price = Settings.ATT.price;
+		this.ammunation = Settings.Reproductioncenter.ammunation;
+		this.price = Settings.Reproductioncenter.price;
 		this.build();
 
 	}
@@ -88,7 +88,7 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	 */
 	public void build() throws GameObjectBuildException {
 
-		if (this.position.getX() <= 300000
+		if (this.position.getX() <= 450000
 				|| this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
@@ -168,9 +168,9 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	 * Reproducts the Population
 	 */
 	public void attack() {
-		this.getOwner().addPopulation(
+		this.getOwner().addPopulation((long)(
 				this.getOwner().getPopulation()
-						* this.getAttackPoints());
+						* this.getAttackPoints()));
 
 	}
 
@@ -179,7 +179,7 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	 * 
 	 * @return
 	 */
-	private int getAttackPoints() {
+	private double getAttackPoints() {
 
 		return this.attackPoints;
 	}

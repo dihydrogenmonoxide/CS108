@@ -146,7 +146,7 @@ public class GamePlayObjectManager {
 	 */
 	public void sendMoving(Coordinates Target, GamePlayObject O) {
 		for (Defensive D : Defensives) {
-
+			
 			D.checkLine(Target, O);
 		}
 	}

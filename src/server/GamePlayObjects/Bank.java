@@ -24,7 +24,7 @@ public class Bank implements GamePlayObject, Building, Unit {
 	private Coordinates position;
 	private int healthPoints;
 	private int range;
-	private int attackPoints;
+	private double attackPoints;
 	private Coordinates target;
 	private int movingRange;
 	private Player Owner;
@@ -94,7 +94,7 @@ public class Bank implements GamePlayObject, Building, Unit {
 
 		
 
-		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+		if (this.position.getX() <= 450000 || this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
 				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
@@ -180,7 +180,7 @@ public class Bank implements GamePlayObject, Building, Unit {
 	 * Attacks the first Target in the List while it isnt dead and the ammunation is >0
 	 */
 	public void attack() {
-		this.getOwner().addMoney(this.Owner.getMoney()*this.getAttackPoints());
+		this.getOwner().addMoney((long)(this.Owner.getMoney()*this.getAttackPoints()));
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class Bank implements GamePlayObject, Building, Unit {
 	 * 
 	 * @return
 	 */
-	private int getAttackPoints() {
+	private double getAttackPoints() {
 
 		return this.attackPoints;
 	}

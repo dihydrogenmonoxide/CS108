@@ -263,17 +263,15 @@ public class SelectServer extends JPanel {
 		{
 			public void actionPerformed(final ActionEvent arg0) 
 			{
-				Log.DebugLog("User wants to enter its own IP, take care...");
-				String[] stringIP = JOptionPane.showInputDialog(
-						"Gebe eine Serveraddresse an: \n IP (zBsp. 192.168.1.1 , Port standardmässig " 
-						+ DEFAULT_SERVER_PORT 
-						+ ")\n IP:PORT (z.Bsp. 192.168.1.1:9003)\n " 
-						+ DEFAULT_SERVER_PORT + ")"
-						).split(":");
-				
-				//FIXME null ptr exception if you hit cancel occurs at .split(":");
-				
+				Log.DebugLog("User wants to enter its own IP, take care...");				
 				try {
+					String[] stringIP = JOptionPane.showInputDialog(
+							"Gebe eine Serveraddresse an: \n IP (zBsp. 192.168.1.1 , Port standardmässig " 
+							+ DEFAULT_SERVER_PORT 
+							+ ")\n IP:PORT (z.Bsp. 192.168.1.1:9003)\n " 
+							+ DEFAULT_SERVER_PORT + ")"
+							).split(":");
+					
 					if (InputValidator.isIP(stringIP[0]) == false)
 					{
 						JOptionPane.showMessageDialog(buttonIp, "Warum konnte der inhaftierte Programmierer nicht aus dem Gefängnis ausbrechen? \n \n \n 404 Feil not found \n \n (not an ip)", "ID 10 T - Error", JOptionPane.ERROR_MESSAGE);

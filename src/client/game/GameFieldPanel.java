@@ -17,9 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GameFieldPanel extends JPanel {
-	Graphics offscreenGraphics;
 	private BufferedImage img;
-	Image offscreenImage;
 	
 	public GameFieldPanel(){
 		try {
@@ -39,21 +37,19 @@ public class GameFieldPanel extends JPanel {
 		c.gridy=0;
 		this.add(gameLabel,c);
 		
-		offscreenImage = createImage( (int)(img.getHeight()*0.45),(int)( img.getWidth()*0.45) );
-		offscreenGraphics = offscreenImage.getGraphics();
+
 		
 	}
 	
 	
 	public void paint( Graphics g ) {
 		super.paint( g );
-		if ( offscreenImage != null ){
-			g.drawImage( offscreenImage, 0, 0, this );
+		try{
+			g.drawImage(img, 0, 0,(int)( img.getWidth()*0.45),(int)(img.getHeight()*0.45) , 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
+		}
+		catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
-	private void offPaint()
-	{
-	offscreenGraphics.drawImage(img, 0, 0,(int)( img.getWidth()*0.45),(int)(img.getHeight()*0.45) , 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
-	}
 }

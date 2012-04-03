@@ -38,16 +38,16 @@ public class Bank implements GamePlayObject, Building, Unit {
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.ATT.healthPoints;
-		this.range = Settings.ATT.attackRange;
-		this.attackPoints = Settings.ATT.attackPoints;
+		this.healthPoints = Settings.Bank.healthPoints;
+		this.range = Settings.Bank.attackRange;
+		this.attackPoints = Settings.Bank.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.ATT.movingRange;
+		this.movingRange = Settings.Bank.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.ATT.ammunation;
-		this.price = Settings.ATT.price;
+		this.ammunation = Settings.Bank.ammunation;
+		this.price = Settings.Bank.price;
 		this.build();
 
 	}

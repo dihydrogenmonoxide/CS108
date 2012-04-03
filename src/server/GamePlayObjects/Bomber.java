@@ -344,7 +344,10 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 	 */
 	public void move() {
 		this.Manager.sendMoving(this.getPosAtEnd(), this);
+		Coordinates Returnposition=this.getPos();
 		this.position = this.getPosAtEnd();
+		this.Manager.sendMoving(Returnposition, this);
+		this.position = Returnposition;
 	}
 
 	/**

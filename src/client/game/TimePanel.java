@@ -23,10 +23,10 @@ import javax.swing.border.LineBorder;
 
 public class TimePanel extends JPanel{
     
-    
-	JLabel timerLabel;
-	Timer timer;
-	int zahl;
+    /**TimerLabel to show Countdown*/
+	private JLabel timerLabel;
+	private Timer timer;
+	private int zahl;
 	
 	public TimePanel(){
 		

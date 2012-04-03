@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +18,22 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import client.net.Clientsocket;
+
 public class GameFieldPanel extends JPanel {
+	/**Buffered image to Paint Map*/
 	private BufferedImage img;
+	/**Image for DoubleBufferedImage*/
 	private Image dbImage;
 	private Graphics dbg;
+	private GameButtonsPanel but;
+	
+	private Clientsocket socket;
 
 
-	public GameFieldPanel(){
+	public GameFieldPanel(Clientsocket s){
+		this.socket = s;
+		
 		try {
 			img = ImageIO.read(new File("full.png"));
 		} catch (IOException e) {
@@ -40,13 +51,15 @@ public class GameFieldPanel extends JPanel {
 		c.gridy=0;
 		this.add(gameLabel,c);
 		
+		but = new GameButtonsPanel(socket);
+		but.selected();
+		/*durch das BufferedImage funktioniert es nocht nicht ganz so, wie es sollte. wenn ihr schnell drückt könnt ihr es jedoch sehen;)*/
+		addMouseListener(new MyMouseListener());
 
-		
 	}
 	
 	
 	public void paintComponent( Graphics g ) {
-		//super.paint( g );
 		try{
 			g.drawImage(img, 0, 0,(int)( img.getWidth()*0.45),(int)(img.getHeight()*0.45) , 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
 			repaint();
@@ -64,4 +77,17 @@ public class GameFieldPanel extends JPanel {
 	}
 	
 
+	class MyMouseListener extends MouseAdapter
+	{
+		public void mousePressed(MouseEvent event)
+		{
+			Graphics g = getGraphics();
+			int x = event.getX();
+			int y = event.getY();
+			g.setColor(Color.green);
+	        g.fillOval(x-10,y-10,20,20);
+	         
+	      }
+	  }
+	
 }

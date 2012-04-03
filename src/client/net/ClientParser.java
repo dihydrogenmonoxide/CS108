@@ -252,10 +252,56 @@ public class ClientParser {
 			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
 			
+		case GAME_PAUSE:
+			//TODO CLIENTPARSER implement freeze 
+			
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_PAUSE, msg));
+			break;
+			
+		case GAME_RESUME:
+			//TODO CLIENTPARSER implement free GUI
+			
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_RESUME, msg));
+			break;
+			
+		case GAME_RESET:
+			//TODO CLIENTPARSER implement reset GameManager
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_RESET, msg));
+			break;
+			
+		case GAME_BUILD_PHASE:
+			//TODO CLIENTPARSER implement enable User interaction on map.
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_BUILD_PHASE, msg));
+			break;
+			
+		case GAME_ANIMATION_PHASE:
+			//TODO CLIENTPARSER implement freeze user interaction on map.
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_ANIMATION_PHASE, msg));
+			break;
+			
+		case GAME_MONEY:
+			//TODO CLIENTPARSER implement add the Money to a player via GameManager
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_MONEY, msg));
+			break;
+			
+		case GAME_SPAWN_OBJECT:
+			//TODO CLIENTPARSER implement notify GameManager
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_SPAWN_OBJECT, msg));
+			break;
+			
+		case GAME_UPDATE_OBJECT:
+			//TODO CLIENTPARSER implement notify GameManager
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_UPDATE_OBJECT, msg));
+			break;
+			
+		case GAME_LAUNCH_MISSILE:
+			//TODO CLIENTPARSER implement ARMAGEDDON
+			this.gameReceived(new GameEvent(msg, Protocol.GAME_LAUNCH_MISSILE, msg));
+			break;
+			
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);
 		}
-		//this.gameReceived(new GameEvent(msg, 12));
 	}
 
 

@@ -338,7 +338,12 @@ public class GamesPanel extends JPanel {
 
 		JButton voteButton = new JButton();
 		voteButton.setText("ich bin bereit");
-		//TODO implement this button
+		voteButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				socket.sendData(Protocol.GAME_VOTESTART.str());
+			}
+		});
 
 
 		infoName.setListData(infoNameV);

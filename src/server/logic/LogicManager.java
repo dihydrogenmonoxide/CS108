@@ -27,6 +27,6 @@ implements Runnable
 	public void startGame()
 	{
 		thread.start();
-		server.broadcastMessage(Protocol.GAME_BEGIN);
+		server.broadcastMessage(Protocol.GAME_BEGIN.str());
 	}
 }

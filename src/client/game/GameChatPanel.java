@@ -50,13 +50,18 @@ public class GameChatPanel extends JPanel {
 	
 	public GameChatPanel(final Clientsocket s){
 		
-		this.socket=s;
-		
+		this.socket = s;
+
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		
-		
-		
+
+		/*
+		 * 
+		 *  MAKE THE GUI
+		 * 
+		 * /
+		  
+		/* The styled Document which holds the actual chat messages*/
 		chatContent = new DefaultStyledDocument();
 
 		chatPane = new JTextPane();
@@ -67,26 +72,25 @@ public class GameChatPanel extends JPanel {
 
 		chatScroll = new JScrollPane(chatPane);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipadx = 320;
-		c.ipady = 505;
+		c.ipadx = 260;
+		c.ipady = 504;
 		c.weightx = 0.0;
-		c.gridwidth = 20;
+		c.gridwidth = 10;
 		c.gridheight = 28;
-		c.gridx = 0;
+		c.gridx = 6;
 		c.gridy = 0;
-		c.insets = new Insets(0, 0, 0, 0);
 		this.add(chatScroll, c);
-		
-		
-		
-		
+
+
 		inputChat = new JFormattedTextField("Nachricht hier eingeben");
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = 1;
-		c.ipadx = 250;
+		//c.ipadx = 0;
 		c.weightx = 0.0;
-		c.gridwidth = 14;
-		c.gridx = 0;
+		c.weighty=0.0;
+		c.gridwidth = 8;
+		c.gridheight=1;
+		c.gridx = 6;
 		c.gridy = 29;
 		this.add(inputChat, c);
 		
@@ -95,15 +99,18 @@ public class GameChatPanel extends JPanel {
 		sendButton = new JButton("senden");
 		sendButton.setEnabled(false);
 		c.fill = GridBagConstraints.HORIZONTAL;
+		chatScroll.setPreferredSize(new Dimension(20, 20));
 		c.ipady = 2;
-		c.ipadx = 1;
+		c.ipadx = 5;
 		c.weightx = 0.0;
 		c.gridwidth = 1;
-		c.gridx = 19;
+		c.gridx = 15;
 		c.gridy = 29;
 		this.add(sendButton, c);
 		
 		this.setOpaque(false);
+		
+		
 		
 		/*
 		 * 
@@ -222,7 +229,5 @@ public class GameChatPanel extends JPanel {
 		});
 
 		
-	
 	}
-
 }

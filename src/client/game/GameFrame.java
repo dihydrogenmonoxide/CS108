@@ -72,7 +72,7 @@ public class GameFrame extends JDialog {
 
 	}
 	
-private JPanel createBackground() {
+	private JPanel createBackground() {
 		
 		JPanel bg = new JPanel()
 		{

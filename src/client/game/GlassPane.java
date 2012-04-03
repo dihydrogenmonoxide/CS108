@@ -10,14 +10,18 @@ import java.awt.event.*;
 
 class GlassPane extends JComponent {
 	Point point;
+	Font font1 = new Font("TimesRoman",Font.PLAIN,36);
 
 	public void paint(Graphics g) {
 		if (point != null) {
 			g.setColor(Color.green);
-			g.fillRect(point.x + 20, point.y +20, 120, 20);
-			g.drawString("Please wait for opponents", point.x+20, point.y+20);
+			g.setFont(font1);
+			g.drawString("Please wait for opponents", 250, 250);
+			
+				
+			}
 		}
-	}
+	
 
 	public void setPoint(Point p) {
 		point = p;

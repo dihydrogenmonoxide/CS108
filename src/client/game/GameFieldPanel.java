@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GameFieldPanel extends JPanel {
+	Graphics offscreenGraphics;
+	private BufferedImage img;
+	Image offscreenImage;
 	
-    private BufferedImage img;
 	public GameFieldPanel(){
-		
 		try {
 			img = ImageIO.read(new File("full.png"));
 		} catch (IOException e) {
@@ -36,28 +38,22 @@ public class GameFieldPanel extends JPanel {
 		c.gridx=0;
 		c.gridy=0;
 		this.add(gameLabel,c);
-
 		
-		
-
-		
+		offscreenImage = createImage( (int)(img.getHeight()*0.45),(int)( img.getWidth()*0.45) );
+		offscreenGraphics = offscreenImage.getGraphics();
 		
 	}
+	
+	
 	public void paint( Graphics g ) {
-		
-	       super.paint( g );
-			try 
-			{
-				g.drawImage(img, 0, 0,(int)( img.getWidth()*0.45),(int)(img.getHeight()*0.45) , 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
-			} 
-			catch (Exception e) 
-			{
-				e.printStackTrace();
-			}
-		
-}
-	
-	
-	
+		super.paint( g );
+		if ( offscreenImage != null ){
+			g.drawImage( offscreenImage, 0, 0, this );
+		}
+	}
 
+	private void offPaint()
+	{
+	offscreenGraphics.drawImage(img, 0, 0,(int)( img.getWidth()*0.45),(int)(img.getHeight()*0.45) , 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
+	}
 }

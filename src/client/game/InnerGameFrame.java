@@ -50,13 +50,12 @@ public class InnerGameFrame extends JPanel {
 		c.gridy = 0;
 		this.add(gameField, c);
 		
-		gameChat = new GameChatPanel(s);
+		gameChat = new GameChatPanel(socket);
 		c.ipady = 2;
 		c.weightx = 0.0;
 		c.gridwidth = 2;
-		c.gridx = 3;
+		c.gridx = 2;
 		c.gridy = 0;
-		c.insets = new Insets(0, 0, 0, 0);
 		this.add(gameChat, c);
 		
 		GameButtonsPanel buttons = new GameButtonsPanel( socket);
@@ -82,7 +81,7 @@ public class InnerGameFrame extends JPanel {
 		});
 		
 		GlassPane = new GlassPane(ready, gameChat,
-				gameFrame.getContentPane());
+		gameFrame.getContentPane());
 		gameFrame.setGlassPane(GlassPane);
 	
 		

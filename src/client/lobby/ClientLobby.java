@@ -4,6 +4,8 @@ package client.lobby;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import client.events.GameEvent;
+import client.events.GameEventListener;
 import client.events.InfoEvent;
 import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
@@ -109,7 +111,17 @@ public class ClientLobby extends JFrame {
 					//get my id
 					socket.sendData(Protocol.CON_MY_ID.str());
 					
-					//TODO Game Listener to start game here.
+					socket.addGameEventListener(new GameEventListener()
+					{
+						public void received(GameEvent evt) 
+						{
+						}
+						@Override
+						public void received(NetEvent evt) {
+							//TODO start game here
+							
+						}	
+					});
 					
 					socket.addInfoEventListener(new InfoEventListener()
 					{

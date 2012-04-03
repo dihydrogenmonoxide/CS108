@@ -131,7 +131,6 @@ public class GamesPanel extends JPanel {
 						{
 							try
 							{
-								Log.DebugLog("HANSHANS");
 								int playerId = Integer.valueOf((String) evt.getMsg().subSequence(10, 13));
 								Log.DebugLog(playerId+"");
 								if(PlayerManager.myId() == playerId)

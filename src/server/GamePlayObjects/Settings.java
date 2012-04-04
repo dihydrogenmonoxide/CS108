@@ -32,12 +32,12 @@ public class Settings {
 	
 	public static class Bomber
 	{
-		final static int movingRange=1000000;
+		final static int movingRange=100000;
 		final static int attackRange=5000;
 		final static String[] attackable = {"Tank", "Building"};
-		final static int attackPoints=100;
+		final static int attackPoints=250;
 		final static int healthPoints=1000;
-		final static int ammunation=10;
+		final static int ammunation=5;
 		final static int price=7000;
 		
 	}
@@ -47,7 +47,7 @@ public class Settings {
 		final static int movingRange=10000;
 		final static int attackRange=5000;
 		final static String[] attackable = {""};
-		final static double attackPoints=0.14;//Hier, Reproduktionsrate
+		final static double attackPoints=0.0014;//Hier, Reproduktionsrate
 		final static int healthPoints=1000;
 		final static int ammunation=10;
 		final static int price=7000;
@@ -59,7 +59,7 @@ public class Settings {
 		final static int movingRange=10000;
 		final static int attackRange=5000;
 		final static String[] attackable = {"Flying"};
-		final static int attackPoints=100;
+		final static int attackPoints=10;
 		final static int healthPoints=1000;
 		final static int ammunation=10;
 		final static int price=7000;
@@ -83,7 +83,7 @@ public class Settings {
 		final static int movingRange=10000;
 		final static int attackRange=5000;
 		final static String[] attackable = {};
-		final static double attackPoints=1.1;//Hier:GeldRate
+		final static double attackPoints=0.0001;//Hier:GeldRate
 		final static int healthPoints=1000;
 		final static int ammunation=10;
 		final static int price=7000;

@@ -16,15 +16,15 @@ public class BigTest {
 		GamePlayObjectManager Manager= new GamePlayObjectManager(s);
 		for(Player p:s.getPlayers())
 		{	
-			p.addMoney(10000000);
-			p.addPopulation(1000000000);
+			p.addMoney(100000000);
+			p.addPopulation(1000000);
 			
 			for(int x=450000;x<800000;x=x+10000)
 			{
 				for (int y=100000;y<300000;y=y+10000)
 				{
 					try{
-				new Tank(new Coordinates(x,y), p, Manager);
+				new Tank(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 				
 					}
 				catch(GameObjectBuildException e){
@@ -32,7 +32,7 @@ public class BigTest {
 				}
 					
 					try{
-						new Jet(new Coordinates(x,y), p, Manager);
+						new Jet(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 						
 							}
 						catch(GameObjectBuildException e){
@@ -40,7 +40,7 @@ public class BigTest {
 						}
 					
 					try{
-						new Bomber(new Coordinates(x,y), p, Manager);
+						new Bomber(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 							
 					}
 						catch(GameObjectBuildException e){
@@ -48,7 +48,7 @@ public class BigTest {
 						}
 					
 					try{
-						new Flak(new Coordinates(x,y), p, Manager);
+						new Flak(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 						
 							}
 						catch(GameObjectBuildException e){
@@ -56,15 +56,7 @@ public class BigTest {
 						}
 					
 					try{
-						new ATT(new Coordinates(x,y), p, Manager);
-						
-							}
-						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
-						}
-					/*
-					try{
-						new Bank(new Coordinates(x,y), p, Manager);
+						new ATT(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 						
 							}
 						catch(GameObjectBuildException e){
@@ -72,12 +64,20 @@ public class BigTest {
 						}
 					
 					try{
-						new Reproductioncenter(new Coordinates(x,y), p, Manager);
+						new Bank(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 						
 							}
 						catch(GameObjectBuildException e){
 							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
-						}*/
+						}
+					
+					try{
+						new Reproductioncenter(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
+						
+							}
+						catch(GameObjectBuildException e){
+							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+						}
 					
 				
 					

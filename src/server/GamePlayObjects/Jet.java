@@ -191,7 +191,7 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 			while (this.ammunation > 0) {
 				while (this.selectTarget().getHealthPoints() < 0) {
 				}
-				
+
 				this.selectTarget().damage(getAttackPoints());
 				this.getOwner().addMoney((long) this.getAttackPoints());
 
@@ -298,46 +298,50 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 			double direction = (getTarget().getY() - this.position.getY())
 					/ (getTarget().getX() - this.position.getX());
 
-			int deltaX = (int) Math.round(Math
-					.sqrt((this.movingRange * this.movingRange)
-							/ (1 + (direction * direction))));
+			double diffY = (getTarget().getY() - this.position.getY());
+			double diffX = (getTarget().getX() - this.position.getX());
+			double dir2 = diffY / diffX;
+			direction = dir2;
+
+			double nenner = (this.movingRange * this.movingRange);
+
+			double zaehler = (1 + (direction * direction));
+
+			double bruch = nenner / zaehler;
+
+			int deltaX = (int) (Math.round(Math.sqrt(bruch)));
+
 			int deltaY = (int) Math.round(deltaX * direction);
+
+			this.PosAtEnd = new Coordinates(this.getPos().getX(), this.getPos()
+					.getY());
 
 			if (getTarget().getY() - this.position.getY() < 0) {
 				if (deltaY < 0) {
-					this.PosAtEnd = this.getPos();
 					this.PosAtEnd.moveY(deltaY);
 				} else {
-					this.PosAtEnd = this.getPos();
 					this.PosAtEnd.moveY(-deltaY);
 				}
 
 			} else if (deltaY < 0) {
-				this.PosAtEnd = this.getPos();
 				this.PosAtEnd.moveY(-deltaY);
 			} else {
-				this.PosAtEnd = this.getPos();
 				this.PosAtEnd.moveY(deltaY);
 			}
 			if (getTarget().getX() - this.position.getX() < 0) {
 				if (deltaX < 0) {
-					this.PosAtEnd = this.getPos();
 					this.PosAtEnd.moveX(deltaX);
 				} else {
-					this.PosAtEnd = this.getPos();
 					this.PosAtEnd.moveX(-deltaX);
 				}
 
 			} else if (deltaX < 0) {
-				this.PosAtEnd = this.getPos();
 				this.PosAtEnd.moveX(-deltaX);
 			} else {
-				this.PosAtEnd = this.getPos();
 				this.PosAtEnd.moveX(deltaX);
 			}
 
 		}
-
 	}
 
 	/**

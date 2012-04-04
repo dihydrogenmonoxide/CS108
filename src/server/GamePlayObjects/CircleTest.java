@@ -17,22 +17,35 @@ class CircleTest {
 	 */
 	public static boolean checkLine(int x1, int y1, int x2, int y2, int x3,
 			int y3, int r) {
+	double sx;
+	double sy;
+		if(x1==x2)
+	{
+		sx=x1;
+		sy=y3;
+	}
+		else if(y1==y2)
+		{
+			sy=y1;
+			sx=x3;
+		}
+		else
+		{
 		double hm1 = (y2 - y1);
 		double hm2 = (x2 - x1);
 		double m;
-		try{
+	
 		m = hm1 / hm2;
-		}
-		catch(Exception e)
-		{ m=1;}
+		
 		double q = y1 - m * x1;
 		double c = y3 + 1 / m * x3;
 		double h1 = c - q;
 		double h2 = m + 1 / m;
-		double sx = h1 / h2;
-		double sy = m * sx + q;
+		 sx = h1 / h2;
+		sy = m * sx + q;
+		}
 		Coordinates Position = new Coordinates(x3, y3);
-
+		
 		if (x1 < x2) {
 
 			if ((Position.getDistance(new Coordinates(x1, y1)) < r)

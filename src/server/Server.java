@@ -69,7 +69,8 @@ implements Comparable<Server>
 	public void addVote()
 	{
 		startVotes++;
-		if(l_players.size() > 1 && startVotes > l_players.size() / 2 & !isPaused)
+		//TODO uncomment after oli is done testing
+		if(/*l_players.size() > 1 && startVotes > l_players.size() / 2 &*/ !isPaused)
 			startGame();
 	}
 	
@@ -119,6 +120,18 @@ implements Comparable<Server>
 	public int getPlayerAmount()
 	{
 		return this.l_locked.size();
+	}
+	
+	/**
+	 * Broadcasts the message to all {@link Player}'s on this {@link Server}
+	 * @param message the message to broadcast
+	 */
+	public void broadcastMessage(String message)
+	{
+		for(Player p : getPlayers())
+		{
+			p.sendData(message);
+		}
 	}
 	
 	

@@ -20,30 +20,32 @@ import client.net.Clientsocket;
 	
 	
 public class GameButtonsPanel extends JPanel{
-	/***/
+	/**Button to send status ready*/
 	private JButton ready;
-	
+	/**Button for tank*/
 	private JToggleButton tank;
-	
+	/**Button for Radar*/
 	private JToggleButton radar;
-	
+	/**Button for Luftabwehr*/
 	private JToggleButton luftabwehr;
-	
+	/**Button for Landabwehr*/
 	private JToggleButton landabwehr;
-	
+	/**Button for Reproduktionszentrum*/
 	private JToggleButton repro;
-	
+	/**Button for Jagdflugzeuge*/
 	private JToggleButton jagd;
-	
+	/**Button for Bomber*/
 	private JToggleButton bomber;
-	
+	/**Button for Raketen*/
 	private JToggleButton rakete;
-	
+	/**Button for Regionalbank*/
 	private JToggleButton geld;
-	
-	TimePanel time;
-
+	/**Time Panel which shows countdown*/
+	private TimePanel time;
+	/**the Connection made to the Server.*/
 	private Clientsocket socket;
+	
+	ButtonGroup group;
 
 	
 	public GameButtonsPanel(Clientsocket s){
@@ -194,9 +196,6 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		
-		
-		
-		
 		time= new TimePanel();
 		c.gridwidth=3;
 		c.gridheight=3;
@@ -204,7 +203,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridy=0;
 		this.add(time, c);
 		
-		ButtonGroup group = new ButtonGroup();
+		group = new ButtonGroup();
 		group.add(tank);
 		group.add(radar);
 		group.add(luftabwehr);
@@ -218,6 +217,11 @@ public class GameButtonsPanel extends JPanel{
 		this.setOpaque(false);
 		
 	
+	}
+
+
+	public void selected() {
+		group.getSelection();
 	}
 
 }

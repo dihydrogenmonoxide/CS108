@@ -33,7 +33,7 @@ public class GameFrame extends JDialog {
 	private int screenY;	
 	/**the Connection to listen to*/
 	private Clientsocket socket;
-
+	/**Frame for Game*/
 	private InnerGameFrame gameFrame;
 
 	
@@ -78,7 +78,6 @@ public class GameFrame extends JDialog {
 		{
 			public void paintComponent(Graphics g)
 			{
-
 					g.setColor(Color.orange);
 					g.fillRect( 0, 0, iLobbyX, iLobbyY);
 			}

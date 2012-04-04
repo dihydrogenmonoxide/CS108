@@ -19,6 +19,8 @@ public interface GamePlayObject {
 		//Returns the Owner of the Object.
 		Player getOwner();
 		
+		void setTarget(Coordinates target);
+		
 		//Asks the Server if the Object can be build here.
 		//If true, the Object gets build.
 		void build() throws GameObjectBuildException;

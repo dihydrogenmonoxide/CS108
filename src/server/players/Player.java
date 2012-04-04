@@ -207,9 +207,16 @@ implements Comparable<Player>
 	 */
 	public void sendData(String s_MSG)
 	{
-		ps_sock.sendData(s_MSG);
+		try
+		{
+			ps_sock.sendData(s_MSG);
+		}
+		catch(NullPointerException e)
+		{
+			Log.ErrorLog("Player "+s_Nick+"("+i_ID+") isn't connected to this server it seems");
+		}
 	}
-	
+			
 	/**
 	 * Returns whether the player is in the lobby or not
 	 * @return whether the player is in the lobby or not

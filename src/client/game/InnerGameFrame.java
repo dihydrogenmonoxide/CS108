@@ -26,12 +26,10 @@ import client.net.Clientsocket;
 
 public class InnerGameFrame extends JPanel {
 	static private GlassPane GlassPane;
-
+	/**the Connection made to the Server.*/
 	private Clientsocket socket;
-	JPanel glass = new JPanel(new GridLayout());
-	JLabel padding = new JLabel();
-	JProgressBar waiter = new JProgressBar();
-	GameChatPanel gameChat;
+	/**Panel for gameChat*/
+	private GameChatPanel gameChat;
 	
 	
 	public InnerGameFrame(JFrame gameFrame, Clientsocket s){
@@ -42,7 +40,7 @@ public class InnerGameFrame extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		
 	
-		GameFieldPanel gameField = new GameFieldPanel();
+		GameFieldPanel gameField = new GameFieldPanel(socket);
 		c.ipady = 2;
 		c.weightx = 0.0;
 		c.gridwidth = 2;

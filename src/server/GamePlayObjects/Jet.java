@@ -77,23 +77,22 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	}
 
 	/**
-	 * Checks if the Object can be build here. //If true, the Object
-	 * gets build.
+	 * Checks if the Object can be build here. //If true, the Object gets build.
 	 * 
 	 * @throws GameObjectBuildException
 	 * 
 	 */
 	public void build() throws GameObjectBuildException {
 
-		
-
-		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+		if (this.position.getX() <= 450000
+				|| this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
-				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
+				|| MapManager.isInside(this.getOwner().getFieldID(), this
+						.getPos().getX(), this.getPos().getY())) {
 			throw new GameObjectBuildException("Wrong Position");
 
-		} else if (Owner.getMoney()<price) {
+		} else if (Owner.getMoney() < price) {
 			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addDefensive(this);
@@ -102,15 +101,11 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 		}
 
 	}
-	
-	public long getPrice(){
-		return (long)this.price;
-	}
-	
-	
 
-	
-	
+	public long getPrice() {
+		return (long) this.price;
+	}
+
 	/**
 	 * never used.
 	 */
@@ -135,8 +130,6 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	 */
 	public void damage(int damPoints) {
 		this.healthPoints -= damPoints;
-		
-		
 
 	}
 
@@ -156,12 +149,11 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	public GamePlayObject selectTarget() {
 		if (this.possibleTargets.isEmpty())
 			return null;
-		
+
 		GamePlayObject G = this.possibleTargets.peek();
-		while(G.getHealthPoints()<=0 && !this.possibleTargets.isEmpty())
-		{
-			G=this.possibleTargets.pop();
-			
+		while (G.getHealthPoints() <= 0 && !this.possibleTargets.isEmpty()) {
+			G = this.possibleTargets.pop();
+
 		}
 		if (this.possibleTargets.isEmpty())
 			return null;
@@ -181,6 +173,7 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 		}
 
 	}
+
 	/**
 	 * Clears the Targetlist
 	 */
@@ -190,18 +183,20 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	}
 
 	/**
-	 * Attacks the first Target in the List while it isnt dead and the ammunation is >0
+	 * Attacks the first Target in the List while it isnt dead and the
+	 * ammunation is >0
 	 */
 	public void attack() {
 		try {
 			while (this.ammunation > 0) {
-				while(this.selectTarget().getHealthPoints()<0)
-				{}
+				while (this.selectTarget().getHealthPoints() < 0) {
+				}
+
 				this.selectTarget().damage(getAttackPoints());
-				this.getOwner().addMoney((long)this.getAttackPoints());
-				
+				this.getOwner().addMoney((long) this.getAttackPoints());
+
 				this.ammunation--;
-				
+
 			}
 		} catch (NullPointerException e) {
 		} finally {
@@ -237,8 +232,7 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 
 	public boolean isAttackableObject(GamePlayObject target) {
 
-		if ((target instanceof Flying)
-				&& this.getOwner() != target.getOwner())
+		if ((target instanceof Flying) && this.getOwner() != target.getOwner())
 			return true;
 		return false;
 	}
@@ -273,113 +267,95 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	}
 
 	/**
-	 * Send the Move to all other Defensive Objects
-	 * Moves the Object to its Target. 
+	 * Send the Move to all other Defensive Objects Moves the Object to its
+	 * Target.
 	 * 
 	 */
 	public void move() {
 		this.Manager.sendMoving(this.getPosAtEnd(), this);
 		this.position = this.getPosAtEnd();
 	}
+
 	/**
 	 * Calculates the Move of this Round.
 	 */
 	public void moveProv() {
-		
-		
+
 		if (this.getTarget() == null || this.getTarget().equals(this.getPos())) {
 			this.setTarget(this.getPos());
 			this.PosAtEnd = this.getPos();
 
 		}
 		if (this.position.getDistance(getTarget()) <= this.movingRange) {
-			
+
 			this.PosAtEnd = new Coordinates(getTarget().getX(), getTarget()
 					.getY());
 
 		}
 
 		else {
-			
+
 			double direction = (getTarget().getY() - this.position.getY())
 					/ (getTarget().getX() - this.position.getX());
-			
-			int deltaX = (int) Math.round(Math.sqrt((this.movingRange*this.movingRange)
-					/ (1 + (direction*direction))));
-			int deltaY = (int) Math.round(deltaX * direction);
-			
-			
 
-			 if(getTarget().getY() - this.position.getY()<0)
-			 {
-				 if(deltaY<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(deltaY);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(-deltaY);
-				 }
-					 
-			 }
-			 else
-				 if(deltaY<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(-deltaY);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveY(deltaY);
-				 }
-			 if(getTarget().getX() - this.position.getX()<0)
-			 {
-				 if(deltaX<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(deltaX);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(-deltaX);
-				 }
-					 
-			 }
-			 else
-				 if(deltaX<0)
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(-deltaX);
-				 }
-				 else
-				 {
-					 this.PosAtEnd=this.getPos();
-					 this.PosAtEnd.moveX(deltaX);
-				 }
-				
-			
-			
+			double diffY = (getTarget().getY() - this.position.getY());
+			double diffX = (getTarget().getX() - this.position.getX());
+			double dir2 = diffY / diffX;
+			direction = dir2;
+
+			double nenner = (this.movingRange * this.movingRange);
+
+			double zaehler = (1 + (direction * direction));
+
+			double bruch = nenner / zaehler;
+
+			int deltaX = (int) (Math.round(Math.sqrt(bruch)));
+
+			int deltaY = (int) Math.round(deltaX * direction);
+
+			this.PosAtEnd = new Coordinates(this.getPos().getX(), this.getPos()
+					.getY());
+
+			if (getTarget().getY() - this.position.getY() < 0) {
+				if (deltaY < 0) {
+					this.PosAtEnd.moveY(deltaY);
+				} else {
+					this.PosAtEnd.moveY(-deltaY);
+				}
+
+			} else if (deltaY < 0) {
+				this.PosAtEnd.moveY(-deltaY);
+			} else {
+				this.PosAtEnd.moveY(deltaY);
+			}
+			if (getTarget().getX() - this.position.getX() < 0) {
+				if (deltaX < 0) {
+					this.PosAtEnd.moveX(deltaX);
+				} else {
+					this.PosAtEnd.moveX(-deltaX);
+				}
+
+			} else if (deltaX < 0) {
+				this.PosAtEnd.moveX(-deltaX);
+			} else {
+				this.PosAtEnd.moveX(deltaX);
+			}
 
 		}
-		
 	}
+
 	/**
-	 * CHecks if the GamePlayObject O moves through its Range, and adds it to the possibleTargetList if its so
+	 * CHecks if the GamePlayObject O moves through its Range, and adds it to
+	 * the possibleTargetList if its so
 	 */
 	public void checkLine(Coordinates Target, GamePlayObject O) {
-		
+
 		if (CircleTest.checkLine(Target.getX(), Target.getY(), O.getPos()
 				.getX(), O.getPos().getY(), this.PosAtEnd.getX(), this.PosAtEnd
 				.getY(), this.getRange())
 				&& this.isAttackableObject(O)) {
 			this.possibleTargets.add(O);
-			
-			
-			
+
 		}
 
 	}
@@ -392,17 +368,16 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 
 	@Override
 	public void setId(int id) {
-		if(id<1000000 || id>9999999)
+		if (id < 1000000 || id > 9999999)
 			throw new IllegalArgumentException();
 		else
-		this.id=id;
-		
-		
+			this.id = id;
+
 	}
 
 	@Override
 	public void addToTargets(Unit U) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -100,7 +100,10 @@ class CBListener extends MouseInputAdapter {
 		if (component == null) {
 			return;
 		}
-
+		
+		/*ChatPanel doe't work yet if glassPane is set true*/
+		
+		
 		if (component.equals(gameChat)) {	//Button funktioniert
 			inButton = true;
 			testForDrag(eventID);

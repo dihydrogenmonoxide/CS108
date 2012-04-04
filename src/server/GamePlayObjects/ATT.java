@@ -92,7 +92,7 @@ public class ATT implements GamePlayObject, Defensive, Building, Unit {
 
 		
 
-		if (this.position.getX() <= 300000 || this.position.getX() >= 800000
+		if (this.position.getX() <= 450000 || this.position.getX() >= 800000
 				|| this.position.getY() <= 100000
 				|| this.position.getY() >= 300000
 				|| MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) {
@@ -102,6 +102,7 @@ public class ATT implements GamePlayObject, Defensive, Building, Unit {
 			throw new GameObjectBuildException("No Money");
 		} else {
 			Manager.addDefensive(this);
+			Manager.addUnit(this);
 			
 			this.getOwner().removeMoney(this.getPrice());
 		}
@@ -290,8 +291,9 @@ public class ATT implements GamePlayObject, Defensive, Building, Unit {
 		
 		
 		
-			this.setTarget(this.getPos());
-			this.PosAtEnd = this.getPos();
+		this.setTarget(new Coordinates(this.getPos().getX(), this.getPos().getY()));
+		
+		this.PosAtEnd = new Coordinates(this.getPos().getX(), this.getPos().getY());
 
 	}
 	/**

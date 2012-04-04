@@ -182,7 +182,7 @@ public class ClientLobby extends JFrame {
 				BufferedImage img = null;
 				try 
 				{
-					img = ImageIO.read(new File("lobby_bg.jpg"));
+					img = ImageIO.read(new File("bilder/lobby_bg.jpg"));
 					g.drawImage(img, 0, 0, iLobbyX, iLobbyY, 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
 				} 
 				catch (Exception e) 

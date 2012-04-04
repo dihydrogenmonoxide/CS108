@@ -3,12 +3,14 @@ package client.game;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,7 +51,7 @@ public class GameButtonsPanel extends JPanel{
 
 	
 	public GameButtonsPanel(Clientsocket s){
-		
+		Color bg = Color.white;
 		this.socket = s;
 		
 		this.setLayout(new GridBagLayout());
@@ -67,8 +69,10 @@ public class GameButtonsPanel extends JPanel{
 		c.gridy = 0;
 		this.add(attack, c);
 		
-		
-		rakete = new JToggleButton("Bild");
+		ImageIcon rak= new ImageIcon("bilder/Rakete.png");
+		rak.setImage(rak.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		rakete = new JToggleButton(rak);
+		rakete.setBackground(bg);
 		rakete.setToolTipText("Rakete");
 		c.ipadx=1;
 		c.ipady=1;
@@ -79,7 +83,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,0,0,0);
 		this.add(rakete, c);
 		
-		tank = new JToggleButton("Bild");
+		ImageIcon tan= new ImageIcon("bilder/Panzer.png");
+		tan.setImage(tan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		tank = new JToggleButton(tan);
+		tank.setBackground(bg);
 		tank.setToolTipText("Panzer");
 		c.ipadx=1;
 		c.ipady=1;
@@ -90,7 +97,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,0,0,0);
 		this.add(tank, c);
 
-		jagd = new JToggleButton("Bild");
+		ImageIcon jag= new ImageIcon("bilder/Flugzeug.png");
+		jag.setImage(jag.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		jagd = new JToggleButton(jag);
+		jagd.setBackground(bg);
 		jagd.setToolTipText("Jagdflugzeug");
 		c.ipadx=1;
 		c.ipady=1;
@@ -101,7 +111,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,5,0,0);
 		this.add(jagd, c);
 		
-		bomber = new JToggleButton("Bild");
+		ImageIcon bom= new ImageIcon("bilder/Bomber.png");
+		bom.setImage(bom.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		bomber = new JToggleButton(bom);
+		bomber.setBackground(bg);
 		bomber.setToolTipText("Bomber");
 		c.ipadx=1;
 		c.ipady=1;
@@ -125,7 +138,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(0,20,0,0);
 		this.add(defense, c);
 		
-		radar= new JToggleButton("Bild");
+		ImageIcon rad= new ImageIcon("bilder/Radar.png");
+		rad.setImage(rad.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		radar= new JToggleButton(rad);
+		radar.setBackground(bg);
 		radar.setToolTipText("Radar");
 		c.ipadx=1;
 		c.ipady=1;
@@ -136,7 +152,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,20,0,0);
 		this.add(radar, c);
 		
-		luftabwehr = new JToggleButton("Bild");
+		ImageIcon luf= new ImageIcon("bilder/Flugabwehr.png");
+		luf.setImage(luf.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		luftabwehr = new JToggleButton(luf);
+		luftabwehr.setBackground(bg);
 		luftabwehr.setToolTipText("Luftabwehr");
 		c.ipadx=1;
 		c.ipady=1;
@@ -147,7 +166,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,20,0,0);
 		this.add(luftabwehr, c);
 		
-		landabwehr = new JToggleButton("Bild");
+		ImageIcon lan= new ImageIcon("bilder/Landabwehr.png");
+		lan.setImage(lan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		landabwehr = new JToggleButton(lan);
+		landabwehr.setBackground(bg);
 		landabwehr.setToolTipText("Landabwehr");
 		c.ipadx=1;
 		c.ipady=1;
@@ -171,7 +193,10 @@ public class GameButtonsPanel extends JPanel{
 		this.add(gebaude, c);
 		
 		
-		repro = new JToggleButton("Bild");
+		ImageIcon rep= new ImageIcon("bilder/Repro.png");
+		rep.setImage(rep.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		repro = new JToggleButton(rep);
+		repro.setBackground(bg);
 		repro.setToolTipText("Reproduktionszentrum");
 		c.ipadx=1;
 		c.ipady=1;
@@ -182,8 +207,10 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,20,0,0);
 		this.add(repro, c);
 		
-		
-		geld = new JToggleButton("Bild");
+		ImageIcon gel= new ImageIcon("bilder/Bank.png");
+		gel.setImage(gel.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		geld = new JToggleButton(gel);
+		geld.setBackground(bg);
 		geld.setToolTipText("Regionalbank");
 		c.ipadx=1;
 		c.ipady=1;

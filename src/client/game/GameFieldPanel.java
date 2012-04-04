@@ -35,7 +35,7 @@ public class GameFieldPanel extends JPanel {
 		this.socket = s;
 		
 		try {
-			img = ImageIO.read(new File("full.png"));
+			img = ImageIO.read(new File("bilder/full.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

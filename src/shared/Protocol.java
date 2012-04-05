@@ -94,7 +94,6 @@ public enum Protocol {
 	/**Starts the game*/
 	GAME_BEGIN(GAME, "BEGI");	
 	
-
 	/**holds the String belonging to the Enum.*/
 	private final String message;
 
@@ -119,7 +118,11 @@ public enum Protocol {
 	public static Protocol fromString(final String str) {
 		String command;
 		if (str != null) {
-			if (5 <= str.length())
+			//-- remove leading and trailing whitespaces
+			command = str.replaceAll("^[ \t]+|[ \t]+$", "");
+				
+			//--cut the message
+			if (5 <= command.length())
 			{
 				command = (String) str.subSequence(0, 5);
 			}
@@ -127,6 +130,8 @@ public enum Protocol {
 			{
 				command = str;
 			}
+			
+			//--search for the command
 			for (Protocol b : Protocol.values()) {
 				if (command.equalsIgnoreCase(b.message)) 
 				{

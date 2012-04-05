@@ -13,6 +13,7 @@ import client.events.NetEvent;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
 import client.events.InfoEventListener;
+import client.game.GameFrame;
 import client.net.Clientsocket;
 import client.net.NetworkException;
 
@@ -53,6 +54,10 @@ public class ClientLobby extends JFrame {
 	private InnerLobby l;
 	/**the User which holds all User based Infos.*/
 	private User user;
+	
+	/**Frame which contains the GUI for the Game.*/
+	private GameFrame game;
+
 	
 	
 	/**creates the lobby.*/
@@ -115,11 +120,14 @@ public class ClientLobby extends JFrame {
 					{
 						public void received(GameEvent evt) 
 						{
+							if (evt.getType() == Protocol.GAME_BEGIN)
+							{
+								lobbyParent.setVisible(false);
+								game = new GameFrame(lobbyParent, socket);
+							}
 						}
 						@Override
 						public void received(NetEvent evt) {
-							//TODO start game here
-							
 						}	
 					});
 					

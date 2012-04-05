@@ -1,5 +1,6 @@
 package client.events;
 
+import shared.Log;
 import shared.Protocol;
 
 public class GameEvent extends NetEvent {
@@ -12,8 +13,18 @@ public class GameEvent extends NetEvent {
 	public GameEvent(Object arg0, Protocol p, String plain){
 		super(arg0, 2);
 		this.evt = p;
+		try
+		{
 		this.game = Integer.valueOf((String) plain.subSequence(8, 9));
 		this.message = plain.substring(10);
+		}
+		catch (StringIndexOutOfBoundsException e)
+		{
+			Log.ErrorLog("Received a game command without a game specified");
+			this.game = 0;
+			this.message = "";
+		}
+		
 	}
 	/*constructs a game event formally*/
 	public GameEvent(Object arg0, Protocol e, int game, String msg) {

@@ -27,6 +27,7 @@ implements Runnable
 	public void startGame()
 	{
 		thread.start();
+		//FIXME please send the GameId with it, thx Oli
 		server.broadcastMessage(Protocol.GAME_BEGIN.str());
 	}
 }

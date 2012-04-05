@@ -96,7 +96,7 @@ public class ClientParser {
 			Log.ErrorLog("Parser, error could not parse message");
 			Log.ErrorLog("--- " + msg + " ---");
 			//XXX uncomment for debugging:
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -363,7 +363,10 @@ public class ClientParser {
 		this.chatMsgReceived(new ChatEvent(msg, 12, msg.substring(5), defaultStyle));
 	}
 
-
+	private sendChatMessage(final String msg)
+	{
+		
+	}
 
 	////********************************** LISTENERS
 

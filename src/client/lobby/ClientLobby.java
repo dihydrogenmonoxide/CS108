@@ -40,7 +40,7 @@ public class ClientLobby extends JFrame {
 	private int screenY;
 
 	/**JFrame which contains the GUI for the Lobby.*/
-	public JFrame lobbyParent;
+	private JFrame lobbyParent;
 	/**width of the lobby in pixel.*/
 	private int iLobbyX = 900; 
 	/**height of the lobby in pixel.*/
@@ -58,6 +58,8 @@ public class ClientLobby extends JFrame {
 	/**Frame which contains the GUI for the Game.*/
 	private GameFrame game;
 
+	/**check if the player is in a game.*/
+	private boolean isInGame = false;
 	
 	
 	/**creates the lobby.*/
@@ -134,12 +136,17 @@ public class ClientLobby extends JFrame {
 					socket.addInfoEventListener(new InfoEventListener()
 					{
 						@Override
-						public void received(final InfoEvent evt){
+						public void received(final InfoEvent evt)
+						{
 							 if (evt.getId() == -1)
 							 {
 								Log.InformationLog("Connection to server broken, starting ServerSelect");
 								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
-								// TODO remove the game if it exists.
+								if (game != null)
+								{	
+									game.dispose();
+									game = null;
+								}
 								socket.disconnect();
 								lobbyParent.remove(l);
 								lobbyParent.validate();

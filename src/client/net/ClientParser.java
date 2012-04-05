@@ -26,7 +26,6 @@ import client.events.ServerSelectedListener;
  * Parser for all Messages, fires the correct Event.
  * */
 public class ClientParser {
-
 	/**different types of Chat messages.*/
 	private enum msgType 
 	{
@@ -354,6 +353,10 @@ public class ClientParser {
 		{
 			t = msgType.PRIVATE;
 		}
+		if (msg.subSequence(1, 7).equals("CHAT *"))
+		{
+			t = msgType.INFO;
+		}
 
 		sendChatMessage(msg.substring(5), t);
 
@@ -377,24 +380,27 @@ public class ClientParser {
 		switch(type)
 		{
 		case DEBUG:
-			StyleConstants.setForeground(msgStyle, Color.yellow);
-			StyleConstants.setBackground(msgStyle, Color.red);
+			StyleConstants.setBackground(msgStyle, Color.orange);
 			break;
 		case SERVER:
-			StyleConstants.setForeground(msgStyle, Color.green);
+			StyleConstants.setForeground(msgStyle, Color.red);
 			break;
 		case ERROR:
 			StyleConstants.setBold(msgStyle, true);
+			StyleConstants.setAlignment(msgStyle, StyleConstants.ALIGN_CENTER);
 			StyleConstants.setBackground(msgStyle, Color.red);
+			StyleConstants.setForeground(msgStyle, Color.yellow);
 			break;
 		case INFO:
-			StyleConstants.setForeground(msgStyle, Color.red);
+			StyleConstants.setForeground(msgStyle, Color.magenta);
+			
 			break;
 		case PRIVATE:
+			StyleConstants.setAlignment(msgStyle, StyleConstants.ALIGN_RIGHT);
 			StyleConstants.setForeground(msgStyle, Color.blue);
 			break;
 		case GAME:
-			StyleConstants.setForeground(msgStyle, Color.pink);
+			StyleConstants.setForeground(msgStyle, Color.green);
 			break;
 		case CLIENT:
 		case MSG:

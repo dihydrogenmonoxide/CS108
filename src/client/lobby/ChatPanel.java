@@ -30,9 +30,9 @@ import client.net.Clientsocket;
 
 /**This class provides a Chatpanel as JPanel, everything is included, only a socket is needed.*/
 public class ChatPanel extends JPanel {
-	/**the Connection to listen to*/
+	/**the Connection to listen to.*/
 	private Clientsocket socket;
-	/**textfield to write messages*/
+	/**textfield to write messages.*/
 	private JFormattedTextField inputChat;
 
 	/**button to send a message.*/
@@ -42,7 +42,7 @@ public class ChatPanel extends JPanel {
 	private JScrollPane chatScroll;
 
 	/** holds the StyledDocuments chatContent with the chat.*/
-	JTextPane chatPane;
+	private JTextPane chatPane;
 
 	/** holds all the Chat-messages.*/
 	private StyledDocument chatContent;
@@ -60,7 +60,6 @@ public class ChatPanel extends JPanel {
 		/*
 		 * 
 		 *  MAKE THE GUI
-		 * 
 		 * /
 		  
 		/* The styled Document which holds the actual chat messages*/
@@ -73,41 +72,38 @@ public class ChatPanel extends JPanel {
 
 
 		chatScroll = new JScrollPane(chatPane);
+		chatScroll.setPreferredSize(new Dimension(20, 20));
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipadx = 400;
-		c.ipady = 460;
-		c.weightx = 0.0;
-		c.gridwidth = 20;
-		c.gridheight = 28;
-		c.gridx = 6;
+		c.ipadx = 330;
+		c.ipady = 450;
+		c.gridwidth = 3;
+		c.gridx = 0;
 		c.gridy = 0;
-		c.insets = new Insets(0, 20, 0, 0);
+		c.insets = new Insets(0, 20, 5, 0);
 		this.add(chatScroll, c);
 
 
 		inputChat = new JFormattedTextField("Nachricht hier eingeben");
+		inputChat.setPreferredSize(new Dimension(50, 20));
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = 1;
-		c.ipadx = 200;
-		c.weightx = 0.0;
-		c.gridwidth = 14;
-		c.gridx = 6;
-		c.gridy = 29;
+		c.gridwidth = 2;
 		c.insets = new Insets(0, 20, 0, 0);
+		c.gridx = 0;
+		c.gridy = 1;
 		this.add(inputChat, c);
 		
 
 
 		sendButton = new JButton("senden");
+		sendButton.setPreferredSize(new Dimension(50, 20));
 		sendButton.setEnabled(false);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		chatScroll.setPreferredSize(new Dimension(20, 20));
-		c.ipady = 2;
-		c.ipadx = 5;
-		c.weightx = 0.0;
 		c.gridwidth = 1;
-		c.gridx = 25;
-		c.gridy = 29;
+		c.ipady = 1;
+		c.ipadx = 1;
+		c.gridx = 2;
+		c.gridy = 1;
 		this.add(sendButton, c);
 		
 		this.setOpaque(false);

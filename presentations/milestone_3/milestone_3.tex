@@ -1,0 +1,135 @@
+\documentclass[12pt, utf8]{beamer}
+\usepackage[ngerman]{babel}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage {listingsutf8}
+\usepackage{multicol}
+
+%AnnArbor | Antibes | Bergen |
+%	Berkeley | Berlin | Boadilla |
+%	boxes | CambridgeUS | Copenhagen |
+%	Darmstadt | default | Dresden |
+%	Frankfurt | Goettingen |Hannover |
+%	Ilmenau | JuanLesPins | Luebeck |
+%	Madrid | Malmoe | Marburg |
+%	Montpellier | PaloAlto | Pittsburgh |
+%	Rochester | Singapore | Szeged |
+%	Warsaw
+
+%Einbinden des Themes
+\usetheme{Berlin}
+%Standard Angaben
+\author{Lucius Bachmann, Fabio Sulzer, Frank Müller, Oliver Wisler}
+\title{SwissDefcon}
+\date{\today}
+
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}[allowframebreaks,allowdisplaybreaks]
+	\frametitle{Inhaltsverzeichnis}
+	\tableofcontents
+\end{frame}
+
+
+\section{Einführung}
+\begin{frame}{Spielidee}
+\begin{itemize}
+\item Verfeindete Kantone bekämpfen sich
+\item Dabei stehen verschiedene Waffen und Gebäude zur Verfügung
+\item Beschränkt durch das Kantonsbudget
+\end{itemize}
+\end{frame}
+
+\section{Spielstatus}
+
+\subsection{Was wird benötigt}
+\begin{frame}{Spielstatus}
+Was muss gespeichert werden?
+\begin{multicols}{2}
+\begin{itemize}
+\item  Spielerdaten 
+	\begin{itemize}
+		\item Geld
+		\item Gebiet
+		\item Objekte
+	\end{itemize}
+\item Objektdaten
+	\begin{itemize}
+		\item Standort
+		\item Lebenspunkte
+	\end{itemize}
+\end{itemize}
+\end{multicols}
+\end{frame}
+
+\subsection{Verwaltung Spielstatus}
+
+\subsection{Verwaltung mehere Spiele}
+
+
+\subsection{Clients}
+
+\section{Spielregeln}
+\subsection{Welche gibt es?}
+\begin{frame}{Spielregeln}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+\subsection{Implementation}
+\begin{frame}{Implementation}
+
+\end{frame}
+
+\section{Kommunikation}
+\subsection{Discovery-Service}
+\begin{frame}
+
+\end{frame}
+\subsection{Chat und Broadcast}
+\begin{frame}
+
+\end{frame}
+\subsection{Netzwerkprotokoll}
+\begin{frame}
+
+\end{frame}
+
+\section{Arbeitsplan}
+\subsection{Soll}
+\begin{frame}
+
+\end{frame}
+\subsection{Ist}
+\begin{frame}
+
+
+-Verzögerungen, Anpassungen
+\end{frame}
+
+\section{Qualitätssicherung}
+\begin{frame}
+\begin{itemize}
+\item eigene Log Klasse und viele Log-Messages
+\item gute Dokumentation mit Javadoc
+-Unit Test
+\end{itemize}
+\end{frame}
+
+
+\section{Demo}
+\begin{frame}
+
+\end{frame}
+
+\end{document}

@@ -8,6 +8,7 @@ import javax.swing.text.StyleConstants;
 
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 import client.data.GamesManager;
 import client.data.PlayerManager;
 import client.events.ChatEvent;
@@ -25,12 +26,27 @@ import client.events.ServerSelectedListener;
  * Parser for all Messages, fires the correct Event.
  * */
 public class ClientParser {
-	
-	/**assigns each gameID a gameName.*/
-	private HashMap<String, String> games = new HashMap<String, String>();
-	
-	/**holds the default attributes for messages.*/
-	private SimpleAttributeSet defaultStyle;
+
+	/**different types of Chat messages.*/
+	private enum msgType 
+	{
+		/**messages from the server.*/
+		SERVER,
+		/**messages from the client.*/
+		CLIENT,
+		/**private messages.*/
+		PRIVATE,
+		/**normal messages.*/
+		MSG,
+		/**infos for the player.*/
+		INFO,
+		/**infos concerning the game.*/
+		GAME,
+		/**debug messages.*/
+		DEBUG,
+		/**Error messages.*/
+		ERROR,
+	}
 
 	/**receives a String and fires the apropiate Event.
 	 * This method receives a String from the socket and then determines
@@ -45,33 +61,19 @@ public class ClientParser {
 		{
 			return;
 		}
-		
+
 		//catch PONGs
 		if (msg.equals(Protocol.CON_PONG.toString()))
 		{
 			return;
 		}
 
-		//reset message style
-		defaultStyle = new SimpleAttributeSet();
-		
+		// invoke the appropiate method.
 		try
 		{
 			Log.DebugLog("Parser, received Message: " + msg);
 
 			Protocol section = getSection(msg);
-			
-			//holds the basic style for messages
-			
-
-			/*
-			 * Here the message is split up and the appropiate method is invoked.
-			 * Type of messages:
-			 * V : message concerning the connection between client and server
-			 * G : message concerning the game
-			 * L : message concerning the lobby
-			 * C : chat messages
-			 * */
 			switch(section)
 			{
 			case CONNECTION:
@@ -102,7 +104,7 @@ public class ClientParser {
 
 
 	/**
-	 * Returns the section of a command.
+	 * Returns the section of a Message.
 	 * @param msg the messages
 	 * @return the section as ENUM
 	 */
@@ -121,8 +123,8 @@ public class ClientParser {
 	{
 		return Protocol.fromString((String) msg.subSequence(0, 5));
 	}
-	
-	/**Extracts the Argument of a received message after the id.
+
+	/**Extracts the Argument of a received Message after the id.
 	 * @param msg the message
 	 * @return the argument after the id*/
 	private String getArgument(final String msg) 
@@ -137,36 +139,32 @@ public class ClientParser {
 	private String getId(final String msg) {
 		return (String) msg.subSequence(6, 9);
 	}
-	
-	/**handles the connection messages.
-	 * @param msg the message*/
-	private void handleConnection(final String msg) {
-		/*
-		 * All the messages concernning the connection
-		 * already implemented:
-		 * NICK : when the client changes its nickname -> inform via chat, replace in hashmap
-		 * PONG : send by the server to test the connection, is disabled
-		 * TOUT : connection timeout -> inform via chat
-		 * FAIL : connection broken -> return to SelectServer
-		 * EXIT : connection closed by server or client -> return to SelectServer
-		 * */
-		Log.DebugLog("->connection: " + msg);
-		StyleConstants.setForeground(defaultStyle, Color.red);
 
-		//get the subcommand
+	/**handles the connection messages.
+	* NICK : when the client changes its nickname -> inform via chat, replace in hashmap
+	* PONG : send by the server to test the connection, is disabled
+	* TOUT : connection timeout -> inform via chat
+	* FAIL : connection broken -> return to SelectServer
+	* EXIT : connection closed by server or client -> return to SelectServer
+	* @param msg the message
+	* */
+	private void handleConnection(final String msg) {
+		Log.DebugLog("->connection: " + msg);
+
+		//get the command
 		Protocol command = getCommand(msg);
 
 		switch(command)
 		{
 		case CON_NICK:	
-			handleNickChange(msg, defaultStyle);
+			handleNickChange(msg);
 			break;
 		case CON_PONG: //just in case
 			Log.DebugLog("-->pong from Server");
 			return;
 		case CON_TIMEOUT:
 			Log.ErrorLog("--> connection broke, reconnect");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<client> connection broken, trying to reconnect", defaultStyle));
+			sendChatMessage("<client> connection broken, trying to reconnect", msgType.ERROR);
 			break;
 		case CON_FAIL:
 			Log.ErrorLog("--> Connection failed, returning to Select server");
@@ -181,7 +179,7 @@ public class ClientParser {
 			PlayerManager.setMyId(Integer.valueOf((String) msg.subSequence(6, 9)));
 			break;
 		default:
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>" + msg, defaultStyle));
+			sendChatMessage("<debug>" + msg, msgType.DEBUG);
 			break;
 		}
 	}
@@ -190,9 +188,8 @@ public class ClientParser {
 
 	/**handles if a user changes his nickname or joins.
 	 * @param msg the message with the nickchange.
-	 * @param attrs the default styling.
 	 * */
-	private void handleNickChange(final String msg, SimpleAttributeSet attrs) {
+	private void handleNickChange(final String msg) {
 		Log.DebugLog(msg);
 		String oldNick = PlayerManager.getNamebyId(getId(msg));
 		if (oldNick != null)
@@ -204,13 +201,13 @@ public class ClientParser {
 			else
 			{
 				Log.DebugLog("--> nickchange: " + oldNick + " to " + getArgument(msg));
-				this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>changed Nick: " + oldNick + " to " + getArgument(msg), attrs));
+				sendChatMessage("<lobby>changed Nick: " + oldNick + " to " + getArgument(msg), msgType.INFO);
 			}
 		}
 		else
 		{
 			Log.DebugLog("--> new nick: " + getArgument(msg));
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby>new User : " + getArgument(msg), attrs));
+			sendChatMessage("<lobby>new User : " + getArgument(msg), msgType.INFO);
 		}
 		PlayerManager.addPlayer(getId(msg), (String) getArgument(msg));
 	}
@@ -225,10 +222,9 @@ public class ClientParser {
 	 * @param msg the message
 	 * */
 	private void handleGame(final String msg) {
-		
 		Log.DebugLog("->game: " + msg);
-		
-		//get the subcommand
+
+		//get the command
 		Protocol command = getCommand(msg);
 
 		switch(command)
@@ -244,66 +240,66 @@ public class ClientParser {
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_JOIN, msg));
 			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
-		
+
 		case GAME_QUIT:
 			Log.DebugLog("-->user quit game: " + msg);
 			GamesManager.removePlayer(getId(msg), (String) getArgument(msg).subSequence(0, 3));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_QUIT, msg));
 			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
-			
+
 		case GAME_BEGIN:
-			//TODO CLIENTPARSER start game 
+			sendChatMessage("Starting the game", msgType.GAME);
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_BEGIN, msg));
 			break;
-			
+
 		case GAME_PAUSE:
 			//TODO CLIENTPARSER implement freeze 
-			
+			sendChatMessage("game paused", msgType.GAME);
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_PAUSE, msg));
 			break;
-			
+
 		case GAME_RESUME:
 			//TODO CLIENTPARSER implement free GUI
-			
+			sendChatMessage("game resumed", msgType.GAME);
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_RESUME, msg));
 			break;
-			
+
 		case GAME_RESET:
 			//TODO CLIENTPARSER implement reset GameManager
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_RESET, msg));
 			break;
-			
+
 		case GAME_BUILD_PHASE:
 			//TODO CLIENTPARSER implement enable User interaction on map.
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_BUILD_PHASE, msg));
 			break;
-			
+
 		case GAME_ANIMATION_PHASE:
 			//TODO CLIENTPARSER implement freeze user interaction on map.
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_ANIMATION_PHASE, msg));
 			break;
-			
+
 		case GAME_MONEY:
 			//TODO CLIENTPARSER implement add the Money to a player via GameManager
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_MONEY, msg));
 			break;
-			
+
 		case GAME_SPAWN_OBJECT:
 			//TODO CLIENTPARSER implement notify GameManager
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_SPAWN_OBJECT, msg));
 			break;
-			
+
 		case GAME_UPDATE_OBJECT:
 			//TODO CLIENTPARSER implement notify GameManager
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_UPDATE_OBJECT, msg));
 			break;
-			
+
 		case GAME_LAUNCH_MISSILE:
 			//TODO CLIENTPARSER implement ARMAGEDDON
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_LAUNCH_MISSILE, msg));
 			break;
-			
+
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);
 		}
@@ -318,54 +314,95 @@ public class ClientParser {
 	 * @param msg the message
 	 * */
 	private void handleLobby(final String msg) {
-		
+
 		Log.DebugLog("->lobby: " + msg);
 		Protocol command = getCommand(msg);
-		
+
 		switch(command)
 		{
 		case LOBBY_QUIT:
 			if (PlayerManager.getNamebyId(getId(msg)) == null) { return; }
 			Log.DebugLog("-->User quit lobby");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User left for a game: " + PlayerManager.getNamebyId(getId(msg)), defaultStyle));
+			sendChatMessage("<lobby> User left for a game: " + PlayerManager.getNamebyId(getId(msg)), msgType.INFO);
 			break;
 		case LOBBY_JOIN:
 			if (PlayerManager.getNamebyId((String) msg.subSequence(7, 9)) == null) { return; }
 			Log.DebugLog("-->User joined");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<lobby> User joined lobby: " + PlayerManager.getNamebyId(getId(msg)), defaultStyle));
+			sendChatMessage("<lobby> User joined lobby: " + PlayerManager.getNamebyId(getId(msg)), msgType.INFO);
 			break;
 		default:
 			Log.DebugLog("-->wrong format");
-			this.chatMsgReceived(new ChatEvent(msg, 12, "<debug>" + msg, defaultStyle));
+			sendChatMessage("<debug>" + msg, msgType.DEBUG);
 		}
 	}
 
 
 	/**
 	 * handle chat messages.
-	 * Server messages are colored red.
-	 * Private messages blue.
+	 * determine the type of the messages.
 	 * @param msg the message
 	 * */
 	private void handleChat(final String msg) { 
 		Log.DebugLog("->chat: " + msg);
 
+		msgType t = msgType.MSG;
 		if (msg.subSequence(1, 14).equals("CHAT [SERVER]"))
 		{
-			StyleConstants.setBackground(defaultStyle, Color.red);
+			t = msgType.SERVER;
 		}
 		if (msg.subSequence(1, 11).equals("CHAT [from") || msg.subSequence(1, 9).equals("CHAT [to"))
 		{
-			StyleConstants.setForeground(defaultStyle, Color.blue);
+			t = msgType.PRIVATE;
 		}
 
-		//fire Event
-		this.chatMsgReceived(new ChatEvent(msg, 12, msg.substring(5), defaultStyle));
+		sendChatMessage(msg.substring(5), t);
+
 	}
 
-	private sendChatMessage(final String msg)
+	/**Formats a chatmessage according to its type, then creates an Chatevent and send it.
+	 * @param msg the Chatmessage
+	 * @param type how to format the message
+	 * */
+	@SuppressWarnings("unused")
+	private void sendChatMessage(final String msg, final msgType type)
 	{
+		SimpleAttributeSet msgStyle = new SimpleAttributeSet();
+
+		//-- check if we should print debug messages
+		if (type == msgType.DEBUG && !Settings.PRINT_DEBUG_MSG_IN_CHAT)
+		{
+			return;
+		}
 		
+		switch(type)
+		{
+		case DEBUG:
+			StyleConstants.setForeground(msgStyle, Color.yellow);
+			StyleConstants.setBackground(msgStyle, Color.red);
+			break;
+		case SERVER:
+			StyleConstants.setForeground(msgStyle, Color.green);
+			break;
+		case ERROR:
+			StyleConstants.setBold(msgStyle, true);
+			StyleConstants.setBackground(msgStyle, Color.red);
+			break;
+		case INFO:
+			StyleConstants.setForeground(msgStyle, Color.red);
+			break;
+		case PRIVATE:
+			StyleConstants.setForeground(msgStyle, Color.blue);
+			break;
+		case GAME:
+			StyleConstants.setForeground(msgStyle, Color.pink);
+			break;
+		case CLIENT:
+		case MSG:
+		default:
+			break;
+		}
+		
+		this.chatMsgReceived(new ChatEvent(msg, 12, msg, msgStyle));
 	}
 
 	////********************************** LISTENERS
@@ -382,7 +419,7 @@ public class ClientParser {
 	/**List of GameEventListener.  */
 	private javax.swing.event.EventListenerList gameListeners =  new javax.swing.event.EventListenerList();
 
-	
+
 	/** 
 	 * adds ChatEvent listeners.
 	 * @param listener

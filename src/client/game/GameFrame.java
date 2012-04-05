@@ -10,6 +10,8 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import shared.Protocol;
+
 import client.net.Clientsocket;
  
 /**
@@ -63,6 +65,7 @@ public class GameFrame extends JDialog {
 		game.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				game.dispose();
+				socket.sendData(Protocol.GAME_QUIT.str());
 				lobbyParent.setVisible(true);
 			}
 		});	

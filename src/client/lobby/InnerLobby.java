@@ -1,44 +1,13 @@
 package client.lobby;
 
-import java.awt.AWTEvent;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
-import client.net.Clientsocket;
-import javax.swing.JPanel;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-
-import shared.Log;
-import shared.ServerAddress;
-import shared.User;
-
-import client.events.ChatEvent;
-import client.events.ChatEventListener;
 import client.events.GameSelectedEvent;
 import client.events.GameSelectedListener;
-import client.events.NetEvent;
-import client.events.ServerSelectedEvent;
-import client.events.ServerSelectedListener;
+import client.net.Clientsocket;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import shared.User;
 /**Class which displays the lobby of a Server.
  * Allow to chat with other users, start a game, join a game.
  * Will throw an Event if a Game is chosen to join.*/

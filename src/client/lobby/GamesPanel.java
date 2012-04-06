@@ -1,44 +1,5 @@
 package client.lobby;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-
-import shared.Log;
-import shared.Protocol;
-
 import client.data.GamesManager;
 import client.data.PlayerManager;
 import client.events.LobbyEvent;
@@ -46,6 +7,17 @@ import client.events.LobbyEventListener;
 import client.events.NetEvent;
 import client.game.GameFrame;
 import client.net.Clientsocket;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.Vector;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import shared.Log;
+import shared.Protocol;
 
 /**a panel which offers the option to join and list games. You can also create games.*/
 public class GamesPanel extends JPanel {
@@ -110,13 +82,21 @@ public class GamesPanel extends JPanel {
 
 		this.setOpaque(false);
 
-
+                /*
+                 This code is a bit dirty ^^
+                 * here is what it makes:
+                 * if you have joined a game it updates the joined Game or 
+                 * otggles to the All Games view if you quit the game.
+                 * 
+                 * if you have not joined the game, it checks if you created a 
+                 * game and gets you to the game view of this game.
+                 */
 		socket.addLobbyEventListener(new LobbyEventListener()
 		{
 			@Override
 			public void received(final LobbyEvent evt) throws Exception 
 			{
-				Log.DebugLog("GameList: " + evt.getSection().str() + " " + evt.getMsg() + " " + Protocol.fromString(evt.getMsg()).str());
+				Log.DebugLog("GameList: " + evt.getSection().str() + " " + evt.getMsg() + "; " + Protocol.fromString(evt.getMsg()).str());
 				switch(evt.getSection())
 				{
 				case LOBBY_UPDATE:
@@ -124,6 +104,22 @@ public class GamesPanel extends JPanel {
 					if (isJoined)
 					{
 						refreshJoinedGame(joinedGame);
+                                                if (Protocol.fromString(evt.getMsg()) == Protocol.GAME_QUIT)
+                                                {
+                                                    try
+							{
+								int playerId = Integer.valueOf((String) evt.getMsg().subSequence(10, 13));
+								Log.DebugLog(playerId+"");
+								if(PlayerManager.myId() == playerId)
+								{
+									displayAllGames();
+									Log.DebugLog("quit the game");
+								}
+                                                                refreshGameList();
+							}catch(Exception e){
+								Log.ErrorLog("GameList: wrong formatted message");
+							}
+                                                }
 					}
 					else
 					{
@@ -147,7 +143,6 @@ public class GamesPanel extends JPanel {
 					}
 
 					break;
-
 				default:
 					break;
 				}
@@ -443,8 +438,6 @@ public class GamesPanel extends JPanel {
 						Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
 						joinedGame = Integer.valueOf(temp.get(0));
 
-
-
 						//send the command
 						socket.sendData(Protocol.GAME_JOIN.str() + joinedGame);
 
@@ -494,8 +487,6 @@ public class GamesPanel extends JPanel {
 		gamesData = GamesManager.makeVector();
 		Log.DebugLog("-->repaint, How many games here: " + gamesData.size());
 		updateGameTable();
-
-
 	}
 
 	/**updates the gameTable.*/

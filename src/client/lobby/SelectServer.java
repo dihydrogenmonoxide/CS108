@@ -1,5 +1,6 @@
 package client.lobby;
 
+import shared.InputValidator;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
 import client.net.DiscoveryClient;

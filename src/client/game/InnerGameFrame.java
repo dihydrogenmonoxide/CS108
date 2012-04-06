@@ -25,15 +25,17 @@ import client.lobby.GamesPanel;
 import client.net.Clientsocket;
 
 public class InnerGameFrame extends JPanel {
-	static private GlassPane GlassPane;
+	private GlassPane GlassPane;
 	/**the Connection made to the Server.*/
 	private Clientsocket socket;
 	/**Panel for gameChat*/
 	private GameChatPanel gameChat;
 	
+	JToggleButton ready;
 	
 	public InnerGameFrame(JFrame gameFrame, Clientsocket s){
 		this.socket = s;
+		this.gameChat=gameChat;
 		
 		
 		this.setLayout(new GridBagLayout());
@@ -56,14 +58,14 @@ public class InnerGameFrame extends JPanel {
 		c.gridy = 0;
 		this.add(gameChat, c);
 		
-		GameButtonsPanel buttons = new GameButtonsPanel( socket);
+		GameButtonsPanel buttons = new GameButtonsPanel( socket, ready, gameFrame, gameChat);
 		c.weightx= 0.0;
 		c.gridwidth=3;
 		c.gridx=0;
 		c.gridy=2;
 		this.add(buttons, c);
 		
-		JToggleButton ready= new JToggleButton("ready");
+		ready= new JToggleButton("ready");
 		ready.setSelected(false);
 		c.gridwidth=1;
 		c.gridx=3;
@@ -72,13 +74,11 @@ public class InnerGameFrame extends JPanel {
 		
 		ready.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				GlassPane.setVisible(e.getStateChange() 
-						== ItemEvent.SELECTED);
+				GlassPane.setVisible(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 		
-		GlassPane = new GlassPane(ready, gameChat,
-		gameFrame.getContentPane());
+		GlassPane = new GlassPane(ready, gameFrame.getContentPane(), gameChat, socket);
 		gameFrame.setGlassPane(GlassPane);
 	
 		

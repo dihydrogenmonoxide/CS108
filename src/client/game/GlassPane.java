@@ -4,6 +4,9 @@ package client.game;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+
+import client.net.Clientsocket;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,13 +14,13 @@ import java.awt.event.*;
 class GlassPane extends JComponent {
 	Point point;
 	Font font1 = new Font("TimesRoman",Font.PLAIN,36);
-
+	Clientsocket socket;
+	
 	public void paint(Graphics g) {
 		if (point != null) {
 			g.setColor(Color.green);
 			g.setFont(font1);
 			g.drawString("Please wait for opponents", 250, 250);
-			
 				
 			}
 		}
@@ -27,8 +30,9 @@ class GlassPane extends JComponent {
 		point = p;
 	}
 
-	public GlassPane(JToggleButton ready, GameChatPanel gameChat, Container contentPane) {
-		CBListener listener = new CBListener(ready, gameChat, this, contentPane);
+	public GlassPane(JToggleButton ready, Container contentPane, GameChatPanel gameChat, Clientsocket s) {
+		this.socket=s;
+		CBListener listener = new CBListener(gameChat,ready, this, contentPane);
 		addMouseListener(listener);
 		addMouseMotionListener(listener);
 	}
@@ -37,15 +41,15 @@ class GlassPane extends JComponent {
 class CBListener extends MouseInputAdapter {
 	Toolkit toolkit;
 	Component liveButton;
-	Component gameChat;
+	Component chatPanel;
 	GlassPane glassPane;
 	Container contentPane;
 	boolean inDrag = false;
 
-	public CBListener(Component liveButton, Component gameChat, GlassPane glassPane, Container contentPane) {
+	public CBListener(Component chatPanel, Component ready, GlassPane glassPane, Container contentPane) {
 		toolkit = Toolkit.getDefaultToolkit();
-		this.liveButton = liveButton;
-		this.gameChat = gameChat;
+		this.liveButton = ready;
+		this.chatPanel=chatPanel;
 		this.glassPane = glassPane;
 		this.contentPane = contentPane;
 	}
@@ -81,21 +85,18 @@ class CBListener extends MouseInputAdapter {
 
 	private void redispatchMouseEvent(MouseEvent e,
 			boolean repaint) {
+		
 		boolean inButton = false;
 		Point glassPanePoint = e.getPoint();
 		Component component = null;
 		Container container = contentPane;
-		Point containerPoint = SwingUtilities.convertPoint(
-				glassPane,
-				glassPanePoint, 
-				contentPane);
+		
+		Point containerPoint = SwingUtilities.convertPoint(glassPane,glassPanePoint, contentPane);
 		int eventID = e.getID();
 
 
-		component = SwingUtilities.getDeepestComponentAt(
-				container,
-				containerPoint.x,
-				containerPoint.y);
+		component = SwingUtilities.getDeepestComponentAt(container, containerPoint.x,containerPoint.y);
+		
 
 		if (component == null) {
 			return;
@@ -104,12 +105,14 @@ class CBListener extends MouseInputAdapter {
 		/*ChatPanel doe't work yet if glassPane is set true*/
 		
 		
-		if (component.equals(gameChat)) {	//Button funktioniert
+		if (component.equals(liveButton)) {	//Button funktioniert
 			inButton = true;
 			testForDrag(eventID);
 		}
 
+		
 		if (inButton || inDrag) {
+			//Rectangle ChatRectangle = SwingUtilities.convertRectangle(glassPane, gameChatRectangle, component);
 			Point componentPoint = SwingUtilities.convertPoint(
 					glassPane,
 					glassPanePoint, 
@@ -123,9 +126,11 @@ class CBListener extends MouseInputAdapter {
 					e.getClickCount(),
 					e.isPopupTrigger()));
 		}
-
+		
 		if (repaint) {
+		
 			toolkit.beep();
+			
 			glassPane.setPoint(glassPanePoint);
 			glassPane.repaint();
 		}

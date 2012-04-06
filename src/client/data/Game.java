@@ -10,8 +10,6 @@ import shared.Log;
 class Game {
 	/**the id of the game.*/
 	private int id;
-        
-        private boolean isVisible = false;
 	
 	/**which players are in there.*/
 	private HashMap<Integer, Player> players = new HashMap<Integer, Player>();
@@ -116,20 +114,5 @@ class Game {
 	public String getName() {
 		return name;
 	}
-        
-        /**sets if the game is visible in the lobby.
-         @param b if the game is visible or not.
-         */
-        public void setVisible(boolean b)
-        {
-            this.isVisible = b;
-        }
-        
-        /**is the game visible or not?.
-         @return if its visible or not.
-         */
-	public boolean getVisible()
-        {
-            return this.isVisible;
-        }
+	
 }

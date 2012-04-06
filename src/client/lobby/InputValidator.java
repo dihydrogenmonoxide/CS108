@@ -1,4 +1,4 @@
-package shared;
+package client.lobby;
 
 public class InputValidator {
 	/**sanitizes Chatmessages, is nothing is done here as of now.

@@ -44,17 +44,7 @@ public class GamesManager {
 		//XXX playerCount generated automatic
 		int playerCount = Integer.valueOf((String) msg.subSequence(10, 11));
 		String name = msg.substring(12);
-                addGame(id, name);
-                if(playerCount == 0)
-                {
-                    games.get(id).setVisible(false);
-                    Log.DebugLog("GameManager: set " + id + " invisible");
-                }
-                else
-                {
-                    games.get(id).setVisible(true);
-                }
-                
+		addGame(id, name);
 	}
 
 	/**adds a player to a game.
@@ -114,7 +104,7 @@ public class GamesManager {
 		{
 			Game g = gIter.next();
 			//remove all empty games
-			if (0 < g.getPlayerCount() && g.getVisible())
+			if (0 < g.getPlayerCount())
 			{
 				Vector<String> v = g.makeVector();
 				Log.DebugLog("-" + v.get(0) + ":" + v.get(1) + ":" + v.get(2));

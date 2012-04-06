@@ -139,21 +139,11 @@ implements Comparable<Server>
 	 * Manually remove a player on quit
 	 * @param p_player the player to remove
 	 */
-        
-        
 	public void removePlayer(Player p_player)
 	{
 		if(isGameRunning)
 		{
 			//TODO what to call if someone quits ingame?
-                    
-                        //FIXME if the game is running and a player quit, 
-                        //a broadcast is sent "GGAME 201 2 gameName", 
-                        //trouble is, that it then will be displayed in the lobby
-                        // (as the GameManager on the client doesn't mark the game as invisible then).
-                        // occurs even if a game is running and a client connects to the lobby
-                        // all games running should be announced as "GGAME 201 0 gameName" (then they are marked as invisible)
-                        // thx for fixing Oli
 		}
 		
 		if(p_player.voted())

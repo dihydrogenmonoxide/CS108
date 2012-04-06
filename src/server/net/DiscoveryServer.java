@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import shared.InputValidator;
+import client.lobby.InputValidator;
 
 public class DiscoveryServer
 implements Runnable

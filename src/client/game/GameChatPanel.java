@@ -26,7 +26,7 @@ import shared.Protocol;
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.NetEvent;
-import shared.InputValidator;
+import client.lobby.InputValidator;
 import client.net.Clientsocket;
 
 public class GameChatPanel extends JPanel {

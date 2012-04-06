@@ -6,15 +6,15 @@
 \usepackage{multicol}
 
 %AnnArbor | Antibes | Bergen |
-%	Berkeley | Berlin | Boadilla |
-%	boxes | CambridgeUS | Copenhagen |
-%	Darmstadt | default | Dresden |
-%	Frankfurt | Goettingen |Hannover |
-%	Ilmenau | JuanLesPins | Luebeck |
-%	Madrid | Malmoe | Marburg |
-%	Montpellier | PaloAlto | Pittsburgh |
-%	Rochester | Singapore | Szeged |
-%	Warsaw
+% Berkeley | Berlin | Boadilla |
+% boxes | CambridgeUS | Copenhagen |
+% Darmstadt | default | Dresden |
+% Frankfurt | Goettingen |Hannover |
+% Ilmenau | JuanLesPins | Luebeck |
+% Madrid | Malmoe | Marburg |
+% Montpellier | PaloAlto | Pittsburgh |
+% Rochester | Singapore | Szeged |
+% Warsaw
 
 %Einbinden des Themes
 \usetheme{Berlin}
@@ -36,12 +36,14 @@
 \end{frame}
 
 \begin{frame}[allowframebreaks,allowdisplaybreaks]
-	\frametitle{Inhaltsverzeichnis}
-	\tableofcontents
+\frametitle{Inhaltsverzeichnis}
+\setcounter{tocdepth}{1}
+\tableofcontents
 \end{frame}
 
 
 \section{Einführung}
+\subsection{Spielidee}
 \begin{frame}{Spielidee}
 \begin{itemize}
 \item Verfeindete Kantone bekämpfen sich
@@ -52,22 +54,22 @@
 
 \section{Spielstatus}
 
-\subsection{Was wird benötigt}
+\subsection{Spielstatus}
 \begin{frame}{Spielstatus}
 Was muss gespeichert werden?
 \begin{multicols}{2}
 \begin{itemize}
-\item  Spielerdaten 
-	\begin{itemize}
-		\item Geld
-		\item Gebiet
-		\item Objekte
-	\end{itemize}
+\item Spielerdaten
+\begin{itemize}
+\item Geld
+\item Gebiet
+\item Objekte
+\end{itemize}
 \item Objektdaten
-	\begin{itemize}
-		\item Standort
-		\item Lebenspunkte
-	\end{itemize}
+\begin{itemize}
+\item Standort
+\item Lebenspunkte
+\end{itemize}
 \end{itemize}
 \end{multicols}
 \end{frame}
@@ -83,7 +85,7 @@ Was muss gespeichert werden?
 \subsection{Welche gibt es?}
 \begin{frame}{Spielregeln}
 \begin{itemize}
-\item 
+\item
 \end{itemize}
 \end{frame}
 \subsection{Implementation}
@@ -106,30 +108,63 @@ Was muss gespeichert werden?
 \end{frame}
 
 \section{Arbeitsplan}
-\subsection{Soll}
+\subsection{Arbeitsplan}
 \begin{frame}
-
+\centering
+\includegraphics[scale=0.3]{images/CS108.pdf}
 \end{frame}
+
 \subsection{Ist}
-\begin{frame}
+\begin{frame}{Ist-Stand}
+\begin{itemize}
+\item Lobby und Chat fertig
+\item Serverstruktur fertig % ???? FRANK
+\item bis jetzt geschrieben:
+\begin{itemize}
+\item 7939 Linien Code
+\item 2050 Linien Kommentare
+\end{itemize}
 
+\end{itemize}
+\end{frame}
 
--Verzögerungen, Anpassungen
+\subsection{noch zu tun}
+\begin{frame}{to do}
+\begin{itemize}
+\item Implementation Schnittstelle Spiellogik / Server
+\item GUI des Spieles
+\end{itemize}
 \end{frame}
 
 \section{Qualitätssicherung}
-\begin{frame}
+\subsection{Ist}
+\begin{frame}{QS bis jetzt}
 \begin{itemize}
 \item eigene Log Klasse und viele Log-Messages
 \item gute Dokumentation mit Javadoc
--Unit Test
+\item viele Kommentare (bis jetzt 20\%)
+\item Aufteilung in Pakete nach Funktion
 \end{itemize}
+\end{frame}
+
+\subsection{noch geplant}
+\begin{frame}
+Unit Test
+-Welche Klasse
 \end{frame}
 
 
 \section{Demo}
-\begin{frame}
-
+\subsection{Demo}
+\begin{frame}{Demo}
+\begin{itemize}
+\item Discovery Service
+\item Lobby
+\item Chat und private Messaging
+\item Spiel erstellen und starten
+\item Server Broadcasts
+\item evtl. Lucius Simulation Spiellogik
+\end{itemize}
 \end{frame}
 
 \end{document}

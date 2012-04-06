@@ -1,16 +1,14 @@
 package client.lobby;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import shared.InputValidator;
+import client.events.ServerSelectedEvent;
+import client.events.ServerSelectedListener;
+import client.net.DiscoveryClient;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -18,25 +16,13 @@ import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.*;
-
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import shared.Log;
 import shared.ServerAddress;
 import shared.Settings;
 import shared.User;
-import client.events.ServerSelectedEvent;
-import client.events.ServerSelectedListener;
-import client.net.DiscoveryClient;
 /**
  * This creates a dialog to join a server.
  * @return the Server which to Connect to.

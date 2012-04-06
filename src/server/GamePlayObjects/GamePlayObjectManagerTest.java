@@ -1,10 +1,6 @@
 package server.GamePlayObjects;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import jUnit.Before;
 import shared.User;
 import shared.game.Coordinates;
 

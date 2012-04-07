@@ -147,7 +147,8 @@ implements Comparable<Server>
 		{
 			//TODO what to call if someone quits ingame?
                     
-                        //FIXME if the game is running and a player quit, 
+			//TODO make sure it's fixed
+                        //DONE if the game is running and a player quit, 
                         //a broadcast is sent "GGAME 201 2 gameName", 
                         //trouble is, that it then will be displayed in the lobby
                         // (as the GameManager on the client doesn't mark the game as invisible then).
@@ -179,7 +180,8 @@ implements Comparable<Server>
 			MainServer.getServerManager().removeServer(this);
 			MainServer.printInformation("Server '"+s_servername+"' closed");
 		}			
-		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
+		if(!isGameRunning)
+			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
 	/**
@@ -257,5 +259,13 @@ implements Comparable<Server>
 	public int getID()
 	{
 		return this.i_ServerID;
+	}
+
+	/**
+	 * @return the {@link LogicManager}
+	 */
+	public LogicManager getLogicManager()
+	{
+		return logicManager;
 	}
 }

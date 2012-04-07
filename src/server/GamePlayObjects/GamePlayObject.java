@@ -2,7 +2,6 @@ package server.GamePlayObjects;
 
 import server.exceptions.GameObjectBuildException;
 import server.players.Player;
-import shared.*;
 import shared.game.Coordinates;
 
 public interface GamePlayObject {
@@ -47,6 +46,11 @@ public interface GamePlayObject {
 		
 		//Checks if the targeted Object can be Attacked( A Bomber cannot attack a Jet)
 		boolean isAttackableObject(GamePlayObject target);
+
+		/**
+		 * @return the {@link String} to transfer to the client
+		 */
+		String toProtocolString();
 		
 		
 		

@@ -8,6 +8,7 @@ import server.exceptions.GameObjectBuildException;
 import server.players.Player;
 import shared.game.Coordinates;
 import shared.game.MapManager;
+import shared.Protocol;
 import shared.User;
 
 /**
@@ -351,6 +352,12 @@ public class Flak implements GamePlayObject, Defensive, Building, Unit {
 		else
 		this.id=id;
 		
+	}
+	
+	@Override
+	public String toProtocolString()
+	{
+		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_STATIONARY_ANTI_AIR.str()+position.getX()+" "+position.getY()+" "+id+" "+healthPoints;
 	}
 }
 

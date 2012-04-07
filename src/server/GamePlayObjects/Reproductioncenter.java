@@ -6,6 +6,7 @@ import server.exceptions.GameObjectBuildException;
 import server.players.Player;
 import shared.game.Coordinates;
 import shared.game.MapManager;
+import shared.Protocol;
 import shared.User;
 
 /**
@@ -281,5 +282,11 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 		else
 			this.id = id;
 
+	}
+	
+	@Override
+	public String toProtocolString()
+	{
+		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_REPRODUCTION_CENTER.str()+position.getX()+" "+position.getY()+" "+id+" "+healthPoints;
 	}
 }

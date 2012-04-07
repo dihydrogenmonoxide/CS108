@@ -23,9 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import client.net.Clientsocket;
+import javax.swing.*;
+import shared.Log;
 
 	
-	
+/**this class provides the buttons to build things.*/
 public class GameButtonsPanel extends JPanel{
 	/**Button to send status ready*/
 	private JButton ready;
@@ -51,10 +53,41 @@ public class GameButtonsPanel extends JPanel{
 	private TimePanel time;
 	/**the Connection made to the Server.*/
 	private Clientsocket socket;
-	
-	static String choice;
+	        
+     /**
+     * all the available buttons which can be selected at the moment.
+     */
+    public static enum button
+    {
 
-	
+        TANK, FIGHTER, BOMBER, ANTIAIR, BUNKER, RADAR, REPRO, BANK, NONE
+    };
+    /**
+     * holds the selected button.
+     */
+    public static button choice = button.NONE;
+
+    /**small actionclass which is responsible for assigning choice the correct value.*/
+    class buttonAction extends AbstractAction
+    {
+
+        button button;
+        /**Assigns the icon and the button to the action.
+         @param icon the icon of the button.
+         @param b the type of button.*/
+        public buttonAction(ImageIcon icon, button b)
+        {
+            super("",icon);
+            button = b;
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            choice = button;
+        }
+    }
+        
+        
 	final ButtonGroup group;
 
 	
@@ -77,6 +110,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridy = 0;
 		this.add(attack, c);
 		
+                //TODO remove this, no rockets anymore :(
 		ImageIcon rak= new ImageIcon("bilder/Rakete.png");
 		rak.setImage(rak.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		rakete = new JToggleButton(rak,false);
@@ -95,7 +129,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon tan= new ImageIcon("bilder/Panzer.png");
 		tan.setImage(tan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		tank = new JToggleButton(tan, false);
-		tank.setActionCommand("tank");
+                tank.setAction(new buttonAction(tan, button.TANK));
 		tank.setBackground(bg);
 		tank.setToolTipText("Panzer");
 		c.ipadx=1;
@@ -110,7 +144,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon jag= new ImageIcon("bilder/Flugzeug.png");
 		jag.setImage(jag.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		jagd = new JToggleButton(jag,false);
-		jagd.setActionCommand("jagd");
+		jagd.setAction(new buttonAction(jag, button.FIGHTER));
 		jagd.setBackground(bg);
 		jagd.setToolTipText("Jagdflugzeug");
 		c.ipadx=1;
@@ -125,7 +159,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon bom= new ImageIcon("bilder/Bomber.png");
 		bom.setImage(bom.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		bomber = new JToggleButton(bom, false);
-		bomber.setActionCommand("bomber");
+		bomber.setAction(new buttonAction(bom, button.BOMBER));
 		bomber.setBackground(bg);
 		bomber.setToolTipText("Bomber");
 		c.ipadx=1;
@@ -153,7 +187,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon rad= new ImageIcon("bilder/Radar.png");
 		rad.setImage(rad.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		radar= new JToggleButton(rad, false);
-		radar.setActionCommand("radar");
+		radar.setAction(new buttonAction(rad, button.RADAR));
 		radar.setBackground(bg);
 		radar.setToolTipText("Radar");
 		c.ipadx=1;
@@ -168,7 +202,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon luf= new ImageIcon("bilder/Flugabwehr.png");
 		luf.setImage(luf.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		luftabwehr = new JToggleButton(luf, false);
-		luftabwehr.setActionCommand("luft");
+		luftabwehr.setAction(new buttonAction(luf, button.ANTIAIR));
 		luftabwehr.setBackground(bg);
 		luftabwehr.setToolTipText("Luftabwehr");
 		c.ipadx=1;
@@ -183,7 +217,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon lan= new ImageIcon("bilder/Landabwehr.png");
 		lan.setImage(lan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		landabwehr = new JToggleButton(lan, false);
-		landabwehr.setActionCommand("land");
+		landabwehr.setAction(new buttonAction(lan, button.BUNKER));
 		landabwehr.setBackground(bg);
 		landabwehr.setToolTipText("Landabwehr");
 		c.ipadx=1;
@@ -211,7 +245,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon rep= new ImageIcon("bilder/Repro.png");
 		rep.setImage(rep.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		repro = new JToggleButton(rep, false);
-		repro.setActionCommand("repro");
+		repro.setAction(new buttonAction(rep, button.REPRO));
 		repro.setBackground(bg);
 		repro.setToolTipText("Reproduktionszentrum");
 		c.ipadx=1;
@@ -226,7 +260,7 @@ public class GameButtonsPanel extends JPanel{
 		ImageIcon gel= new ImageIcon("bilder/Bank.png");
 		gel.setImage(gel.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		geld = new JToggleButton(gel, false);
-		geld.setActionCommand("geld");
+		geld.setAction(new buttonAction(gel, button.BANK));
 		geld.setBackground(bg);
 		geld.setToolTipText("Regionalbank");
 		c.ipadx=1;
@@ -257,37 +291,7 @@ public class GameButtonsPanel extends JPanel{
 		group.add(bomber);
 		group.add(rakete);
 		group.add(geld);
-		System.out.println(choice);
+		
 		this.setOpaque(false);
-		
-		selected();
 	}
-
-
-	public String selected() {
-
-		class VoteActionListener implements ActionListener {
-			public void actionPerformed(ActionEvent ex) {
-				choice = group.getSelection().getActionCommand();
-				System.out.println("ACTION Candidate Selected: " + choice);
-			}
-		}
-
-		ActionListener al = new VoteActionListener();
-	    tank.addActionListener(al);
-	    radar.addActionListener(al);
-	    luftabwehr.addActionListener(al);
-	    landabwehr.addActionListener(al);
-	    repro.addActionListener(al);
-	    jagd.addActionListener(al);
-	    bomber.addActionListener(al);
-	    rakete.addActionListener(al);
-	    geld.addActionListener(al);
-
-	    
-	    
-	    return choice;
-		
-	}
-
 }

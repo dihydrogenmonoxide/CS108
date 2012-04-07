@@ -3,6 +3,7 @@ package server.players;
 import java.util.*;
 import shared.*;
 import server.MainServer;
+import server.exceptions.PlayerNotFoundException;
 
 
 public class PlayerManager 
@@ -56,15 +57,17 @@ public class PlayerManager
 	 * returns null if none was found
 	 * @param s_name the pleayer's name you're looking for
 	 * @return the player or null if no such player was found
+	 * @throws PlayerNotFoundException if a Player with the specified nick can't be found
 	 */
-	public Player findPlayer(String s_name)
+	public Player findPlayer(String s_name) 
+			throws PlayerNotFoundException
 	{
 		for(Player p : this.l_players)
 		{
 			if(s_name.compareToIgnoreCase(p.getNick()) == 0)
 				return p;
 		}
-		return null;
+		throw new PlayerNotFoundException("A Player with the nick of \'"+s_name+"\' could not be found!");
 	}
 
 
@@ -123,15 +126,17 @@ public class PlayerManager
 	 * checks whether a player with a certain UUID can be found. returns null if nothing was found.
 	 * @param s_PlayerID the player UUID
 	 * @return the corresponding player
+	 * @throws PlayerNotFoundException if now {@link Player} can be found matching the specified UUID
 	 */
 	public Player findUUID(String s_PlayerID) 
+			throws PlayerNotFoundException 
 	{
 		for(Player p : this.l_players)
 		{
 			if(s_PlayerID.compareTo(p.getToken()) == 0)
 				return p;
 		}
-		return null;
+		throw new PlayerNotFoundException("A Player witht he specified UUID couldn't be found");
 	}
 	
 	/**
@@ -140,7 +145,7 @@ public class PlayerManager
 	 * @throws NoSuchElementException if the server is full
 	 */
 	public int reserveID()
-	throws NoSuchElementException
+			throws NoSuchElementException
 	{
 		return this.qi_AvailableIDs.remove();
 	}

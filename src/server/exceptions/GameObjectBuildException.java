@@ -1,5 +1,6 @@
 package server.exceptions;
 
+@SuppressWarnings("serial")
 public class GameObjectBuildException 
 extends Exception
 {

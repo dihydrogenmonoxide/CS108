@@ -1,7 +1,11 @@
 package server.players;
 
+import java.util.EmptyStackException;
+import java.util.Stack;
+
 import server.MainServer;
 import server.Server;
+import server.GamePlayObjects.GamePlayObject;
 import server.net.*;
 import shared.Log;
 import shared.Protocol;
@@ -22,6 +26,8 @@ implements Comparable<Player>
 	private long money = 0;
 	private long population = 0;
 	private boolean voted = false;
+	private boolean finishedBuilding = false;
+	private Stack<GamePlayObject> objectStack = new Stack<GamePlayObject>();
 	
 	/**
 	 * Creates a new Player on the Server;
@@ -366,5 +372,57 @@ implements Comparable<Player>
 	public void resetVoted()
 	{
 		voted = false;		
+	}
+
+
+	/** 
+	 * @param o adds this {@link GamePlayObject} to the {@link Stack} of currently built {@link GamePlayObject} in this build phase
+	 */
+	public void addObject(GamePlayObject o)
+	{
+		objectStack.push(o);
+	}
+	
+	/**
+	 * removes the topmost {@link GamePlayObject}
+	 */
+	public void removeObject()
+	{
+		try
+		{
+			GamePlayObject o = objectStack.pop();
+			o.destruct();
+			sendData(o.toProtocolString());
+		}
+		catch(EmptyStackException e)
+		{
+			sendData(Protocol.CON_ERROR.str()+"Already reverted all objects for this round.");
+		}		
+	}
+	
+	/**
+	 * @param b whether a {@link Player} finished building in the current build phase or not
+	 */
+	public void finishedBuilding(boolean b)
+	{
+		finishedBuilding = b;
+	}
+	
+	
+	/**
+	 * @return whether a {@link Player} finished building this round or not
+	 */
+	public boolean finishedBuilding()
+	{
+		return finishedBuilding;
+	}
+	
+	/**
+	 * ends the build phase and resets everything
+	 */
+	public void endBuildPhase()
+	{
+		objectStack.clear();
+		finishedBuilding = false;
 	}
 }

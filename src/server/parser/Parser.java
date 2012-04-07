@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import server.MainServer;
 import server.Server;
+import server.exceptions.PlayerNotFoundException;
 import server.net.PlayerSocket;
 import server.players.Player;
 import shared.Log;
@@ -12,6 +13,7 @@ import shared.Protocol;
 
 public class Parser 
 {
+
 
 	public Parser()
 	{
@@ -47,39 +49,7 @@ public class Parser
 		switch(command)
 		{
 		case CON_AUTH://tested & works ~frank
-			if(s_MSG.length()>7)
-			{
-				String s_PlayerID = s_MSG.substring(6, s_MSG.length());
-				Player p = MainServer.getPlayerManager().findUUID(s_PlayerID);
-				if(p != null)
-				{
-					MainServer.printInformation("The Player "+p.getNick()+" just reconnected");
-					ps_sock.sendData(Protocol.CON_HASH.str()+s_PlayerID);
-					p.reconnect(ps_sock);
-					ps_sock.setPlayer(p);
-				}
-				else
-				{
-					ps_sock.sendData(Protocol.CON_ERROR.str() + "Unknown UUID, you're not allowed to reconnect");
-					break;
-				}
-			}
-			else
-			{
-				String uuid = UUID.randomUUID().toString();
-				try
-				{
-					ps_sock.setPlayer(new Player(uuid, ps_sock, MainServer.getPlayerManager().reserveID()));
-					ps_sock.sendData(Protocol.CON_HASH.str() + uuid);
-				}
-				catch(NoSuchElementException e)
-				{
-					ps_sock.sendData(Protocol.CON_ERROR.str() + "All seats taken - server is full!");
-					ps_sock.sendData(Protocol.CON_EXIT.toString());
-					ps_sock.close();
-				}
-			}
-			break;
+			handleAuthentication(s_MSG, ps_sock);
 			
 		case CON_PING://tested & works ~frank
 			ps_sock.sendData(Protocol.CON_PONG.toString());
@@ -113,20 +83,24 @@ public class Parser
 			handleChat(s_MSG, ps_sock);
 			break;
 		case GAME_RESET:
-			//TODO implement reset
+			ps_sock.getPlayer().getServer().getLogicManager().resendEverything(ps_sock.getPlayer());
 			break;
 		case GAME_SPAWN_OBJECT:
-			//TODO implement
+			ps_sock.getPlayer().getServer().getLogicManager().buildObject(s_MSG, ps_sock.getPlayer());
 			break;
 		case GAME_UPDATE_OBJECT:
-			//TODO implement
+			ps_sock.getPlayer().getServer().getLogicManager().updateObject(s_MSG, ps_sock.getPlayer());
 			break;
-		case GAME_LAUNCH_MISSILE:
-			//TODO implement
+		case GAME_BUILD_PHASE:
+			ps_sock.getPlayer().getServer().getLogicManager().finishedBuilding(ps_sock.getPlayer());
 			break;
 			
 		case GAME_VOTESTART:
 			ps_sock.getPlayer().voteStart();
+			break;
+			
+		case GAME_UNDO:
+			ps_sock.getPlayer().removeObject();
 			break;
 			
 		default:
@@ -134,6 +108,41 @@ public class Parser
 			ps_sock.sendData(Protocol.CON_ERROR.str() + "not implemented yet");	
 			break;
 		}		
+	}
+
+	private void handleAuthentication(String s_MSG, PlayerSocket ps_sock)
+	{
+		if(s_MSG.length()>7)
+		{
+			String s_PlayerID = s_MSG.substring(6, s_MSG.length());
+			try
+			{
+				Player p = MainServer.getPlayerManager().findUUID(s_PlayerID);
+				MainServer.printInformation("The Player "+p.getNick()+" just reconnected");
+				ps_sock.sendData(Protocol.CON_HASH.str()+s_PlayerID);
+				p.reconnect(ps_sock);
+				ps_sock.setPlayer(p);
+			}
+			catch(PlayerNotFoundException e)
+			{
+				ps_sock.sendData(Protocol.CON_ERROR.str() + "Unknown UUID, you're not allowed to reconnect");
+			}
+		}
+		else
+		{
+			String uuid = UUID.randomUUID().toString();
+			try
+			{
+				ps_sock.setPlayer(new Player(uuid, ps_sock, MainServer.getPlayerManager().reserveID()));
+				ps_sock.sendData(Protocol.CON_HASH.str() + uuid);
+			}
+			catch(NoSuchElementException e)
+			{
+				ps_sock.sendData(Protocol.CON_ERROR.str() + "All seats taken - server is full!");
+				ps_sock.sendData(Protocol.CON_EXIT.toString());
+				ps_sock.close();
+			}
+		}
 	}
 
 	/**
@@ -244,9 +253,9 @@ public class Parser
 			s_MSG = s_MSG.substring(5, s_MSG.length());
 			//Split by one or more whitespaces
 			String[] s = s_MSG.split("\\s+");
-			Player p_player = MainServer.getPlayerManager().findPlayer(s[0]);
-			if(p_player != null)
+			try
 			{
+				Player p_player = MainServer.getPlayerManager().findPlayer(s[0]);
 				s_MSG = s_MSG.substring(s[0].length(), s_MSG.length());
 				if(p_player == ps_sock.getPlayer())
 				{
@@ -260,10 +269,9 @@ public class Parser
 					return;
 				}
 			}
-			else
+			catch (PlayerNotFoundException e)
 			{
 				ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t Player \'"+s[0]+"\' isn't playing on this server...");
-				return;
 			}
 		}
 		else
@@ -295,16 +303,26 @@ public class Parser
 			s_MSG = "anon";
 		
 		// make sure no nicks are used twice
-		Player p = MainServer.getPlayerManager().findPlayer(s_MSG);
-		if(p != null)
+		int i = 0;
+		try
 		{
-			int i = 0;
-			while(p != null)
+			Player p = MainServer.getPlayerManager().findPlayer(s_MSG);
+			while(true)
 			{
-				i++;
-				p = MainServer.getPlayerManager().findPlayer(s_MSG+i);
+				try
+				{
+					i++;
+					p = MainServer.getPlayerManager().findPlayer(s_MSG+i);
+				}
+				catch (PlayerNotFoundException e)
+				{
+					s_MSG = s_MSG+i;
+				}
 			}
-			s_MSG = s_MSG+i;
+		}
+		catch (PlayerNotFoundException e) 
+		{
+			
 		}
 		
 		ps_sock.getPlayer().setNick(s_MSG);

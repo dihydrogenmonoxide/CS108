@@ -27,8 +27,8 @@ public enum Protocol {
 	OBJECT_STATIONARY_ANTI_TANK(OBJECT, "SAT"),
 	/**the stationary anti aircraft weapon*/
 	OBJECT_STATIONARY_ANTI_AIR(OBJECT, "SAA"),
-	/**the missile silo*/
-	OBJECT_MISSILE_SILO(OBJECT, "MSS"),
+	/**the bank*/
+	OBJECT_BANK(OBJECT, "BNK"),
 	/**alive beacon.*/
 	DISC_ALIVE(DISCOVERY, "ALIV"),
 	/**server beacon.*/
@@ -89,10 +89,12 @@ public enum Protocol {
 	GAME_SPAWN_OBJECT(GAME, "SPWN"),
 	/**Updates the given object */
 	GAME_UPDATE_OBJECT(GAME, "UPDT"),
-	/**Launches a missile */
-	GAME_LAUNCH_MISSILE(GAME, "MISL"),
 	/**Starts the game*/
-	GAME_BEGIN(GAME, "BEGI");	
+	GAME_BEGIN(GAME, "BEGI"),	
+	/**Updates the population size*/
+	GAME_POPULATION(GAME, "POPU"),	
+	/**undo the last built object*/
+	GAME_UNDO(GAME, "UNDO");
 	
 	/**holds the String belonging to the Enum.*/
 	private final String message;

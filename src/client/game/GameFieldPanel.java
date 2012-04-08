@@ -1,5 +1,6 @@
 package client.game;
 
+import client.data.RunningGame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -23,6 +24,7 @@ import javax.swing.SwingUtilities;
 import client.net.Clientsocket;
 import shared.game.MapManager;
 import shared.Log;
+import shared.Protocol;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
@@ -46,7 +48,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         this.socket = s;
 
         //TODO decide which field to highlight and which are inactive.
-        img = MapManager.renderMap(0, MAP_WIDTH);
+        img = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
 
 
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
@@ -89,9 +91,21 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
         switch (but.choice)
         {
+            case TANK:
+            case FIGHTER:
+            case BOMBER:
+            case ANTIAIR:
+            case BUNKER:
+            case RADAR:
+            case REPRO:
+            case BANK:
+            case NONE:
+            
             
             //XXX this is just for testing purposes:
             default:
+                
+                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_BANK.str() + pixelToCoordX(e.getX()) + " " + pixelToCoordY(e.getY()));
                 Graphics g = getGraphics();
                 int x = e.getX();
                 int y = e.getY();
@@ -105,7 +119,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
                 
             //TODO send a request to the server.
-                
+             
+           
             /*
             * How to solve this:
             * if player clicks on the map, send a request to the server
@@ -132,5 +147,26 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void mouseClicked(MouseEvent e)
     {
+    }
+    
+    /**converts pixel coordinates of the X axis to swiss map coordinates.*/
+    public int pixelToCoordX(int x)
+    {
+        /*Das schweizer koordinatennetz geht von O-W von 450000 bis 800000.*/
+        int coordStart = 450000;
+        int coordEnd = 800000;
+        int coordDelta = coordEnd - coordStart;        
+        return coordStart + coordDelta*x/MAP_WIDTH;
+        
+    }
+    
+    /**converts pixel coordinates of the Y axis to swiss map coordinates.*/
+    public int pixelToCoordY(int y)
+    {
+        /*Das schweizer koordinatennetz geht von S-N von 100000 bis 300000.*/
+        int coordStart = 100000;
+        int coordEnd = 300000;
+        int coordDelta = coordEnd - coordStart;        
+        return coordStart + coordDelta*y/img.getHeight();
     }
 }

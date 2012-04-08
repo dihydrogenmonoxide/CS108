@@ -25,6 +25,7 @@ import client.net.Clientsocket;
 import shared.game.MapManager;
 import shared.Log;
 import shared.Protocol;
+import shared.game.Coordinates;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
@@ -105,7 +106,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
             //XXX this is just for testing purposes:
             default:
                 
-                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_BANK.str() + pixelToCoordX(e.getX()) + " " + pixelToCoordY(e.getY()));
+                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_BANK.str() + Coordinates.pixelToCoord(e.getY(), e.getY(), MAP_WIDTH, img.getHeight()));
                 Graphics g = getGraphics();
                 int x = e.getX();
                 int y = e.getY();
@@ -149,24 +150,4 @@ public class GameFieldPanel extends JPanel implements MouseListener
     {
     }
     
-    /**converts pixel coordinates of the X axis to swiss map coordinates.*/
-    public int pixelToCoordX(int x)
-    {
-        /*Das schweizer koordinatennetz geht von O-W von 450000 bis 800000.*/
-        int coordStart = 450000;
-        int coordEnd = 800000;
-        int coordDelta = coordEnd - coordStart;        
-        return coordStart + coordDelta*x/MAP_WIDTH;
-        
-    }
-    
-    /**converts pixel coordinates of the Y axis to swiss map coordinates.*/
-    public int pixelToCoordY(int y)
-    {
-        /*Das schweizer koordinatennetz geht von S-N von 100000 bis 300000.*/
-        int coordStart = 100000;
-        int coordEnd = 300000;
-        int coordDelta = coordEnd - coordStart;        
-        return coordStart + coordDelta*y/img.getHeight();
-    }
 }

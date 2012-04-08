@@ -4,12 +4,12 @@ package shared.game;
 
 
 public class Coordinates {
-    public static final int coordEndY = 300000;
+     static final int coordEndY = 300000;
     /**Starting point of the coordinates on the X axis.*/
-    public static final int coordStartX = 450000;
+     static final int coordStartX = 450000;
     /**Ending point of the coordinates on the X axis.*/
-    public static final int coordEndX = 800000;
-    public static final int coordStartY = 100000;
+     static final int coordEndX = 800000;
+     static final int coordStartY = 100000;
     
     
 	private int x;
@@ -72,15 +72,15 @@ public class Coordinates {
        /**converts from pixel to Coordinates.
         @param x the point on the x axis
         @param y the point on the y axis
-        @param totLength the total length of the map in pixels
-        @param totLength the total Height of the map in pixels
+        @param totWidth the total length of the map in pixels
+        @param totWidth the total Height of the map in pixels
         @return a Coordinate object with the desired Coordinates.
         */
-       static Coordinates pixelToCoord(int x, int y, int totLength, int totHeight)
+      public static Coordinates pixelToCoord(int x, int y, int totWidth, int totHeight)
         {
             //-- get x coords
             int coordDeltaX = coordEndX - coordStartX;
-            int coordX = coordStartX + coordDeltaX * x / totLength;
+            int coordX = coordStartX + coordDeltaX * x / totWidth;
             
             //-- get y coords
             int coordDeltaY = coordEndY - coordStartY;        

@@ -83,6 +83,7 @@ public class Parser
 			handleChat(s_MSG, ps_sock);
 			break;
 		case GAME_RESET:
+			//TODO fix null ptr
 			ps_sock.getPlayer().getServer().getLogicManager().resendEverything(ps_sock.getPlayer());
 			break;
 		case GAME_SPAWN_OBJECT:

@@ -1,5 +1,6 @@
 package server.players;
 
+import java.net.Socket;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -23,7 +24,8 @@ implements Comparable<Player>
 	private boolean b_quit = false;
 	private boolean b_ConnectionLost = false;
 	private int fieldID = 0;
-	private long money = 0;
+	//TODO SERVER default money amount?
+	private long money = 1111110;
 	private long population = 0;
 	private boolean voted = false;
 	private boolean finishedBuilding = false;
@@ -235,8 +237,12 @@ implements Comparable<Player>
 	/**
 	 * This gets called when the Player lost the connection and may tries to reconnect
 	 */
-	public void connectionLost()
+	public void connectionLost(Socket sock)
 	{
+		if(ps_sock.getSocket() != sock)
+			return;
+		//TODO SERVER fix connection reset by beer issue
+		
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
 

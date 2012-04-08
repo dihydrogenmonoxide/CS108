@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -52,6 +53,7 @@ implements Runnable
 			S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), Settings.SocketTimeout.TIMEOUT);
 			S_sock.setKeepAlive(true);
 			S_sock.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
+			S_sock.setTcpNoDelay(true);
 		}
 		catch (IOException e)
 		{
@@ -134,10 +136,10 @@ implements Runnable
 					String s = OIS_MSG.readUTF();
 					parser.parse(s);					
 				}
-				catch(EOFException e2)
+				catch(SocketTimeoutException  e3)
 				{
-					Log.ErrorLog("Reading Error: "+e2.getMessage());
-					this.S_sock.close();
+					Log.ErrorLog("Disconnected! Initiating reconnect! "+e3.getMessage());
+					S_sock.close();
 					
 					parser.parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT);
 					try
@@ -158,11 +160,29 @@ implements Runnable
 						i_ReconnectionsFailed++;
 					}
 				}
-				catch(SocketTimeoutException  e3)
+				catch(EOFException e)
 				{
-					//A timeout occurred!
-					Log.ErrorLog("Disconnected! Initiating reconnect! "+e3.getMessage());
-					this.S_sock.close();
+					Log.ErrorLog("Reading Error: "+e.getMessage());
+					S_sock.close();
+					try
+					{
+						this.reconnect();
+						i_ReconnectionsFailed = 0;
+					}
+					catch(SocketCreationException e1)
+					{
+						Log.WarningLog("A reconnect failed: "+e1.getMessage());
+						if(i_ReconnectionsFailed >= Settings.SocketTimeout.MAX_RETRIES-1)
+						{
+							parser.parse(Protocol.CON_FAIL.toString());
+							Log.ErrorLog("Connection reset by beer");
+							b_connected = false;
+							OIS_MSG.close();
+							OOS_MSG.close();
+							S_sock.close();
+						}
+						i_ReconnectionsFailed++;
+					}
 				}
 				catch(IOException e1)
 				{
@@ -284,7 +304,7 @@ implements Runnable
 	{
 		try 
 		{
-			bq_Queue.put(s_Data);
+			bq_Queue.put(s_Data);			
 			synchronized(this.T_Thread_send)
 			{
 				T_Thread_send.notify();
@@ -310,6 +330,16 @@ implements Runnable
 		try 
 		{
 			bq_Queue.put(Protocol.CHAT_MESSAGE.str() + s_MSG);
+			//TODO remove this in the final version
+		/*	for(int i = 1000; i != 0; i--)
+			{
+			//	bq_Queue.put("CCHAT derp "+i+" : "+System.currentTimeMillis());
+				if(i%2 == 0)
+					bq_Queue.put("GMAKE asdasd"+i);
+				else
+					bq_Queue.put("GQUIT");
+			}*/
+			//end removal
 			synchronized(this.T_Thread_send)
 			{
 				T_Thread_send.notify();
@@ -353,6 +383,7 @@ implements Runnable
 				S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), Settings.SocketTimeout.TIMEOUT);
 				S_sock.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
 				S_sock.setKeepAlive(true);
+				S_sock.setTcpNoDelay(true);
 			} 
 			catch (IOException e) 
 			{

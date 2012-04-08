@@ -70,7 +70,7 @@ public class ClientParser {
 		// invoke the appropiate method.
 		try
 		{
-			Log.DebugLog("Parser, received Message: " + msg);
+		//	Log.DebugLog("Parser, received Message: " + msg);
 
 			Protocol section = getSection(msg);
 			switch(section)
@@ -337,7 +337,7 @@ public class ClientParser {
 	 * @param msg the message
 	 * */
 	private void handleChat(final String msg) { 
-		Log.DebugLog("->chat: " + msg);
+	//	Log.DebugLog("->chat: " + msg);
 
 		msgType t = msgType.MSG;
 		if (msg.subSequence(1, 14).equals("CHAT [SERVER]"))

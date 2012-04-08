@@ -66,6 +66,8 @@ class Game {
 	 * @param p the player to add to the game.*/
 	public void addPlayer(final Player p) 
 	{
+		if (p == null)
+				return;
 		Log.DebugLog("Game: player added to game " + name + ":" + p.getName());
 		players.put(p.getId(), p);
 	}

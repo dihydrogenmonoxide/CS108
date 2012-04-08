@@ -48,6 +48,7 @@ implements Runnable
 			animationPhase();
 			//TODO SERVER detect game ending when one player won
 		}
+		//TODO SERVER save score?
 	}
 	
 	private void updateClients()

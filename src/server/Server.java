@@ -29,7 +29,6 @@ implements Comparable<Server>
 	public Server(String s_Servername, int i_ID)
 	
 	{
-		// TODO implement the whole server a user can start when he's in the lobby
 		for(int i = 1; i != 6; i++)
 		{
 			availableFieldIDs.offer(i);
@@ -145,6 +144,7 @@ implements Comparable<Server>
 	{
 		if(isGameRunning)
 		{
+			
 			//TODO what to call if someone quits ingame?
                     
 			//TODO make sure it's fixed
@@ -236,8 +236,9 @@ implements Comparable<Server>
 	 */
 	public void pause()
 	{
-		//TODO implement
 		isPaused = true;
+		if(isGameRunning)
+			logicManager.pause();
 	}
 	
 	/**
@@ -245,10 +246,11 @@ implements Comparable<Server>
 	 */
 	public void resume()
 	{
-		//TODO implement
 		isPaused = false;
 		if(l_players.size() > 1 && startVotes > l_players.size() / 2)
 			startGame();
+		if(isGameRunning)
+			logicManager.resume();
 	}
 
 

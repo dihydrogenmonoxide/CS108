@@ -6,12 +6,10 @@ import server.GamePlayObjects.ATT;
 import server.GamePlayObjects.Bomber;
 import server.GamePlayObjects.Flak;
 import server.GamePlayObjects.GamePlayObject;
-import server.GamePlayObjects.GamePlayObjectManager;
 import server.GamePlayObjects.Jet;
 import server.GamePlayObjects.Reproductioncenter;
 import server.GamePlayObjects.Tank;
 import server.exceptions.GameObjectBuildException;
-import server.exceptions.PlayerNotFoundException;
 import server.parser.Parser;
 import server.players.Player;
 import shared.Log;
@@ -29,8 +27,9 @@ implements Runnable
 	private Server server;
 	private Thread thread = new Thread(this);
 	private int voteCount = 0;	
-	
+	private boolean isPaused = false;
 	private boolean isInBuildPhase = false;
+	private int remainingTime = 0;
 
 	
 	public LogicManager(Server server)
@@ -78,7 +77,15 @@ implements Runnable
 		server.broadcastMessage(Protocol.GAME_ANIMATION_PHASE.str()+animationTimeInSeconds);
 		try
 		{
-			Thread.sleep(animationTimeInSeconds*1000);
+			remainingTime = animationTimeInSeconds+1;
+			for(; remainingTime != 0; remainingTime--)
+			{
+				Thread.sleep(1000);
+				if(isPaused)
+				{
+					remainingTime++;
+				}
+			}
 		}
 		catch(InterruptedException e)
 		{
@@ -102,7 +109,15 @@ implements Runnable
 		isInBuildPhase = true;
 		try
 		{
-			Thread.sleep(buildTimeInSeconds*1000+1000);
+			remainingTime = buildTimeInSeconds+2;
+			for(; remainingTime != 0; remainingTime--)
+			{
+				Thread.sleep(1000);
+				if(isPaused)
+				{
+					remainingTime++;
+				}
+			}
 		}
 		catch (InterruptedException e)
 		{
@@ -255,5 +270,27 @@ implements Runnable
 			}
 		}
 		Log.ErrorLog("Couldn't move the object - \'"+s_MSG+"\' isn't in a valid format");
+	}
+
+	/**
+	 * resumes the {@link Server} and notifies all {@link Player}s about it
+	 */
+	public void resume()
+	{
+		isPaused = false;
+		server.broadcastMessage(Protocol.GAME_RESUME.str());
+		if(isInBuildPhase)
+			server.broadcastMessage(Protocol.GAME_BUILD_PHASE.str()+remainingTime);
+		else
+			server.broadcastMessage(Protocol.GAME_ANIMATION_PHASE.str()+remainingTime);
+	}
+
+	/**
+	 * pauses the {@link Server} and notifies all {@link Player}s
+	 */
+	public void pause()
+	{
+		isPaused = true;
+		server.broadcastMessage(Protocol.GAME_PAUSE.str());
 	}
 }

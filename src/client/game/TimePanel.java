@@ -1,6 +1,5 @@
 package client.game;
 
-import client.data.RunningGame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -34,7 +33,7 @@ public class TimePanel extends JPanel{
     /**TimerLabel to show Countdown*/
 	private JLabel timerLabel;
 	private Timer timer;
-	private int rundenzeit;
+	private int zahl;
 	private JFrame gameFrame;
 	private GlassPane GlassPane;
 	private Clientsocket socket;
@@ -63,38 +62,43 @@ public class TimePanel extends JPanel{
 		Font curFont = timerLabel.getFont();
 		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));
 		
-		TimeClassMin tcMin = new TimeClassMin(ready, gameChat);
+		zahl=74;//Rundenzeit
+		
+		TimeClassMin tcMin = new TimeClassMin(zahl, ready, gameChat);
 		timer = new Timer(1000, tcMin);
 		timer.start();
 		
 		
 	}
 
-	public String makeTime(int seconds){
-          return String.format("%02d:%02d", seconds/60, seconds%60);
-        }
+	
 
 	public class TimeClassMin implements ActionListener {
 		int sec;
 		int min;
-		int rundenzeit;
+		int zahl;
 		int zero;
 		JToggleButton ready;
 		GameChatPanel gameChat;
 
-		public TimeClassMin(JToggleButton ready, GameChatPanel gameChat){
-			this.rundenzeit=rundenzeit;
+		public TimeClassMin(int zahl, JToggleButton ready, GameChatPanel gameChat){
+			this.zahl=zahl;
 			this.ready = ready;
 			this.gameChat = gameChat;
 		}
 
 		public void actionPerformed(ActionEvent f){
-                    //TODO ugly
-                        rundenzeit = RunningGame.getBuildTime();
-			
-			timerLabel.setText(makeTime(rundenzeit));
-			
-			if (rundenzeit == 0){
+			zahl--;
+			min=zahl/60;
+			sec=zahl%60;
+			if(zahl%60<10||zahl%60<70){
+				timerLabel.setText(min+"   :   "+zero+sec);
+				zero=0;
+			}
+			if(sec>=10){
+				timerLabel.setText(min +"   :   "+ sec);
+			} 
+			if (sec==0&& min==0){
 				timer.stop();
 				timerLabel.setText("  Ende!  ");
 				GlassPane = new GlassPane(ready, gameFrame.getContentPane(), gameChat, socket);

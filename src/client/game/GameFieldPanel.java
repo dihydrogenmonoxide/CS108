@@ -1,6 +1,5 @@
 package client.game;
 
-import client.data.RunningGame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -24,8 +23,6 @@ import javax.swing.SwingUtilities;
 import client.net.Clientsocket;
 import shared.game.MapManager;
 import shared.Log;
-import shared.Protocol;
-import shared.game.Coordinates;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
@@ -49,7 +46,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         this.socket = s;
 
         //TODO decide which field to highlight and which are inactive.
-        img = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
+        img = MapManager.renderMap(0, MAP_WIDTH);
 
 
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
@@ -92,21 +89,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
         switch (but.choice)
         {
-            case TANK:
-            case FIGHTER:
-            case BOMBER:
-            case ANTIAIR:
-            case BUNKER:
-            case RADAR:
-            case REPRO:
-            case BANK:
-            case NONE:
-            
             
             //XXX this is just for testing purposes:
             default:
-                
-                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_BANK.str() + Coordinates.pixelToCoord(e.getY(), e.getY(), MAP_WIDTH, img.getHeight()));
                 Graphics g = getGraphics();
                 int x = e.getX();
                 int y = e.getY();
@@ -120,8 +105,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
                 
             //TODO send a request to the server.
-             
-           
+                
             /*
             * How to solve this:
             * if player clicks on the map, send a request to the server
@@ -149,5 +133,4 @@ public class GameFieldPanel extends JPanel implements MouseListener
     public void mouseClicked(MouseEvent e)
     {
     }
-    
 }

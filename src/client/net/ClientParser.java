@@ -11,7 +11,6 @@ import shared.Protocol;
 import shared.Settings;
 import client.data.GamesManager;
 import client.data.PlayerManager;
-import client.data.RunningGame;
 import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.GameEvent;
@@ -22,8 +21,6 @@ import client.events.LobbyEvent;
 import client.events.LobbyEventListener;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Parser for all Messages, fires the correct Event.
@@ -251,14 +248,8 @@ public class ClientParser {
 			break;
 
 		case GAME_BEGIN:
-                        RunningGame.initGame
-                            (
-                                Integer.valueOf((String)(msg.subSequence(6, 9))),
-                                Integer.valueOf((String)(msg.subSequence(10, 11)))
-                            );
+			sendChatMessage("Starting the game", msgType.GAME);
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_BEGIN, msg));
-                        sendChatMessage("Starting the game", msgType.GAME);
-                        //TODO fire event if something went wrong.
 			break;
 
 		case GAME_PAUSE:
@@ -279,7 +270,7 @@ public class ClientParser {
 			break;
 
 		case GAME_BUILD_PHASE:
-			RunningGame.setBuildTime(getFirstNumber(msg));
+			//TODO CLIENTPARSER implement enable User interaction on map.
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_BUILD_PHASE, msg));
 			break;
 
@@ -306,20 +297,8 @@ public class ClientParser {
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);
 		}
-	   }
-        
-            static Pattern firstNumber = Pattern.compile("^[a-zA-Z ]+([0-9]+).*");
+	}
 
-            private int getFirstNumber(String s)
-            {
-                 Matcher m = firstNumber.matcher(s);
-
-                 if (m.find())
-                 {
-                    return Integer.valueOf(m.group(1));
-                 }
-                 return 0;
-            }
 
 	/**
 	 * All messages concerning the Lobby / userstatus.

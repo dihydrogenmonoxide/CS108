@@ -72,7 +72,7 @@ public class GameFrame extends JDialog {
 			}
 		});	
 		
-                //TODO listener which closes the game if something unforeseen happens.
+	  
 		
 
 	}

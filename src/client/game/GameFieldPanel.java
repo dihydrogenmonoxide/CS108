@@ -29,8 +29,9 @@ import shared.game.Coordinates;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
-
+    //XXX not nice
     private static final int MAP_WIDTH = 1000;
+    private static int MAP_HEIGHT;
     /**
      * Buffered image to Paint Map
      */
@@ -50,7 +51,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
         //TODO decide which field to highlight and which are inactive.
         img = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
-
+        MAP_HEIGHT = img.getHeight();
 
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 
@@ -91,48 +92,40 @@ public class GameFieldPanel extends JPanel implements MouseListener
     {
         Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
         Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(e.getX(), e.getY(), MAP_WIDTH, img.getHeight()));
+        Log.DebugLog("sending request to create:" + but.choice);
         switch (but.choice)
         {
             case TANK:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_TANK);
+                break;
             case FIGHTER:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_FIGHTER_JET);
+                break;
             case BOMBER:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_BOMBER);
+                break;
             case ANTIAIR:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_STATIONARY_ANTI_AIR);
+                break;
             case BUNKER:
-            case RADAR:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_STATIONARY_ANTI_TANK);
+                break;
             case REPRO:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_REPRODUCTION_CENTER);
+                break;
             case BANK:
+                spawnObject(e.getX(),e.getY(),Protocol.OBJECT_BANK);
+                break;
             case NONE:
-            
-            
-            //XXX this is just for testing purposes:
             default:
-                
-                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_TANK.str() + Coordinates.pixelToCoord(e.getX(), e.getY(), MAP_WIDTH, img.getHeight()));
-                Graphics g = getGraphics();
-                int x = e.getX();
-                int y = e.getY();
-                try
-                {
-                    bil = ImageIO.read(new File("bilder/Bank.png"));
-                    g.drawImage(bil, x, y, 20, 20, null);
-                } catch (IOException e1)
-                {
-                    e1.printStackTrace();
-                }
-                
-            //TODO send a request to the server.
-             
-           
-            /*
-            * How to solve this:
-            * if player clicks on the map, send a request to the server
-            * don't draw anything.
-            * the server will then send us that a new object is created which is then drawn.
-            * to do this we will have to make a class for each drawable object 
-            * with it's unique draw/paint method.
-            */
-
         }
+    }
+    /**sends a spawn request to the server.
+     @param c the Coordinates where to spawn
+     @param obj the object to spawn*/
+    public void spawnObject(int x, int y, Protocol obj)
+    {
+        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, MAP_WIDTH, MAP_HEIGHT));
     }
 
     public void mouseReleased(MouseEvent e)

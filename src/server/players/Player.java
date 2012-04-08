@@ -271,7 +271,7 @@ implements Comparable<Player>
 	 */
 	public void reconnect(PlayerSocket ps_socket) 
 	{
-		b_ConnectionLost = true;
+		b_ConnectionLost = false;
 		this.ps_sock = ps_socket;
 		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" reconnected!", this);
 		if(this.s_server != null)

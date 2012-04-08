@@ -31,7 +31,7 @@ implements Runnable
 	private ObjectOutputStream OOS_MSG;
 	private ObjectInputStream OIS_MSG;
 	
-	BlockingQueue<String> bq_Queue = new LinkedBlockingQueue<String>();
+	private BlockingQueue<String> bq_Queue = new LinkedBlockingQueue<String>();
 	
 	private String s_PlayerID = "";
 	
@@ -226,6 +226,7 @@ implements Runnable
 						catch (InterruptedException e)
 						{
 							Log.ErrorLog("This shouldn't be interrupted!");
+							return;
 						}
 					}
 					OOS_MSG.flush();
@@ -241,6 +242,7 @@ implements Runnable
 							} catch (InterruptedException e) 
 							{
 								Log.DebugLog("Waiting in the send Thread was interrupted");
+								return;
 							}		
 						}
 					}						
@@ -329,9 +331,22 @@ implements Runnable
 		if(!b_connected)
 			throw new SocketCreationException("This connection was manually closed! Can't reopen!");
 		
+		try
+		{
+			OOS_MSG.close();
+			OIS_MSG.close();
+			S_sock.close();
+		}
+		catch(IOException e)
+		{
+			Log.WarningLog("Already closed the streams");
+		}
+		
+		
 		if(this.S_sock.isClosed() || !this.S_sock.isConnected())
 		{
 			Log.DebugLog("Socket was Closed... Attempting reconnect");
+			this.T_Thread_send.interrupt();
 			try 
 			{
 				S_sock = new Socket();
@@ -372,24 +387,17 @@ implements Runnable
 			{
 				throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
 			}
-			
-			//restarting both threads in case one of them shut down
-			try
-			{
-				this.T_Thread_send.start();
-			}
-			catch(IllegalThreadStateException e)
-			{
-				Log.InformationLog("Receiver Thread is still running!");
-			}
+	
 			
 			try
 			{
-				this.T_Thread_send.start();
+				this.T_Thread_send = new Thread(this);
+				T_Thread_send.start();
 			}
 			catch(IllegalThreadStateException e)
 			{
-				Log.InformationLog("Sender Thread is still running!");
+				Log.InformationLog("Couldn't start the sender thread!");
+				throw new SocketCreationException("Failed to start the sender thread: "+e.getMessage());
 			}
 		}
 		
@@ -404,8 +412,7 @@ implements Runnable
 		{
 			throw new SocketCreationException("Failed to send a reconnect ping: "+e.getMessage());
 		}
-		
-		
+		i_ReconnectionsFailed = 0;
 	}
 	
 	/**

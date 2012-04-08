@@ -14,11 +14,12 @@ import server.parser.Parser;
 import server.players.Player;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 
 public class PlayerSocket
 implements Runnable
 {
-	private final static int i_Timeout = 4000;
+
 	private Socket S_socket;
 	private Parser P_Parser;
 	private Player p_player;
@@ -97,12 +98,12 @@ implements Runnable
 							try 
 							{
 								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
-								Thread.currentThread().wait(i_Timeout);
+								Thread.currentThread().wait(Settings.SocketTimeout.TIMEOUT);
 								
 								if(bq_Queue.isEmpty() && !this.S_socket.isClosed() && b_active)
 								{
 									//the wait was interrupted by a timeout, this client has lost the connection!
-									this.P_Parser.Parse(Protocol.CON_TIMEOUT.str()+i_Timeout, this);
+									this.P_Parser.Parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT, this);
 									this.b_active = false;
 									this.S_socket.close();
 									if(connectionLost)

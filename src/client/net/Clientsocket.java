@@ -19,12 +19,7 @@ import shared.*;
 public class Clientsocket 
 implements Runnable
 {
-	/**the connection timeout in microseconds.*/
-	private static final int i_Timeout = 4000;
-	/**the time to wait between reconnects.*/
-	private static final int i_Wait = 500;
-	/**how many reconnects.*/
-	private static final int i_MaxReconnect = 5;
+	
 	/**how many reconnects failed so far.*/
 	private int i_ReconnectionsFailed = 0;
 	
@@ -54,9 +49,9 @@ implements Runnable
 		try
 		{
 			S_sock = new Socket();
-			S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), i_Timeout);
+			S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), Settings.SocketTimeout.TIMEOUT);
 			S_sock.setKeepAlive(true);
-			S_sock.setSoTimeout(i_Timeout);
+			S_sock.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
 		}
 		catch (IOException e)
 		{
@@ -144,7 +139,7 @@ implements Runnable
 					Log.ErrorLog("Reading Error: "+e2.getMessage());
 					this.S_sock.close();
 					
-					parser.parse(Protocol.CON_TIMEOUT.str()+i_Timeout);
+					parser.parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT);
 					try
 					{
 						this.reconnect();
@@ -153,7 +148,7 @@ implements Runnable
 					catch(SocketCreationException e1)
 					{
 						Log.WarningLog("A reconnect failed: "+e1.getMessage());
-						if(i_ReconnectionsFailed >= i_MaxReconnect-1)
+						if(i_ReconnectionsFailed >= Settings.SocketTimeout.MAX_RETRIES-1)
 						{
 							parser.parse(Protocol.CON_FAIL.toString());
 							b_connected = false;
@@ -181,7 +176,7 @@ implements Runnable
 					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
 					{
 						Log.ErrorLog("Socket Closed unexpectedly: "+e1.getMessage());
-						parser.parse(Protocol.CON_TIMEOUT.str()+i_Timeout);
+						parser.parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT);
 						try
 						{
 							this.reconnect();
@@ -190,7 +185,7 @@ implements Runnable
 						catch(SocketCreationException e2)
 						{
 							Log.WarningLog("A reconnect failed: "+e2.getMessage());
-							if(i_ReconnectionsFailed >= i_MaxReconnect)
+							if(i_ReconnectionsFailed >= Settings.SocketTimeout.MAX_RETRIES)
 							{
 								parser.parse(Protocol.CON_FAIL.toString());
 								b_connected = false;
@@ -242,7 +237,7 @@ implements Runnable
 							try 
 							{
 								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
-								Thread.currentThread().wait(i_Wait);
+								Thread.currentThread().wait(Settings.SocketTimeout.WAIT_BETWEEN_PINGS);
 							} catch (InterruptedException e) 
 							{
 								Log.DebugLog("Waiting in the send Thread was interrupted");
@@ -340,8 +335,8 @@ implements Runnable
 			try 
 			{
 				S_sock = new Socket();
-				S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), i_Timeout);
-				S_sock.setSoTimeout(i_Timeout);
+				S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), Settings.SocketTimeout.TIMEOUT);
+				S_sock.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
 				S_sock.setKeepAlive(true);
 			} 
 			catch (IOException e) 

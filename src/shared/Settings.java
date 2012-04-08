@@ -7,4 +7,13 @@ public final class Settings {
 	public static final int SERVER_DEFAULT_PORT = 9003;
 	public static final boolean PRINT_DEBUG_MSG_IN_CHAT = true;
 	
+	public final class SocketTimeout
+	{
+		/**the connection timeout in microseconds.*/
+		public static final int TIMEOUT = 4000;
+		/**the time to wait between reconnects.*/
+		public static final int WAIT_BETWEEN_PINGS = 500;
+		/**how many reconnects.*/
+		public static final int MAX_RETRIES = 5;
+	}	
 }

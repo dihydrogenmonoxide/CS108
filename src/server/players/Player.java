@@ -9,11 +9,11 @@ import server.GamePlayObjects.GamePlayObject;
 import server.net.*;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 
 public class Player 
 implements Comparable<Player>
 {
-	private final static int i_Timeout = 20000;
 	private String s_Nick = "JohnDoe";
 	private String s_PlayerToken;
 	private Server s_server;
@@ -246,7 +246,7 @@ implements Comparable<Player>
 			this.s_server.pause();
 		try 
 		{
-			Thread.sleep(i_Timeout);
+			Thread.sleep(Settings.SocketTimeout.TIMEOUT*Settings.SocketTimeout.MAX_RETRIES);
 		}
 		catch (InterruptedException e)
 		{

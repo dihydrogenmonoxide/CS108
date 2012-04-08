@@ -170,17 +170,17 @@ implements Runnable
 		}
 		
 		String[] s = s_MSG.split("\\s+");
-		if(s.length == 3)
+		if(s.length == 4)
 		{
-			int x = Integer.parseInt(s[1]);
-			int y = Integer.parseInt(s[2]);
+			int x = Integer.parseInt(s[2]);
+			int y = Integer.parseInt(s[3]);
 			synchronized (player)
 			{
 				try
 				{
 					GamePlayObject o;
 					
-					switch(Protocol.fromString(s[0]))
+					switch(Protocol.fromString(s[1]))
 					{
 					case OBJECT_BOMBER:
 						o = new Bomber(new Coordinates(x, y), player, server.getObjectManager());
@@ -241,11 +241,11 @@ implements Runnable
 		}
 		
 		String[] s = s_MSG.split("\\s+");
-		if(s.length == 4)
+		if(s.length == 5)
 		{
-			int x = Integer.parseInt(s[1]);
-			int y = Integer.parseInt(s[2]);
-			int id = Integer.parseInt(s[3]);
+			int x = Integer.parseInt(s[2]);
+			int y = Integer.parseInt(s[3]);
+			int id = Integer.parseInt(s[4]);
 			synchronized (player)
 			{
 				GamePlayObject o = server.getObjectManager().getObjectById(id);

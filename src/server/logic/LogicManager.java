@@ -46,7 +46,7 @@ implements Runnable
 			server.getObjectManager().round();
 			updateClients();
 			animationPhase();
-			//TODO detect game ending when one player won
+			//TODO SERVER detect game ending when one player won
 		}
 	}
 	
@@ -253,7 +253,7 @@ implements Runnable
 					if(o.getOwner() == player)
 					{
 						o.setTarget(new Coordinates(x, y));
-						//TODO evaluate whether to send the new position or not
+						//TODO SERVER evaluate whether to send the new position or not
 					}
 					else
 					{

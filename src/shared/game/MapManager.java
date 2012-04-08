@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 
 public class MapManager
 {
-	//TODO test "is inside" and redefine the areas
 	private final static Color polyLineColor = new Color(255, 0, 0);
 	private final static Color polyFillColor = new Color(0, 0, 0);
 	private final static Color highlightLineColor = new Color(0, 255, 0);

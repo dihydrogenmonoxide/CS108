@@ -68,7 +68,7 @@ implements Comparable<Server>
 	public void addVote()
 	{
 		startVotes++;
-		//TODO uncomment after oli is done testing
+		//TODO SERVER uncomment after oli is done testing
 		if(/*l_players.size() > 1 && startVotes > l_players.size() / 2 &*/ !isPaused)
 			startGame();
 	}
@@ -145,9 +145,9 @@ implements Comparable<Server>
 		if(isGameRunning)
 		{
 			
-			//TODO what to call if someone quits ingame?
+			//TODO SERVER what to call if someone quits ingame?
                     
-			//TODO make sure it's fixed
+			//TODO SERVER make sure it's fixed
                         //DONE if the game is running and a player quit, 
                         //a broadcast is sent "GGAME 201 2 gameName", 
                         //trouble is, that it then will be displayed in the lobby

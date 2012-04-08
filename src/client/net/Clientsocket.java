@@ -329,7 +329,7 @@ implements Runnable
 	public void reconnect()
 	throws SocketCreationException
 	{
-		//TODO takes very long, check that
+		//TODO FRANK takes very long, check that
 		if(!b_connected)
 			throw new SocketCreationException("THis connection was manually closed! Can't reopen!");
 		

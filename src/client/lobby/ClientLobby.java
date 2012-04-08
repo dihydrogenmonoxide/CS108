@@ -106,6 +106,8 @@ public class ClientLobby extends JFrame {
 					s.setVisible(false);
 					
 					//make Connection
+					//TODO try & catch as clientsocket throws an exception if it fails
+					//what to do if it can't be opened?
 					socket = new Clientsocket(server);
 					//JOptionPane.showMessageDialog(lobbyParent, "Verbunden mit Server");
 					

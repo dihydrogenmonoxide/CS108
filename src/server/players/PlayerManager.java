@@ -1,6 +1,9 @@
 package server.players;
 
 import java.util.*;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+
 import shared.*;
 import server.MainServer;
 import server.exceptions.PlayerNotFoundException;
@@ -10,7 +13,7 @@ public class PlayerManager
 {
 	private List<Player> l_players = new Vector<Player>();
 	private List<Player> l_locked;
-	private Queue<Integer> qi_AvailableIDs = new LinkedList<Integer>();
+	private BlockingDeque<Integer> qi_AvailableIDs = new LinkedBlockingDeque<Integer>();
 	
 	public PlayerManager()
 	{
@@ -27,7 +30,7 @@ public class PlayerManager
 	 * @param s_MSG the message
 	 * @param p_player the initiator of the broadcast
 	 */
-	public void broadcastMessage(String s_MSG, Player p_player)
+	public synchronized void broadcastMessage(String s_MSG, Player p_player)
 	{
 		if(p_player.getServer() == null)
 		{
@@ -59,7 +62,7 @@ public class PlayerManager
 	 * @return the player or null if no such player was found
 	 * @throws PlayerNotFoundException if a Player with the specified nick can't be found
 	 */
-	public Player findPlayer(String s_name) 
+	public synchronized Player findPlayer(String s_name) 
 			throws PlayerNotFoundException
 	{
 		for(Player p : this.l_players)
@@ -84,7 +87,7 @@ public class PlayerManager
 	 * Add a Player to the PlayerManager. This is automatically done when you create a new Player!
 	 * @param p_Player the player
 	 */
-	public void addPlayer(Player p_Player)
+	public synchronized void addPlayer(Player p_Player)
 	{
 		process(p_Player, true);
 	}
@@ -94,7 +97,7 @@ public class PlayerManager
 	 * Manually remove a player on quit
 	 * @param p_player the player to remove
 	 */
-	public void removePlayer(Player p_player)
+	public synchronized void removePlayer(Player p_player)
 	{
 		process(p_player, false);
 	}
@@ -115,7 +118,7 @@ public class PlayerManager
 				{
 					i_players.remove();
 					p.disconnect();
-					qi_AvailableIDs.offer(p.getID());
+					qi_AvailableIDs.offer(p.getID()-100);
 					MainServer.printInformation("Removed "+p.getNick()+" from the List of active Players");					
 				}
 			}
@@ -128,7 +131,7 @@ public class PlayerManager
 	 * @return the corresponding player
 	 * @throws PlayerNotFoundException if now {@link Player} can be found matching the specified UUID
 	 */
-	public Player findUUID(String s_PlayerID) 
+	public synchronized Player findUUID(String s_PlayerID) 
 			throws PlayerNotFoundException 
 	{
 		for(Player p : this.l_players)
@@ -154,7 +157,7 @@ public class PlayerManager
 	 * Broadcasts the message to everyone, no matter whether they're int he lobby or a server
 	 * @param s_MSG the message to broadcast
 	 */
-	public void broadcastMessage_everyone(String s_MSG)
+	public synchronized void broadcastMessage_everyone(String s_MSG)
 	{
 		for(Player p : l_players)
 		{

@@ -111,7 +111,7 @@ implements Runnable
 											
 									connectionLost = true;
 									if(this.getPlayer() != null)
-										this.getPlayer().connectionLost();
+										this.getPlayer().connectionLost(S_socket);
 									else
 										Log.WarningLog("A player disconnected before he was really connected");
 									return;
@@ -270,5 +270,11 @@ implements Runnable
 		}
 		this.b_active = false;
 		
+	}
+
+
+	public Socket getSocket()
+	{
+		return S_socket;
 	}
 }

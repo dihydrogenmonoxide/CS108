@@ -59,6 +59,8 @@ public class ServerManager
 				Server p = i_servers.next();
 				if(p == s_Server)
 				{
+					i_servers.remove();
+					qi_AvailableIDs.offer(p.getID()-200);
 					MainServer.printInformation("Removed "+p.getServername()+" from the list of all servers");					
 				}
 			}
@@ -73,7 +75,7 @@ public class ServerManager
 	public int reserveID()
 	throws NoSuchElementException
 	{
-		return this.qi_AvailableIDs.remove();
+		return qi_AvailableIDs.remove();
 	}
 	
 	/**

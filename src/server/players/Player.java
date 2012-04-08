@@ -1,5 +1,6 @@
 package server.players;
 
+import java.net.Socket;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -235,8 +236,11 @@ implements Comparable<Player>
 	/**
 	 * This gets called when the Player lost the connection and may tries to reconnect
 	 */
-	public void connectionLost()
+	public void connectionLost(Socket sock)
 	{
+		if(ps_sock.getSocket() != sock)
+			return;
+		
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
 

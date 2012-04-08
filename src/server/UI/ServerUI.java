@@ -39,6 +39,8 @@ import java.io.PrintStream;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.AbstractListModel;
 
 public class ServerUI {
 
@@ -54,6 +56,8 @@ public class ServerUI {
 	
 	private DefaultListModel<Player> playerList = new DefaultListModel<Player>();
 	private JLabel lblPlayers;
+	private JLabel lblServeroutput;
+	private JLabel lblStdout;
 
 
 	/**
@@ -106,12 +110,10 @@ public class ServerUI {
 		txtpnStdout = new JTextArea();
 		txtpnStdout.setForeground(Color.GREEN);
 		txtpnStdout.setBackground(Color.BLACK);
-		txtpnStdout.setText("STD::OUT:\n");
 		
 		txtrServeroutput = new JTextArea();
 		txtrServeroutput.setForeground(Color.GREEN);
 		txtrServeroutput.setBackground(Color.BLACK);
-		txtrServeroutput.setText("Serveroutput:");
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportView(txtpnStdout);
@@ -124,6 +126,21 @@ public class ServerUI {
 		scrollPane_1.setAutoscrolls(true);
 		JPanel contentPane = new JPanel();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane_1, scrollPane);
+		splitPane.setBackground(Color.BLACK);
+		
+		lblStdout = new JLabel("STD::OUT:");
+		lblStdout.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblStdout.setForeground(Color.GREEN);
+		lblStdout.setBackground(Color.DARK_GRAY);
+		lblStdout.setOpaque(true);
+		scrollPane.setColumnHeaderView(lblStdout);
+		
+		lblServeroutput = new JLabel("Serveroutput:");
+		lblServeroutput.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblServeroutput.setForeground(Color.GREEN);
+		lblServeroutput.setBackground(Color.DARK_GRAY);
+		lblServeroutput.setOpaque(true);
+		scrollPane_1.setColumnHeaderView(lblServeroutput);
 		contentPane.setLayout(new BorderLayout());
 		
 				
@@ -137,11 +154,13 @@ public class ServerUI {
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		lblPlayers = new JLabel("Players:");
+		lblPlayers.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblPlayers.setForeground(Color.GREEN);
-		lblPlayers.setBackground(new Color(0, 0, 0));
+		lblPlayers.setBackground(Color.DARK_GRAY);
 		lblPlayers.setOpaque(true);
 		scrollPane2.setColumnHeaderView(lblPlayers);
-		playerList.setSize(100);
+		
+
 		
 		popupMenu = new PopupMenu();
 		MenuItem menuItem = new MenuItem("Kick");
@@ -169,11 +188,10 @@ public class ServerUI {
 		
 		list.addMouseListener(new MouseAdapter() {
 		     public void mouseClicked(MouseEvent me) {
-		       // if right mouse button clicked (or me.isPopupTrigger())
 		       if (SwingUtilities.isRightMouseButton(me)
 		           && !list.isSelectionEmpty()
-		           && list.locationToIndex(me.getPoint())
-		              == list.getSelectedIndex()) {
+		           && list.locationToIndex(me.getPoint()) == list.getSelectedIndex()
+		           && playerList.get(list.getSelectedIndex()) != null) {
 		               popupMenu.show(list, me.getX(), me.getY());
 		               }
 		           }
@@ -181,6 +199,7 @@ public class ServerUI {
 		     );
 		
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane2, splitPane);
+		splitPane1.setBackground(Color.BLACK);
 		splitPane1.setOneTouchExpandable(true);
 		splitPane1.setContinuousLayout(true);
 		contentPane.add(splitPane1, BorderLayout.CENTER);
@@ -190,6 +209,8 @@ public class ServerUI {
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
 		frmSwissDefconServer.setContentPane(contentPane);
+		
+		playerList.setSize(100);
 		
 		OutputStream stdout = new OutputStream()
 		{
@@ -225,7 +246,7 @@ public class ServerUI {
 	
 	public void printText(String s)
 	{
-		txtrServeroutput.append("\n"+s);
+		txtrServeroutput.append(s+"\n");
 	}
 
 	private void stdout(String s)

@@ -32,7 +32,6 @@ import java.awt.event.MouseEvent;
 public class MapMakingAssistance extends JFrame
 {
 
-	private JPanel contentPane;
 	private JFileChooser fc1 = new JFileChooser();
 
 	private IM iw;

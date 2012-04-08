@@ -64,7 +64,7 @@ public class GamesManager {
 	static void addPlayer(final int gameId, final Player p)
 	{
 		Game g = games.get(gameId);
-		if (g != null)
+		if (g != null && p!= null)
 		{
 			g.addPlayer(p);
 		}

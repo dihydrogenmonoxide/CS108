@@ -87,14 +87,9 @@ public class Tank implements GamePlayObject, Defensive, Unit {
 	 */
 	public void build() throws GameObjectBuildException {
 
-		if (this.position.getX() <= 450000
-				|| this.position.getX() >= 800000
-				|| this.position.getY() <= 100000
-				|| this.position.getY() >= 300000
-				|| MapManager.isInside(this.getOwner().getFieldID(), this
-						.getPos().getX(), this.getPos().getY())) {
+		if (!MapManager.isInside(this.getOwner().getFieldID(), this.getPos().getX(), this.getPos().getY())) 
+		{
 			throw new GameObjectBuildException("Wrong Position");
-
 		} else if (Owner.getMoney() < price) {
 			throw new GameObjectBuildException("No Money");
 		} else {

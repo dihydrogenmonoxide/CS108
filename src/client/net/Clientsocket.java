@@ -3,6 +3,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.BlockingQueue;
@@ -23,7 +24,7 @@ implements Runnable
 	/**the time to wait between reconnects.*/
 	private static final int i_Wait = 500;
 	/**how many reconnects.*/
-	private static final int i_MaxReconnect = 2;
+	private static final int i_MaxReconnect = 5;
 	/**how many reconnects failed so far.*/
 	private int i_ReconnectionsFailed = 0;
 	
@@ -52,7 +53,8 @@ implements Runnable
 		this.SA_Server = SA_Server;
 		try
 		{
-			this.S_sock = new Socket(this.SA_Server.getAddress(), this.SA_Server.getPort());
+			S_sock = new Socket();
+			S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), i_Timeout);
 			S_sock.setKeepAlive(true);
 			S_sock.setSoTimeout(i_Timeout);
 		}
@@ -151,7 +153,7 @@ implements Runnable
 					catch(SocketCreationException e1)
 					{
 						Log.WarningLog("A reconnect failed: "+e1.getMessage());
-						if(i_ReconnectionsFailed >= i_MaxReconnect)
+						if(i_ReconnectionsFailed >= i_MaxReconnect-1)
 						{
 							parser.parse(Protocol.CON_FAIL.toString());
 							b_connected = false;
@@ -329,16 +331,16 @@ implements Runnable
 	public void reconnect()
 	throws SocketCreationException
 	{
-		//TODO FRANK takes very long, check that
 		if(!b_connected)
-			throw new SocketCreationException("THis connection was manually closed! Can't reopen!");
+			throw new SocketCreationException("This connection was manually closed! Can't reopen!");
 		
 		if(this.S_sock.isClosed() || !this.S_sock.isConnected())
 		{
 			Log.DebugLog("Socket was Closed... Attempting reconnect");
 			try 
 			{
-				this.S_sock = new Socket(this.SA_Server.getAddress(), this.SA_Server.getPort());
+				S_sock = new Socket();
+				S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), i_Timeout);
 				S_sock.setSoTimeout(i_Timeout);
 				S_sock.setKeepAlive(true);
 			} 

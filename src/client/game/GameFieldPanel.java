@@ -90,6 +90,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     public void mousePressed(MouseEvent e)
     {
         Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
+        Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(e.getX(), e.getY(), MAP_WIDTH, img.getHeight()));
         switch (but.choice)
         {
             case TANK:
@@ -106,7 +107,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
             //XXX this is just for testing purposes:
             default:
                 
-                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_BANK.str() + Coordinates.pixelToCoord(e.getY(), e.getY(), MAP_WIDTH, img.getHeight()));
+                socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + Protocol.OBJECT_TANK.str() + Coordinates.pixelToCoord(e.getX(), e.getY(), MAP_WIDTH, img.getHeight()));
                 Graphics g = getGraphics();
                 int x = e.getX();
                 int y = e.getY();

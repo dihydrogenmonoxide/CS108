@@ -4,13 +4,14 @@ package shared.game;
 
 
 public class Coordinates {
-     static final int coordEndY = 300000;
     /**Starting point of the coordinates on the X axis.*/
      static final int coordStartX = 450000;
     /**Ending point of the coordinates on the X axis.*/
      static final int coordEndX = 800000;
+     /**Starting point of the coordinates on the Y axis.*/
      static final int coordStartY = 100000;
-    
+     /**Ending point of the coordinates on the X axis.*/
+     static final int coordEndY = 300000;
     
 	private int x;
 	private int y;
@@ -70,6 +71,7 @@ public class Coordinates {
         }
         
        /**converts from pixel to Coordinates.
+        * it assumes pixel (0,0) is the upper left pixel. it has the coordinate 450'000/100'000
         @param x the point on the x axis
         @param y the point on the y axis
         @param totWidth the total length of the map in pixels
@@ -80,11 +82,11 @@ public class Coordinates {
         {
             //-- get x coords
             int coordDeltaX = coordEndX - coordStartX;
-            int coordX = coordStartX + coordDeltaX * x / totWidth;
+            int coordX = coordEndX - coordDeltaX * (totWidth-x) / totWidth;
             
             //-- get y coords
             int coordDeltaY = coordEndY - coordStartY;        
-            int coordY = coordStartY + coordDeltaY*y/totHeight;
+            int coordY = coordStartY + coordDeltaY*(y)/totHeight;
             
             //-- create coordinates
             return new Coordinates(coordX, coordY);

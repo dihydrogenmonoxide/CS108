@@ -294,11 +294,6 @@ public class ClientParser {
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_UPDATE_OBJECT, msg));
 			break;
 
-		case GAME_LAUNCH_MISSILE:
-			//TODO CLIENTPARSER implement ARMAGEDDON
-			this.gameReceived(new GameEvent(msg, Protocol.GAME_LAUNCH_MISSILE, msg));
-			break;
-
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);
 		}

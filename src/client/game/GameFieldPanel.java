@@ -21,188 +21,116 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import client.net.Clientsocket;
+import shared.game.MapManager;
+import shared.Log;
 
-public class GameFieldPanel extends JPanel implements MouseListener {
-	/**Buffered image to Paint Map*/
-	private BufferedImage img;
-	/**Image for DoubleBufferedImage*/
-	private Image dbImage;
-	private Graphics dbg;
-	private GameButtonsPanel but;
-	
-	private Clientsocket socket;
-	
-	private Image bil;
+public class GameFieldPanel extends JPanel implements MouseListener
+{
+
+    private static final int MAP_WIDTH = 1000;
+    /**
+     * Buffered image to Paint Map
+     */
+    private BufferedImage img;
+    /**
+     * Image for DoubleBufferedImage
+     */
+    private Image dbImage;
+    private Graphics dbg;
+    private GameButtonsPanel but;
+    private Clientsocket socket;
+    private Image bil;
+
+    public GameFieldPanel(Clientsocket s)
+    {
+        this.socket = s;
+
+        //TODO decide which field to highlight and which are inactive.
+        img = MapManager.renderMap(0, MAP_WIDTH);
 
 
-	public GameFieldPanel(Clientsocket s){
-		this.socket = s;
-		
-		try {
-			img = ImageIO.read(new File("bilder/full.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+        this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 
-		JLabel gameLabel = new JLabel();
-		c.ipadx=(int)(img.getWidth()*0.45);
-		c.ipady=(int)(img.getHeight()*0.45);
-		c.gridwidth=20;
-		c.gridx=0;
-		c.gridy=0;
-		this.add(gameLabel,c);
-		
-		//but = new GameButtonsPanel(socket);
-		//but.selected();
-		/*durch das BufferedImage funktioniert es nocht nicht ganz so, wie es sollte. wenn ihr schnell drückt könnt ihr es jedoch sehen;)*/
-		
-		gameLabel.addMouseListener(this);
-	    addMouseListener(this);
-	}
-	
-	
-	public void paintComponent( Graphics g ) {
-		try{
-			g.drawImage(img, 0, 0,(int)( img.getWidth()*0.45),(int)(img.getHeight()*0.45) , 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
-			//repaint();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	public void paint(Graphics g){
-		dbImage= createImage(getWidth(), getHeight());
-		dbg= dbImage.getGraphics();
-		paintComponent(dbg);
-		g.drawImage(dbImage,0,0,this);
-		
-		
-	}
-	
-	
-	
-	public void mousePressed(MouseEvent e) {
-		if (but.choice.equals("tank")){
-			Graphics g = getGraphics();
-			int x = e.getX();
-			int y = e.getY();
-			try {
-				bil = ImageIO.read(new File("bilder/Panzer.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("radar")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Radar.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("rakete")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Rakete.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("jagd")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Flugzeug.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("bomber")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Bomber.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("luft")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Flugabwehr.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("land")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Landabwehr.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("repro")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Repro.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}if(but.choice.equals("geld")){
-    		Graphics g = getGraphics();
-    		int x = e.getX();
-   			int y = e.getY();
-   			try {
-				bil = ImageIO.read(new File("bilder/Bank.png"));
-				g.drawImage(bil, x, y, 20, 20, null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			
-		}
-		
-	}
 
-	public void mouseReleased(MouseEvent e) {
-		
-	}
+        //but = new GameButtonsPanel(socket);
+        //but.selected();
+		/*
+         * durch das BufferedImage funktioniert es nocht nicht ganz so, wie es
+         * sollte. wenn ihr schnell drückt könnt ihr es jedoch sehen;)
+         */
 
-	public void mouseEntered(MouseEvent e) {
-		
-	}
+        this.addMouseListener(this);
+    }
 
-	public void mouseExited(MouseEvent e) {
-		
-	}
+    public void paintComponent(Graphics g)
+    {
+        try
+        {
+            g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
+            //repaint();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public void mouseClicked(MouseEvent e) {
-		
-	}
-	
+    public void paint(Graphics g)
+    {
+        dbImage = createImage(getWidth(), getHeight());
+        dbg = dbImage.getGraphics();
+        paintComponent(dbg);
+        g.drawImage(dbImage, 0, 0, this);
+
+
+    }
+
+    public void mousePressed(MouseEvent e)
+    {
+        Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
+        switch (but.choice)
+        {
+            
+            //XXX this is just for testing purposes:
+            default:
+                Graphics g = getGraphics();
+                int x = e.getX();
+                int y = e.getY();
+                try
+                {
+                    bil = ImageIO.read(new File("bilder/Bank.png"));
+                    g.drawImage(bil, x, y, 20, 20, null);
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+                
+            //TODO send a request to the server.
+                
+            /*
+            * How to solve this:
+            * if player clicks on the map, send a request to the server
+            * don't draw anything.
+            * the server will then send us that a new object is created which is then drawn.
+            * to do this we will have to make a class for each drawable object 
+            * with it's unique draw/paint method.
+            */
+
+        }
+    }
+
+    public void mouseReleased(MouseEvent e)
+    {
+    }
+
+    public void mouseEntered(MouseEvent e)
+    {
+    }
+
+    public void mouseExited(MouseEvent e)
+    {
+    }
+
+    public void mouseClicked(MouseEvent e)
+    {
+    }
 }

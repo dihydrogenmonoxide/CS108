@@ -213,14 +213,7 @@ public class MapManager
 	 */
 	public static boolean isInside(int fieldNumber, int xCoordinate, int yCoordinate)
 	{
-		float x = xCoordinate - 450000;
-		float y = yCoordinate - 100000;
-		for(Polygon p : fields)
-		{
-			if(p.contains(x, y))
-				return true;
-		}
-		return false;
+		return (getFieldNumber(xCoordinate, yCoordinate) == fieldNumber);
 	}
 	
 	/**
@@ -237,7 +230,7 @@ public class MapManager
 		{
 			
 			if(fields[i].contains(x, y))
-				return i;
+				return i+1;
 		}
 		return 0;
 	}

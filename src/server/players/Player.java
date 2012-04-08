@@ -237,7 +237,6 @@ implements Comparable<Player>
 	 */
 	public void connectionLost()
 	{
-		// TODO check why the player is instantly disconnected after losing the connection
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
 
@@ -277,7 +276,6 @@ implements Comparable<Player>
 		if(this.s_server != null)
 			this.s_server.resume();
 		
-		//TODO test if the client receives this
 		for(Player play : MainServer.getPlayerManager().getPlayers())
 		{
 			if(play != this)
@@ -302,7 +300,6 @@ implements Comparable<Player>
 	 */
 	public synchronized void disconnect() 
 	{
-		// TODO what to send out when a player quits?
 		if(!b_quit)
 		{
 			MainServer.getGUI().removePlayer(this);

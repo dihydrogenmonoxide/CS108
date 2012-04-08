@@ -129,7 +129,14 @@ implements Comparable<Server>
 	{
 		for(Player p : getPlayers())
 		{
-			p.sendData(message);
+			try
+			{
+				p.sendData(message);
+			}
+			catch(NullPointerException e)
+			{
+				Log.WarningLog("Seens you were trying to send data to a player that isn't really connected");
+			}
 		}
 	}
 	

@@ -238,14 +238,18 @@ public class ClientParser {
 			break;
 
 		case GAME_MONEY:
-			
+			RunningGame.setMoney(msg.getIntArgument(1), msg.getLongArgument(2));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_MONEY, msg));
 			break;
 
 		case GAME_UPDATE_OBJECT:
-			//TODO CLIENTPARSER implement notify GameManager
+			RunningGame.updateObj(msg.getProtocolArgument(1), msg.getIntArgument(2), msg.getIntArgument(3), msg.getIntArgument(4), msg.getIntArgument(5));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_UPDATE_OBJECT, msg));
 			break;
+                    
+                case GAME_POPULATION:
+                        RunningGame.setPop(msg.getLongArgument(1));
+                        break;
 
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);

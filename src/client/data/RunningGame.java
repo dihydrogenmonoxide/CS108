@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import shared.Log;
+import shared.Protocol;
 
 /**
  * This class holds all the informations about a Game the input comes from the
@@ -181,13 +182,28 @@ public class RunningGame
      */
     public static void hardReset()
     {
-        //TODO RunningGame implement
+        //TODO RunningGame implement hard reset
         isRunning = false;
     }
 
     public static int getMyFieldId()
     {
         return fieldId;
+    }
+
+    public static void setMoney(int intArgument, long longArgument)
+    {
+        //TODO RunningGame implement set Money
+    }
+
+    public static void updateObj(Protocol object, int xCoords, int yCoords, int playerId, int health)
+    {
+       //TODO RunningGame implement update Object
+    }
+
+    public static void setPop(long longArgument)
+    {
+        //TODO RunningGame implement set Population
     }
 
 }

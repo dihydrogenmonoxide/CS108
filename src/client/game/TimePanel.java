@@ -75,15 +75,10 @@ public class TimePanel extends JPanel{
         }
 
 	public class TimeClassMin implements ActionListener {
-		int sec;
-		int min;
-		int rundenzeit;
-		int zero;
 		JToggleButton ready;
 		GameChatPanel gameChat;
 
 		public TimeClassMin(JToggleButton ready, GameChatPanel gameChat){
-			this.rundenzeit=rundenzeit;
 			this.ready = ready;
 			this.gameChat = gameChat;
 		}
@@ -95,13 +90,18 @@ public class TimePanel extends JPanel{
 			timerLabel.setText(makeTime(rundenzeit));
 			
 			if (rundenzeit == 0){
-				timer.stop();
 				timerLabel.setText("  Ende!  ");
 				GlassPane = new GlassPane(ready, gameFrame.getContentPane(), gameChat, socket);
 				gameFrame.setGlassPane(GlassPane);
 				GlassPane.setVisible(true);
-
 			}
+                        else
+                        {
+                            if(GlassPane != null)
+                            {
+                                GlassPane.setVisible(false);
+                            }
+                        }
 			
 		}
 

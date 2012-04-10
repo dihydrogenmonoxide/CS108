@@ -34,6 +34,17 @@ public class Message
         //-- split message at " "
         this.messageParts = message.split("\\s+");
     }
+    
+     /**
+     * return a part of the message. Cast this part to Long. is used for getting
+     * large numbers (eg the Money count).
+     *
+     * @param whichArgument which argument you want.
+     */
+    public long getLongArgument(int whichArgument)
+    {
+        return Long.valueOf(messageParts[whichArgument]);
+    }
 
     /**
      * return a part of the message. Cast this part to int. is used for getting
@@ -55,6 +66,12 @@ public class Message
     public String getStringArgument(int whichArgument)
     {
         return messageParts[whichArgument];
+    }
+    
+    /**get the Protocol of a given Argument, used to extract objects out of messages.*/
+    public Protocol getProtocolArgument(int i)
+    {
+        return Protocol.fromString(getStringArgument(i));
     }
 
     /**
@@ -108,4 +125,6 @@ public class Message
 //        }
 //        return 0;
 //    }
+
+    
 }

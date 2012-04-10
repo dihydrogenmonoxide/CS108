@@ -4,6 +4,7 @@ package client.game;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -58,7 +59,7 @@ public class InnerGameFrame extends JPanel {
 		c.gridy = 0;
 		this.add(gameChat, c);
 		
-		GameButtonsPanel buttons = new GameButtonsPanel( socket, ready, gameFrame, gameChat);
+		GameButtonsPanel buttons = new GameButtonsPanel( socket, gameFrame);
 		c.weightx= 0.0;
 		c.gridwidth=3;
 		c.gridx=0;
@@ -70,16 +71,21 @@ public class InnerGameFrame extends JPanel {
 		c.gridwidth=1;
 		c.gridx=3;
 		c.gridy=2;
+		c.insets= new Insets(0,50,0,0);
 		this.add(ready, c);
 		
 		ready.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				GlassPane.setVisible(e.getStateChange() == ItemEvent.SELECTED);
+				GameChatPanel glassChat = new GameChatPanel(socket);
+				GlassPane.add(glassChat);
 			}
 		});
 		
-		GlassPane = new GlassPane(ready, gameFrame.getContentPane(), gameChat, socket);
+		GlassPane = new GlassPane(gameFrame.getContentPane()
+				, socket);
 		gameFrame.setGlassPane(GlassPane);
+		
 	
 		
 		this.setOpaque(false);

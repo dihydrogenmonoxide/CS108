@@ -91,7 +91,7 @@ public class GameButtonsPanel extends JPanel{
 	final ButtonGroup group;
 
 	
-	public GameButtonsPanel(Clientsocket s, JToggleButton ready, JFrame gameFrame, GameChatPanel gameChat){
+	public GameButtonsPanel(Clientsocket s, JFrame gameFrame){
 		Color bg = Color.green;
 		this.socket = s;
 		
@@ -274,7 +274,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		
-		time= new TimePanel(ready, gameFrame, gameChat, socket );
+		time= new TimePanel(gameFrame, socket );
 		c.gridwidth=3;
 		c.gridheight=3;
 		c.gridx=6;

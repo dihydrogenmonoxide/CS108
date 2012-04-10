@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import shared.Log;
 
 /**class which holds all the games the client knows about.
- * all the methos and variables are static.*/
+ * all the methods and variables are static.*/
 public class GamesManager {
 	/**Hashmap which holds all the games.
 	 * key: the id of the game.*/
@@ -33,30 +33,14 @@ public class GamesManager {
 			games.get(id).setName(name);
 		}
 	}
-	/**same as above, just a wrapper for String.
-	 * String format: "201 2 Hanspeter", id count name
-	 * @param msg the string describing the game
-	 * */
-	@SuppressWarnings("unused")
-	public static void addGame(final String msg)
+        
+        /**removes a game from the list.
+	 * @param id the gameId*/
+	public static void removeGame(final int id) 
 	{
-		int id = Integer.valueOf((String) msg.subSequence(6, 9));
-		//XXX playerCount generated automatic
-		int playerCount = Integer.valueOf((String) msg.subSequence(10, 11));
-		String name = msg.substring(12);
-                addGame(id, name);
-                if(playerCount == 0)
-                {
-                    games.get(id).setVisible(false);
-                    Log.DebugLog("GameManager: set " + id + " invisible");
-                }
-                else
-                {
-                    games.get(id).setVisible(true);
-                }
-                
+		games.remove(id);
 	}
-
+        
 	/**adds a player to a game.
 	 * only accessable in this packet.
 	 * @param gameId the id of the game
@@ -70,6 +54,16 @@ public class GamesManager {
 		}
 	}
 
+        /**
+	 * adds a player to a game.
+	 * Wrapper for all classes not in this packet.
+	 * @param gameId the id of the game.
+	 * @param playerId the id of the player.*/
+	public static void addPlayer(final int gameId, final int playerId) {
+		Log.DebugLog("GameManager added Player " + playerId + ":" + PlayerManager.getNamebyId(playerId) + " to game " + gameId);
+		addPlayer(gameId, PlayerManager.getPlayerbyId(playerId));
+	}
+        
 	/**remove a player from the game.
 	 * @param gameId the gameId of the game.
 	 * @param playerId the id of the player to remove.*/
@@ -81,6 +75,7 @@ public class GamesManager {
 			g.removePlayer(playerId);
 		}
 	}
+        
 	/**get Infos about a game.
 	 * @param gameId the id of the game.
 	 * @return */
@@ -92,12 +87,6 @@ public class GamesManager {
 			return g.makeLongInfo();
 		}
 		return null;
-	}
-	/**removes a game from the list.
-	 * @param id the gameId*/
-	public static void removeGame(final int id) 
-	{
-		games.remove(id);
 	}
 
 	/**generate a Vector<Vector<String>> used for display all games in a JTable.
@@ -124,22 +113,5 @@ public class GamesManager {
 		Log.DebugLog("->list refreshed, holding " + res.size() + " games");
 		return res;
 	}
-	/**
-	 * adds a player to a game.
-	 * Wrapper for all classes not in this packet.
-	 * @param gameId the id of the game.
-	 * @param playerId the id of the player.*/
-	public static void addPlayer(final int gameId, final int playerId) {
-		Log.DebugLog("GameManager added Player " + playerId + ":" + PlayerManager.getNamebyId(playerId) + " to game " + gameId);
-		addPlayer(gameId, PlayerManager.getPlayerbyId(playerId));
-	}
-	/**
-	 * removes a player from a game.
-	 * Wrapper for all classes not in this packet.
-	 * @param gameId the id of the game.
-	 * @param playerId the id of the player.*/
-	public static void removePlayer(final String gameId, final String playerId) {
-		Log.DebugLog("GameManager removed Player " + playerId + " from game " + gameId);
-		removePlayer(Integer.valueOf(gameId), Integer.valueOf(playerId));
-	}
+	
 }

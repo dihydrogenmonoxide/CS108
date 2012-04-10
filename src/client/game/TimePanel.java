@@ -40,7 +40,7 @@ public class TimePanel extends JPanel{
 	private Clientsocket socket;
  
 
-	public TimePanel(JToggleButton ready, JFrame gameFrame, GameChatPanel gameChat, Clientsocket s){
+	public TimePanel( JFrame gameFrame, Clientsocket s){
 		this.socket=s;
 		this.gameFrame = gameFrame;
 

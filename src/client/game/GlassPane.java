@@ -30,9 +30,9 @@ class GlassPane extends JComponent {
 		point = p;
 	}
 
-	public GlassPane(JToggleButton ready, Container contentPane, GameChatPanel gameChat, Clientsocket s) {
+	public GlassPane( Container contentPane, Clientsocket s) {
 		this.socket=s;
-		CBListener listener = new CBListener(gameChat,ready, this, contentPane);
+		CBListener listener = new CBListener( this, contentPane);
 		addMouseListener(listener);
 		addMouseMotionListener(listener);
 	}
@@ -40,18 +40,11 @@ class GlassPane extends JComponent {
 
 class CBListener extends MouseInputAdapter {
 	Toolkit toolkit;
-	Component liveButton;
-	Component chatPanel;
 	GlassPane glassPane;
-	Container contentPane;
-	boolean inDrag = false;
 
-	public CBListener(Component chatPanel, Component ready, GlassPane glassPane, Container contentPane) {
+	public CBListener(GlassPane glassPane, Container contentPane) {
 		toolkit = Toolkit.getDefaultToolkit();
-		this.liveButton = ready;
-		this.chatPanel=chatPanel;
 		this.glassPane = glassPane;
-		this.contentPane = contentPane;
 	}
 
 	public void mouseMoved(MouseEvent e) {
@@ -80,52 +73,13 @@ class CBListener extends MouseInputAdapter {
 
 	public void mouseReleased(MouseEvent e) {
 		redispatchMouseEvent(e, true);
-		inDrag = false;
 	}
 
 	private void redispatchMouseEvent(MouseEvent e,
 			boolean repaint) {
 		
-		boolean inButton = false;
 		Point glassPanePoint = e.getPoint();
-		Component component = null;
-		Container container = contentPane;
 		
-		Point containerPoint = SwingUtilities.convertPoint(glassPane,glassPanePoint, contentPane);
-		int eventID = e.getID();
-
-
-		component = SwingUtilities.getDeepestComponentAt(container, containerPoint.x,containerPoint.y);
-		
-
-		if (component == null) {
-			return;
-		}
-		
-		/*ChatPanel doe't work yet if glassPane is set true*/
-		
-		
-		if (component.equals(liveButton)) {	//Button funktioniert
-			inButton = true;
-			testForDrag(eventID);
-		}
-
-		
-		if (inButton || inDrag) {
-			//Rectangle ChatRectangle = SwingUtilities.convertRectangle(glassPane, gameChatRectangle, component);
-			Point componentPoint = SwingUtilities.convertPoint(
-					glassPane,
-					glassPanePoint, 
-					component);
-			component.dispatchEvent(new MouseEvent(component,
-					eventID,
-					e.getWhen(),
-					e.getModifiers(),
-					componentPoint.x,
-					componentPoint.y,
-					e.getClickCount(),
-					e.isPopupTrigger()));
-		}
 		
 		if (repaint) {
 		
@@ -136,9 +90,4 @@ class CBListener extends MouseInputAdapter {
 		}
 	}
 
-	private void testForDrag(int eventID) {
-		if (eventID == MouseEvent.MOUSE_PRESSED) {
-			inDrag = true;
-		}
-	}
 }

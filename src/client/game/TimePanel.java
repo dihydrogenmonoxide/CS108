@@ -40,7 +40,7 @@ public class TimePanel extends JPanel{
 	private Clientsocket socket;
  
 	
-	public TimePanel(JToggleButton ready, JFrame gameFrame, GameChatPanel gameChat, Clientsocket s){
+	public TimePanel( JFrame gameFrame, Clientsocket s){
 		this.socket=s;
 		this.gameFrame = gameFrame;
 		
@@ -63,7 +63,7 @@ public class TimePanel extends JPanel{
 		Font curFont = timerLabel.getFont();
 		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));
 		
-		TimeClassMin tcMin = new TimeClassMin(ready, gameChat);
+		TimeClassMin tcMin = new TimeClassMin();
 		timer = new Timer(1000, tcMin);
 		timer.start();
 		
@@ -82,10 +82,9 @@ public class TimePanel extends JPanel{
 		JToggleButton ready;
 		GameChatPanel gameChat;
 
-		public TimeClassMin(JToggleButton ready, GameChatPanel gameChat){
+		public TimeClassMin(){
 			this.rundenzeit=rundenzeit;
-			this.ready = ready;
-			this.gameChat = gameChat;
+
 		}
 
 		public void actionPerformed(ActionEvent f){
@@ -97,7 +96,7 @@ public class TimePanel extends JPanel{
 			if (rundenzeit == 0){
 				timer.stop();
 				timerLabel.setText("  Ende!  ");
-				GlassPane = new GlassPane(ready, gameFrame.getContentPane(), gameChat, socket);
+				GlassPane = new GlassPane(gameFrame.getContentPane(), socket);
 				gameFrame.setGlassPane(GlassPane);
 				GlassPane.setVisible(true);
 

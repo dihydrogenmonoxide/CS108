@@ -39,7 +39,7 @@ public class RunningGame
      */
     public static void setBuildTime(int seconds)
     {
-       if(0<= seconds)
+       if(0 <= seconds)
        {
        stopTimer();
        remainingTime = seconds;
@@ -116,7 +116,7 @@ public class RunningGame
 
                 public void run()
                 {
-                    if (0 <= remainingTime)
+                    if (0 < remainingTime)
                     {
                         remainingTime--;
                         if (remainingTime % 5 == 0)
@@ -128,24 +128,6 @@ public class RunningGame
             }, 0, 1000);
         }
         Log.DebugLog("Started new Timer with " + remainingTime + "s in the phase" + state);
-    }
-    
-
-    
-    /**set the game phase.
-     @param phase the game phase which should be set.
-     @deprecated
-    */
-    public static void setGamePhase(final GamePhases phase)
-    {
-        if(phase == GamePhases.PAUSE)
-        {
-            isPaused = true;
-        }
-        else
-        {
-            state = phase;
-        }
     }
     
     /**set if a game is paused or not.*/

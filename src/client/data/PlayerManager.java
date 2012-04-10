@@ -53,12 +53,11 @@ public class PlayerManager {
 	 * If the player doesn't exist return null.
 	 * @param id the id of the player
 	 * @return the name of the player*/
-	public static  String getNamebyId(final String id) 
+	public static  String getNamebyId(final int id) 
 	{
-		int i = Integer.valueOf(id);
-		if (players.get(i) != null)
+		if (players.get(id) != null)
 		{
-			return players.get(i).getName();
+			return players.get(id).getName();
 		}
 		return null;
 	}

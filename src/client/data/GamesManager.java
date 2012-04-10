@@ -129,9 +129,9 @@ public class GamesManager {
 	 * Wrapper for all classes not in this packet.
 	 * @param gameId the id of the game.
 	 * @param playerId the id of the player.*/
-	public static void addPlayer(final String gameId, final String playerId) {
+	public static void addPlayer(final int gameId, final int playerId) {
 		Log.DebugLog("GameManager added Player " + playerId + ":" + PlayerManager.getNamebyId(playerId) + " to game " + gameId);
-		addPlayer(Integer.valueOf(gameId), PlayerManager.getPlayerbyId(Integer.valueOf(playerId)));
+		addPlayer(gameId, PlayerManager.getPlayerbyId(playerId));
 	}
 	/**
 	 * removes a player from a game.

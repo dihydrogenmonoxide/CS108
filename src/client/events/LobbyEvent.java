@@ -20,7 +20,7 @@ public class LobbyEvent extends NetEvent
 	public Protocol getSection(){
 		return section;
 	}
-	public String getMsg(){
-		return message.toString();
+	public Message getMsg(){
+		return message;
 	}
 }

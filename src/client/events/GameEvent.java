@@ -24,7 +24,7 @@ public class GameEvent extends NetEvent {
 		return evt;
 	}
 	
-	public String getMsg(){
-		return message.toString();
+	public Message getMsg(){
+		return message;
 	}
 }

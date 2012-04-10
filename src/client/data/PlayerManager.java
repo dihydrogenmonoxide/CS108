@@ -41,24 +41,16 @@ public class PlayerManager {
 		Player p = new Player(playerId, playerName);
 		players.put(p.getId(), p);
 	}
-	/**wrapper for Strings.
-	 * String format: "101 Hans"  id, name
-	 * @param id the id as String
-	 * @param name the playername as String.*/
-	public static void addPlayer(String id, String name) 
-	{
-		addPlayer(Integer.valueOf(id), name);
-	}
+	
 	/**return the name of a player with the given id.
 	 * If the player doesn't exist return null.
 	 * @param id the id of the player
 	 * @return the name of the player*/
-	public static  String getNamebyId(final String id) 
+	public static  String getNamebyId(final int id) 
 	{
-		int i = Integer.valueOf(id);
-		if (players.get(i) != null)
+		if (players.get(id) != null)
 		{
-			return players.get(i).getName();
+			return players.get(id).getName();
 		}
 		return null;
 	}
@@ -71,7 +63,7 @@ public class PlayerManager {
 		return p.getId();
 	}
 	
-	/**retuns the player matching the given id.
+	/**returns the player matching the given id.
 	 * only accessible in this packet.
 	 * other packets should use getIdbyName or getNamebyId.
 	 * @param id the id of the player

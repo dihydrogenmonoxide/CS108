@@ -1,6 +1,7 @@
 package client.game;
 
 
+import client.data.RunningGame;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -66,14 +67,14 @@ public class GameFrame extends JDialog {
 		game.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				game.dispose();
-                                //TODO notifiy the GameObjectManager to reset everything.
+                                RunningGame.hardReset();
 				socket.sendData(Protocol.GAME_QUIT.str());
 				lobbyParent.setVisible(true);
 			}
 		});	
 		
                 //TODO listener which closes the game if something unforeseen happens.
-		
+		//would recommend an infoEventListener
 
 	}
 	

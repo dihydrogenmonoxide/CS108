@@ -96,7 +96,7 @@ public class GamesPanel extends JPanel {
 			@Override
 			public void received(final LobbyEvent evt) throws Exception 
 			{
-				Log.DebugLog("GameList: " + evt.getSection().str() + " " + evt.getMsg() + "; " + Protocol.fromString(evt.getMsg()).str());
+				Log.DebugLog("GameList: " + evt.getSection().str() + " " + evt.getMsg() + "; " + evt.getMsg().getCommand());
 				switch(evt.getSection())
 				{
 				case LOBBY_UPDATE:
@@ -104,11 +104,11 @@ public class GamesPanel extends JPanel {
 					if (isJoined)
 					{
 						refreshJoinedGame(joinedGame);
-                                                if (Protocol.fromString(evt.getMsg()) == Protocol.GAME_QUIT)
+                                                if (evt.getMsg().getCommand() == Protocol.GAME_QUIT)
                                                 {
                                                     try
 							{
-								int playerId = Integer.valueOf((String) evt.getMsg().subSequence(10, 13));
+								int playerId = evt.getMsg().getIntArgument(2);
 								Log.DebugLog(playerId+"");
 								if(PlayerManager.myId() == playerId)
 								{
@@ -123,15 +123,15 @@ public class GamesPanel extends JPanel {
 					}
 					else
 					{
-						if (Protocol.fromString(evt.getMsg()) == Protocol.GAME_JOIN)
+						if (evt.getMsg().getCommand() == Protocol.GAME_JOIN)
 						{
 							try
 							{
-								int playerId = Integer.valueOf((String) evt.getMsg().subSequence(10, 13));
+								int playerId = evt.getMsg().getIntArgument(2);
 								Log.DebugLog(playerId+"");
 								if(PlayerManager.myId() == playerId)
 								{
-									joinedGame = Integer.valueOf((String) evt.getMsg().subSequence(6, 9));
+									joinedGame = evt.getMsg().getIntArgument(1);
 									refreshJoinedGame(joinedGame);
 									displayJoinedGame();
 									Log.DebugLog("You created a game: "+joinedGame);

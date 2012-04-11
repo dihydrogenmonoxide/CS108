@@ -39,14 +39,14 @@ public class TimePanel extends JPanel{
 	private GlassPane GlassPane;
 	private Clientsocket socket;
  
-	
-	public TimePanel(JToggleButton ready, JFrame gameFrame, GameChatPanel gameChat, Clientsocket s){
+
+	public TimePanel( JFrame gameFrame, Clientsocket s){
 		this.socket=s;
 		this.gameFrame = gameFrame;
-		
+
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		
+
 
 
 
@@ -59,15 +59,15 @@ public class TimePanel extends JPanel{
 		timerLabel.setAlignmentX(CENTER_ALIGNMENT);
 		timerLabel.setAlignmentY(CENTER_ALIGNMENT);
 		this.add(timerLabel,c);		
-		
+
 		Font curFont = timerLabel.getFont();
 		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));
-		
-		TimeClassMin tcMin = new TimeClassMin(ready, gameChat);
+
+		TimeClassMin tcMin = new TimeClassMin();
 		timer = new Timer(1000, tcMin);
 		timer.start();
-		
-		
+
+
 	}
 
 	public String makeTime(int seconds){
@@ -75,34 +75,31 @@ public class TimePanel extends JPanel{
         }
 
 	public class TimeClassMin implements ActionListener {
-		int sec;
-		int min;
-		int rundenzeit;
-		int zero;
-		JToggleButton ready;
-		GameChatPanel gameChat;
 
-		public TimeClassMin(JToggleButton ready, GameChatPanel gameChat){
-			this.rundenzeit=rundenzeit;
-			this.ready = ready;
-			this.gameChat = gameChat;
+
+		public TimeClassMin(){
 		}
 
 		public void actionPerformed(ActionEvent f){
                     //TODO ugly
                         rundenzeit = RunningGame.getBuildTime();
-			
+
 			timerLabel.setText(makeTime(rundenzeit));
-			
+
 			if (rundenzeit == 0){
-				timer.stop();
 				timerLabel.setText("  Ende!  ");
-				GlassPane = new GlassPane(ready, gameFrame.getContentPane(), gameChat, socket);
+				GlassPane = new GlassPane(gameFrame.getContentPane(), socket);
 				gameFrame.setGlassPane(GlassPane);
 				GlassPane.setVisible(true);
-
 			}
-			
+                        else
+                        {
+                            if(GlassPane != null)
+                            {
+                                GlassPane.setVisible(false);
+                            }
+                        }
+
 		}
 
 	}

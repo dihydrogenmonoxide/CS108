@@ -1,5 +1,6 @@
 package client.events;
 
+import client.net.Message;
 import shared.Protocol;
 
 /**
@@ -8,9 +9,9 @@ import shared.Protocol;
 public class LobbyEvent extends NetEvent 
 {
 	private Protocol section;
-	private String message;
+	private Message message;
 	
-	public LobbyEvent(Object arg0, int Id, Protocol lobbyUpdate, String msg) 
+	public LobbyEvent(Object arg0, int Id, Protocol lobbyUpdate, Message msg) 
 	{
 		super(arg0, Id);
 		this.section = lobbyUpdate;
@@ -19,7 +20,7 @@ public class LobbyEvent extends NetEvent
 	public Protocol getSection(){
 		return section;
 	}
-	public String getMsg(){
+	public Message getMsg(){
 		return message;
 	}
 }

@@ -14,14 +14,16 @@ public class GamePlayObjectManager {
 	private LinkedList<Unit> Units;
 	private int maxid;
 	private Server Server;
+	private int maxRounds;
 
-	public GamePlayObjectManager(Server server) {
+	public GamePlayObjectManager(Server server, int maxRounds) {
 		this.AllObjects = new LinkedList<GamePlayObject>();
 		this.Defensives = new LinkedList<Defensive>();
 		
 		this.Units = new LinkedList<Unit>();
 		this.maxid=1000000;
 		this.Server=server;
+		this.maxRounds=maxRounds;
 	}
 	
 	public Server getServer(){
@@ -96,6 +98,24 @@ public class GamePlayObjectManager {
 		return Playerslist;
 		
 	}
+	
+	/**
+	 * Deletes all Objects of a Player
+	 * @param Player p
+	 */
+	
+	public void deleteAllObjectsOfPlayer(Player p){
+		LinkedList<GamePlayObject> toDelete=getPlayersObjectList(p);
+		for(GamePlayObject O:toDelete)
+		{
+				Defensives.remove(O);
+				Units.remove(O);
+				AllObjects.remove(O);
+			
+		}
+		
+	}
+	
 
 	/**
 	 * 
@@ -220,6 +240,15 @@ public class GamePlayObjectManager {
 
 		for (Defensive D : Defensives) {
 			D.clearTargetList();
+		}
+		
+		for(Player p:Server.getPlayers())
+		{
+			if(p.getPopulation()<=0)
+			{
+				deleteAllObjectsOfPlayer(p);
+			}
+			
 		}
 
 	}

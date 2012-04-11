@@ -429,4 +429,16 @@ implements Comparable<Player>
 		objectStack.clear();
 		finishedBuilding = false;
 	}
+
+
+	/**
+	 * 
+	 * @return whether the {@link Player} is in a running {@link Server} or not
+	 */
+	public boolean isInActiveGame()
+	{
+		if(s_server == null)
+			return false;
+		return s_server.isGameRunning();
+	}
 }

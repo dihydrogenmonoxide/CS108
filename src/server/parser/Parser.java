@@ -83,16 +83,35 @@ public class Parser
 			handleChat(s_MSG, ps_sock);
 			break;
 		case GAME_RESET:
-			//TODO fix null ptr
+			if(!ps_sock.getPlayer().isInActiveGame())
+			{
+				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				break;
+			}
 			ps_sock.getPlayer().getServer().getLogicManager().resendEverything(ps_sock.getPlayer());
 			break;
 		case GAME_SPAWN_OBJECT:
+			if(!ps_sock.getPlayer().isInActiveGame())
+			{
+				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				break;
+			}
 			ps_sock.getPlayer().getServer().getLogicManager().buildObject(s_MSG, ps_sock.getPlayer());
 			break;
 		case GAME_UPDATE_OBJECT:
+			if(!ps_sock.getPlayer().isInActiveGame())
+			{
+				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				break;
+			}
 			ps_sock.getPlayer().getServer().getLogicManager().updateObject(s_MSG, ps_sock.getPlayer());
 			break;
 		case GAME_BUILD_PHASE:
+			if(!ps_sock.getPlayer().isInActiveGame())
+			{
+				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				break;
+			}
 			ps_sock.getPlayer().getServer().getLogicManager().finishedBuilding(ps_sock.getPlayer());
 			break;
 			

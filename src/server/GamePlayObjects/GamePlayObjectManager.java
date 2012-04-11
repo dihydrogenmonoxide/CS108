@@ -4,6 +4,7 @@ package server.GamePlayObjects;
 import java.util.LinkedList;
 
 import server.Server;
+import server.exceptions.GameEndedException;
 import server.players.Player;
 import shared.game.Coordinates;
 
@@ -16,6 +17,17 @@ public class GamePlayObjectManager {
 	private Server Server;
 	private int maxRounds;
 
+	
+	
+	public GamePlayObjectManager(Server server) {
+		this.AllObjects = new LinkedList<GamePlayObject>();
+		this.Defensives = new LinkedList<Defensive>();
+		
+		this.Units = new LinkedList<Unit>();
+		this.maxid=1000000;
+		this.Server=server;
+		this.maxRounds=100;
+	}
 	public GamePlayObjectManager(Server server, int maxRounds) {
 		this.AllObjects = new LinkedList<GamePlayObject>();
 		this.Defensives = new LinkedList<Defensive>();
@@ -200,8 +212,16 @@ public class GamePlayObjectManager {
 	 * The PossibleTargetList gets cleared
 	 * 
 	 * Round finished.
+	 * 
+	 * If Maxrounds <=0 or only one Player is Playing, the Game is ended.
 	 */
-	public void round() {
+	public void round() throws GameEndedException{
+		if(this.maxRounds<=0 || Server.getPlayers().size()<=1)
+		{
+			throw new GameEndedException();
+		}
+		else
+		{
 		for (Unit U : Units) {
 			U.moveProv();
 
@@ -250,7 +270,9 @@ public class GamePlayObjectManager {
 			}
 			
 		}
+		this.maxRounds--;
 
-	}
+		}
+		}
 
 }

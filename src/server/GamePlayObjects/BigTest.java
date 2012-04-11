@@ -1,6 +1,7 @@
 package server.GamePlayObjects;
 
 import server.Server;
+import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.players.Player;
 import shared.game.Coordinates;
@@ -12,8 +13,11 @@ public class BigTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 		Server s=TestServer.startTestServer();
-		GamePlayObjectManager Manager= new GamePlayObjectManager(s);
+		try
+		{
+		GamePlayObjectManager Manager= new GamePlayObjectManager(s, 88);
 		for(Player p:s.getPlayers())
 		{	
 			p.addMoney(100000000);
@@ -110,8 +114,17 @@ for(int i=0; i<100;i++)
 			}
 			
 		}
+		
 		Manager.round();
+		
+		
 	}
+
+	}
+catch(GameEndedException e)
+{
+	System.out.println("Max Rounds are Over ore only one Player is alive");
+}
 
 /*for(GamePlayObject O: Manager.getObjectList())
 {

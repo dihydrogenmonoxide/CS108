@@ -75,64 +75,105 @@ Was muss gespeichert werden?
 \end{frame}
 
 \subsection{Verwaltung Spielstatus}
-
-\subsection{Verwaltung mehere Spiele}
-
-
-\subsection{Clients}
+\begin{frame}{Verwaltung}
+	\begin{itemize}
+		\item für jedes Spiel eine eigene Spielinstanz
+			\begin{itemize}
+		\item jede Instanz verwaltet die ihr zugehörigen Spieler
+		\item verwaltet den Spielstand
+			\end{itemize}
+		\item mehrere Spiele $=$ mehrere Instanzen
+	\end{itemize}
+\end{frame}
 
 \section{Spielregeln}
-\subsection{Welche gibt es?}
-\begin{frame}{Spielregeln}
-\begin{itemize}
-\item
+\subsection{Regeln}
+\begin{frame}[allowframebreaks]
+	\begin{itemize}
+\item das Spiel ist rundenbasiert
+\item Die Zeit pro Runde ist begrenzt
+\item Während der Runde können Objekte platziert und bewegt werden
+\item Die Anzahl Objekte ist durch das Kantonsbudget beschränkt
+\item Nach dem Rundenende wird der Spielzug ausgeführt
+\item Für die Zerstörung von Gebäuden und dezimierung der Bevölkerung gibt es Geld
+\item Der Spieler der nach einer bestimmten Anzahl Runden am meisten Geld hat gewinnt
+\item Spieler ohne Bevölkerung scheiden aus
 \end{itemize}
+	\begin{exampleblock}{Implementation}
+		\begin{itemize}
+\item jedes Spielobjekt beinhaltet seine Regeln
+\item keine Regelklasse
+\item Überprüfung durch den Server
+\end{itemize}
+\end{exampleblock}
 \end{frame}
 
 
 \subsection{Implementation}
 \begin{frame}{Implementation}
 \begin{figure}
-\includegraphics[width=9cm]{images/GamePlayObjects.pdf}
+\includegraphics[width=9cm]{images/GamePlayObjects.ps}
 \caption{Klassendiagramm der Spielobjekte}
 \end{figure}
 \end{frame}
 
-
+ 
 \section{Kommunikation}
-\begin{frame}
 \subsection{Discovery-Service}
-
+\begin{frame}
+Innerhalb eines LAN Netzwerkes.
 \begin{exampleblock}{Server Broadcast}
-
+Der Server sendet über Multicast ein Alive. \\
+Der Client kann so vorhandene Server finden.\
 \end{exampleblock}
-\begin{figure}
-\includegraphics[width=6cm]{images/broadcast.eps}
-\end{figure}
+alternativ direkt mit IP verbinden.
 \end{frame}
 
 \subsection{Chat und Broadcast}
 \begin{frame}
-
+	\begin{itemize}
+		\item Der Server hat eine Liste mit allen Clients.
+		\item Nachrichten werden per default an die Gruppe des Clients versendet.
+			\begin{itemize}
+				\item Lobby
+				\item Spiel
+			\end{itemize}
+		\item Privatchat mit /msg
+	\end{itemize}
 \end{frame}
 \subsection{Netzwerkprotokoll}
 \begin{frame}
-
+	\begin{definition}
+		Anfangsbuchstaben des Befehls definiert Befehlsgruppe
+		\begin{itemize}
+			\item Verbindung
+			\item Lobby
+			\item Game
+			\item Discovery
+			\item Chat
+		\end{itemize}
+	\end{definition}
+	\begin{definition}
+		Danach 4 Buchstaben die den genauen Befehl definieren
+	\end{definition}
 \end{frame}
 
 \section{Arbeitsplan}
 \subsection{Arbeitsplan}
 \begin{frame}
 \centering
-\includegraphics[scale=0.3]{images/CS108.pdf}
+\begin{figure}
+\includegraphics[width=11cm]{images/cs108.ps}
+\caption{Arbeitsplan}
+	\end{figure}
 \end{frame}
 
-\subsection{Ist}
+\subsection{Ist} 
 \begin{frame}{Ist-Stand}
 \begin{itemize}
 \item Lobby und Chat fertig
-\item Serverstruktur fertig % ???? FRANK
-\item bis jetzt geschrieben:
+\item Serverstruktur fertig
+\item bis jetzt geschrieben :
 \begin{itemize}
 \item 7939 Linien Code
 \item 2050 Linien Kommentare
@@ -141,10 +182,10 @@ Was muss gespeichert werden?
 \end{itemize}
 \end{frame}
 
-\subsection{noch zu tun}
+\subsection{noch zu tun} 
 \begin{frame}{to do}
 \begin{itemize}
-\item Schnittstelle Spiellogik $\leftrightarrow$ Server
+\item Ermittlung des Gewinners
 \item Schnittstelle Clientparser $\leftrightarrow$ GUI des Spieles
 \item Ausbau der GUI
 \end{itemize}
@@ -158,13 +199,15 @@ Was muss gespeichert werden?
 \item gute Dokumentation mit Javadoc
 \item viele Kommentare (bis jetzt 20\%)
 \item Aufteilung in Pakete nach Funktion
+\item Servertests mit vielen Befehlen (ca. 3000 Befehle random)
 \end{itemize}
 \end{frame}
 
 \subsection{noch geplant}
 \begin{frame}
-Unit Test
--Welche Klasse
+	\begin{exampleblock}{Unit Test}
+		Bank
+	\end{exampleblock}
 \end{frame}
 
 
@@ -177,7 +220,6 @@ Unit Test
 \item Chat und private Messaging
 \item Spiel erstellen und starten
 \item Server Broadcasts
-\item evtl. Lucius Simulation Spiellogik
 \end{itemize}
 \end{frame}
 

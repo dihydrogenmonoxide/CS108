@@ -19,7 +19,7 @@ public class GamesManager {
 	 * @param id the id of the game.
 	 * @param name the name of the game.
 	 * */
-	public static void addGame(final int id, final String name)
+	public static void addGame(final int id, final int playerCount, final String name)
 	{
 		if (games.get(id) == null)
 		{
@@ -31,6 +31,17 @@ public class GamesManager {
 		{
 			Log.DebugLog("GameManager updated game: " + id + " : " + name);
 			games.get(id).setName(name);
+			//playerCount is only important to determine if a game is visible or not
+			//when its visible the playercount will be 0< otherwise the game has started and
+			//is therefore invisible.
+			if(0<playerCount)
+			{
+				games.get(id).setVisible(true);
+			}
+			else
+			{
+				games.get(id).setVisible(false);
+			}
 		}
 	}
         
@@ -51,6 +62,7 @@ public class GamesManager {
 		if (g != null && p!= null)
 		{
 			g.addPlayer(p);
+			Log.DebugLog("GameManager game:"+gameId+" holding "+g.getPlayerCount()+" players");
 		}
 	}
 

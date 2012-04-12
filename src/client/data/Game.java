@@ -79,7 +79,8 @@ class Game {
 		players.remove(playerId);
 		if (players.size() <= 0)
 		{
-			//amesManager.removeGame(this.id);
+			Log.DebugLog("removing game " + this.id);
+			GamesManager.removeGame(this.id);
 		}
 	}
 	

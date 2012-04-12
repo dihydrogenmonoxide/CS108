@@ -68,6 +68,18 @@ public class Message
         return messageParts[whichArgument];
     }
     
+    /**returns all the arguments concatenated from and including the specified one.
+     *@param whichArgument the starting argument*/
+    public String subStringArgument(int whichArgument)
+    {
+    	String res = messageParts[whichArgument];
+    	for(int i=whichArgument+1;i<messageParts.length;i++)
+    	{
+    		res += " " + whichArgument;
+    	}
+    	return res;
+    }
+    
     /**get the Protocol of a given Argument, used to extract objects out of messages.*/
     public Protocol getProtocolArgument(int i)
     {

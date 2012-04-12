@@ -337,6 +337,7 @@ public class Parser
 				catch (PlayerNotFoundException e)
 				{
 					s_MSG = s_MSG+i;
+					break;
 				}
 			}
 		}

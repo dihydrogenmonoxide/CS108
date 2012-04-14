@@ -31,8 +31,6 @@ public class TimePanel extends JPanel{
 		this.socket=s;
 		this.gameFrame = gameFrame;
 
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
 
 
 
@@ -41,13 +39,12 @@ public class TimePanel extends JPanel{
 		timerLabel.setForeground(Color.red);
 		timerLabel.setBackground(Color.black);
 		timerLabel.setOpaque(true);
-	    Border thickBorder = new LineBorder(Color.red, 7);
-		timerLabel.setBorder(thickBorder);
+		timerLabel.setBorder(new LineBorder(Color.red, 7));
 		timerLabel.setAlignmentX(CENTER_ALIGNMENT);
 		timerLabel.setAlignmentY(CENTER_ALIGNMENT);
                 
                 
-		this.add(timerLabel,c);		
+		this.add(timerLabel);		
 
 		Font curFont = timerLabel.getFont();
 		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));

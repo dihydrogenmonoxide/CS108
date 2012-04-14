@@ -4,6 +4,7 @@ import client.net.Clientsocket;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 	
 /**this class provides the buttons to build things.*/
@@ -77,12 +78,18 @@ public class GameButtonsPanel extends JPanel{
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
-		
+                
+                //the color of the text for all labels
+		Color lblTxtColor = new Color(0, 0, 0);
+                
+                Border cyan = BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan);
+                Border purple = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.MAGENTA);
+                Border buttonBorder = BorderFactory.createCompoundBorder(cyan, purple);
+                
 		JLabel attack = new JLabel();
 		attack.setText("Angriffelemente:");
-		attack.setBackground(new Color(255, 255, 255));
-		attack.setOpaque(true);
-		attack.setForeground(new Color(50, 50, 50));
+                attack.setForeground(lblTxtColor);
+		attack.setOpaque(false);
 		c.fill = GridBagConstraints.LINE_END;
 		c.gridwidth = 2;
 		c.gridx = 0;
@@ -96,6 +103,7 @@ public class GameButtonsPanel extends JPanel{
 		rakete.setActionCommand("rakete");
 		rakete.setBackground(bg);
 		rakete.setToolTipText("Rakete");
+                rakete.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -111,6 +119,7 @@ public class GameButtonsPanel extends JPanel{
                 tank.setAction(new buttonAction(tan, button.TANK));
 		tank.setBackground(bg);
 		tank.setToolTipText("Panzer");
+                tank.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -126,6 +135,7 @@ public class GameButtonsPanel extends JPanel{
 		jagd.setAction(new buttonAction(jag, button.FIGHTER));
 		jagd.setBackground(bg);
 		jagd.setToolTipText("Jagdflugzeug");
+                jagd.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -141,6 +151,7 @@ public class GameButtonsPanel extends JPanel{
 		bomber.setAction(new buttonAction(bom, button.BOMBER));
 		bomber.setBackground(bg);
 		bomber.setToolTipText("Bomber");
+                bomber.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -153,9 +164,8 @@ public class GameButtonsPanel extends JPanel{
 		
 		JLabel defense = new JLabel();
 		defense.setText("Verteidigungselemente");
-		defense.setBackground(new Color(255, 255, 255));
-		defense.setOpaque(true);
-		defense.setForeground(new Color(50, 50, 50));
+		defense.setOpaque(false);
+		defense.setForeground(lblTxtColor);
 		c.fill = GridBagConstraints.LINE_END;
 		c.gridwidth = 2;
 		c.gridx = 2;
@@ -169,6 +179,7 @@ public class GameButtonsPanel extends JPanel{
 		radar.setAction(new buttonAction(rad, button.RADAR));
 		radar.setBackground(bg);
 		radar.setToolTipText("Radar");
+                radar.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -184,6 +195,7 @@ public class GameButtonsPanel extends JPanel{
 		luftabwehr.setAction(new buttonAction(luf, button.ANTIAIR));
 		luftabwehr.setBackground(bg);
 		luftabwehr.setToolTipText("Luftabwehr");
+                luftabwehr.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -199,6 +211,7 @@ public class GameButtonsPanel extends JPanel{
 		landabwehr.setAction(new buttonAction(lan, button.BUNKER));
 		landabwehr.setBackground(bg);
 		landabwehr.setToolTipText("Landabwehr");
+                landabwehr.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -210,9 +223,8 @@ public class GameButtonsPanel extends JPanel{
 		
 		JLabel gebaude = new JLabel();
 		gebaude.setText("Aufbauelemente");
-		gebaude.setBackground(new Color(255, 255, 255));
-		gebaude.setOpaque(true);
-		gebaude.setForeground(new Color(50, 50, 50));
+		gebaude.setOpaque(false);
+		gebaude.setForeground(lblTxtColor);
 		c.fill = GridBagConstraints.LINE_END;
 		c.gridwidth = 2;
 		c.gridx = 4;
@@ -227,6 +239,7 @@ public class GameButtonsPanel extends JPanel{
 		repro.setAction(new buttonAction(rep, button.REPRO));
 		repro.setBackground(bg);
 		repro.setToolTipText("Reproduktionszentrum");
+                repro.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -242,6 +255,7 @@ public class GameButtonsPanel extends JPanel{
 		geld.setAction(new buttonAction(gel, button.BANK));
 		geld.setBackground(bg);
 		geld.setToolTipText("Regionalbank");
+                geld.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -259,6 +273,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridx=6;
 		c.gridy=0;
 		this.add(time, c);
+                time.setOpaque(false);
 		
 		group = new ButtonGroup();
 		group.add(tank);

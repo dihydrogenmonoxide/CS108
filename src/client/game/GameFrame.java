@@ -57,7 +57,7 @@ public class GameFrame
         innerGameFrame = new InnerGameFrame(this, socket);
         
         
-        game.setBackground(Color.CYAN);
+        game.setBackground(Color.black);
         
         
         game.setContentPane(innerGameFrame);

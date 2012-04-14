@@ -55,7 +55,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
         //TODO decide which field to highlight and which are inactive.
 
 
-
         this.setBackground(Color.blue);
 
         /*
@@ -65,7 +64,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
         
         this.addMouseListener(this);
  
-
 
     }
     
@@ -86,6 +84,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void paint(Graphics g)
     {
+        //XXX not exactly nice way to do it
         if (!isRendered)
         {
                 MAP_WIDTH = getWidth();

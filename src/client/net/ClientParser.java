@@ -1,30 +1,15 @@
 package client.net;
 
-import client.data.GamePhases;
-import java.awt.Color;
-import java.util.HashMap;
-
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-
-import shared.Log;
-import shared.Protocol;
-import shared.Settings;
 import client.data.GamesManager;
 import client.data.PlayerManager;
 import client.data.RunningGame;
-import client.events.ChatEvent;
-import client.events.ChatEventListener;
-import client.events.GameEvent;
-import client.events.GameEventListener;
-import client.events.InfoEvent;
-import client.events.InfoEventListener;
-import client.events.LobbyEvent;
-import client.events.LobbyEventListener;
-import client.events.ServerSelectedEvent;
-import client.events.ServerSelectedListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import client.events.*;
+import java.awt.Color;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import shared.Log;
+import shared.Protocol;
+import shared.Settings;
 
 /**
  * Parser for all Messages, fires the correct Event.

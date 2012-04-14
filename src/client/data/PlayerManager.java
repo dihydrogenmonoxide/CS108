@@ -1,7 +1,6 @@
 package client.data;
 
 import java.util.concurrent.ConcurrentHashMap;
-
 import shared.Log;
 /**this class holds all the Players known to the client.
  * all variables and methods are static.*/

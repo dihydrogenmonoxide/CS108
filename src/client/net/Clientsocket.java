@@ -1,4 +1,8 @@
 package client.net;
+import client.events.ChatEventListener;
+import client.events.GameEventListener;
+import client.events.InfoEventListener;
+import client.events.LobbyEventListener;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,15 +10,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import client.events.ChatEventListener;
-import client.events.GameEventListener;
-import client.events.LobbyEventListener;
-import client.events.InfoEventListener;
-
 import shared.*;
 
 public class Clientsocket 

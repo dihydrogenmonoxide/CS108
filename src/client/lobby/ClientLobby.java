@@ -1,27 +1,20 @@
 package client.lobby;
 
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import client.events.GameEvent;
-import client.events.GameEventListener;
-import client.events.InfoEvent;
-import client.events.NetEvent;
-import client.events.ServerSelectedEvent;
-import client.events.ServerSelectedListener;
-import client.events.InfoEventListener;
+import client.events.*;
 import client.game.GameFrame;
 import client.net.Clientsocket;
-
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import shared.Log;
 import shared.Protocol;
 import shared.ServerAddress;
 import shared.User;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 
 /** this is the lobby at the start.

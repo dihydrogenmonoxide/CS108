@@ -1,7 +1,6 @@
 package client.events;
 
 import client.net.Message;
-import shared.Log;
 import shared.Protocol;
 
 public class GameEvent extends NetEvent {

@@ -3,16 +3,12 @@ package client.net;
 
 
 
-import shared.*;
-
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.*;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import shared.*;
 
 public class DiscoveryClient
 implements Runnable

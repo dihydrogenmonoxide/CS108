@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-
 import shared.Log;
 /**holds all the infos about a game.*/
 class Game {

@@ -1,7 +1,6 @@
 package client.events;
 
 import java.util.EventObject;
-
 import shared.ServerAddress;
 
 /**

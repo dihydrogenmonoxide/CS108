@@ -1,6 +1,5 @@
 package client.lobby;
 
-import shared.InputValidator;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
 import client.net.DiscoveryClient;
@@ -19,10 +18,7 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import shared.Log;
-import shared.ServerAddress;
-import shared.Settings;
-import shared.User;
+import shared.*;
 /**
  * This creates a dialog to join a server.
  * @return the Server which to Connect to.

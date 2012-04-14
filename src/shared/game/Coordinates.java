@@ -2,6 +2,8 @@
 
 package shared.game;
 
+import shared.Log;
+
 
 public class Coordinates {
     /**Starting point of the coordinates on the X axis.*/
@@ -80,6 +82,11 @@ public class Coordinates {
         */
       public static Coordinates pixelToCoord(int x, int y, int totWidth, int totHeight)
         {
+            if(totWidth == 0 || totHeight == 0){
+                Log.ErrorLog("Coordinates: Division by Zero, you got a bug in your code");
+                return null;
+            }
+            
             //-- get x coords
             int coordDeltaX = coordEndX - coordStartX;
             int coordX = coordEndX - coordDeltaX * (totWidth-x) / totWidth;

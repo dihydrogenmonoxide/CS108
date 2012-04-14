@@ -30,6 +30,7 @@ import client.data.RunningGame;
 import client.lobby.ChatPanel;
 import client.lobby.GamesPanel;
 import client.net.Clientsocket;
+import shared.Log;
 
 public class InnerGameFrame extends JPanel {
 	private GlassPane GlassPane;
@@ -39,35 +40,35 @@ public class InnerGameFrame extends JPanel {
 	private GameChatPanel gameChat;
 	
 	private JToggleButton ready;
+        
+        
 	
 	JButton leave;
 	
-	public InnerGameFrame(final JFrame gameFrame, Clientsocket s, int screenX, int screenY, final JFrame lobbyParent){
+	public InnerGameFrame(final GameFrame gameFrame, Clientsocket s){
 		this.socket = s;
 		this.gameChat=gameChat;
+                
+                JFrame game = gameFrame.getFrame();
 		
 		
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+                
 		
-		int MAP_HEIGHT=0;
-		int MAP_WIDTH = 0;
-		if(screenY*1.75<=screenX){
-        	MAP_HEIGHT= screenY-150;
-		}
-		else{
-			MAP_WIDTH=screenX-360;
-		}
-		
-		
-		GameFieldPanel gameField = new GameFieldPanel(socket, MAP_WIDTH, MAP_HEIGHT);
-		c.ipady = 2;
-		c.weightx = 0.0;
+		GameFieldPanel gameField = new GameFieldPanel(socket);
+                c.fill = GridBagConstraints.BOTH;
+                c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 4.0;
+                c.weighty = 4.0;
 		c.gridwidth = 2;
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(gameField, c);
-		
+                
+                
+                c.fill = GridBagConstraints.NONE;
+                
 		gameChat = new GameChatPanel(socket);
 		c.ipady = 2;
 		c.weightx = 0.0;
@@ -76,8 +77,10 @@ public class InnerGameFrame extends JPanel {
 		c.gridy = 0;
 		this.add(gameChat, c);
 		
-		GameButtonsPanel buttons = new GameButtonsPanel( socket, gameFrame);
+		GameButtonsPanel buttons = new GameButtonsPanel( socket, game);
+                c.weighty = 0.0;
 		c.weightx= 0.0;
+                c.anchor = GridBagConstraints.CENTER;
 		c.gridwidth=3;
 		c.gridx=0;
 		c.gridy=2;
@@ -110,26 +113,15 @@ public class InnerGameFrame extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int eingabe = JOptionPane.showConfirmDialog(null,
-                        "Willst du das Spiel wirklich beenden?", null,JOptionPane.YES_NO_OPTION);
-				if(eingabe==0){
-					/**WindowClosingEvent to return to InnerLobby*/
-					gameFrame.dispose();
-					RunningGame.hardReset();
-					socket.sendData(Protocol.GAME_QUIT.str());
-					lobbyParent.setVisible(true);
-	
-				}
+                            gameFrame.closeGame();
 			}
 		});
 		
 		
 		
-		GlassPane = new GlassPane(gameFrame.getContentPane()
+		GlassPane = new GlassPane(game.getContentPane()
 				, socket);
-		gameFrame.setGlassPane(GlassPane);
-		
-		
+		game.setGlassPane(GlassPane);
 		
 		this.setOpaque(false);
 	}

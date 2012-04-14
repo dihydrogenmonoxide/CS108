@@ -2,27 +2,17 @@ package client.game;
 
 import client.data.RunningGame;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.Timer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.TimeoutException;
-
-
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -50,7 +40,7 @@ public class TimePanel extends JPanel{
 
 
 
-		timerLabel = new JLabel("   Start  ");		
+		timerLabel = new JLabel(" Start ");		
 		timerLabel.setForeground(Color.red);
 		timerLabel.setBackground(Color.black);
 		timerLabel.setOpaque(true);
@@ -58,11 +48,14 @@ public class TimePanel extends JPanel{
 		timerLabel.setBorder(thickBorder);
 		timerLabel.setAlignmentX(CENTER_ALIGNMENT);
 		timerLabel.setAlignmentY(CENTER_ALIGNMENT);
+                
+                
 		this.add(timerLabel,c);		
 
 		Font curFont = timerLabel.getFont();
 		timerLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 50));
-
+                
+                
 		TimeClassMin tcMin = new TimeClassMin();
 		timer = new Timer(1000, tcMin);
 		timer.start();

@@ -7,24 +7,19 @@ import javax.swing.*;
 import client.events.GameEvent;
 import client.events.GameEventListener;
 import client.events.InfoEvent;
-import client.events.LobbyEvent;
-import client.events.LobbyEventListener;
 import client.events.NetEvent;
 import client.events.ServerSelectedEvent;
 import client.events.ServerSelectedListener;
 import client.events.InfoEventListener;
 import client.game.GameFrame;
 import client.net.Clientsocket;
-import client.net.NetworkException;
 
 import shared.Log;
 import shared.Protocol;
 import shared.ServerAddress;
-import shared.SocketCreationException;
 import shared.User;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -144,7 +139,7 @@ public class ClientLobby extends JFrame {
 								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
 								if (game != null)
 								{	
-									game.dispose();
+									game.closeGame();
 									game = null;
 								}
 								socket.disconnect();

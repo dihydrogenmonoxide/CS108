@@ -1,6 +1,7 @@
 package client.game;
 
 import client.data.RunningGame;
+import client.net.Clientsocket;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -8,12 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-
-import client.net.Clientsocket;
-import shared.game.MapManager;
 import shared.Log;
 import shared.Protocol;
 import shared.game.Coordinates;
+import shared.game.MapManager;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {

@@ -1,30 +1,9 @@
 package client.game;
 
-import java.awt.Choice;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-
 import client.net.Clientsocket;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
-import shared.Log;
 
 	
 /**this class provides the buttons to build things.*/

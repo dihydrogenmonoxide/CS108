@@ -2,13 +2,11 @@ package client.game;
 
 
 
-import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-
 import client.net.Clientsocket;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import javax.swing.JComponent;
+import javax.swing.event.MouseInputAdapter;
 
 
 class GlassPane extends JComponent {

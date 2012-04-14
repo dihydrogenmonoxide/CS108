@@ -1,36 +1,18 @@
 package client.game;
 
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import client.net.Clientsocket;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JToggleButton;
-
-import shared.Protocol;
-
-import client.data.RunningGame;
-import client.lobby.ChatPanel;
-import client.lobby.GamesPanel;
-import client.net.Clientsocket;
-import shared.Log;
 
 public class InnerGameFrame extends JPanel {
 	private GlassPane GlassPane;

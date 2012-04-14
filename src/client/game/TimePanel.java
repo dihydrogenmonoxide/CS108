@@ -1,22 +1,19 @@
 package client.game;
 
 import client.data.RunningGame;
+import client.net.Clientsocket;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-
-import client.net.Clientsocket;
 
 
 public class TimePanel extends JPanel{
@@ -74,7 +71,7 @@ public class TimePanel extends JPanel{
 		}
 
 		public void actionPerformed(ActionEvent f){
-                    //TODO ugly
+                    //XXX ugly
                         rundenzeit = RunningGame.getBuildTime();
 
 			timerLabel.setText(makeTime(rundenzeit));

@@ -1,19 +1,15 @@
 package client.game;
 
 import client.data.RunningGame;
-import java.awt.*;
+import client.net.Clientsocket;
+import java.awt.Color;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import shared.Protocol;
-
-import client.net.Clientsocket;
+import javax.swing.JFrame;
 import shared.Log;
+import shared.Protocol;
 
 /**
  *

@@ -53,25 +53,17 @@ public class GameFrame extends JDialog {
                 
                 //-- add content
 		game.setContentPane(bg);
-		gameFrame= new InnerGameFrame(game, socket);
+		gameFrame= new InnerGameFrame(game, socket, screenX, screenY, lobbyParent);
 		game.add(gameFrame);
 		
                 //-- set size and location
-                game.setSize(game.getPreferredSize());
+                game.setSize(screenX,screenY);
 		game.setLocation(screenX / 2 - game.getWidth() / 2, screenY / 2 - game.getHeight() / 2);
                 
+		game.setUndecorated(true);
 		game.setResizable(false);
 		game.setVisible(true);
 		
-		/**WindowClosingEvent to return to InnerLobby*/
-		game.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				game.dispose();
-                                RunningGame.hardReset();
-				socket.sendData(Protocol.GAME_QUIT.str());
-				lobbyParent.setVisible(true);
-			}
-		});	
 		
                 //TODO listener which closes the game if something unforeseen happens.
 		//would recommend an infoEventListener

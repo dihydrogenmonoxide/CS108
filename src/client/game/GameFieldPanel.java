@@ -29,9 +29,8 @@ import shared.game.Coordinates;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
-    //XXX not nice
-    private static final int MAP_WIDTH = 1000;
-    private static int MAP_HEIGHT;
+	public  final int MAP_WIDTH;
+    public final int MAP_HEIGHT;
     /**
      * Buffered image to Paint Map
      */
@@ -45,16 +44,26 @@ public class GameFieldPanel extends JPanel implements MouseListener
     private Clientsocket socket;
     private Image bil;
 
-    public GameFieldPanel(Clientsocket s)
+    public GameFieldPanel(Clientsocket s, int MAP_WIDTH, int MAP_HEIGHT)
     {
-        this.socket = s;
-
+    	this.MAP_WIDTH= MAP_WIDTH;
+    	this.MAP_HEIGHT= MAP_HEIGHT;
+        
+        
+        if(MAP_HEIGHT!=0){
+        	img = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_HEIGHT);
+        	MAP_WIDTH = img.getWidth();
+        }
+        
+        
         //TODO decide which field to highlight and which are inactive.
-        img = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
-        MAP_HEIGHT = img.getHeight();
-
+        else{
+        	img = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
+        	MAP_HEIGHT = img.getHeight();
+        }
+        
+        
         this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
-
 
         //but = new GameButtonsPanel(socket);
         //but.selected();

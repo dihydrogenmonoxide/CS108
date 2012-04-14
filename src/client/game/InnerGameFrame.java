@@ -13,14 +13,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JToggleButton;
 
+import shared.Protocol;
+
+import client.data.RunningGame;
 import client.lobby.ChatPanel;
 import client.lobby.GamesPanel;
 import client.net.Clientsocket;
@@ -32,9 +38,11 @@ public class InnerGameFrame extends JPanel {
 	/**Panel for gameChat*/
 	private GameChatPanel gameChat;
 	
-	JToggleButton ready;
+	private JToggleButton ready;
 	
-	public InnerGameFrame(JFrame gameFrame, Clientsocket s){
+	JButton leave;
+	
+	public InnerGameFrame(final JFrame gameFrame, Clientsocket s, int screenX, int screenY, final JFrame lobbyParent){
 		this.socket = s;
 		this.gameChat=gameChat;
 		
@@ -42,8 +50,17 @@ public class InnerGameFrame extends JPanel {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
-	
-		GameFieldPanel gameField = new GameFieldPanel(socket);
+		int MAP_HEIGHT=0;
+		int MAP_WIDTH = 0;
+		if(screenY*1.75<=screenX){
+        	MAP_HEIGHT= screenY-150;
+		}
+		else{
+			MAP_WIDTH=screenX-360;
+		}
+		
+		
+		GameFieldPanel gameField = new GameFieldPanel(socket, MAP_WIDTH, MAP_HEIGHT);
 		c.ipady = 2;
 		c.weightx = 0.0;
 		c.gridwidth = 2;
@@ -82,11 +99,37 @@ public class InnerGameFrame extends JPanel {
 			}
 		});
 		
+
+		leave = new JButton("Beenden");
+		c.gridx=3;
+		c.gridy=2;
+		c.insets = new Insets(100, 0, 0, 0);
+		this.add(leave,c);
+		
+		leave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int eingabe = JOptionPane.showConfirmDialog(null,
+                        "Willst du das Spiel wirklich beenden?", null,JOptionPane.YES_NO_OPTION);
+				if(eingabe==0){
+					/**WindowClosingEvent to return to InnerLobby*/
+					gameFrame.dispose();
+					RunningGame.hardReset();
+					socket.sendData(Protocol.GAME_QUIT.str());
+					lobbyParent.setVisible(true);
+	
+				}
+			}
+		});
+		
+		
+		
 		GlassPane = new GlassPane(gameFrame.getContentPane()
 				, socket);
 		gameFrame.setGlassPane(GlassPane);
 		
-	
+		
 		
 		this.setOpaque(false);
 	}

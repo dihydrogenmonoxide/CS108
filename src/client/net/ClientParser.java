@@ -109,6 +109,7 @@ public class ClientParser {
 			sendChatMessage("<client> connection broken, trying to reconnect", msgType.ERROR);
 			break;
 		case CON_FAIL:
+			//FIXME CLIENT reset all data on disconnection
 			Log.ErrorLog("--> Connection failed, returning to Select server");
 			this.infoReceived(new InfoEvent(msg, -1, "<server disconnected>"));
 			break;

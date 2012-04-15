@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
+import server.GamePlayObjects.GamePlayObject;
 import server.GamePlayObjects.GamePlayObjectManager;
 import server.logic.LogicManager;
 import server.players.*;
@@ -151,17 +152,11 @@ implements Comparable<Server>
 	{
 		if(isGameRunning)
 		{
-			
-			//TODO SERVER what to call if someone quits ingame?
-                    
-			//TODO SERVER make sure it's fixed
-                        //DONE if the game is running and a player quit, 
-                        //a broadcast is sent "GGAME 201 2 gameName", 
-                        //trouble is, that it then will be displayed in the lobby
-                        // (as the GameManager on the client doesn't mark the game as invisible then).
-                        // occurs even if a game is running and a client connects to the lobby
-                        // all games running should be announced as "GGAME 201 0 gameName" (then they are marked as invisible)
-                        // thx for fixing Oli
+			//TODO SERVER test if this works; fix round end votes!   
+			for(GamePlayObject o : objectManager.getPlayersObjectList(p_player))
+			{
+				o.destruct();
+			}
 		}
 		
 		if(p_player.voted())

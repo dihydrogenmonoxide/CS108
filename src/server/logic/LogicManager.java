@@ -9,6 +9,7 @@ import server.GamePlayObjects.GamePlayObject;
 import server.GamePlayObjects.Jet;
 import server.GamePlayObjects.Reproductioncenter;
 import server.GamePlayObjects.Tank;
+import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.parser.Parser;
 import server.players.Player;
@@ -40,15 +41,20 @@ implements Runnable
 	@Override
 	public void run() 
 	{
-		while(server.isGameRunning())
+		try
 		{
-			buildPhase();
-			server.getObjectManager().round();
-			updateClients();
-			animationPhase();
-			//TODO SERVER detect game ending when one player won
+			while(server.isGameRunning())
+			{
+				buildPhase();
+				server.getObjectManager().round();
+				updateClients();
+				animationPhase();
+			}
 		}
-		//TODO SERVER save score?
+		catch (GameEndedException e)
+		{
+			// TODO SERVER stop server & save score
+		}
 	}
 	
 	private void updateClients()
@@ -207,6 +213,7 @@ implements Runnable
 					
 					player.sendData(o.toProtocolString());
 					player.addObject(o);
+					return;
 				}
 				catch(GameObjectBuildException e)
 				{

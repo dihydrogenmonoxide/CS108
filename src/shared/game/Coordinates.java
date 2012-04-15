@@ -2,6 +2,7 @@
 
 package shared.game;
 
+import java.awt.Dimension;
 import shared.Log;
 
 
@@ -80,23 +81,43 @@ public class Coordinates {
         @param totWidth the total Height of the map in pixels
         @return a Coordinate object with the desired Coordinates.
         */
-      public static Coordinates pixelToCoord(int x, int y, int totWidth, int totHeight)
+      public static Coordinates pixelToCoord(int x, int y, Dimension image)
         {
-            if(totWidth == 0 || totHeight == 0){
+            if(image.width == 0 || image.height == 0){
                 Log.ErrorLog("Coordinates: Division by Zero, you got a bug in your code");
                 return null;
             }
             
             //-- get x coords
             int coordDeltaX = coordEndX - coordStartX;
-            int coordX = coordEndX - coordDeltaX * (totWidth-x) / totWidth;
+            int coordX = coordEndX - coordDeltaX * (image.width-x) / image.width;
             
             //-- get y coords
             int coordDeltaY = coordEndY - coordStartY;        
-            int coordY = coordStartY + coordDeltaY*(y)/totHeight;
+            int coordY = coordStartY + coordDeltaY*(y)/image.height;
             
             //-- create coordinates
             return new Coordinates(coordX, coordY);
         }
         
+      /**calculates the pixels for given Coordinates.
+       @param */
+      public static Dimension coordToPixel(Coordinates coord, Dimension image)
+        {
+            if(image.width == 0 || image.height == 0){
+                Log.ErrorLog("Coordinates: Division by Zero, you got a bug in your code");
+                return null;
+            }
+            
+            //-- get X pixel
+            int coordDeltaX = coordEndX - coordStartX;
+            int pixelX = (coord.x - coordStartX)*image.width/coordDeltaX;
+             
+            //-- get Y pixel
+            int coordDeltaY = coordEndY - coordStartY;      
+            int pixelY = (coord.y - coordStartY)*image.height/coordDeltaY;
+            
+            //-- create coordinates
+            return new Dimension(pixelX, pixelY);
+        }
 }

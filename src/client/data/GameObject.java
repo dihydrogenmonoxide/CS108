@@ -1,5 +1,9 @@
 package client.data;
 
+import client.game.DrawableObject;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import shared.game.Coordinates;
 import shared.game.GameSettings;
 
@@ -10,7 +14,7 @@ import shared.game.GameSettings;
  *
  * @author fox918
  */
-class GameObject
+public class GameObject implements DrawableObject
 {    
     ObjectType type;
     int objectId;
@@ -43,5 +47,15 @@ class GameObject
     {
         return null;
         //TODO implement this;
+    }
+    
+    //TODO markierung if friend or foe
+    public BufferedImage getImg(){
+        return type.getImg();
+    }
+
+    public Coordinates getLocation()
+    {
+        return location;
     }
 }

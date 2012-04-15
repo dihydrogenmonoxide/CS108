@@ -30,7 +30,8 @@ public class RunningGame
     public static boolean isPaused = false;
     /**the actual phase the game is in.*/
     static GamePhases state = GamePhases.PAUSE;
-    private static ConcurrentHashMap<Integer, GameObject> objects;
+    
+    private static ConcurrentHashMap<Integer, GameObject> objects = new ConcurrentHashMap<Integer, GameObject>();
 
     /**
      * Sets the Build time of the running game. if the Build time is over 0 the
@@ -179,21 +180,21 @@ public class RunningGame
         //TODO RunningGame implement set Money
     }
 
-    public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId,int playerId, int health)
+    public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId, int playerId, int health)
     {
-       GameObject obj = objects.get(objectId); 
-       ObjectType type = ObjectType.fromProtocol(objectType);
-       Coordinates coords = new Coordinates(xCoords, yCoords);
-       if(obj == null)
-       {
-           Log.DebugLog("Running Game: creating object with id:" + objectId);   
-           objects.put(objectId, new GameObject(type, coords, objectId, playerId, health));
-       }
-       else
-       {
-           Log.DebugLog("Running Game: update object with id:" + objectId);
-           obj.update(coords, health);
-       }
+        GameObject obj = objects.get(objectId);
+        ObjectType type = ObjectType.fromProtocol(objectType);
+        Coordinates coords = new Coordinates(xCoords, yCoords);
+        if(obj != null)
+        { 
+            Log.DebugLog("Running Game: update object with id:" + objectId);
+            obj.update(coords, health);
+        } 
+        else
+        {
+            Log.DebugLog("Running Game: creating object with id:" + objectId);
+            objects.put(objectId, new GameObject(type, coords, objectId, playerId, health));
+        }
     }
     
     public static void deleteObject(int objectId)

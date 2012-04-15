@@ -228,7 +228,7 @@ public class ClientParser {
 			break;
 
 		case GAME_UPDATE_OBJECT:
-			RunningGame.updateObj(msg.getProtocolArgument(1), msg.getIntArgument(2), msg.getIntArgument(3), msg.getIntArgument(4), msg.getIntArgument(5));
+			RunningGame.updateObj(msg.getProtocolArgument(1), msg.getIntArgument(2), msg.getIntArgument(3), msg.getIntArgument(4), msg.getIntArgument(5), msg.getIntArgument(6));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_UPDATE_OBJECT, msg));
 			break;
                     

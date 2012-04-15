@@ -3,6 +3,7 @@ package client.game;
 import client.data.RunningGame;
 import client.net.Clientsocket;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.WindowAdapter;
@@ -10,6 +11,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 
 /**
  *
@@ -68,17 +70,21 @@ public class GameFrame
         try
         {
             
+            
             //now set fullscreen
-            if (screen.isFullScreenSupported())
+            if (screen.isFullScreenSupported() && Settings.FULLSCREEN)
             {
                 game.setUndecorated(true);
                 screen.setFullScreenWindow(game);
             }
-            
+            else
+            {
+                throw new Exception();
+            }
         } catch (Exception e)
         {
             Log.ErrorLog("Sorry, no fullscreen for you");
-             game.setSize(game.getPreferredSize());
+             game.setSize(new Dimension(1000,600));
              game.setLocation(screenX / 2 - game.getWidth() / 2, screenY / 2 - game.getHeight() / 2);
         }
 

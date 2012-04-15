@@ -1,5 +1,6 @@
 package server.GamePlayObjects;
 
+import shared.game.GameSettings;
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -35,16 +36,16 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 			GamePlayObjectManager manager) throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Reproductioncenter.healthPoints;
-		this.range = Settings.Reproductioncenter.attackRange;
-		this.attackPoints = Settings.Reproductioncenter.attackPoints;
+		this.healthPoints = GameSettings.Reproductioncenter.healthPoints;
+		this.range = GameSettings.Reproductioncenter.attackRange;
+		this.attackPoints = GameSettings.Reproductioncenter.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Reproductioncenter.movingRange;
+		this.movingRange = GameSettings.Reproductioncenter.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Reproductioncenter.ammunation;
-		this.price = Settings.Reproductioncenter.price;
+		this.ammunation = GameSettings.Reproductioncenter.ammunation;
+		this.price = GameSettings.Reproductioncenter.price;
 		this.build();
 
 	}

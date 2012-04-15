@@ -4,6 +4,7 @@ package server.GamePlayObjects;
 
 
 
+import shared.game.GameSettings;
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -39,16 +40,16 @@ public class Bank implements GamePlayObject, Building, Unit {
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Bank.healthPoints;
-		this.range = Settings.Bank.attackRange;
-		this.attackPoints = Settings.Bank.attackPoints;
+		this.healthPoints = GameSettings.Bank.healthPoints;
+		this.range = GameSettings.Bank.attackRange;
+		this.attackPoints = GameSettings.Bank.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Bank.movingRange;
+		this.movingRange = GameSettings.Bank.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Bank.ammunation;
-		this.price = Settings.Bank.price;
+		this.ammunation = GameSettings.Bank.ammunation;
+		this.price = GameSettings.Bank.price;
 		this.build();
 
 	}

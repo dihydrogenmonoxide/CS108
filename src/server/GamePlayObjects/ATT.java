@@ -2,6 +2,7 @@ package server.GamePlayObjects;
 
 
 
+import shared.game.GameSettings;
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -37,16 +38,16 @@ public class ATT implements GamePlayObject, Defensive, Building, Unit {
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.ATT.healthPoints;
-		this.range = Settings.ATT.attackRange;
-		this.attackPoints = Settings.ATT.attackPoints;
+		this.healthPoints = GameSettings.ATT.healthPoints;
+		this.range = GameSettings.ATT.attackRange;
+		this.attackPoints = GameSettings.ATT.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.ATT.movingRange;
+		this.movingRange = GameSettings.ATT.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.ATT.ammunation;
-		this.price = Settings.ATT.price;
+		this.ammunation = GameSettings.ATT.ammunation;
+		this.price = GameSettings.ATT.price;
 		this.build();
 
 	}
@@ -209,7 +210,7 @@ public class ATT implements GamePlayObject, Defensive, Building, Unit {
 			}
 		} catch (NullPointerException e) {
 		} finally {
-			this.ammunation = Settings.ATT.ammunation;
+			this.ammunation = GameSettings.ATT.ammunation;
 		}
 	}
 

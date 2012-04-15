@@ -1,5 +1,6 @@
 package server.GamePlayObjects;
 
+import shared.game.GameSettings;
 import java.util.LinkedList;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -37,16 +38,16 @@ public class Tank implements GamePlayObject, Defensive, Unit {
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Tank.healthPoints;
-		this.range = Settings.Tank.attackRange;
-		this.attackPoints = Settings.Tank.attackPoints;
+		this.healthPoints = GameSettings.Tank.healthPoints;
+		this.range = GameSettings.Tank.attackRange;
+		this.attackPoints = GameSettings.Tank.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Tank.movingRange;
+		this.movingRange = GameSettings.Tank.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Tank.ammunation;
-		this.price = Settings.Tank.price;
+		this.ammunation = GameSettings.Tank.ammunation;
+		this.price = GameSettings.Tank.price;
 		this.build();
 
 	}
@@ -209,7 +210,7 @@ public class Tank implements GamePlayObject, Defensive, Unit {
 			}
 		} catch (NullPointerException e) {
 		} finally {
-			this.ammunation = Settings.Tank.ammunation;
+			this.ammunation = GameSettings.Tank.ammunation;
 		}
 	}
 

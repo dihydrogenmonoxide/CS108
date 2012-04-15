@@ -1,6 +1,7 @@
 package client.data;
 
 import shared.game.Coordinates;
+import shared.game.GameSettings;
 
 /**
  * This is class holds all the Informations about a specific GameObject (e.g. a
@@ -12,10 +13,13 @@ import shared.game.Coordinates;
 class GameObject
 {
 
+    /**holds all the infos about a specific type.
+     constructor: imagePath, isMovable, isSelectable, MovingRange, AttackRange, HealthPoints
+     */
     static enum ObjectType
     {
 
-        TANK,
+        TANK("./bilder/Panzer.png", GameSettings.Tank.movingRange),
         FIGHTER,
         BOMBER, 
         ANTIAIR, 

@@ -2,6 +2,7 @@ package server.GamePlayObjects;
 
 
 
+import shared.game.GameSettings;
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -37,16 +38,16 @@ public class Flak implements GamePlayObject, Defensive, Building, Unit {
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Flak.healthPoints;
-		this.range = Settings.Flak.attackRange;
-		this.attackPoints = Settings.Flak.attackPoints;
+		this.healthPoints = GameSettings.Flak.healthPoints;
+		this.range = GameSettings.Flak.attackRange;
+		this.attackPoints = GameSettings.Flak.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Flak.movingRange;
+		this.movingRange = GameSettings.Flak.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Flak.ammunation;
-		this.price = Settings.Flak.price;
+		this.ammunation = GameSettings.Flak.ammunation;
+		this.price = GameSettings.Flak.price;
 		this.build();
 
 	}
@@ -209,7 +210,7 @@ public class Flak implements GamePlayObject, Defensive, Building, Unit {
 			}
 		} catch (NullPointerException e) {
 		} finally {
-			this.ammunation = Settings.Flak.ammunation;
+			this.ammunation = GameSettings.Flak.ammunation;
 		}
 	}
 

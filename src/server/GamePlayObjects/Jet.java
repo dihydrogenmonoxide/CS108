@@ -1,5 +1,6 @@
 package server.GamePlayObjects;
 
+import shared.game.GameSettings;
 import java.util.LinkedList;
 
 import server.exceptions.GameObjectBuildException;
@@ -35,16 +36,16 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 			throws GameObjectBuildException {
 
 		this.position = pos;
-		this.healthPoints = Settings.Jet.healthPoints;
-		this.range = Settings.Jet.attackRange;
-		this.attackPoints = Settings.Jet.attackPoints;
+		this.healthPoints = GameSettings.Jet.healthPoints;
+		this.range = GameSettings.Jet.attackRange;
+		this.attackPoints = GameSettings.Jet.attackPoints;
 
 		this.Owner = owner;
-		this.movingRange = Settings.Jet.movingRange;
+		this.movingRange = GameSettings.Jet.movingRange;
 		this.Manager = manager;
 		this.possibleTargets = new LinkedList<GamePlayObject>();
-		this.ammunation = Settings.Jet.ammunation;
-		this.price = Settings.Jet.price;
+		this.ammunation = GameSettings.Jet.ammunation;
+		this.price = GameSettings.Jet.price;
 		this.build();
 
 	}
@@ -197,7 +198,7 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 			}
 		} catch (NullPointerException e) {
 		} finally {
-			this.ammunation = Settings.Jet.ammunation;
+			this.ammunation = GameSettings.Jet.ammunation;
 		}
 	}
 

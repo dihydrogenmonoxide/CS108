@@ -72,7 +72,7 @@ public class GameButtonsPanel extends JPanel{
 
 	
 	public GameButtonsPanel(Clientsocket s, JFrame game){
-		Color bg = Color.green;
+		Color bg = Color.black;
 		this.socket = s;
 		
 		this.setLayout(new GridBagLayout());
@@ -80,7 +80,7 @@ public class GameButtonsPanel extends JPanel{
 		
                 
                 //the color of the text for all labels
-		Color lblTxtColor = new Color(0, 0, 0);
+		Color lblTxtColor = Color.red;
                 
                 Border cyan = BorderFactory.createMatteBorder(3, 3, 3, 3, Color.cyan);
                 Border purple = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.MAGENTA);
@@ -96,22 +96,6 @@ public class GameButtonsPanel extends JPanel{
 		c.gridy = 0;
 		this.add(attack, c);
 		
-                //TODO remove this, no rockets anymore :(
-		ImageIcon rak= new ImageIcon("bilder/Rakete.png");
-		rak.setImage(rak.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-		rakete = new JToggleButton(rak,false);
-		rakete.setActionCommand("rakete");
-		rakete.setBackground(bg);
-		rakete.setToolTipText("Rakete");
-                rakete.setBorder(buttonBorder);
-		c.ipadx=1;
-		c.ipady=1;
-		c.gridwidth=1;
-		c.gridheight=1;
-		c.gridx=0;
-		c.gridy=1;
-		c.insets = new Insets(2,0,0,0);
-		this.add(rakete, c);
 		
 		ImageIcon tan= new ImageIcon("bilder/Panzer.png");
 		tan.setImage(tan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
@@ -156,15 +140,16 @@ public class GameButtonsPanel extends JPanel{
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
-		c.gridx=1;
-		c.gridy=2;
-		c.insets = new Insets(2,5,0,0);
+		c.gridx=0;
+		c.gridy=1;
+		c.insets = new Insets(2,0,0,0);
 		this.add(bomber, c);
 		
 		
 		JLabel defense = new JLabel();
 		defense.setText("Verteidigungselemente");
-		defense.setOpaque(false);
+		defense.setOpaque(false
+				);
 		defense.setForeground(lblTxtColor);
 		c.fill = GridBagConstraints.LINE_END;
 		c.gridwidth = 2;

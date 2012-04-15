@@ -25,7 +25,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
      * the Height of the Map, is set after rendering.
      */
     //TODO find relation MAP_Width to MAP_height
-    public static int MAP_HEIGHT=0;
+    
+    public static int MAP_HEIGHT=(MAP_WIDTH*4/7);
     /**
      * Buffered image to Paint Map
      */
@@ -56,11 +57,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
 
         this.setBackground(Color.blue);
-
-        /*
-         * durch das BufferedImage funktioniert es nocht nicht ganz so, wie es
-         * sollte. wenn ihr schnell drückt könnt ihr es jedoch sehen;)
-         */
         
         this.addMouseListener(this);
  

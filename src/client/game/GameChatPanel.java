@@ -4,6 +4,8 @@ import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.NetEvent;
 import client.net.Clientsocket;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -52,6 +54,7 @@ public class GameChatPanel extends JPanel {
 		chatContent = new DefaultStyledDocument();
 
 		chatPane = new JTextPane();
+		chatPane.setBackground(new Color(139, 139, 122));
 		chatPane.setEditable(false);
 		chatPane.setFocusable(false);
 		chatPane.setDocument(chatContent);
@@ -70,6 +73,7 @@ public class GameChatPanel extends JPanel {
 
 
 		inputChat = new JFormattedTextField("Nachricht hier eingeben");
+		inputChat.setBackground(new Color(139, 139, 122));
 		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = 1;
 		inputChat.setPreferredSize(new Dimension(10,20));

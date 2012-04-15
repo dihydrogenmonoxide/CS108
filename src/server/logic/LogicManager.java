@@ -224,7 +224,6 @@ implements Runnable
 				
 			}
 		}
-                //FIXME i'm at the wrong place, is sent even though a object is created
 		Log.ErrorLog("Couldn't build the object - \'"+s_MSG+"\' isn't in a valid format");
 	}
 	

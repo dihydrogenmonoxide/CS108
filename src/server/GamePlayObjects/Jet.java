@@ -382,6 +382,6 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	@Override
 	public String toProtocolString()
 	{
-		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_FIGHTER_JET.str()+position.getX()+" "+position.getY()+" "+id+" "+healthPoints;
+		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_FIGHTER_JET.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
 }

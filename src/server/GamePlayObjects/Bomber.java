@@ -457,6 +457,6 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 	@Override
 	public String toProtocolString()
 	{
-		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BOMBER.str()+position.getX()+" "+position.getY()+" "+id+" "+healthPoints;
+		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BOMBER.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
 }

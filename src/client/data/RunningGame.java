@@ -1,5 +1,6 @@
 package client.data;
 
+import client.game.DrawableObject;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -215,4 +216,8 @@ public class RunningGame
         //TODO RunningGame implement set Population
     }
 
+    public static ConcurrentHashMap<Integer, GameObject> getObjects()
+    {
+        return objects;
+    }
 }

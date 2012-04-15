@@ -1,7 +1,11 @@
 package client.game;
 
 
+import client.data.RunningGame;
 import client.net.Clientsocket;
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,7 +15,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 
 public class InnerGameFrame extends JPanel {
@@ -31,7 +38,7 @@ public class InnerGameFrame extends JPanel {
 		this.socket = s;
 		this.gameChat=gameChat;
                 
-                JFrame game = gameFrame.getFrame();
+        JFrame game = gameFrame.getFrame();
 		
 		
 		this.setLayout(new GridBagLayout());
@@ -39,31 +46,31 @@ public class InnerGameFrame extends JPanel {
                 
 		
 		GameFieldPanel gameField = new GameFieldPanel(socket);
-                c.fill = GridBagConstraints.BOTH;
-                c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.CENTER;
 		c.weightx = 4.0;
-                c.weighty = 4.0;
-		c.gridwidth = 2;
+        c.weighty = 4.0;
+		c.gridwidth = 6;
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(gameField, c);
                 
                 
-                c.fill = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.NONE;
                 
 		gameChat = new GameChatPanel(socket);
 		c.ipady = 2;
 		c.weightx = 0.0;
-		c.gridwidth = 2;
-		c.gridx = 2;
+		c.gridwidth = 4;
+		c.gridx = 6;
 		c.gridy = 0;
 		this.add(gameChat, c);
 		
 		GameButtonsPanel buttons = new GameButtonsPanel( socket, game);
-                c.weighty = 0.0;
+		c.weighty = 0.0;
 		c.weightx= 0.0;
-                c.anchor = GridBagConstraints.CENTER;
-		c.gridwidth=3;
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridwidth=7;
 		c.gridx=0;
 		c.gridy=2;
 		this.add(buttons, c);
@@ -71,7 +78,7 @@ public class InnerGameFrame extends JPanel {
 		ready= new JToggleButton("ready");
 		ready.setSelected(false);
 		c.gridwidth=1;
-		c.gridx=3;
+		c.gridx=9;
 		c.gridy=2;
 		c.insets= new Insets(0,50,0,0);
 		this.add(ready, c);
@@ -86,9 +93,8 @@ public class InnerGameFrame extends JPanel {
 		
 
 		leave = new JButton("Beenden");
-		c.gridx=3;
-		c.gridy=2;
-		c.insets = new Insets(100, 0, 0, 0);
+		c.gridx=9;
+		c.gridy=3;
 		this.add(leave,c);
 		
 		leave.addActionListener(new ActionListener() {
@@ -101,14 +107,33 @@ public class InnerGameFrame extends JPanel {
 		
 		
 		
-		GlassPane = new GlassPane(game.getContentPane()
-				, socket);
+		
+		
+		JTextArea money = new JTextArea();
+		Font f = new Font( Font.SERIF, Font.PLAIN, 20 );
+		money.setFont(f);
+		money.setOpaque(false);
+		money.setForeground(new Color(150,150,150));
+		money.setText("Kontostand: "+ Integer.toString(RunningGame.getMoney()));
+		money.setEditable(false);
+        money.setLineWrap(true);
+        money.setWrapStyleWord(true);
+		c.gridx=7;
+		c.gridy=2;
+		this.add(money,c);
+		
+		
+		
+		
+		GlassPane = new GlassPane(game.getContentPane(), socket);
 		game.setGlassPane(GlassPane);
+		
+		
+		
 		
 		this.setOpaque(false);
 	}
-	
-	
+		
 	
 }
 

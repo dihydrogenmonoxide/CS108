@@ -31,6 +31,8 @@ public class RunningGame
     /**the actual phase the game is in.*/
     static GamePhases state = GamePhases.PAUSE;
     
+    static int money=0;
+    
     private static ConcurrentHashMap<Integer, GameObject> objects = new ConcurrentHashMap<Integer, GameObject>();
 
     /**
@@ -179,6 +181,12 @@ public class RunningGame
     {
         //TODO RunningGame implement set Money
     }
+    public static int getMoney(){
+    	//TODO 
+    	return money;
+    }
+    
+    
 
     public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId, int playerId, int health)
     {

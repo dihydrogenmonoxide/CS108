@@ -5,6 +5,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import shared.Log;
 import shared.Protocol;
+import shared.game.Coordinates;
 
 /**
  * This class holds all the informations about a Game the input comes from the
@@ -178,9 +179,26 @@ public class RunningGame
         //TODO RunningGame implement set Money
     }
 
-    public static void updateObj(Protocol object, int xCoords, int yCoords, int playerId, int health)
+    public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId,int playerId, int health)
     {
-       //TODO RunningGame implement update Object
+       GameObject obj = objects.get(objectId); 
+       ObjectType type = ObjectType.fromProtocol(objectType);
+       Coordinates coords = new Coordinates(xCoords, yCoords);
+       if(obj == null)
+       {
+           Log.DebugLog("Running Game: creating object with id:" + objectId);   
+           objects.put(objectId, new GameObject(type, coords, objectId, playerId, health));
+       }
+       else
+       {
+           Log.DebugLog("Running Game: update object with id:" + objectId);
+           obj.update(coords, health);
+       }
+    }
+    
+    public static void deleteObject(int objectId)
+    {
+        objects.remove(objectId);
     }
 
     public static void setPop(long longArgument)

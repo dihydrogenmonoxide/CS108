@@ -129,6 +129,7 @@ implements Comparable<Player>
 	 */
 	public void setNick(String s_Nick)
 	{
+		//TODO SERVER potential risk of players abusing this (not setting the nick and thus not appearing anywhere
 		String s_oldNick = this.s_Nick;
 		this.s_Nick = s_Nick;
 		if(!b_NameSet)

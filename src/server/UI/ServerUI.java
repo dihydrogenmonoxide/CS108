@@ -260,6 +260,7 @@ public class ServerUI {
 	 */
 	public synchronized void addPlayer(Player p)
 	{
+		//TODO SERVER update on namechange
 		playerList.add(p.getID()-101, p);
 	}
 	

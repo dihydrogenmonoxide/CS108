@@ -297,7 +297,7 @@ public class Bank implements GamePlayObject, Building, Unit {
 	@Override
 	public String toProtocolString()
 	{
-		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BANK.str()+position.getX()+" "+position.getY()+" "+id+" "+healthPoints;
+		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BANK.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
 }
 

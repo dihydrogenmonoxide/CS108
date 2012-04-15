@@ -355,7 +355,7 @@ public class Flak implements GamePlayObject, Defensive, Building, Unit {
 	@Override
 	public String toProtocolString()
 	{
-		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_STATIONARY_ANTI_AIR.str()+position.getX()+" "+position.getY()+" "+id+" "+healthPoints;
+		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_STATIONARY_ANTI_AIR.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
 }
 

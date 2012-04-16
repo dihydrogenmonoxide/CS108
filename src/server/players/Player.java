@@ -3,6 +3,7 @@ package server.players;
 import java.net.Socket;
 import java.util.EmptyStackException;
 import java.util.Stack;
+import java.util.concurrent.BrokenBarrierException;
 
 import server.MainServer;
 import server.Server;
@@ -41,6 +42,7 @@ implements Comparable<Player>
 		this.ps_sock = ps_sock;
 		MainServer.getPlayerManager().addPlayer(this);
 		this.i_ID = i_ID+100;
+		MainServer.getGUI().addPlayer(this);
 		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
 	}
 	
@@ -134,7 +136,6 @@ implements Comparable<Player>
 		this.s_Nick = s_Nick;
 		if(!b_NameSet)
 		{
-			MainServer.printInformation("The Player with the ID "+this.i_ID+" set his name to \'"+s_Nick+"\'");
 			for(Player play : MainServer.getPlayerManager().getPlayers())
 			{
 				if(play != this)
@@ -143,9 +144,6 @@ implements Comparable<Player>
 						ps_sock.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
 					ps_sock.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
 				}
-					
-					
-				
 			}
 			for(Server s : MainServer.getServerManager().getServers())
 			{
@@ -156,13 +154,12 @@ implements Comparable<Player>
 				}
 			}
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
-			MainServer.getGUI().addPlayer(this);
 			b_NameSet = true;
 		}
-		else
-		{
-			MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+s_oldNick+"\' -> \'"+s_Nick+"\'");
-		}
+		
+		MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+s_oldNick+"\' -> \'"+s_Nick+"\'");
+		MainServer.getGUI().addPlayer(this);
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CON_NICK.str()+getID()+" "+getNick());
 	}
 
 	/**

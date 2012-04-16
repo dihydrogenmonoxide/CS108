@@ -50,8 +50,9 @@ implements Runnable
 		this.i_ServerPort = i_ServerPort;
 		
 		t_thread = new Thread(this);
-		t_thread.start();
+		t_thread.setDaemon(true);
 		t_thread.setPriority(Thread.MIN_PRIORITY);
+		t_thread.start();
 	}
 	
 	/**

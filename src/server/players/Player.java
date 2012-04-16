@@ -3,7 +3,6 @@ package server.players;
 import java.net.Socket;
 import java.util.EmptyStackException;
 import java.util.Stack;
-import java.util.concurrent.BrokenBarrierException;
 
 import server.MainServer;
 import server.Server;
@@ -259,11 +258,6 @@ implements Comparable<Player>
 		
 		if(this.b_ConnectionLost)
 		{
-			if(this.s_server != null)
-			{
-				this.s_server.removePlayer(this);
-				this.s_server.resume();
-			}
 			this.disconnect();
 		}
 			
@@ -307,8 +301,13 @@ implements Comparable<Player>
 	{
 		if(!b_quit)
 		{
-			MainServer.getGUI().removePlayer(this);
 			b_quit = true;
+			if(s_server != null)
+			{
+				s_server.removePlayer(this);
+				s_server.resume();
+			}
+			MainServer.getGUI().removePlayer(this);
 			MainServer.getPlayerManager().removePlayer(this);
 			if(this.b_ConnectionLost)
 				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" timed out.", this);
@@ -329,7 +328,6 @@ implements Comparable<Player>
 	public String toString()
 	{
 		return this.s_Nick;
-		
 	}
 	
 	/**

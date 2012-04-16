@@ -136,6 +136,7 @@ implements Runnable
 	
 	public void resendEverything(Player player)
 	{
+		//TODO SERVER make sure that destroyed objects are updated aswell! (and are deleted next round)
 		for(GamePlayObject o :server.getObjectManager().getObjectList())
 		{
 			player.sendData(o.toProtocolString());

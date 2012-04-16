@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import server.MainServer;
 import server.parser.Parser;
 import server.players.Player;
 import shared.Log;

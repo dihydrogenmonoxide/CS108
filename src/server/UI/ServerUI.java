@@ -210,7 +210,7 @@ public class ServerUI {
 		splitPane.setContinuousLayout(true);
 		frmSwissDefconServer.setContentPane(contentPane);
 		
-		playerList.setSize(100);
+		playerList.setSize(101);
 		
 		OutputStream stdout = new OutputStream()
 		{

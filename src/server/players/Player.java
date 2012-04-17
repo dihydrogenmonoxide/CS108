@@ -302,11 +302,6 @@ implements Comparable<Player>
 		if(!b_quit)
 		{
 			b_quit = true;
-			if(s_server != null)
-			{
-				s_server.removePlayer(this);
-				s_server.resume();
-			}
 			MainServer.getGUI().removePlayer(this);
 			MainServer.getPlayerManager().removePlayer(this);
 			if(this.b_ConnectionLost)
@@ -319,6 +314,11 @@ implements Comparable<Player>
 			else
 				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
 		
+			if(s_server != null)
+			{
+				s_server.resume();
+				s_server.removePlayer(this);
+			}
 			ps_sock.close();
 		}
 	}

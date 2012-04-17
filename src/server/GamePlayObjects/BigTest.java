@@ -17,70 +17,80 @@ public class BigTest {
 		Server s=TestServer.startTestServer();
 		try
 		{
-		GamePlayObjectManager Manager= new GamePlayObjectManager(s, 88);
+			int a=0,b=0;
+		GamePlayObjectManager Manager= new GamePlayObjectManager(s, 10);
 		for(Player p:s.getPlayers())
 		{	
 			p.addMoney(100000000);
-			p.addPopulation(1000000);
+			p.addPopulation(100000);
 			
-			for(int x=450000;x<800000;x=x+10000)
+			for(int x=0;x<10000;x=x+1)
 			{
-				for (int y=100000;y<300000;y=y+10000)
-				{
+				
 					try{
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
 				new Tank(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
 				
 					}
 				catch(GameObjectBuildException e){
-					System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+					System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 				}
 					
 					try{
-						new Jet(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
-						
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
+						new Jet(new Coordinates(a,b),p, Manager);
 							}
 						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+							System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 						}
 					
 					try{
-						new Bomber(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
-							
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
+						new Bomber(new Coordinates(a,b),p, Manager);
 					}
 						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+							System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 						}
 					
 					try{
-						new Flak(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
-						
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
+						new Flak(new Coordinates(a,b),p, Manager);
 							}
 						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+							System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 						}
 					
 					try{
-						new ATT(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
-						
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
+						new ATT(new Coordinates(a,b),p, Manager);
 							}
 						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+							System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 						}
 					
 					try{
-						new Bank(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
+						new Bank(new Coordinates(a,b),p, Manager);
 						
 							}
 						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+							System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 						}
 					
 					try{
-						new Reproductioncenter(new Coordinates((int)(350000*Math.random()+450000),(int)(200000*Math.random()+100000)), p, Manager);
+						a=(int)(350000*Math.random()+450000);
+						b=(int)(350000*Math.random()+100000);
+						new Reproductioncenter(new Coordinates(a,b),p, Manager);
 						
 							}
 						catch(GameObjectBuildException e){
-							System.out.println(e.getMessage()+ " at "+ x+"/"+y);
+							System.out.println(e.getMessage()+ " at "+ a+"/"+b);
 						}
 					
 				
@@ -89,18 +99,18 @@ public class BigTest {
 				}
 				
 			}
-		}
+		
 for(int i=0; i<100;i++)
 {	
 	int k=0;
-	int b=0;
+	int c=0;
 	for(GamePlayObject O: Manager.getObjectList())
 	{
 		k++;
-		if(O instanceof Bomber)b++;
+		if(O instanceof Bomber)c++;
 	}
 	System.out.println("Round "+i+" :" +k+" Objects");
-	System.out.println("Round "+i+" :" +b+" Bombers");
+	System.out.println("Round "+i+" :" +c+" Bombers");
 	for(Player P:s.getPlayers())
 	{
 	System.out.println("Player with id" +P.getID()+ " has "+ P.getMoney()+ " Money and "+P.getPopulation()+" Population" );	
@@ -123,9 +133,8 @@ for(int i=0; i<100;i++)
 	}
 catch(GameEndedException e)
 {
-	System.out.println("Max Rounds are Over ore only one Player is alive");
+	System.out.println(e.getMessage()+" Winner is"+e.getWinner().getNick()+" with" +e.getWinner().getMoney()+" Money");
 }
-
 /*for(GamePlayObject O: Manager.getObjectList())
 {
 	System.out.println( O.getClass().getName() +" with id"+ O.getId()+" of "+O.getOwner().getID()+" has "+O.getHealthPoints()+" HPs");

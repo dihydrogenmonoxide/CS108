@@ -1,6 +1,7 @@
 
 package server.GamePlayObjects;
 
+import java.awt.List;
 import java.util.LinkedList;
 
 import server.Server;
@@ -216,25 +217,25 @@ public class GamePlayObjectManager {
 	 * If Maxrounds <=0 or only one Player is Playing, the Game is ended.
 	 */
 	public void round() throws GameEndedException{
+		
 		if(this.maxRounds<=0 || Server.getPlayers().size()<=1)
 		{
-			throw new GameEndedException();
+			long maxMoney=0;
+			Player winner=null;
+			for(Player p:Server.getPlayers())
+				{
+				if(p.getMoney()>maxMoney)
+				{
+					maxMoney=p.getMoney();
+					winner=p;
+					
+				}
+				
+				}
+			throw new GameEndedException("Game Ended",winner);
 		}
 		else
 		{
-		for (Unit U : Units) {
-			U.moveProv();
-
-		}
-		for (Unit U : Units) {
-			U.move();
-
-		}
-
-		for (Unit U : Units) {
-			U.attack();
-		}
-
 		LinkedList<GamePlayObject> saveAllObjects = new LinkedList<GamePlayObject>();
 
 		for (GamePlayObject e : AllObjects) {
@@ -258,18 +259,38 @@ public class GamePlayObjectManager {
 
 		saveAllObjects.clear();
 
-		for (Defensive D : Defensives) {
-			D.clearTargetList();
-		}
 		
-		for(Player p:Server.getPlayers())
+		LinkedList<Player> Helplist=new LinkedList<Player>(Server.getPlayers()); 
+		for(Player p:Helplist)
 		{
 			if(p.getPopulation()<=0)
 			{
 				deleteAllObjectsOfPlayer(p);
+				Server.removePlayer(p);
 			}
 			
 		}
+		
+		
+		
+		
+		for (Unit U : Units) {
+			U.moveProv();
+
+		}
+		for (Unit U : Units) {
+			U.move();
+
+		}
+
+		for (Unit U : Units) {
+			U.attack();
+		}
+		for (Defensive D : Defensives) {
+			D.clearTargetList();
+		}
+
+
 		this.maxRounds--;
 
 		}

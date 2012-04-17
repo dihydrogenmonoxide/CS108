@@ -101,6 +101,7 @@ implements Runnable
 								
 								if(bq_Queue.isEmpty() && !this.S_socket.isClosed() && b_active)
 								{
+									//TODO SERVER move this to the receiver, as this in fact is rubbish
 									//the wait was interrupted by a timeout, this client has lost the connection!
 									this.P_Parser.Parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT, this);
 									this.b_active = false;

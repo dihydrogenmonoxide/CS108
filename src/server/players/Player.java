@@ -391,7 +391,7 @@ implements Comparable<Player>
 		try
 		{
 			GamePlayObject o = objectStack.pop();
-			o.destruct();
+			o.damage(o.getHealthPoints());
 			sendData(o.toProtocolString());
 		}
 		catch(EmptyStackException e)

@@ -50,7 +50,13 @@ public class GameFieldPanel extends JPanel implements MouseListener
     private Image bil;
     //if the background is rendered already
     boolean isRendered = false;
-
+    int x1,y1;
+    int radius;
+    
+    private boolean pressed=false;
+    
+    
+    
     public GameFieldPanel(Clientsocket s)
     {
         this.socket = s;
@@ -63,9 +69,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
 
         this.setBackground(Color.blue);
-        
-        this.addMouseListener(this);
- 
+         
 
         this.addMouseListener(this);
 
@@ -116,6 +120,10 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
                     g.drawImage(objImg, pixelCoords.width - imageDim / 2, pixelCoords.height - imageDim / 2, 20, 20, null);
                 }
+            }
+            if(pressed){
+            	g.setColor(new Color(255,255,0,90));
+            	g.fillOval((int)(x1-radius/2),(int) (y1-radius/2), 2*radius, 2*radius);
             }
 
         } catch (Exception e)
@@ -199,5 +207,33 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void mouseClicked(MouseEvent e)
     {
+    	int xP= e.getX();
+        int yP= e.getY();
+        target(xP,yP);
+    	
     }
+    
+    public void target(int x , int y){
+    	
+    	/*some problems at the moment!isn't drawing each time you clicked*/
+    	Collection<GameObject> c = RunningGame.getObjects().values();
+        Iterator<GameObject> objIter = c.iterator();
+        GameObject obj = null;
+        while(objIter.hasNext()){
+        	obj = objIter.next();
+        	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
+        	x1= pixelCoords.width - 20 / 2;
+        	y1= pixelCoords.height - 20 / 2;
+
+        }
+        if(x > x1-20 && x < x1+20 && y > y1-20 && y < y1+20){
+    		radius= obj.movingRange();
+    		pressed=true;
+    	}
+    	else{
+    		pressed=false;
+    	}
+    }
+    
+    
 }

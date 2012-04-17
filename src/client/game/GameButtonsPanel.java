@@ -13,20 +13,16 @@ public class GameButtonsPanel extends JPanel{
 	private JButton ready;
 	/**Button for tank*/
 	private JToggleButton tank;
-	/**Button for Radar*/
-	private JToggleButton radar;
 	/**Button for Luftabwehr*/
 	private JToggleButton luftabwehr;
 	/**Button for Landabwehr*/
-	private JToggleButton landabwehr;
+	private JToggleButton bunker;
 	/**Button for Reproduktionszentrum*/
 	private JToggleButton repro;
 	/**Button for Jagdflugzeuge*/
 	private JToggleButton jagd;
 	/**Button for Bomber*/
 	private JToggleButton bomber;
-	/**Button for Raketen*/
-	private JToggleButton rakete;
 	/**Button for Regionalbank*/
 	private JToggleButton geld;
 	/**Time Panel which shows countdown*/
@@ -158,13 +154,13 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(0,20,0,0);
 		this.add(defense, c);
 		
-		ImageIcon rad= new ImageIcon("bilder/Radar.png");
-		rad.setImage(rad.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-		radar= new JToggleButton(rad, false);
-		radar.setAction(new buttonAction(rad, button.RADAR));
-		radar.setBackground(bg);
-		radar.setToolTipText("Radar");
-                radar.setBorder(buttonBorder);
+		ImageIcon lan= new ImageIcon("bilder/Landabwehr.png");
+		lan.setImage(lan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		bunker= new JToggleButton(lan, false);
+		bunker.setAction(new buttonAction(lan, button.BUNKER));
+		bunker.setBackground(bg);
+		bunker.setToolTipText("Landabwehr");
+			bunker.setBorder(buttonBorder);
 		c.ipadx=1;
 		c.ipady=1;
 		c.gridwidth=1;
@@ -172,7 +168,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridx=2;
 		c.gridy=1;
 		c.insets = new Insets(2,20,0,0);
-		this.add(radar, c);
+		this.add(bunker, c);
 		
 		ImageIcon luf= new ImageIcon("bilder/Flugabwehr.png");
 		luf.setImage(luf.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
@@ -185,26 +181,11 @@ public class GameButtonsPanel extends JPanel{
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
-		c.gridx=2;
-		c.gridy=2;
+		c.gridx=3;
+		c.gridy=1;
 		c.insets = new Insets(2,20,0,0);
 		this.add(luftabwehr, c);
 		
-		ImageIcon lan= new ImageIcon("bilder/Landabwehr.png");
-		lan.setImage(lan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-		landabwehr = new JToggleButton(lan, false);
-		landabwehr.setAction(new buttonAction(lan, button.BUNKER));
-		landabwehr.setBackground(bg);
-		landabwehr.setToolTipText("Landabwehr");
-                landabwehr.setBorder(buttonBorder);
-		c.ipadx=1;
-		c.ipady=1;
-		c.gridwidth=1;
-		c.gridheight=1;
-		c.gridx=3;
-		c.gridy=1;
-		c.insets = new Insets(2,0,0,0);
-		this.add(landabwehr, c);
 		
 		JLabel gebaude = new JLabel();
 		gebaude.setText("Aufbauelemente");
@@ -262,13 +243,11 @@ public class GameButtonsPanel extends JPanel{
 		
 		group = new ButtonGroup();
 		group.add(tank);
-		group.add(radar);
+		group.add(bunker);
 		group.add(luftabwehr);
-		group.add(landabwehr);
 		group.add(repro);
 		group.add(jagd);
 		group.add(bomber);
-		group.add(rakete);
 		group.add(geld);
 		
 		this.setOpaque(false);

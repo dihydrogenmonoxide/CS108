@@ -58,4 +58,9 @@ public class GameObject implements DrawableObject
     {
         return location;
     }
+    
+    public int movingRange(){
+    	return type.getMovingRange();
+    }
+    
 }

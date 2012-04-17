@@ -5,10 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameSettings {
+	/*moving and attack ranges are too big*/
+	
 	
 	public static class Tank
 	{
-		final static public int movingRange=10000;
+		final static public int movingRange=10000;	
 		final static public int attackRange=1000;
 		final static public String[] attackableBy = {"Tank", "Building"};
 		final static public int attackPoints=78;

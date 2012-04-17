@@ -198,7 +198,6 @@ public class GamesPanel extends JPanel
     private void makeGameCreator(GridBagConstraints c)
     {
 
-        JButton startButton;
 
         createPanel = new JPanel();
         createPanel.setBackground(new Color(255, 255, 255));
@@ -277,11 +276,9 @@ public class GamesPanel extends JPanel
 
         JButton createButton = new JButton("erstellen");
 
-        startButton = new JButton("Spiel starten");
 
         JPanel buttons = new JPanel();
         buttons.add(createButton);
-        buttons.add(startButton);
 
         createPanel.add(buttons);
 
@@ -299,17 +296,7 @@ public class GamesPanel extends JPanel
             }
         });
 
-        //TODO remove this after testing, game should start automatic.
-        // game should then be started from an GameEvent listener in the ClientLobby. (therefore the lobbyParent parameter is not needed then.)
-        startButton.addActionListener(new ActionListener()
-        {
-
-            public void actionPerformed(final ActionEvent e)
-            {
-                game = new GameFrame(lobbyParent, socket);
-                lobbyParent.setVisible(false);
-            }
-        });
+        
 
 
     }

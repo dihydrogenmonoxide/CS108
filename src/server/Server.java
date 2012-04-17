@@ -85,6 +85,17 @@ implements Comparable<Server>
 		logicManager.startGame();
 		isGameRunning = true;
 	}
+	
+	
+	/**
+	 * This is called when a {@link Player} is defeated
+	 * @param p the {@link Player} to remove
+	 */
+	private void suspendPlayer(Player p)
+	{
+		//TODO server implement
+		
+	}
 
 
 	/**

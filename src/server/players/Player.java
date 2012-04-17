@@ -391,6 +391,7 @@ implements Comparable<Player>
 		try
 		{
 			GamePlayObject o = objectStack.pop();
+			//TODO SERVER refund that poor sucker
 			o.damage(o.getHealthPoints());
 			sendData(o.toProtocolString());
 		}

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Vector;
 
 import server.GamePlayObjects.GamePlayObject;
@@ -34,6 +35,9 @@ implements Comparable<Server>
 		{
 			availableFieldIDs.offer(i);
 		}
+		
+		Collections.shuffle((List<Integer>) availableFieldIDs);
+		
 		s_servername = s_Servername;
 		l_locked = Collections.unmodifiableList(l_players);
 		i_ServerID = i_ID+200;

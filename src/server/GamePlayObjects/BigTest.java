@@ -22,7 +22,7 @@ public class BigTest {
 		for(Player p:s.getPlayers())
 		{	
 			p.addMoney(100000000);
-			p.addPopulation(100000);
+			p.addPopulation(500000);
 			
 			for(int x=0;x<10000;x=x+1)
 			{

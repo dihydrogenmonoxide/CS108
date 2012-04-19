@@ -33,8 +33,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     /**
      * the Height of the Map, is set after rendering.
      */
-    //TODO find relation MAP_Width to MAP_height
-    
     public static int MAP_HEIGHT=(MAP_WIDTH*4/7);
     /**
      * Buffered image to Paint Map
@@ -227,6 +225,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
         }
         if(x > x1-20 && x < x1+20 && y > y1-20 && y < y1+20){
+		//TODO recalculate from swiss coordinates (km) to pixel, might be best to make a static method in Coordinates.java
     		radius= obj.movingRange();
     		pressed=true;
     	}

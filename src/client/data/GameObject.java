@@ -60,7 +60,7 @@ public class GameObject implements DrawableObject
     }
     
     public int movingRange(){
-    	return type.getMovingRange();
+    	return (type.getMovingRange()/100);
     }
     
 }

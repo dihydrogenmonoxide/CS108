@@ -4,10 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import server.MainServer;
-import server.Server;
 import server.exceptions.PlayerNotFoundException;
 import server.net.PlayerSocket;
 import server.players.Player;
+import server.server.Server;
 import shared.Log;
 import shared.Protocol;
 

@@ -1,7 +1,6 @@
 package server.logic;
 
 import server.MainServer;
-import server.Server;
 import server.GamePlayObjects.ATT;
 import server.GamePlayObjects.Bomber;
 import server.GamePlayObjects.Flak;
@@ -13,6 +12,7 @@ import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.parser.Parser;
 import server.players.Player;
+import server.server.Server;
 import shared.Log;
 import shared.Protocol;
 import shared.game.Coordinates;

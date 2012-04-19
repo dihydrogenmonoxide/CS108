@@ -4,9 +4,9 @@ package server.GamePlayObjects;
 import java.awt.List;
 import java.util.LinkedList;
 
-import server.Server;
 import server.exceptions.GameEndedException;
 import server.players.Player;
+import server.server.Server;
 import shared.game.Coordinates;
 
 public class GamePlayObjectManager {

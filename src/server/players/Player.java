@@ -5,12 +5,12 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 import server.MainServer;
-import server.Server;
 import server.GamePlayObjects.ATT;
 import server.GamePlayObjects.Bank;
 import server.GamePlayObjects.GamePlayObject;
 import server.GamePlayObjects.Tank;
 import server.net.*;
+import server.server.Server;
 import shared.Log;
 import shared.Protocol;
 import shared.Settings;

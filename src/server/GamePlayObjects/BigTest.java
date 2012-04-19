@@ -1,9 +1,9 @@
 package server.GamePlayObjects;
 
-import server.Server;
 import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.players.Player;
+import server.server.Server;
 import shared.game.Coordinates;
 import test.gamePlayObjects.TestServer;
 

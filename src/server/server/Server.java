@@ -1,4 +1,4 @@
-package server;
+package server.server;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
+import server.MainServer;
 import server.GamePlayObjects.GamePlayObject;
 import server.GamePlayObjects.GamePlayObjectManager;
 import server.logic.LogicManager;

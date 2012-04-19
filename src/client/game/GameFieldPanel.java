@@ -123,7 +123,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
             }
             if(pressed){
             	g.setColor(new Color(255,255,0,90));
-            	g.fillOval((int)(x1-radius/2),(int) (y1-radius/2), 2*radius, 2*radius);
+            	g.fillOval((x1-radius), (y1-radius), 2*radius, 2*radius);
             }
 
         } catch (Exception e)
@@ -162,7 +162,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void mousePressed(MouseEvent e)
     {
-        Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
+        if(pressed){
+        	
+        }
+        else{
+    	
+    	Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
         Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(e.getX(), e.getY(), new Dimension(MAP_WIDTH, MAP_HEIGHT)));
         Log.DebugLog("sending request to create:" + but.choice);
         switch (but.choice)
@@ -191,6 +196,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
             case NONE:
             default:
         }
+        }
     }
 
     public void mouseReleased(MouseEvent e)
@@ -215,7 +221,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
     public void target(int x , int y){
     	
-    	/*some problems at the moment!isn't drawing each time you clicked*/
     	Collection<GameObject> c = RunningGame.getObjects().values();
         Iterator<GameObject> objIter = c.iterator();
         GameObject obj = null;
@@ -224,15 +229,17 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
         	x1= pixelCoords.width - 20 / 2;
         	y1= pixelCoords.height - 20 / 2;
+            if(x > x1-20 && x < x1+20 && y > y1-20 && y < y1+20){
+        		radius= obj.movingRange();
+        		pressed=true;
+        		break;
+        	}
+        	else{
+        		pressed=false;
+        	}
 
         }
-        if(x > x1-20 && x < x1+20 && y > y1-20 && y < y1+20){
-    		radius= obj.movingRange();
-    		pressed=true;
-    	}
-    	else{
-    		pressed=false;
-    	}
+
     }
     
     

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameSettings {
-	/*moving and attack ranges are too big*/
+	//TODO moving and attack ranges are too big
 	
 	
 	public static class Tank

@@ -5,6 +5,7 @@ import client.data.RunningGame;
 import client.net.Clientsocket;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -47,6 +48,7 @@ public class InnerGameFrame extends JPanel {
 		
 		GameFieldPanel gameField = new GameFieldPanel(socket);
         c.fill = GridBagConstraints.BOTH;
+        gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         c.anchor = GridBagConstraints.CENTER;
 		c.weightx = 4.0;
         c.weighty = 4.0;

@@ -43,6 +43,7 @@ implements Runnable
 	{
 		try
 		{
+			server.resetFields();
 			while(server.isGameRunning())
 			{
 				buildPhase();
@@ -53,7 +54,12 @@ implements Runnable
 		}
 		catch (GameEndedException e)
 		{
-			// TODO SERVER stop server & save score
+			Player winner = e.getWinner();
+			server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+winner.getNick()+" won the game with a "+winner.getMoney()+" points");
+			server.broadcastPreviousWinners();
+			server.addWinner("\t"+winner.getNick()+": "+winner.getMoney()+" points");
+			winner.sendData(Protocol.GAME_LOST_OR_WON.str()+"0");
+			return;
 		}
 	}
 	
@@ -63,7 +69,6 @@ implements Runnable
 		{
 			resendEverything(p);
 		}
-		
 	}
 
 	/**
@@ -136,7 +141,7 @@ implements Runnable
 	
 	public void resendEverything(Player player)
 	{
-		//TODO SERVER make sure that destroyed objects are updated aswell! (and are deleted next round)
+		//TODO SERVER make sure that destroyed objects are updated aswell! (and are deleted next round) <--- test this
 		for(GamePlayObject o :server.getObjectManager().getObjectList())
 		{
 			player.sendData(o.toProtocolString());
@@ -163,7 +168,7 @@ implements Runnable
 		}
 	}
 
-	public void buildObject(String s_MSG, Player player)
+	public void buildObject(String parserString, Player player)
 	{
 		if(server.isPaused())
 		{
@@ -176,7 +181,7 @@ implements Runnable
 			return;
 		}
 		
-		String[] s = s_MSG.split("\\s+");
+		String[] s = parserString.split("\\s+");
 		if(s.length == 4)
 		{
 			int x = Integer.parseInt(s[2]);
@@ -208,7 +213,7 @@ implements Runnable
 						o = new Tank(new Coordinates(x, y), player, server.getObjectManager());
 						break;	
 					default:
-						Log.ErrorLog("Couldn't build the object - \'"+s_MSG+"\' isn't in a valid format");
+						Log.ErrorLog("Couldn't build the object - \'"+parserString+"\' isn't in a valid format");
 						return;
 					}
 					
@@ -225,16 +230,16 @@ implements Runnable
 				
 			}
 		}
-		Log.ErrorLog("Couldn't build the object - \'"+s_MSG+"\' isn't in a valid format");
+		Log.ErrorLog("Couldn't build the object - \'"+parserString+"\' isn't in a valid format");
 	}
 	
 	/**
 	 * updates the given object
-	 * @param s_MSG the options received from the {@link Parser}
+	 * @param parserString the options received from the {@link Parser}
 	 * @param player the {@link Player} requesting the update
 	 */
 
-	public void updateObject(String s_MSG, Player player)
+	public void updateObject(String parserString, Player player)
 	{
 		if(server.isPaused())
 		{
@@ -247,7 +252,7 @@ implements Runnable
 			return;
 		}
 		
-		String[] s = s_MSG.split("\\s+");
+		String[] s = parserString.split("\\s+");
 		if(s.length == 5)
 		{
 			int x = Integer.parseInt(s[2]);
@@ -261,7 +266,7 @@ implements Runnable
 					if(o.getOwner() == player)
 					{
 						o.setTarget(new Coordinates(x, y));
-						//TODO SERVER evaluate whether to send the new position or not
+						player.sendData(o.toProtocolString());
 					}
 					else
 					{
@@ -277,7 +282,7 @@ implements Runnable
 				return;
 			}
 		}
-		Log.ErrorLog("Couldn't move the object - \'"+s_MSG+"\' isn't in a valid format");
+		Log.ErrorLog("Couldn't move the object - \'"+parserString+"\' isn't in a valid format");
 	}
 
 	/**

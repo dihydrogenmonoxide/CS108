@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Vector;
 
 import server.GamePlayObjects.GamePlayObject;
@@ -14,20 +13,25 @@ import server.logic.LogicManager;
 import server.players.*;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
+
+
 public class Server 
 implements Comparable<Server>
 {
-	private List<Player> l_players = new Vector<Player>();
-	private List<Player> l_locked;
-	private String s_servername;
-	private int i_ServerID;
+	private List<Player> playerList = new Vector<Player>();
+	private List<Player> playerListLocked;
+	private String serverName;
+	private int serverID;
 	private Queue<Integer> availableFieldIDs = new LinkedList<Integer>();
 	private int startVotes = 0;
 	private GamePlayObjectManager objectManager;
 	private LogicManager logicManager;
 	private boolean isGameRunning = false;
 	private boolean isPaused = false;
+	private List<String> previousWinners = new Vector<String>();
 	
+	@SuppressWarnings("unchecked")
 	public Server(String s_Servername, int i_ID)
 	
 	{
@@ -38,15 +42,15 @@ implements Comparable<Server>
 		
 		Collections.shuffle((List<Integer>) availableFieldIDs);
 		
-		s_servername = s_Servername;
-		l_locked = Collections.unmodifiableList(l_players);
-		i_ServerID = i_ID+200;
+		serverName = s_Servername;
+		playerListLocked = Collections.unmodifiableList(playerList);
+		serverID = i_ID+200;
 		
 		objectManager = new GamePlayObjectManager(this);
 		logicManager = new LogicManager(this);
 		
 		MainServer.getServerManager().addServer(this);
-		MainServer.printInformation("New server '"+s_servername+"' created");
+		MainServer.printInformation("New server '"+serverName+"' created");
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 	}
 	
@@ -54,7 +58,7 @@ implements Comparable<Server>
 	@Override
 	public int compareTo(Server o)
 	{
-		return o.i_ServerID - this.i_ServerID;
+		return o.serverID - this.serverID;
 	}
 	
 
@@ -64,7 +68,16 @@ implements Comparable<Server>
 	 */
 	public List<Player> getPlayers()
 	{
-		return l_locked;
+		return playerListLocked;
+	}
+	
+	/**
+	 * Adds a winner
+	 * @param winner the winner message
+	 */
+	public void addWinner(String winner)
+	{
+		previousWinners.add(winner);
 	}
 	
 	/**
@@ -76,6 +89,21 @@ implements Comparable<Server>
 		//TODO SERVER uncomment after oli is done testing
 		if(/*l_players.size() > 1 && startVotes > l_players.size() / 2 &*/ !isPaused)
 			startGame();
+	}
+	
+	/**
+	 * broadcasts previous winners
+	 */
+	public void broadcastPreviousWinners()
+	{
+		if(previousWinners.size() > 0)
+		{
+			broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\tPrevious winners:");
+			for(String s : previousWinners)
+			{
+				broadcastMessage(Protocol.CHAT_MESSAGE.str()+s);
+			}
+		}
 	}
 	
 	
@@ -91,10 +119,10 @@ implements Comparable<Server>
 	 * This is called when a {@link Player} is defeated
 	 * @param p the {@link Player} to remove
 	 */
-	private void suspendPlayer(Player p)
+	public void suspendPlayer(Player p)
 	{
-		//TODO server implement
-		
+		broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+p.getNick()+" is defeated!");
+		p.sendData(Protocol.GAME_LOST_OR_WON.str()+"1");
 	}
 
 
@@ -109,21 +137,21 @@ implements Comparable<Server>
 	
 	/**
 	 * Add a {@link Player} to the {@link Server}.
-	 * @param p_Player the {@link Player}
+	 * @param player the {@link Player}
 	 */
-	public void addPlayer(Player p_Player)
+	public void addPlayer(Player player)
 	{	
 		if(isGameRunning)
 		{
-			p_Player.sendData(Protocol.CON_ERROR.str()+"Can't join a running game");
+			player.sendData(Protocol.CON_ERROR.str()+"Can't join a running game");
 		}
 		else
 		{
-			p_Player.setServer(this);
-			process(p_Player, true);
-			p_Player.setFieldID(availableFieldIDs.remove());
-			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_JOIN.str()+this.i_ServerID+" "+p_Player.getID()+" "+p_Player.getNick());
-			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+p_Player.getID());
+			player.setServer(this);
+			process(player, true);
+			player.setFieldID(availableFieldIDs.remove());
+			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_JOIN.str()+this.serverID+" "+player.getID()+" "+player.getNick());
+			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+player.getID());
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
 		}
 	}
@@ -134,7 +162,7 @@ implements Comparable<Server>
 	 */
 	public int getPlayerAmount()
 	{
-		return this.l_locked.size();
+		return this.playerListLocked.size();
 	}
 	
 	/**
@@ -159,43 +187,43 @@ implements Comparable<Server>
 	
 	/**
 	 * Manually remove a player on quit
-	 * @param p_player the player to remove
+	 * @param player the player to remove
 	 */
         
         
-	public void removePlayer(Player p_player)
+	public void removePlayer(Player player)
 	{
 		if(isGameRunning)
 		{
 			//TODO SERVER test if this works; fix round end votes!   
-			for(GamePlayObject o : objectManager.getPlayersObjectList(p_player))
+			for(GamePlayObject o : objectManager.getPlayersObjectList(player))
 			{
-				o.destruct();
+				o.damage(o.getHealthPoints());
 			}
 		}
 		
-		if(p_player.voted())
+		if(player.voted())
 		{
-			p_player.resetVoted();
+			player.resetVoted();
 			startVotes--;
 		}
 		
-		p_player.setServer(null);
-		process(p_player, false);
-		if(p_player.getFieldID() >= 1 && p_player.getFieldID() <= 5)
+		player.setServer(null);
+		process(player, false);
+		if(player.getFieldID() >= 1 && player.getFieldID() <= 5)
 		{
-			availableFieldIDs.offer(p_player.getFieldID());
+			availableFieldIDs.offer(player.getFieldID());
 		}
 		else
 		{
 			Log.ErrorLog("Error: this player hadn't had a valit field ID");
 		}
-		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+p_player.getID());
-		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.i_ServerID+" "+p_player.getID()+" "+p_player.getNick());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+player.getID());
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.serverID+" "+player.getID()+" "+player.getNick());
 		if(this.getPlayerAmount() == 0)
 		{
 			MainServer.getServerManager().removeServer(this);
-			MainServer.printInformation("Server '"+s_servername+"' closed");
+			MainServer.printInformation("Server '"+serverName+"' closed");
 		}			
 		if(!isGameRunning)
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_BROADCAST.str()+this.getID()+" "+this.getPlayerAmount()+"  "+this.getServername());
@@ -217,23 +245,23 @@ implements Comparable<Server>
 		return isPaused;
 	}
 	
-	private synchronized void process(Player p_player, boolean b_add)
+	private synchronized void process(Player player, boolean add)
 	{
-		if(b_add)
+		if(add)
 		{
-			this.l_players.add(p_player);
-			MainServer.printInformation("added "+p_player.getNick()+" to "+this.s_servername);
+			this.playerList.add(player);
+			MainServer.printInformation("added "+player.getNick()+" to "+this.serverName);
 		}
 		else
 		{
-			Iterator<Player> i_players = this.l_players.iterator();
+			Iterator<Player> i_players = this.playerList.iterator();
 			while(i_players.hasNext())
 			{
 				Player p = i_players.next();
-				if(p == p_player)
+				if(p == player)
 				{
 					i_players.remove();
-					MainServer.printInformation("Removed "+p.getNick()+" from "+this.s_servername);					
+					MainServer.printInformation("Removed "+p.getNick()+" from "+this.serverName);					
 				}
 			}
 		}
@@ -245,7 +273,7 @@ implements Comparable<Server>
 	 */
 	public String getServername()
 	{
-		return this.s_servername;
+		return this.serverName;
 	}
 	
 	/**
@@ -264,7 +292,7 @@ implements Comparable<Server>
 	public void resume()
 	{
 		isPaused = false;
-		if(l_players.size() > 1 && startVotes > l_players.size() / 2)
+		if(playerList.size() > 1 && startVotes > playerList.size() / 2)
 			startGame();
 		if(isGameRunning)
 			logicManager.resume();
@@ -277,7 +305,7 @@ implements Comparable<Server>
 	 */
 	public int getID()
 	{
-		return this.i_ServerID;
+		return this.serverID;
 	}
 
 	/**
@@ -286,5 +314,19 @@ implements Comparable<Server>
 	public LogicManager getLogicManager()
 	{
 		return logicManager;
+	}
+
+
+	/**
+	 * resets the money and population
+	 */
+	public void resetFields()
+	{
+		for(Player p : playerList)
+		{
+			p.addMoney(Settings.GameValues.DEFAULT_MONEY-p.getMoney());
+			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION-p.getPopulation());
+		}
+		Log.DebugLog("reset population & money");
 	}
 }

@@ -51,7 +51,7 @@ public class GameSettings {
 		final static public String[] attackable = {""};
 		final static public double attackPoints=0.0014;//Hier, Reproduktionsrate
 		final static public int healthPoints=1000;
-		final static public int ammunation=10;
+		final static public int ammunation=1;
 		final static public int price=7000;
 		
 	}
@@ -87,7 +87,7 @@ public class GameSettings {
 		final static public String[] attackable = {};
 		final static public double attackPoints=0.0001;//Hier:GeldRate
 		final static public int healthPoints=1000;
-		final static public int ammunation=10;
+		final static public int ammunation=1;
 		final static public int price=7000;
 		
 	}

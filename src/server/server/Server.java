@@ -120,6 +120,10 @@ implements Comparable<Server>
 	 * This is called when a {@link Player} is defeated
 	 * @param p the {@link Player} to remove
 	 */
+	//Ich baue jetzt bei mir das Endgültige ignorieren dieses Players ein.
+	//Jetzt ist es noch so dass die Objekte gelöscht werden etc., aber wenn alle
+	//Player bis auf einen Suspended sind, dann geht das Spiel trotzdem weiter.
+	//@author Lucius
 	public void suspendPlayer(Player p)
 	{
 		broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+p.getNick()+" is defeated!");

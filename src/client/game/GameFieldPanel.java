@@ -53,17 +53,25 @@ public class GameFieldPanel extends JPanel implements MouseListener
      */
     private Image dbImage;
     private Graphics dbg;
+    /**Buttonspanel to choce pressed button from ButtonGroup*/
     private GameButtonsPanel but;
     private Clientsocket socket;
     private Image bil;
     //if the background is rendered already
     boolean isRendered = false;
+    /**position to handle the chosen Object from GameObjectList*/
     private int x1,y1;
+    /**radius to move object*/
     private int radius;
+    /**boolean to see if place is free where you want to add Object*/
     private boolean frei= true;
-    private double winkel=0;
+    /**angel for showing the movingRange*/
+    private double angel=0;
+    /**boolean to take object*/
     private boolean pressed=false;
+    /**boolean to draw line*/
     private boolean lineTrue=false;
+    /**List which holds the lines*/
     List<Linie> line = new ArrayList<Linie>();
     
     
@@ -91,7 +99,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     		public void run()
     		{
-    			winkel++;
+    			angel++;
     			repaint();
     		}
     	}, 0, 100);
@@ -147,12 +155,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
       		  	gd.setColor(new Color(0,255,0,(int)farbe));
 
       		  	for(int i=0; i<(360*fact);i++){
-      		  		double rad= Math.toRadians(winkel);
+      		  		double rad= Math.toRadians(angel);
       		  		int x = (int) (Math.cos (rad) * radius);
       		  		int y = (int) (Math.sin (rad) * radius);
       		  		gd.drawLine (x1, y1, x + x1, y + y1);
       		  		gd.setColor(new Color(0,255,0,(int)(farbe)));
-      		  		winkel-=1/fact;
+      		  		angel-=1/fact;
       		  		farbe-=a;
       		  	}
 
@@ -213,6 +221,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	else{
     		if( (x1+radius>=xP) && (x1-radius<=xP) && (y1+radius>=yP) && (y1-radius<=yP)){
     			//TODO update Object list with new Points
+    			//TODO check if line from object is already set
     			Linie li = new Linie(x1,y1,xP,yP);
     			line.add(li);
         	}

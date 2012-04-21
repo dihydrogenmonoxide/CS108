@@ -221,14 +221,16 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	else{
     		if( (x1+radius>=xP) && (x1-radius<=xP) && (y1+radius>=yP) && (y1-radius<=yP)){
     			//TODO update Object list with new Points
-    			//TODO check if line from object is already set
     			Linie li = new Linie(x1,y1,xP,yP);
-    			line.add(li);
+    			if(lineExist(x1, y1)){
+    				line.add(li);
+    				count=1;
+    			}
         	}
     		else{
     			pressed=false;
+        		count=0;
     		}
-    		count=0;
 		}
 
     	
@@ -265,9 +267,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
     			radius= obj.movingRange();
     			pressed=true;
         		frei = false;
-        		count++;
             	x1=x1+10;
             	y1=y1+10;
+//            	ObjectInfo info= new ObjectInfo();
+//            	info.showHealthPoint();
+        		count++;
         		return;
         	}
         	else{
@@ -317,6 +321,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     }
     
     class Linie{
+    	
     	int xs,ys,xe,ye;
     	public Linie(int xstart, int ystart, int xend, int yend){
     		xs=xstart;
@@ -325,5 +330,18 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		ye=yend;
     	}
     	
+    }
+	boolean drawLine= true;
+    boolean lineExist(int xstart, int ystart){
+
+    	for (Linie l : line){
+    		if(l.xs==xstart&&l.ys==ystart){
+    			drawLine=false;
+    			break;
+    		}else{
+    			drawLine=true;
+    		}
+    	}
+		return drawLine;
     }
 }

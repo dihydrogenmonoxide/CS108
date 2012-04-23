@@ -264,13 +264,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	x1= pixelCoords.width - 20 / 2;
         	y1= pixelCoords.height - 20 / 2;
             if(x > x1 && x < x1+20 && y > y1 && y < y1+20){
-    			radius= obj.movingRange();
+    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
     			pressed=true;
         		frei = false;
             	x1=x1+10;
             	y1=y1+10;
-//            	ObjectInfo info= new ObjectInfo();
-//            	info.showHealthPoint();
         		count++;
         		return;
         	}

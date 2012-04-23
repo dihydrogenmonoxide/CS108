@@ -272,6 +272,7 @@ int a=0;
 
     	
     }
+<<<<<<< HEAD
     JButton delete;
     void Button(){
     	if(a==1){
@@ -296,6 +297,81 @@ int a=0;
 		    	inner.revalidate();
 		    	inner.repaint();
 			}    
+=======
+    
+    public void target(int x , int y){
+    	Collection<GameObject> c = RunningGame.getObjects().values();
+        Iterator<GameObject> objIter = c.iterator();
+        GameObject obj = null;
+        while(objIter.hasNext()){
+        	obj = objIter.next();
+        	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
+        	x1= pixelCoords.width - 20 / 2;
+        	y1= pixelCoords.height - 20 / 2;
+            if(x > x1 && x < x1+20 && y > y1 && y < y1+20){
+    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
+    			pressed=true;
+        		frei = false;
+            	x1=x1+10;
+            	y1=y1+10;
+        		count++;
+        		return;
+        	}
+        	else{
+        		pressed=false;
+        		frei = true;
+        	}      	
+
+        }
+
+    }
+    
+    public void add(int x, int y){
+    	if(frei){
+            
+        	
+        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
+            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
+            Log.DebugLog("sending request to create:" + but.choice);
+            switch (but.choice)
+            {
+                case TANK:
+                    spawnObject(x, y, Protocol.OBJECT_TANK);
+                    break;
+                case FIGHTER:
+                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
+                    break;
+                case BOMBER:
+                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
+                    break;
+                case ANTIAIR:
+                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
+                    break;
+                case BUNKER:
+                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
+                    break;
+                case REPRO:
+                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
+                    break;
+                case BANK:
+                    spawnObject(x, y, Protocol.OBJECT_BANK);
+                    break;
+                case NONE:
+                default:
+            }
+        count=0;
+        }
+    }
+    
+    class Linie{
+    	
+    	int xs,ys,xe,ye;
+    	public Linie(int xstart, int ystart, int xend, int yend){
+    		xs=xstart;
+    		ys =ystart;
+    		xe=xend;
+    		ye=yend;
+>>>>>>> caa7a39e3a76cb1fa51268cda00f0eedc70a0143
     	}
 
     }

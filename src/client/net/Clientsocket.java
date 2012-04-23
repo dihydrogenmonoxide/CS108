@@ -64,6 +64,7 @@ implements Runnable
 		
 		try 
 		{
+			//TODO SERVER failure creating objectoutput and or inputstream ("invalid argument")
 			OOS_MSG = new ObjectOutputStream(S_sock.getOutputStream());
 			OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
 			

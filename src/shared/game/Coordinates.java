@@ -120,4 +120,14 @@ public class Coordinates {
             //-- create coordinates
             return new Dimension(pixelX, pixelY);
         }
+      
+      public static int radCoordToPixel(int i, Dimension image){
+    	  if(i==0){
+    		  Log.ErrorLog("Division by Zero, you got a bug in your code");
+    	  }
+    	  int coordDeltaX= coordEndX-coordStartX;
+    	  int rad= i*image.width/coordDeltaX;
+    	  return rad;
+      }
+      
 }

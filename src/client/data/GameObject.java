@@ -58,7 +58,7 @@ public class GameObject implements DrawableObject
     {
         return location;
     }
-    
+    //TODO make methode that gets Pixelvalue out of MovingRange
     public int movingRange(){
     	return (type.getMovingRange()/100);
     }

@@ -6,15 +6,23 @@ import client.events.GameEvent;
 import client.events.GameEventListener;
 import client.events.NetEvent;
 import client.net.Clientsocket;
+
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JPanel;
@@ -45,16 +53,26 @@ public class GameFieldPanel extends JPanel implements MouseListener
      */
     private Image dbImage;
     private Graphics dbg;
+    /**Buttonspanel to choce pressed button from ButtonGroup*/
     private GameButtonsPanel but;
     private Clientsocket socket;
     private Image bil;
     //if the background is rendered already
     boolean isRendered = false;
-    int x1,y1;
-    int radius;
-    
+    /**position to handle the chosen Object from GameObjectList*/
+    private int x1,y1;
+    /**radius to move object*/
+    private int radius;
+    /**boolean to see if place is free where you want to add Object*/
+    private boolean frei= true;
+    /**angel for showing the movingRange*/
+    private double angel=0;
+    /**boolean to take object*/
     private boolean pressed=false;
-    
+    /**boolean to draw line*/
+    private boolean lineTrue=false;
+    /**List which holds the lines*/
+    List<Linie> line = new ArrayList<Linie>();
     
     
     public GameFieldPanel(Clientsocket s)
@@ -75,16 +93,21 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
         //static framerate:
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask()
-        {
+        
+    	timer.scheduleAtFixedRate(new TimerTask()
+    	{
 
-            public void run()
-            {
-                repaint();
-            }
-        }, 0, 300);
+    		public void run()
+    		{
+    			angel++;
+    			repaint();
+    		}
+    	}, 0, 100);
     }
 
+	
+    	
+    
     public void paintComponent(Graphics g)
     {
         boolean logRedraw = false;
@@ -122,9 +145,33 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
             }
             if(pressed){
-            	g.setColor(new Color(255,255,0,90));
-            	g.fillOval((x1-radius), (y1-radius), 2*radius, 2*radius);
+            	double n=60;
+      		  	double fact=3;
+            	double f=360*fact;
+            	double a=n/f;
+            	Graphics2D gd = (Graphics2D) g;
+      		  	gd.setStroke(new BasicStroke(3));
+      		  	double farbe=n;
+      		  	gd.setColor(new Color(0,255,0,(int)farbe));
+
+      		  	for(int i=0; i<(360*fact);i++){
+      		  		double rad= Math.toRadians(angel);
+      		  		int x = (int) (Math.cos (rad) * radius);
+      		  		int y = (int) (Math.sin (rad) * radius);
+      		  		gd.drawLine (x1, y1, x + x1, y + y1);
+      		  		gd.setColor(new Color(0,255,0,(int)(farbe)));
+      		  		angel-=1/fact;
+      		  		farbe-=a;
+      		  	}
+
             }
+            for (Linie l : line)
+            {
+            	g.setColor(Color.orange);
+                g.drawLine(l.xs, l.ys,l.xe,l.ye);
+            }
+            
+            
 
         } catch (Exception e)
         {
@@ -159,44 +206,34 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
         socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
     }
-
+    int count =0;
+    int xP;
+    int yP;
     public void mousePressed(MouseEvent e)
     {
-        if(pressed){
-        	
-        }
-        else{
+    	xP= e.getX();
+        yP= e.getY();
+    	lineTrue=false;
+    	if(count==0){
+    		target(xP,yP);
+    		add(xP,yP);
+    	}
+    	else{
+    		if( (x1+radius>=xP) && (x1-radius<=xP) && (y1+radius>=yP) && (y1-radius<=yP)){
+    			//TODO update Object list with new Points
+    			Linie li = new Linie(x1,y1,xP,yP);
+    			if(lineExist(x1, y1)){
+    				line.add(li);
+    				count=1;
+    			}
+        	}
+    		else{
+    			pressed=false;
+        		count=0;
+    		}
+		}
+
     	
-    	Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
-        Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(e.getX(), e.getY(), new Dimension(MAP_WIDTH, MAP_HEIGHT)));
-        Log.DebugLog("sending request to create:" + but.choice);
-        switch (but.choice)
-        {
-            case TANK:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_TANK);
-                break;
-            case FIGHTER:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_FIGHTER_JET);
-                break;
-            case BOMBER:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_BOMBER);
-                break;
-            case ANTIAIR:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_STATIONARY_ANTI_AIR);
-                break;
-            case BUNKER:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_STATIONARY_ANTI_TANK);
-                break;
-            case REPRO:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_REPRODUCTION_CENTER);
-                break;
-            case BANK:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_BANK);
-                break;
-            case NONE:
-            default:
-        }
-        }
     }
 
     public void mouseReleased(MouseEvent e)
@@ -213,14 +250,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void mouseClicked(MouseEvent e)
     {
-    	int xP= e.getX();
-        int yP= e.getY();
-        target(xP,yP);
+
     	
     }
     
     public void target(int x , int y){
-    	
     	Collection<GameObject> c = RunningGame.getObjects().values();
         Iterator<GameObject> objIter = c.iterator();
         GameObject obj = null;
@@ -229,18 +263,85 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
         	x1= pixelCoords.width - 20 / 2;
         	y1= pixelCoords.height - 20 / 2;
-            if(x > x1-20 && x < x1+20 && y > y1-20 && y < y1+20){
-        		radius= obj.movingRange();
-        		pressed=true;
-        		break;
+            if(x > x1 && x < x1+20 && y > y1 && y < y1+20){
+    			radius= obj.movingRange();
+    			pressed=true;
+        		frei = false;
+            	x1=x1+10;
+            	y1=y1+10;
+//            	ObjectInfo info= new ObjectInfo();
+//            	info.showHealthPoint();
+        		count++;
+        		return;
         	}
         	else{
         		pressed=false;
-        	}
+        		frei = true;
+        	}      	
 
         }
 
     }
     
+    public void add(int x, int y){
+    	if(frei){
+            
+        	
+        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
+            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
+            Log.DebugLog("sending request to create:" + but.choice);
+            switch (but.choice)
+            {
+                case TANK:
+                    spawnObject(x, y, Protocol.OBJECT_TANK);
+                    break;
+                case FIGHTER:
+                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
+                    break;
+                case BOMBER:
+                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
+                    break;
+                case ANTIAIR:
+                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
+                    break;
+                case BUNKER:
+                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
+                    break;
+                case REPRO:
+                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
+                    break;
+                case BANK:
+                    spawnObject(x, y, Protocol.OBJECT_BANK);
+                    break;
+                case NONE:
+                default:
+            }
+        count=0;
+        }
+    }
     
+    class Linie{
+    	
+    	int xs,ys,xe,ye;
+    	public Linie(int xstart, int ystart, int xend, int yend){
+    		xs=xstart;
+    		ys =ystart;
+    		xe=xend;
+    		ye=yend;
+    	}
+    	
+    }
+	boolean drawLine= true;
+    boolean lineExist(int xstart, int ystart){
+
+    	for (Linie l : line){
+    		if(l.xs==xstart&&l.ys==ystart){
+    			drawLine=false;
+    			break;
+    		}else{
+    			drawLine=true;
+    		}
+    	}
+		return drawLine;
+    }
 }

@@ -30,10 +30,11 @@ public class InnerGameFrame extends JPanel {
 	private GameChatPanel gameChat;
 	
 	private JToggleButton ready;
-        
-        
+                
+	GridBagConstraints c;
 	
 	JButton leave;
+	
 	
 	public InnerGameFrame(final GameFrame gameFrame, Clientsocket s){
 		this.socket = s;
@@ -43,10 +44,11 @@ public class InnerGameFrame extends JPanel {
 		
 		
 		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-                
+		c = new GridBagConstraints();
+          
 		
-		GameFieldPanel gameField = new GameFieldPanel(socket);
+		
+		GameFieldPanel gameField = new GameFieldPanel(socket, gameFrame, this, c);
         c.fill = GridBagConstraints.BOTH;
         gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         c.anchor = GridBagConstraints.CENTER;
@@ -126,16 +128,14 @@ public class InnerGameFrame extends JPanel {
 		
 		
 		
-		
 		GlassPane = new GlassPane(game.getContentPane(), socket);
 		game.setGlassPane(GlassPane);
 		
 		
-		
-		
 		this.setOpaque(false);
 	}
-		
 	
+
+		
 }
 

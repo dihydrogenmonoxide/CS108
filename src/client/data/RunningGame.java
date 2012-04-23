@@ -220,4 +220,11 @@ public class RunningGame
     {
         return objects;
     }
+    
+    public static String getHealth(){
+    	//TODO return HealthPoints
+    	String health=Integer.toString(10);
+    	return health;
+    }
+    
 }

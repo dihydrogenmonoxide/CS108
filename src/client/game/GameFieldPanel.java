@@ -10,8 +10,10 @@ import client.net.Clientsocket;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -25,11 +27,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import shared.Log;
 import shared.Protocol;
 import shared.game.Coordinates;
 import shared.game.MapManager;
+import javax.swing.JTextField;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
@@ -59,40 +67,42 @@ public class GameFieldPanel extends JPanel implements MouseListener
     private Image bil;
     //if the background is rendered already
     boolean isRendered = false;
-    /**position to handle the chosen Object from GameObjectList*/
-    private int x1,y1;
-    /**radius to move object*/
-    private int radius;
-    /**boolean to see if place is free where you want to add Object*/
-    private boolean frei= true;
     /**angel for showing the movingRange*/
     private double angel=0;
-    /**boolean to take object*/
-    private boolean pressed=false;
-    /**boolean to draw line*/
-    private boolean lineTrue=false;
-    /**List which holds the lines*/
-    List<Linie> line = new ArrayList<Linie>();
+
+    DrawingObjects dr;
     
+    int xP,yP;
+    GameFrame game;
+    InnerGameFrame inner;
+    GridBagConstraints cl;
+    static int count=0;
+    static List<Lines> line=new ArrayList<Lines>();
     
-    public GameFieldPanel(Clientsocket s)
+        
+    public GameFieldPanel(Clientsocket s, GameFrame gameFrame, InnerGameFrame innerGameFrame, GridBagConstraints c)
     {
+    	this.cl=c;
+    	this.inner = innerGameFrame;
+    	this.game= gameFrame;
         this.socket = s;
 
         this.setPreferredSize(this.getMaximumSize());
 
 
-
-        //TODO decide which field to highlight and which are inactive.
-
-
+        //TODO decide which field to highlight and which are inactive.		
+		
+		
+        
         this.setBackground(Color.blue);
          
-
+        
         this.addMouseListener(this);
-
+        
+        	
         //static framerate:
         Timer timer = new Timer();
+
         
     	timer.scheduleAtFixedRate(new TimerTask()
     	{
@@ -144,7 +154,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                     g.drawImage(objImg, pixelCoords.width - imageDim / 2, pixelCoords.height - imageDim / 2, 20, 20, null);
                 }
             }
-            if(pressed){
+            if(dr.pressed){
             	double n=60;
       		  	double fact=3;
             	double f=360*fact;
@@ -156,20 +166,25 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
       		  	for(int i=0; i<(360*fact);i++){
       		  		double rad= Math.toRadians(angel);
-      		  		int x = (int) (Math.cos (rad) * radius);
-      		  		int y = (int) (Math.sin (rad) * radius);
-      		  		gd.drawLine (x1, y1, x + x1, y + y1);
+      		  		int x = (int) (Math.cos (rad) * dr.radius);
+      		  		int y = (int) (Math.sin (rad) * dr.radius);
+      		  		gd.drawLine (dr.xObject, dr.yObject, x + dr.xObject, y + dr.yObject);
       		  		gd.setColor(new Color(0,255,0,(int)(farbe)));
       		  		angel-=1/fact;
       		  		farbe-=a;
       		  	}
+      		  	
 
+      		  	new ObjectInfo(gd,c);	
             }
-            for (Linie l : line)
-            {
-            	g.setColor(Color.orange);
-                g.drawLine(l.xs, l.ys,l.xe,l.ye);
-            }
+            
+//            if(line!=null){
+            	for (Lines l : line)
+            	{
+            		g.setColor(Color.orange);
+            		g.drawLine(l.xs, l.ys,l.xe,l.ye);
+            	}
+//            }
             
             
 
@@ -206,29 +221,33 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
         socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
     }
-    int count =0;
-    int xP;
-    int yP;
+int a=0;
     public void mousePressed(MouseEvent e)
     {
+    	dr= new DrawingObjects(socket, xP, yP, but, inner, cl);
     	xP= e.getX();
         yP= e.getY();
-    	lineTrue=false;
+        Button();
+    	dr.lineTrue=false;
     	if(count==0){
-    		target(xP,yP);
-    		add(xP,yP);
+//    		button();
+    		dr.target(xP,yP);
+    		dr.add(xP,yP);
+    		a=1;
+
     	}
     	else{
-    		if( (x1+radius>=xP) && (x1-radius<=xP) && (y1+radius>=yP) && (y1-radius<=yP)){
+    		//TODO if does not describe a circle
+    		if( (dr.xObject+dr.radius>=xP) && (dr.xObject-dr.radius<=xP) && (dr.yObject+dr.radius>=yP) && (dr.yObject-dr.radius<=yP)){
     			//TODO update Object list with new Points
-    			Linie li = new Linie(x1,y1,xP,yP);
-    			if(lineExist(x1, y1)){
+    			Lines li = new Lines(dr.xObject,dr.yObject,xP,yP);
+    			if(dr.lineExist(dr.xObject, dr.yObject)){
     				line.add(li);
-    				count=1;
+    				count++;
     			}
         	}
     		else{
-    			pressed=false;
+    			dr.pressed=false;
         		count=0;
     		}
 		}
@@ -253,95 +272,31 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     	
     }
-    
-    public void target(int x , int y){
-    	Collection<GameObject> c = RunningGame.getObjects().values();
-        Iterator<GameObject> objIter = c.iterator();
-        GameObject obj = null;
-        while(objIter.hasNext()){
-        	obj = objIter.next();
-        	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-        	x1= pixelCoords.width - 20 / 2;
-        	y1= pixelCoords.height - 20 / 2;
-            if(x > x1 && x < x1+20 && y > y1 && y < y1+20){
-    			radius= obj.movingRange();
-    			pressed=true;
-        		frei = false;
-            	x1=x1+10;
-            	y1=y1+10;
-//            	ObjectInfo info= new ObjectInfo();
-//            	info.showHealthPoint();
-        		count++;
-        		return;
-        	}
-        	else{
-        		pressed=false;
-        		frei = true;
-        	}      	
-
-        }
-
-    }
-    
-    public void add(int x, int y){
-    	if(frei){
-            
-        	
-        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
-            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
-            Log.DebugLog("sending request to create:" + but.choice);
-            switch (but.choice)
-            {
-                case TANK:
-                    spawnObject(x, y, Protocol.OBJECT_TANK);
-                    break;
-                case FIGHTER:
-                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
-                    break;
-                case BOMBER:
-                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
-                    break;
-                case ANTIAIR:
-                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
-                    break;
-                case BUNKER:
-                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
-                    break;
-                case REPRO:
-                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
-                    break;
-                case BANK:
-                    spawnObject(x, y, Protocol.OBJECT_BANK);
-                    break;
-                case NONE:
-                default:
-            }
-        count=0;
-        }
-    }
-    
-    class Linie{
-    	
-    	int xs,ys,xe,ye;
-    	public Linie(int xstart, int ystart, int xend, int yend){
-    		xs=xstart;
-    		ys =ystart;
-    		xe=xend;
-    		ye=yend;
+    JButton delete;
+    void Button(){
+    	if(a==1){
+			if (count==0){
+				
+				System.out.println("ahsdasdbnjkaskjdbkbansjdasjkdnbkjbaksjdb");
+		//    		delete.setVisible(false);
+				inner.remove(delete);
+				inner.revalidate();
+				inner.repaint();
+			}
+		
+			else{
+		        delete = new JButton("delete");
+				delete.setOpaque(false);
+				cl.gridx=7;
+				cl.gridy=3;
+				inner.add(delete,cl);
+				
+				//TODO add ActionListener to delete Object
+				
+		    	inner.revalidate();
+		    	inner.repaint();
+			}    
     	}
-    	
-    }
-	boolean drawLine= true;
-    boolean lineExist(int xstart, int ystart){
 
-    	for (Linie l : line){
-    		if(l.xs==xstart&&l.ys==ystart){
-    			drawLine=false;
-    			break;
-    		}else{
-    			drawLine=true;
-    		}
-    	}
-		return drawLine;
     }
 }

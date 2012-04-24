@@ -26,97 +26,91 @@ public class DrawingObjects {
 	static int xObject,yObject;
     /**radius to move object*/
     static int radius;
-
-    static int xMouse, yMouse;
+//    /**Point of mouseListener*/
+//    static int xMouse, yMouse;
     /**boolean to see if place is free where you want to add Object*/
     boolean frei= true;
-    
+    /**the Connection made to the Server.*/
     Clientsocket socket;
     /**Buttonspanel to choce pressed button from ButtonGroup*/
     private GameButtonsPanel but;
-    
+    /**delete Button to set Visible true*/
     JButton delete;
-        
-    InnerGameFrame inner;
-    GridBagConstraints cl;
     
-	public DrawingObjects(Clientsocket s, int xP, int yP, GameButtonsPanel butons, InnerGameFrame inner, GridBagConstraints cl){
-		this.cl= cl;
-		this.inner=inner;
+	public DrawingObjects(Clientsocket s, GameButtonsPanel butons, JButton delete){
+		this.delete=delete;
 		this.but=butons;
 		this.socket=s;
-		this.xMouse= xP;
-		this.yMouse=yP;
-		
-
 		
 	}
 	
 	
-	
-	 public void target(int x , int y){
-	    	Collection<GameObject> c = RunningGame.getObjects().values();
-	        Iterator<GameObject> objIter = c.iterator();
-	        GameObject obj = null;
-	        while(objIter.hasNext()){
-	        	obj = objIter.next();
-	        	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
-	        	xObject= pixelCoords.width - 20 / 2;
-	        	yObject= pixelCoords.height - 20 / 2;
-	            if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20){
-	    			radius= obj.movingRange();
-	    			pressed=true;
-	        		frei = false;
-	            	xObject=xObject+10;
-	            	yObject=yObject+10;
-	        		GameFieldPanel.count=1;        		
-	        		return;
-	        	}
-	        	else{
-	        		pressed=false;
-	        		frei = true;
-	        	}      	
+	/**go true every Object which already exists. If point which is pressed equals Object, make pressed true, to draw TargetRadius*/
+	public void target(int x , int y){
+		Collection<GameObject> c = RunningGame.getObjects().values();
+        Iterator<GameObject> objIter = c.iterator();
+        GameObject obj = null;
+        while(objIter.hasNext()){
+        	obj = objIter.next();
+	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
+        	xObject= pixelCoords.width - 20 / 2;
+        	yObject= pixelCoords.height - 20 / 2;
+            if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20){
+    			radius= obj.movingRange();
+    			pressed=true;
+        		frei = false;
+            	xObject=xObject+10;
+            	yObject=yObject+10;
+        		GameFieldPanel.count=1;    
+        		delete.setVisible(true);
+        		return;
+        	}
+        	else{
+        		pressed=false;
+        		frei = true;
+        	}      	
 
-	        }
+        }
 
-	    }
+    }
 	    
-	    public void add(int x, int y){
-	    	if(frei){
-	            
-	        	
-	        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
-	            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
-	            Log.DebugLog("sending request to create:" + but.choice);
-	            switch (but.choice)
-	            {
-	                case TANK:
-	                    spawnObject(x, y, Protocol.OBJECT_TANK);
-	                    break;
-	                case FIGHTER:
-	                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
-	                    break;
-	                case BOMBER:
-	                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
-	                    break;
-	                case ANTIAIR:
-	                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
-	                    break;
-	                case BUNKER:
-	                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
-	                    break;
-	                case REPRO:
-	                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
-	                    break;
-	                case BANK:
-	                    spawnObject(x, y, Protocol.OBJECT_BANK);
-	                    break;
-	                case NONE:
-	                default:
-	            }
-            GameFieldPanel.count=0;
-	        }
-	    }
+	/**add new Objects to the ObjectList*/
+    public void add(int x, int y){
+    	if(frei){
+            
+        	
+        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
+            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
+            Log.DebugLog("sending request to create:" + but.choice);
+            switch (but.choice)
+            {
+                case TANK:
+                    spawnObject(x, y, Protocol.OBJECT_TANK);
+                    break;
+                case FIGHTER:
+                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
+                    break;
+                case BOMBER:
+                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
+                    break;
+                case ANTIAIR:
+                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
+                    break;
+                case BUNKER:
+                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
+                    break;
+                case REPRO:
+                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
+                    break;
+                case BANK:
+                    spawnObject(x, y, Protocol.OBJECT_BANK);
+                    break;
+                case NONE:
+                default:
+            }
+        GameFieldPanel.count=0;
+        }
+    }
     
     
     /**
@@ -131,6 +125,7 @@ public class DrawingObjects {
         socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
     }
 
+    /**check if Object has already a line in this round or not*/
 	boolean drawLine= true;
     boolean lineExist(int xstart, int ystart){
 
@@ -144,7 +139,4 @@ public class DrawingObjects {
     	}
 		return drawLine;
     }
-	int a=0;
-
-
 }

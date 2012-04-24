@@ -16,6 +16,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -69,15 +70,23 @@ public class GameFieldPanel extends JPanel implements MouseListener
     boolean isRendered = false;
     /**angel for showing the movingRange*/
     private double angel=0;
-
-    DrawingObjects dr;
     
+    DrawingObjects dr;
+    /**Point of mousePressed*/
     int xP,yP;
+    /**GameFrame */
     GameFrame game;
+    /**JPanel InnerGameFrame to add deleteButton*/
     InnerGameFrame inner;
+    /**Gridbagcontraints to add Position of delete Button*/
     GridBagConstraints cl;
+    /**Integer to get how many Clicks*/
     static int count=0;
+    /**ArrayList, which holds Lines*/
     static List<Lines> line=new ArrayList<Lines>();
+    /**delete Button which appears, when its Possible to click on it (if target is drawn)*/
+    JButton delete;
+
     
         
     public GameFieldPanel(Clientsocket s, GameFrame gameFrame, InnerGameFrame innerGameFrame, GridBagConstraints c)
@@ -89,6 +98,13 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
         this.setPreferredSize(this.getMaximumSize());
 
+        delete = new JButton("delete");
+		delete.setOpaque(false);
+		cl.gridx=7;
+		cl.gridy=3;
+		delete.setVisible(false);
+		inner.add(delete,cl);
+		//TODO add button Listener
 
         //TODO decide which field to highlight and which are inactive.		
 		
@@ -107,6 +123,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	timer.scheduleAtFixedRate(new TimerTask()
     	{
 
+    		//TODO for oli: is that ok or should angel otherwise be updated?
     		public void run()
     		{
     			angel++;
@@ -164,6 +181,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
       		  	double farbe=n;
       		  	gd.setColor(new Color(0,255,0,(int)farbe));
 
+      		  	/**draws Radar around Object with ObjectRadius*/
       		  	for(int i=0; i<(360*fact);i++){
       		  		double rad= Math.toRadians(angel);
       		  		int x = (int) (Math.cos (rad) * dr.radius);
@@ -221,31 +239,33 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
         socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
     }
-int a=0;
     public void mousePressed(MouseEvent e)
     {
-    	dr= new DrawingObjects(socket, xP, yP, but, inner, cl);
+    	dr= new DrawingObjects(socket,but,delete);
     	xP= e.getX();
         yP= e.getY();
-        Button();
     	dr.lineTrue=false;
+    	/**
+    	 * if count==0 draw new object or draw target around chousen object*/
     	if(count==0){
-//    		button();
     		dr.target(xP,yP);
     		dr.add(xP,yP);
-    		a=1;
 
     	}
+    	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
     	else{
-    		//TODO if does not describe a circle
-    		if( (dr.xObject+dr.radius>=xP) && (dr.xObject-dr.radius<=xP) && (dr.yObject+dr.radius>=yP) && (dr.yObject-dr.radius<=yP)){
+    		delete.setVisible(false);
+    		inner.revalidate();
+    		inner.repaint();
+    		if((xP-dr.xObject)*(xP-dr.xObject)+(yP-dr.yObject)*(yP-dr.yObject)<= (dr.radius*dr.radius)){
     			//TODO update Object list with new Points
     			Lines li = new Lines(dr.xObject,dr.yObject,xP,yP);
     			if(dr.lineExist(dr.xObject, dr.yObject)){
     				line.add(li);
-    				count++;
+//    				count=1;
     			}
         	}
+    		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
     		else{
     			dr.pressed=false;
         		count=0;
@@ -272,107 +292,7 @@ int a=0;
 
     	
     }
-<<<<<<< HEAD
-    JButton delete;
-    void Button(){
-    	if(a==1){
-			if (count==0){
-				
-				System.out.println("ahsdasdbnjkaskjdbkbansjdasjkdnbkjbaksjdb");
-		//    		delete.setVisible(false);
-				inner.remove(delete);
-				inner.revalidate();
-				inner.repaint();
-			}
-		
-			else{
-		        delete = new JButton("delete");
-				delete.setOpaque(false);
-				cl.gridx=7;
-				cl.gridy=3;
-				inner.add(delete,cl);
-				
-				//TODO add ActionListener to delete Object
-				
-		    	inner.revalidate();
-		    	inner.repaint();
-			}    
-=======
     
-    public void target(int x , int y){
-    	Collection<GameObject> c = RunningGame.getObjects().values();
-        Iterator<GameObject> objIter = c.iterator();
-        GameObject obj = null;
-        while(objIter.hasNext()){
-        	obj = objIter.next();
-        	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-        	x1= pixelCoords.width - 20 / 2;
-        	y1= pixelCoords.height - 20 / 2;
-            if(x > x1 && x < x1+20 && y > y1 && y < y1+20){
-    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-    			pressed=true;
-        		frei = false;
-            	x1=x1+10;
-            	y1=y1+10;
-        		count++;
-        		return;
-        	}
-        	else{
-        		pressed=false;
-        		frei = true;
-        	}      	
-
-        }
-
-    }
     
-    public void add(int x, int y){
-    	if(frei){
-            
-        	
-        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
-            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
-            Log.DebugLog("sending request to create:" + but.choice);
-            switch (but.choice)
-            {
-                case TANK:
-                    spawnObject(x, y, Protocol.OBJECT_TANK);
-                    break;
-                case FIGHTER:
-                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
-                    break;
-                case BOMBER:
-                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
-                    break;
-                case ANTIAIR:
-                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
-                    break;
-                case BUNKER:
-                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
-                    break;
-                case REPRO:
-                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
-                    break;
-                case BANK:
-                    spawnObject(x, y, Protocol.OBJECT_BANK);
-                    break;
-                case NONE:
-                default:
-            }
-        count=0;
-        }
-    }
-    
-    class Linie{
     	
-    	int xs,ys,xe,ye;
-    	public Linie(int xstart, int ystart, int xend, int yend){
-    		xs=xstart;
-    		ys =ystart;
-    		xe=xend;
-    		ye=yend;
->>>>>>> caa7a39e3a76cb1fa51268cda00f0eedc70a0143
-    	}
-
-    }
 }

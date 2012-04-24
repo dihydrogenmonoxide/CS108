@@ -4,9 +4,9 @@ package server.GamePlayObjects;
 import java.awt.List;
 import java.util.LinkedList;
 
-import server.Server;
 import server.exceptions.GameEndedException;
 import server.players.Player;
+import server.server.Server;
 import shared.game.Coordinates;
 
 public class GamePlayObjectManager {
@@ -217,8 +217,17 @@ public class GamePlayObjectManager {
 	 * If Maxrounds <=0 or only one Player is Playing, the Game is ended.
 	 */
 	public void round() throws GameEndedException{
-		
-		if(this.maxRounds<=0 || Server.getPlayers().size()<=1)
+		LinkedList<Player> PlayerHelpList1=new LinkedList<Player>(Server.getPlayers());
+		for(Player p:Server.getPlayers())
+		{
+			if(p.getPopulation()<=0)
+			{
+				PlayerHelpList1.remove(p);
+				
+			}
+			
+		}
+		if(this.maxRounds<=0 || PlayerHelpList1.size()<=1)
 		{
 			long maxMoney=0;
 			Player winner=null;
@@ -266,7 +275,7 @@ public class GamePlayObjectManager {
 			if(p.getPopulation()<=0)
 			{
 				deleteAllObjectsOfPlayer(p);
-				Server.removePlayer(p);
+				Server.removePlayer(p);// To do: change to suspendPlayer(p)
 			}
 			
 		}

@@ -1,8 +1,8 @@
 package test.gamePlayObjects;
 
 import server.MainServer;
-import server.Server;
 import server.players.Player;
+import server.server.Server;
 
 public class TestServer 
 {

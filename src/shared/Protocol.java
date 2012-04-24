@@ -94,7 +94,9 @@ public enum Protocol {
 	/**Updates the population size*/
 	GAME_POPULATION(GAME, "POPU"),	
 	/**undo the last built object*/
-	GAME_UNDO(GAME, "UNDO");
+	GAME_UNDO(GAME, "UNDO"),
+	/**tells the client that it should go back into pre game mode*/
+	GAME_LOST_OR_WON(GAME, "LOST");
 	
 	/**holds the String belonging to the Enum.*/
 	private final String message;

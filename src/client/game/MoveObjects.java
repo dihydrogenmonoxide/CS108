@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Line extends JPanel implements ActionListener{
+public class MoveObjects extends JPanel implements ActionListener{
 	Timer timer;
 
 	
@@ -20,7 +20,7 @@ public class Line extends JPanel implements ActionListener{
 	private int yend=110;
 	final double xdif=xend-xstart;
 	double ydif=yend-ystart;
-	public Line() {
+	public MoveObjects() {
 		timer = new Timer(1000, this);
 	    timer.start();
     }

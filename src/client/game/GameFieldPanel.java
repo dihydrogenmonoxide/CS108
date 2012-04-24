@@ -6,22 +6,39 @@ import client.events.GameEvent;
 import client.events.GameEventListener;
 import client.events.NetEvent;
 import client.net.Clientsocket;
+
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import shared.Log;
 import shared.Protocol;
 import shared.game.Coordinates;
 import shared.game.MapManager;
+import javax.swing.JTextField;
 
 public class GameFieldPanel extends JPanel implements MouseListener
 {
@@ -43,46 +60,79 @@ public class GameFieldPanel extends JPanel implements MouseListener
      */
     private Image dbImage;
     private Graphics dbg;
+    /**Buttonspanel to choce pressed button from ButtonGroup*/
     private GameButtonsPanel but;
     private Clientsocket socket;
     private Image bil;
     //if the background is rendered already
     boolean isRendered = false;
-    int x1,y1;
-    int radius;
+    /**angel for showing the movingRange*/
+    private double angel=0;
     
-    private boolean pressed=false;
+    DrawingObjects dr;
+    /**Point of mousePressed*/
+    int xP,yP;
+    /**GameFrame */
+    GameFrame game;
+    /**JPanel InnerGameFrame to add deleteButton*/
+    InnerGameFrame inner;
+    /**Gridbagcontraints to add Position of delete Button*/
+    GridBagConstraints cl;
+    /**Integer to get how many Clicks*/
+    static int count=0;
+    /**ArrayList, which holds Lines*/
+    static List<Lines> line=new ArrayList<Lines>();
+    /**delete Button which appears, when its Possible to click on it (if target is drawn)*/
+    JButton delete;
+
     
-    
-    
-    public GameFieldPanel(Clientsocket s)
+        
+    public GameFieldPanel(Clientsocket s, GameFrame gameFrame, InnerGameFrame innerGameFrame, GridBagConstraints c)
     {
+    	this.cl=c;
+    	this.inner = innerGameFrame;
+    	this.game= gameFrame;
         this.socket = s;
 
         this.setPreferredSize(this.getMaximumSize());
 
+        delete = new JButton("delete");
+		delete.setOpaque(false);
+		cl.gridx=7;
+		cl.gridy=3;
+		delete.setVisible(false);
+		inner.add(delete,cl);
+		//TODO add button Listener
 
-
-        //TODO decide which field to highlight and which are inactive.
-
-
+        //TODO decide which field to highlight and which are inactive.		
+		
+		
+        
         this.setBackground(Color.blue);
          
-
+        
         this.addMouseListener(this);
-
+        
+        	
         //static framerate:
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask()
-        {
 
-            public void run()
-            {
-                repaint();
-            }
-        }, 0, 300);
+        
+    	timer.scheduleAtFixedRate(new TimerTask()
+    	{
+
+    		//TODO for oli: is that ok or should angel otherwise be updated?
+    		public void run()
+    		{
+    			angel++;
+    			repaint();
+    		}
+    	}, 0, 100);
     }
 
+	
+    	
+    
     public void paintComponent(Graphics g)
     {
         boolean logRedraw = false;
@@ -119,10 +169,40 @@ public class GameFieldPanel extends JPanel implements MouseListener
                     g.drawImage(objImg, pixelCoords.width - imageDim / 2, pixelCoords.height - imageDim / 2, 20, 20, null);
                 }
             }
-            if(pressed){
-            	g.setColor(new Color(255,255,0,90));
-            	g.fillOval((int)(x1-radius/2),(int) (y1-radius/2), 2*radius, 2*radius);
+            if(dr.pressed){
+            	double n=60;
+      		  	double fact=3;
+            	double f=360*fact;
+            	double a=n/f;
+            	Graphics2D gd = (Graphics2D) g;
+      		  	gd.setStroke(new BasicStroke(3));
+      		  	double farbe=n;
+      		  	gd.setColor(new Color(0,255,0,(int)farbe));
+
+      		  	/**draws Radar around Object with ObjectRadius*/
+      		  	for(int i=0; i<(360*fact);i++){
+      		  		double rad= Math.toRadians(angel);
+      		  		int x = (int) (Math.cos (rad) * dr.radius);
+      		  		int y = (int) (Math.sin (rad) * dr.radius);
+      		  		gd.drawLine (dr.xObject, dr.yObject, x + dr.xObject, y + dr.yObject);
+      		  		gd.setColor(new Color(0,255,0,(int)(farbe)));
+      		  		angel-=1/fact;
+      		  		farbe-=a;
+      		  	}
+      		  	
+
+      		  	new ObjectInfo(gd,c);	
             }
+            
+//            if(line!=null){
+            	for (Lines l : line)
+            	{
+            		g.setColor(Color.orange);
+            		g.drawLine(l.xs, l.ys,l.xe,l.ye);
+            	}
+//            }
+            
+            
 
         } catch (Exception e)
         {
@@ -157,38 +237,40 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
         socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
     }
-
     public void mousePressed(MouseEvent e)
     {
-        Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + but.choice.toString());
-        Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(e.getX(), e.getY(), new Dimension(MAP_WIDTH, MAP_HEIGHT)));
-        Log.DebugLog("sending request to create:" + but.choice);
-        switch (but.choice)
-        {
-            case TANK:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_TANK);
-                break;
-            case FIGHTER:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_FIGHTER_JET);
-                break;
-            case BOMBER:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_BOMBER);
-                break;
-            case ANTIAIR:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_STATIONARY_ANTI_AIR);
-                break;
-            case BUNKER:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_STATIONARY_ANTI_TANK);
-                break;
-            case REPRO:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_REPRODUCTION_CENTER);
-                break;
-            case BANK:
-                spawnObject(e.getX(), e.getY(), Protocol.OBJECT_BANK);
-                break;
-            case NONE:
-            default:
-        }
+    	dr= new DrawingObjects(socket,but,delete);
+    	xP= e.getX();
+        yP= e.getY();
+    	dr.lineTrue=false;
+    	/**
+    	 * if count==0 draw new object or draw target around chousen object*/
+    	if(count==0){
+    		dr.target(xP,yP);
+    		dr.add(xP,yP);
+
+    	}
+    	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
+    	else{
+    		delete.setVisible(false);
+    		inner.revalidate();
+    		inner.repaint();
+    		if((xP-dr.xObject)*(xP-dr.xObject)+(yP-dr.yObject)*(yP-dr.yObject)<= (dr.radius*dr.radius)){
+    			//TODO update Object list with new Points
+    			Lines li = new Lines(dr.xObject,dr.yObject,xP,yP);
+    			if(dr.lineExist(dr.xObject, dr.yObject)){
+    				line.add(li);
+//    				count=1;
+    			}
+        	}
+    		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
+    		else{
+    			dr.pressed=false;
+        		count=0;
+    		}
+		}
+
+    	
     }
 
     public void mouseReleased(MouseEvent e)
@@ -205,34 +287,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void mouseClicked(MouseEvent e)
     {
-    	int xP= e.getX();
-        int yP= e.getY();
-        target(xP,yP);
+   }
+    
+    
     	
-    }
-    
-    public void target(int x , int y){
-    	
-    	/*some problems at the moment!isn't drawing each time you clicked*/
-    	Collection<GameObject> c = RunningGame.getObjects().values();
-        Iterator<GameObject> objIter = c.iterator();
-        GameObject obj = null;
-        while(objIter.hasNext()){
-        	obj = objIter.next();
-        	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-        	x1= pixelCoords.width - 20 / 2;
-        	y1= pixelCoords.height - 20 / 2;
-
-        }
-        if(x > x1-20 && x < x1+20 && y > y1-20 && y < y1+20){
-		//TODO recalculate from swiss coordinates (km) to pixel, might be best to make a static method in Coordinates.java
-    		radius= obj.movingRange();
-    		pressed=true;
-    	}
-    	else{
-    		pressed=false;
-    	}
-    }
-    
-    
 }

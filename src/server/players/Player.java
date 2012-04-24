@@ -5,12 +5,16 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 import server.MainServer;
-import server.Server;
+import server.GamePlayObjects.ATT;
+import server.GamePlayObjects.Bank;
 import server.GamePlayObjects.GamePlayObject;
+import server.GamePlayObjects.Tank;
 import server.net.*;
+import server.server.Server;
 import shared.Log;
 import shared.Protocol;
 import shared.Settings;
+import shared.game.GameSettings;
 
 public class Player 
 implements Comparable<Player>
@@ -24,8 +28,7 @@ implements Comparable<Player>
 	private boolean b_quit = false;
 	private boolean b_ConnectionLost = false;
 	private int fieldID = 0;
-	//TODO SERVER default money amount?
-	private long money = 1111110;
+	private long money = 0;
 	private long population = 0;
 	private boolean voted = false;
 	private boolean finishedBuilding = false;
@@ -391,7 +394,20 @@ implements Comparable<Player>
 		try
 		{
 			GamePlayObject o = objectStack.pop();
-			//TODO SERVER refund that poor sucker
+			if(o instanceof server.GamePlayObjects.ATT)
+				addMoney(GameSettings.ATT.price);
+			else if(o instanceof server.GamePlayObjects.Tank)
+				addMoney(GameSettings.Tank.price);
+			else if(o instanceof server.GamePlayObjects.Bank)
+				addMoney(GameSettings.Bank.price);
+			else if(o instanceof server.GamePlayObjects.Bomber)
+				addMoney(GameSettings.Bomber.price);
+			else if(o instanceof server.GamePlayObjects.Reproductioncenter)
+				addMoney(GameSettings.Reproductioncenter.price);
+			else if(o instanceof server.GamePlayObjects.Flak)
+				addMoney(GameSettings.Flak.price);
+			else
+				Log.WarningLog("Couldn't refund an object: "+o.getClass());
 			o.damage(o.getHealthPoints());
 			sendData(o.toProtocolString());
 		}

@@ -113,6 +113,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 				dr.pressed=false;
 				delete.setVisible(false);
 				count=0;
+				dr.removeLine(dr.xObject, dr.yObject);
 				
 			}
 		});
@@ -187,7 +188,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
             	double f=360*fact;
             	double a=n/f;
             	gd= (Graphics2D) g;
-            	new ObjectInfo(gd, c, dr.obj);
       		  	gd.setStroke(new BasicStroke(3));
       		  	double farbe=n;
       		  	gd.setColor(new Color(0,255,0,(int)farbe));
@@ -198,12 +198,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
       		  		int x = (int) (Math.cos (rad) * dr.radius);
       		  		int y = (int) (Math.sin (rad) * dr.radius);
       		  		gd.drawLine (dr.xObject, dr.yObject, x + dr.xObject, y + dr.yObject);
-      		  		gd.setColor(new Color(0,255,0,(int)(farbe)));
+      		  		gd.setColor(new Color(131, 245, 44,(int)(farbe)));
       		  		angel-=1/fact;
       		  		farbe-=a;
       		  	}
+      		  	new ObjectInfo(gd, dr.obj);
       		  	
-
             }
             
         	for (Lines l : line)
@@ -257,8 +257,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	 * if count==0 draw new object or draw target around chousen object*/
     	if(count==0){
     		dr.target(xP,yP);
-    		dr.add(xP,yP);
-
+    		dr.addObj(xP,yP);
     	}
     	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
     	else{
@@ -270,7 +269,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     			Lines li = new Lines(dr.xObject,dr.yObject,xP,yP);
     			if(dr.lineExist(dr.xObject, dr.yObject)){
     				line.add(li);
-//    				count=1;
     			}
         	}
     		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/

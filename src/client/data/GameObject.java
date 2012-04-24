@@ -21,6 +21,7 @@ public class GameObject implements DrawableObject
     int playerId;
     int healthPoints;
     Coordinates location;
+    //TODO create Money for each ObjectType
     int money=0;
     
     

@@ -27,8 +27,6 @@ public class ChoseObject {
 	static int xObject,yObject;
     /**radius to move object*/
     static int radius;
-//    /**Point of mouseListener*/
-//    static int xMouse, yMouse;
     /**boolean to see if place is free where you want to add Object*/
     boolean frei= true;
     /**the Connection made to the Server.*/
@@ -54,7 +52,6 @@ public class ChoseObject {
         Iterator<GameObject> objIter = c.iterator();
         while(objIter.hasNext()){
         	obj = objIter.next();
-//  		  	new ObjectInfo(gd,c,obj);	
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width - 20 / 2;
         	yObject= pixelCoords.height - 20 / 2;
@@ -78,7 +75,7 @@ public class ChoseObject {
     }
 	    
 	/**add new Objects to the ObjectList*/
-    public void add(int x, int y){
+    public void addObj(int x, int y){
     	if(frei){
             
         	
@@ -142,5 +139,12 @@ public class ChoseObject {
     		}
     	}
 		return drawLine;
+    }
+    void removeLine(int x, int y){
+    	for(Lines l: GameFieldPanel.line){
+    		if(l.xs==x&&l.ys==y){
+    			GameFieldPanel.line.remove(l);
+    		}    	
+    	}
     }
 }

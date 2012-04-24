@@ -74,7 +74,7 @@ public class InnerGameFrame extends JPanel {
 		c.weighty = 0.0;
 		c.weightx= 0.0;
 		c.anchor = GridBagConstraints.CENTER;
-		c.gridwidth=7;
+		c.gridwidth=10;
 		c.gridx=0;
 		c.gridy=3;
 		this.add(buttons, c);
@@ -122,8 +122,9 @@ public class InnerGameFrame extends JPanel {
 		money.setEditable(false);
         money.setLineWrap(true);
         money.setWrapStyleWord(true);
-		c.gridx=7;
+		c.gridx=4;
 		c.gridy=2;
+		c.insets= new Insets(0, 100, 0, 0);
 		this.add(money,c);
 		
 		

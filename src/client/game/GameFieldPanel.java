@@ -71,7 +71,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     /**angel for showing the movingRange*/
     private double angel=0;
     
-    DrawingObjects dr;
+    ChoseObject dr;
     /**Point of mousePressed*/
     int xP,yP;
     /**GameFrame */
@@ -87,6 +87,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     /**delete Button which appears, when its Possible to click on it (if target is drawn)*/
     JButton delete;
 
+    Graphics2D gd;
     
         
     public GameFieldPanel(Clientsocket s, GameFrame gameFrame, InnerGameFrame innerGameFrame, GridBagConstraints c)
@@ -100,11 +101,21 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
         delete = new JButton("delete");
 		delete.setOpaque(false);
-		cl.gridx=7;
-		cl.gridy=3;
+		cl.gridx=5;
+		cl.gridy=2;
 		delete.setVisible(false);
 		inner.add(delete,cl);
-		//TODO add button Listener
+		
+		delete.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				RunningGame.deleteObject(dr.obj.getID());
+				dr.pressed=false;
+				delete.setVisible(false);
+				count=0;
+				
+			}
+		});
 
         //TODO decide which field to highlight and which are inactive.		
 		
@@ -160,7 +171,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
                     Log.DebugLog("GameField: x=" + obj.getLocation().getX() + " y=" + obj.getLocation().getY() + "berechnet: pixelX=" + pixelCoords.width + " pixelY=" + pixelCoords.height);
                 }
                 //-- draw image
-
                 //-- width of the image
                 int imageDim = 20;
 
@@ -176,7 +186,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
       		  	double fact=3;
             	double f=360*fact;
             	double a=n/f;
-            	Graphics2D gd = (Graphics2D) g;
+            	gd= (Graphics2D) g;
+            	new ObjectInfo(gd, c, dr.obj);
       		  	gd.setStroke(new BasicStroke(3));
       		  	double farbe=n;
       		  	gd.setColor(new Color(0,255,0,(int)farbe));
@@ -193,16 +204,13 @@ public class GameFieldPanel extends JPanel implements MouseListener
       		  	}
       		  	
 
-      		  	new ObjectInfo(gd,c);	
             }
             
-//            if(line!=null){
-            	for (Lines l : line)
+        	for (Lines l : line)
             	{
             		g.setColor(Color.orange);
             		g.drawLine(l.xs, l.ys,l.xe,l.ye);
-            	}
-//            }
+        	}
             
             
 
@@ -241,7 +249,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     }
     public void mousePressed(MouseEvent e)
     {
-    	dr= new DrawingObjects(socket,but,delete);
+    	dr= new ChoseObject(socket,but,delete, gd);
     	xP= e.getX();
         yP= e.getY();
     	dr.lineTrue=false;

@@ -10,7 +10,7 @@ public class GameSettings {
 	
 	public static class Tank
 	{
-		final static public int movingRange=10000;	
+		final static public int movingRange=30000;	
 		final static public int attackRange=1000;
 		final static public String[] attackableBy = {"Tank", "Building"};
 		final static public int attackPoints=78;
@@ -22,7 +22,7 @@ public class GameSettings {
 	
 	public static class Jet
 	{
-		final static public int movingRange=10000;
+		final static public int movingRange=50000;
 		final static public int attackRange=5000;
 		final static public String[] attackableBy = {"Tank", "Building"};
 		final static public int attackPoints=100;
@@ -34,7 +34,7 @@ public class GameSettings {
 	
 	public static class Bomber
 	{
-		final static public int movingRange=100000;
+		final static public int movingRange=200000;
 		final static public int attackRange=5000;
 		final static public String[] attackable = {"Tank", "Building"};
 		final static public int attackPoints=250;

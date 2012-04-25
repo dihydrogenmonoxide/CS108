@@ -23,6 +23,7 @@ public class GameObject
     boolean wasUpdated = false;
     Coordinates location;
     Coordinates oldLocation;
+
     
     
     GameObject(ObjectType type, Coordinates coords, int objectId, int playerId, int healthPoints)

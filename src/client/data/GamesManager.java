@@ -28,26 +28,29 @@ public class GamesManager {
 		}
 		else
 		{
-			Log.DebugLog("GameManager updated game: " + id + " : " + name);
-			games.get(id).setName(name);
-			//playerCount is only important to determine if a game is visible or not
+			
+			games.get(id).setName(name);                     
+		}
+                //playerCount is only important to determine if a game is visible or not
 			//when its visible the playercount will be 0< otherwise the game has started and
 			//is therefore invisible.
 			if(0<playerCount)
 			{
 				games.get(id).setVisible(true);
-			}
+                                Log.DebugLog("GameManager updated game: " + id + " : " + name + " set visible");
+                        }
 			else
 			{
 				games.get(id).setVisible(false);
+                                Log.DebugLog("GameManager updated game: " + id + " : " + name + " set invisible");
 			}
-		}
 	}
         
         /**removes a game from the list.
 	 * @param id the gameId*/
 	public static void removeGame(final int id) 
 	{
+                Log.DebugLog("GameManager removed Game:" + id);
 		games.remove(id);
 	}
         
@@ -121,7 +124,7 @@ public class GamesManager {
 				res.add(v);
 			}
 		}
-		Log.DebugLog("->list refreshed, holding " + res.size() + " games");
+		Log.DebugLog("->list refreshed, holding " + res.size() + " of " + games.size() + "games");
 		return res;
 	}
 	

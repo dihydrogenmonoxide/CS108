@@ -25,7 +25,7 @@ public class ObjectInfo extends JPanel{
 		if(obj!=null){
 			gd.drawString("Lebenspunkte: "+ Integer.toString(obj.getHealth()), 10, 20);    	
     	
-			gd.drawString("Objektwert:  "+Integer.toString(obj.getMoney()), 10, 50);
+			gd.drawString("Objektwert:  "+Long.toString(RunningGame.getMoney()), 10, 50);
 		}
 	}
 	

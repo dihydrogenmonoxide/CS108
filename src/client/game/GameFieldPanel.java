@@ -150,7 +150,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     public void mouseClicked(MouseEvent e)
     {
         //-- make a decision: show objectInfo or create Object:
-
+        // TODO make this decision
         GameButtonsPanel.button choice = GameButtonsPanel.choice;
         Log.DebugLog("User clicked on the map at (" + e.getX() + "," + e.getY() + ") with the button choice: " + choice.toString());
         Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(e.getX(), e.getY(), bgMapDim));

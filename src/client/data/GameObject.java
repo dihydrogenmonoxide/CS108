@@ -1,6 +1,6 @@
 package client.data;
 
-import client.game.DrawableObject;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -14,14 +14,15 @@ import shared.game.GameSettings;
  *
  * @author fox918
  */
-public class GameObject implements DrawableObject
+public class GameObject
 {    
     ObjectType type;
     int objectId;
     int playerId;
     int healthPoints;
+    boolean wasUpdated = false;
     Coordinates location;
-    int money=0;
+    Coordinates oldLocation;
     
     
     GameObject(ObjectType type, Coordinates coords, int objectId, int playerId, int healthPoints)
@@ -35,46 +36,62 @@ public class GameObject implements DrawableObject
     
     public void update(Coordinates coords, int healthPoints)
     {
+        this.oldLocation = this.location;
         this.location = coords;
         this.healthPoints = healthPoints;
+        this.wasUpdated = true;
          //-- determine wheter to delete it (healthpoints == 0)
            if(healthPoints <= 0)
            {
                RunningGame.deleteObject(objectId);
            }
-    }
-    
-    public String makeMove(Coordinates newCoords)
-    {
-        return null;
-        //TODO implement this;
-    }
-    
+    }    
     //TODO markierung if friend or foe
     public BufferedImage getImg(){
         return type.getImg();
+    }
+    /**returns the color of all lines for this object. Depends if friend or foe*/
+    public Color getColor()
+    {
+        //TODO implement friend or foe
+        return new Color (0,255,0);
     }
 
     public Coordinates getLocation()
     {
         return location;
     }
-    //TODO make methode that gets Pixelvalue out of MovingRange
+    
+    public Coordinates getOldLocation()
+    {
+        return oldLocation;
+    }
+    
+    /**if this object was updated since the last toggle.*/
+    public boolean wasUpdated()
+    {
+        return wasUpdated;
+    }
+    
+    /**when the object has been drawn for the new round.*/
+    public void isUpdated()
+    {
+        wasUpdated = false;
+    }
+    
+    /**the moving range of this object.*/
     public int movingRange(){
     	return type.getMovingRange();
     }
     
+    /**the id of this object.*/
     public int getID(){
 		return objectId;
     }
     
+    /**returns the current Healthpoints of the object.*/
     public int getHealth(){
     	return healthPoints;
-    }
-    
-    public int getMoney(){
-    	//TODO add Money to Object
-    	return money;
     }
     
 }

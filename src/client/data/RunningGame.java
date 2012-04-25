@@ -1,6 +1,5 @@
 package client.data;
 
-import client.game.DrawableObject;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,9 +31,11 @@ public class RunningGame
     /**the actual phase the game is in.*/
     static GamePhases state = GamePhases.PAUSE;
     
-    static int money=0;
+    static long myMoney;
+    static long myPopulation;
     
     private static ConcurrentHashMap<Integer, GameObject> objects = new ConcurrentHashMap<Integer, GameObject>();
+    private static int roundNumber;
 
     /**
      * Sets the Build time of the running game. if the Build time is over 0 the
@@ -50,6 +51,7 @@ public class RunningGame
        remainingTime = seconds;
        state = GamePhases.BUILD;
        Log.InformationLog("Entered Build Phase");
+       roundNumber++;
        startTimer();
        }
        else
@@ -177,12 +179,14 @@ public class RunningGame
     {
         return fieldId;
     }
-
-    public static void setMoney(int intArgument, long longArgument)
+    
+    /**sets the money of the current player.*/
+    public static void setMoney(long moneyArg)
     {
-        //TODO RunningGame implement set Money
+        myMoney = moneyArg;
     }
 
+    /**updates an Object, sets  its new configs.*/
     public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId, int playerId, int health)
     {
         GameObject obj = objects.get(objectId);
@@ -202,12 +206,13 @@ public class RunningGame
     
     public static void deleteObject(int objectId)
     {
+         Log.DebugLog("Running Game: deleting object with id:" + objectId);
         objects.remove(objectId);
     }
 
-    public static void setPop(long longArgument)
+    public static void setPop(long populationArg)
     {
-        //TODO RunningGame implement set Population
+        myPopulation = populationArg;
     }
 
     public static ConcurrentHashMap<Integer, GameObject> getObjects()
@@ -215,8 +220,13 @@ public class RunningGame
         return objects;
     }
     
-    public static int getMoney(){
-    	return money;
+    public static long getMoney(){
+    	return myMoney;
     }
     
+    
+    public static int getRoundNr()
+    {
+        return roundNumber;
+    }
 }

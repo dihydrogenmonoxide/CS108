@@ -106,7 +106,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=0;
 		c.gridy=2;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(tank, c);
 
 		ImageIcon jag= new ImageIcon("bilder/Flugzeug.png");
@@ -122,7 +122,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=1;
 		c.gridy=1;
-		c.insets = new Insets(5,40,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(jagd, c);
 		
 		ImageIcon bom= new ImageIcon("bilder/Bomber.png");
@@ -138,12 +138,12 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=0;
 		c.gridy=1;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(bomber, c);
 		
 		
 		JLabel defense = new JLabel();
-		defense.setText("Verteidigungselemente:");
+		defense.setText("Verteidigungselemente");
 		defense.setOpaque(false
 				);
 		defense.setForeground(lblTxtColor);
@@ -151,7 +151,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridwidth = 2;
 		c.gridx = 2;
 		c.gridy = 0;
-		c.insets = new Insets(0,40,0,0);
+		c.insets = new Insets(0,20,0,0);
 		this.add(defense, c);
 		
 		ImageIcon lan= new ImageIcon("bilder/Landabwehr.png");
@@ -167,7 +167,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=2;
 		c.gridy=1;
-		c.insets = new Insets(5,40,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(bunker, c);
 		
 		ImageIcon luf= new ImageIcon("bilder/Flugabwehr.png");
@@ -183,19 +183,19 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=3;
 		c.gridy=1;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(luftabwehr, c);
 		
 		
 		JLabel gebaude = new JLabel();
-		gebaude.setText("Aufbauelemente:");
+		gebaude.setText("Aufbauelemente");
 		gebaude.setOpaque(false);
 		gebaude.setForeground(lblTxtColor);
 		c.fill = GridBagConstraints.LINE_END;
 		c.gridwidth = 2;
 		c.gridx = 4;
 		c.gridy = 0;
-		c.insets = new Insets(0,40,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(gebaude, c);
 		
 		
@@ -212,7 +212,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=4;
 		c.gridy=1;
-		c.insets = new Insets(5,40,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(repro, c);
 		
 		ImageIcon gel= new ImageIcon("bilder/Bank.png");
@@ -228,19 +228,18 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=5;
 		c.gridy=1;
-		c.insets = new Insets(5,40,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(geld, c);
 		
 		
 		
 		time= new TimePanel(game, socket );
-		time.setMinimumSize(new Dimension(200,80));
 		c.gridwidth=3;
 		c.gridheight=3;
 		c.gridx=6;
 		c.gridy=0;
 		this.add(time, c);
-		time.setOpaque(false);
+                time.setOpaque(false);
 		
 		group = new ButtonGroup();
 		group.add(tank);

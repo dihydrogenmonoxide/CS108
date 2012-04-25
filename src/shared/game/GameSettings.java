@@ -22,7 +22,7 @@ public class GameSettings {
 	
 	public static class Jet
 	{
-		final static public int movingRange=45000;
+		final static public int movingRange=50000;
 		final static public int attackRange=5000;
 		final static public String[] attackableBy = {"Tank", "Building"};
 		final static public int attackPoints=100;
@@ -46,7 +46,7 @@ public class GameSettings {
 	
 	public static class Reproductioncenter
 	{
-		final static public int movingRange=0;
+		final static public int movingRange=10000;
 		final static public int attackRange=5000;
 		final static public String[] attackable = {""};
 		final static public double attackPoints=0.0014;//Hier, Reproduktionsrate
@@ -58,7 +58,7 @@ public class GameSettings {
 	
 	public static class Flak
 	{
-		final static public int movingRange=0;
+		final static public int movingRange=10000;
 		final static public int attackRange=5000;
 		final static public String[] attackable = {"Flying"};
 		final static public int attackPoints=10;
@@ -70,7 +70,7 @@ public class GameSettings {
 	
 	public static class ATT
 	{
-		final static public int movingRange=0;
+		final static public int movingRange=10000;
 		final static public int attackRange=5000;
 		final static public String[] attackableBy = {"Tank"};
 		final static public int attackPoints=100;
@@ -82,7 +82,7 @@ public class GameSettings {
 	
 	public static class Bank
 	{
-		final static public int movingRange=0;
+		final static public int movingRange=10000;
 		final static public int attackRange=5000;
 		final static public String[] attackable = {};
 		final static public double attackPoints=0.0001;//Hier:GeldRate

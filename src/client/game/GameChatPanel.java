@@ -61,9 +61,9 @@ public class GameChatPanel extends JPanel {
 
 
 		chatScroll = new JScrollPane(chatPane);
-		c.fill = GridBagConstraints.BOTH;
-		c.ipadx = 240;
-		c.ipady = 400;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipadx = 260;
+		c.ipady = 504;
 		c.weightx = 0.0;
 		c.gridwidth = 10;
 		c.gridheight = 28;

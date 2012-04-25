@@ -224,7 +224,7 @@ public class ClientParser {
 			break;
 
 		case GAME_MONEY:
-			RunningGame.setMoney(msg.getLongArgument(1));
+			RunningGame.setMoney(msg.getIntArgument(1), msg.getLongArgument(2));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_MONEY, msg));
 			break;
 
@@ -236,10 +236,7 @@ public class ClientParser {
                 case GAME_POPULATION:
                         RunningGame.setPop(msg.getLongArgument(1));
                         break;
-                    
-                case GAME_LOST_OR_WON:
-                        this.gameReceived(new GameEvent(msg, Protocol.GAME_LOST_OR_WON,msg));
-                        break;
+
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);
 		}

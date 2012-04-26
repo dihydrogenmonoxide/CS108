@@ -1,10 +1,13 @@
-package client.game;
+package client.game.field;
 
 import client.data.GameObject;
 import client.data.RunningGame;
 import client.events.GameEvent;
 import client.events.GameEventListener;
 import client.events.NetEvent;
+import client.game.GameButtonsPanel;
+import client.game.GameFrame;
+import client.game.InnerGameFrame;
 import client.net.Clientsocket;
 
 import java.awt.BasicStroke;
@@ -26,13 +29,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.Timer;
 
 import shared.Log;
 import shared.Protocol;
@@ -63,7 +66,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     private Image dbImage;
     private Graphics dbg;
     /**Buttonspanel to choce pressed button from ButtonGroup*/
-    private GameButtonsPanel but;
     private Clientsocket socket;
     private Image bil;
     //if the background is rendered already
@@ -88,6 +90,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
     JButton delete;
 
     Graphics2D gd;
+    Timer timerslow;
+    Timer timerfast;
     
         
     public GameFieldPanel(Clientsocket s, GameFrame gameFrame, InnerGameFrame innerGameFrame, GridBagConstraints c)
@@ -110,6 +114,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
 			
 			public void actionPerformed(ActionEvent e) {
 				RunningGame.deleteObject(dr.obj.getID());
+				timerfast.stop();
+				timerslow.start();
 				dr.pressed=false;
 				delete.setVisible(false);
 				count=0;
@@ -128,19 +134,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
         
         	
         //static framerate:
-        Timer timer = new Timer();
-
-        
-    	timer.scheduleAtFixedRate(new TimerTask()
-    	{
-
-    		//TODO for oli: is that ok or should angel otherwise be updated?
-    		public void run()
-    		{
-    			angel++;
-    			repaint();
-    		}
-    	}, 0, 100);
+        timerslow= new Timer(300, new ActionListenerSlow());
+        timerfast= new Timer(1,new ActionListerFast());
+        timerslow.start();
     }
 
 	
@@ -183,7 +179,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
             }
             if(dr.pressed){
             	double n=60;
-      		  	double fact=3;
+      		  	double fact=2;
             	double f=360*fact;
             	double a=n/f;
             	gd= (Graphics2D) g;
@@ -249,7 +245,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     }
     public void mousePressed(MouseEvent e)
     {
-    	dr= new ChoseObject(socket,but,delete, gd);
+    	dr= new ChoseObject(socket,delete, gd, timerslow, timerfast);
     	xP= e.getX();
         yP= e.getY();
     	dr.lineTrue=false;
@@ -275,6 +271,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	}
     		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
     		else{
+    			timerfast.stop();
+    			timerslow.start();
     			dr.pressed=false;
         		count=0;
     		}
@@ -301,6 +299,22 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	
     }
     
-    
+    class ActionListenerSlow implements ActionListener {
+    	  public void actionPerformed(ActionEvent e) {
+
+    		  repaint();
+    		  System.out.println("slow");
+
+    	  }
+    	}
+    class ActionListerFast implements ActionListener {
+    	  public void actionPerformed(ActionEvent e) {
+
+    		  angel++;
+    		  repaint();
+    		  System.out.println("fast");
+
+    	  }
+    	}
     	
 }

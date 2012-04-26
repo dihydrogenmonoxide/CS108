@@ -1,6 +1,7 @@
 package client.data;
 
-import client.game.DrawableObject;
+import client.game.field.DrawableObject;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;

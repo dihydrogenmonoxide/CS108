@@ -249,7 +249,6 @@ public class GameButtonsPanel extends JPanel{
 		group.add(jagd);
 		group.add(bomber);
 		group.add(geld);
-		
 		this.setOpaque(false);
 	}
 }

@@ -1,4 +1,4 @@
-package client.game;
+package client.game.field;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -9,12 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.Timer;
 
 import shared.Log;
 import shared.Protocol;
 import shared.game.Coordinates;
 import client.data.GameObject;
 import client.data.RunningGame;
+import client.game.GameButtonsPanel;
 import client.net.Clientsocket;
 
 public class ChoseObject {
@@ -40,9 +42,12 @@ public class ChoseObject {
     GameObject obj = null;
     Graphics2D gd;
     
-	public ChoseObject(Clientsocket s, GameButtonsPanel butons, JButton delete, Graphics2D gd){
+    Timer timerslow,timerfast;
+    
+	public ChoseObject(Clientsocket s, JButton delete, Graphics2D gd, Timer timerslow, Timer timerfast){
+		this.timerfast=timerfast;
+		this.timerslow=timerslow;
 		this.delete=delete;
-		this.but=butons;
 		this.socket=s;
 		this.gd=gd;
 	}
@@ -54,11 +59,12 @@ public class ChoseObject {
         Iterator<GameObject> objIter = c.iterator();
         while(objIter.hasNext()){
         	obj = objIter.next();
-//  		  	new ObjectInfo(gd,c,obj);	
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width - 20 / 2;
         	yObject= pixelCoords.height - 20 / 2;
             if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20){
+        		timerslow.stop();
+        		timerfast.start();
     			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
         		frei = false;
@@ -69,6 +75,8 @@ public class ChoseObject {
         		return;
         	}
         	else{
+        		timerfast.stop();
+        		timerslow.start();
         		pressed=false;
         		frei = true;
         	}      	
@@ -130,17 +138,13 @@ public class ChoseObject {
     }
 
     /**check if Object has already a line in this round or not*/
-	boolean drawLine= true;
     boolean lineExist(int xstart, int ystart){
 
     	for (Lines l : GameFieldPanel.line){
     		if(l.xs==xstart&&l.ys==ystart){
-    			drawLine=false;
-    			break;
-    		}else{
-    			drawLine=true;
+    			return false;
     		}
     	}
-		return drawLine;
+		return true;
     }
 }

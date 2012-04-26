@@ -1,4 +1,4 @@
-package client.game;
+package client.game.field;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,6 +15,7 @@ import client.data.GameObject;
 import client.data.RunningGame;
 
 public class ObjectInfo extends JPanel{
+	
 
 	public ObjectInfo(Graphics2D gd, Collection<GameObject> c, GameObject obj){
 				

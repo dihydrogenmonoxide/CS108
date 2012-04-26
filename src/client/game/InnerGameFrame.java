@@ -2,6 +2,7 @@ package client.game;
 
 
 import client.data.RunningGame;
+import client.game.field.GameFieldPanel;
 import client.net.Clientsocket;
 
 import java.awt.Color;

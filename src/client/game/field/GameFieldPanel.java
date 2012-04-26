@@ -19,6 +19,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,6 +73,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     boolean isRendered = false;
     /**angel for showing the movingRange*/
     private double angel=0;
+    private double ang=4;
     
     ChoseObject dr;
     /**Point of mousePressed*/
@@ -135,7 +137,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	
         //static framerate:
         timerslow= new Timer(300, new ActionListenerSlow());
-        timerfast= new Timer(1,new ActionListerFast());
+        timerfast= new Timer(5,new ActionListerFast());
         timerslow.start();
     }
 
@@ -178,26 +180,37 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
             }
             if(dr.pressed){
-            	double n=60;
-      		  	double fact=2;
-            	double f=360*fact;
-            	double a=n/f;
+            	double n=20;
+            	double a=n/(360/4);
             	gd= (Graphics2D) g;
-            	new ObjectInfo(gd, c, dr.obj);
-      		  	gd.setStroke(new BasicStroke(3));
+            	//TODO objectinfo throws nullpointer
+//            	new ObjectInfo(gd,dr.obj);
       		  	double farbe=n;
-      		  	gd.setColor(new Color(0,255,0,(int)farbe));
+      		  	Polygon poly = new Polygon();
 
       		  	/**draws Radar around Object with ObjectRadius*/
-      		  	for(int i=0; i<(360*fact);i++){
-      		  		double rad= Math.toRadians(angel);
-      		  		int x = (int) (Math.cos (rad) * dr.radius);
-      		  		int y = (int) (Math.sin (rad) * dr.radius);
-      		  		gd.drawLine (dr.xObject, dr.yObject, x + dr.xObject, y + dr.yObject);
-      		  		gd.setColor(new Color(0,255,0,(int)(farbe)));
-      		  		angel-=1/fact;
+      		  	for(int i=0; i<360/4;i++){
+
+      		  		
+      		  		
+      		  		double rad= Math.toRadians(ang);
+      		  		double rad1= Math.toRadians(angel);
+      		  		
+      		  		int y = (int) (Math.cos (rad) * dr.radius);
+      		  		int y1 = (int) (Math.cos(rad1)*dr.radius);
+      		  		int x = (int) (Math.sin (rad) * dr.radius);
+      		  		int x1 = (int) (Math.sin (rad1) * dr.radius);
+      		  		poly.addPoint(dr.xObject,dr.yObject);
+    		  		poly.addPoint(x1+dr.xObject,y1+dr.yObject);
+      		  		poly.addPoint(x+dr.xObject,y+dr.yObject);
+      		  		gd.setColor(new Color(0,255,0,(int)farbe));
+    		  		gd.fillPolygon(poly);
+
+      		  		ang-=4;
+      		  		angel-=4;
       		  		farbe-=a;
       		  	}
+
       		  	
 
             }
@@ -258,6 +271,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	}
     	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
     	else{
+
     		delete.setVisible(false);
     		inner.revalidate();
     		inner.repaint();
@@ -301,18 +315,17 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
     class ActionListenerSlow implements ActionListener {
     	  public void actionPerformed(ActionEvent e) {
-
-    		  repaint();
     		  System.out.println("slow");
+    		  repaint();
 
     	  }
     	}
     class ActionListerFast implements ActionListener {
     	  public void actionPerformed(ActionEvent e) {
-
-    		  angel++;
-    		  repaint();
     		  System.out.println("fast");
+    		  angel+=4;
+    		  ang+=4;
+    		  repaint();
 
     	  }
     	}

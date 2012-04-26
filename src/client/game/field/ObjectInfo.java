@@ -17,7 +17,7 @@ import client.data.RunningGame;
 public class ObjectInfo extends JPanel{
 	
 
-	public ObjectInfo(Graphics2D gd, Collection<GameObject> c, GameObject obj){
+	public ObjectInfo(Graphics2D gd, GameObject obj){
 				
 		gd.setColor(Color.green);
 		Font f = new Font( Font.SERIF, Font.PLAIN, 18 );

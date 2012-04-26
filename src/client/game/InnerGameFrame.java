@@ -76,13 +76,13 @@ public class InnerGameFrame extends JPanel {
 		c.anchor = GridBagConstraints.CENTER;
 		c.gridwidth=7;
 		c.gridx=0;
-		c.gridy=2;
+		c.gridy=3;
 		this.add(buttons, c);
 		
 		ready= new JToggleButton("ready");
 		ready.setSelected(false);
 		c.gridwidth=1;
-		c.gridx=9;
+		c.gridx=1;
 		c.gridy=2;
 		c.insets= new Insets(0,50,0,0);
 		this.add(ready, c);
@@ -97,8 +97,8 @@ public class InnerGameFrame extends JPanel {
 		
 
 		leave = new JButton("Beenden");
-		c.gridx=9;
-		c.gridy=3;
+		c.gridx=0;
+		c.gridy=2;
 		this.add(leave,c);
 		
 		leave.addActionListener(new ActionListener() {

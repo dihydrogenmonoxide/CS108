@@ -182,12 +182,6 @@ public class RunningGame
     {
         //TODO RunningGame implement set Money
     }
-    public static int getMoney(){
-    	//TODO 
-    	return money;
-    }
-    
-    
 
     public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId, int playerId, int health)
     {
@@ -221,10 +215,8 @@ public class RunningGame
         return objects;
     }
     
-    public static String getHealth(){
-    	//TODO return HealthPoints
-    	String health=Integer.toString(10);
-    	return health;
+    public static int getMoney(){
+    	return money;
     }
     
 }

@@ -535,7 +535,7 @@ public class GamesPanel extends JPanel
     {
         Log.DebugLog("GamesPanel: refresh game list.");
         gamesData = GamesManager.makeVector();
-        Log.DebugLog("-->repaint, How many games here: " + gamesData.size());
+        Log.DebugLog("-->repaint, How many games are displayed: " + gamesData.size());
         updateGameTable();
     }
 

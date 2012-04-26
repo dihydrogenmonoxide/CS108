@@ -16,11 +16,14 @@ import client.data.RunningGame;
 
 public class ObjectInfo extends JPanel{
 
-	public ObjectInfo(Graphics2D gd, Collection<GameObject> c){
+	public ObjectInfo(Graphics2D gd, Collection<GameObject> c, GameObject obj){
 				
 		gd.setColor(Color.green);
-    	gd.drawString("Lebenspunkte: "+ RunningGame.getHealth(), 10, 10);
+		Font f = new Font( Font.SERIF, Font.PLAIN, 18 );
+		gd.setFont(f);
+    	gd.drawString("Lebenspunkte: "+ Integer.toString(obj.getHealth()), 10, 20);    	
     	
+    	gd.drawString("Objektwer:  "+Integer.toString(obj.getMoney()), 10, 50);
     
 	}
 	

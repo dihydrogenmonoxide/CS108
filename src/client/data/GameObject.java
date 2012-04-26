@@ -21,6 +21,7 @@ public class GameObject implements DrawableObject
     int playerId;
     int healthPoints;
     Coordinates location;
+    int money=0;
     
     
     GameObject(ObjectType type, Coordinates coords, int objectId, int playerId, int healthPoints)
@@ -63,6 +64,17 @@ public class GameObject implements DrawableObject
     	return type.getMovingRange();
     }
     
+    public int getID(){
+		return objectId;
+    }
     
+    public int getHealth(){
+    	return healthPoints;
+    }
+    
+    public int getMoney(){
+    	//TODO add Money to Object
+    	return money;
+    }
     
 }

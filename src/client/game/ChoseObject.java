@@ -1,6 +1,7 @@
 package client.game;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import client.data.GameObject;
 import client.data.RunningGame;
 import client.net.Clientsocket;
 
-public class DrawingObjects {
+public class ChoseObject {
 	
     /**boolean to take object*/
     static boolean pressed=false;
@@ -36,12 +37,14 @@ public class DrawingObjects {
     private GameButtonsPanel but;
     /**delete Button to set Visible true*/
     JButton delete;
+    GameObject obj = null;
+    Graphics2D gd;
     
-	public DrawingObjects(Clientsocket s, GameButtonsPanel butons, JButton delete){
+	public ChoseObject(Clientsocket s, GameButtonsPanel butons, JButton delete, Graphics2D gd){
 		this.delete=delete;
 		this.but=butons;
 		this.socket=s;
-		
+		this.gd=gd;
 	}
 	
 	
@@ -49,14 +52,14 @@ public class DrawingObjects {
 	public void target(int x , int y){
 		Collection<GameObject> c = RunningGame.getObjects().values();
         Iterator<GameObject> objIter = c.iterator();
-        GameObject obj = null;
         while(objIter.hasNext()){
         	obj = objIter.next();
+//  		  	new ObjectInfo(gd,c,obj);	
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width - 20 / 2;
         	yObject= pixelCoords.height - 20 / 2;
             if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20){
-    			radius= obj.movingRange();
+    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
         		frei = false;
             	xObject=xObject+10;
@@ -103,6 +106,7 @@ public class DrawingObjects {
                     spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
                     break;
                 case BANK:
+                	//TODO you cant add Bank in Panel
                     spawnObject(x, y, Protocol.OBJECT_BANK);
                     break;
                 case NONE:

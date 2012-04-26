@@ -122,7 +122,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=1;
 		c.gridy=1;
-		c.insets = new Insets(2,5,0,0);
+		c.insets = new Insets(2,20,0,0);
 		this.add(jagd, c);
 		
 		ImageIcon bom= new ImageIcon("bilder/Bomber.png");
@@ -183,7 +183,7 @@ public class GameButtonsPanel extends JPanel{
 		c.gridheight=1;
 		c.gridx=3;
 		c.gridy=1;
-		c.insets = new Insets(2,20,0,0);
+		c.insets = new Insets(2,0,0,0);
 		this.add(luftabwehr, c);
 		
 		
@@ -226,8 +226,8 @@ public class GameButtonsPanel extends JPanel{
 		c.ipady=1;
 		c.gridwidth=1;
 		c.gridheight=1;
-		c.gridx=4;
-		c.gridy=2;
+		c.gridx=5;
+		c.gridy=1;
 		c.insets = new Insets(2,20,0,0);
 		this.add(geld, c);
 		

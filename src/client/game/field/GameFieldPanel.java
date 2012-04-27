@@ -180,8 +180,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
             }
             if(dr.pressed){
-            	double n=255;
-            	double a=n/(360/4);
+        		double n=255;
+        		double a=n/(360/4);
             	gd= (Graphics2D) g;
             
       		  	double farbe=n;

@@ -77,5 +77,8 @@ public class GameObject implements DrawableObject
     	//TODO add Money to Object
     	return money;
     }
+    public boolean hasMovingRange(){
+    	return type.getMovable();
+    }
     
 }

@@ -59,13 +59,13 @@ public class ChoseObject {
         Iterator<GameObject> objIter = c.iterator();
         while(objIter.hasNext()){
         	obj = objIter.next();
-	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
+	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));
         	xObject= pixelCoords.width - 20 / 2;
         	yObject= pixelCoords.height - 20 / 2;
             if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20&&obj.hasMovingRange()){//TODO i don't think thats best way to check for moving range
         		timerslow.stop();
         		timerfast.start();
-    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
+    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));
     			pressed=true;
         		frei = false;
             	xObject=xObject+10;
@@ -91,7 +91,7 @@ public class ChoseObject {
             
         	
         	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
-            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
+            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)));
             Log.DebugLog("sending request to create:" + but.choice);
             switch (but.choice)
             {
@@ -133,8 +133,8 @@ public class ChoseObject {
      */
     public void spawnObject(int x, int y, Protocol obj)
     {
-        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + GameFieldPanel.MAP_WIDTH + ", m_heigth" + GameFieldPanel.MAP_HEIGHT);
-        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
+        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + Background.MAP_WIDTH + ", m_heigth" + Background.MAP_HEIGHT);
+        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)));
     }
 
     /**check if Object has already a line in this round or not*/
@@ -151,8 +151,8 @@ public class ChoseObject {
     void removeLine(int xstart, int ystart){
     	for (Lines l : GameFieldPanel.line){
     		if(l.xs==xstart&&l.ys==ystart){
-    			//TODO if you delete last Element throws exception
     			GameFieldPanel.line.remove(l);
+    			break;
     		}
     	}
     	

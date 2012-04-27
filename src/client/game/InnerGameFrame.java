@@ -2,6 +2,7 @@ package client.game;
 
 
 import client.data.RunningGame;
+import client.game.field.Background;
 import client.game.field.GameFieldPanel;
 import client.net.Clientsocket;
 
@@ -47,9 +48,20 @@ public class InnerGameFrame extends JPanel {
 		this.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
           
+		Background back = new Background();
+        c.fill = GridBagConstraints.BOTH;
+        back.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 4.0;
+        c.weighty = 4.0;
+		c.gridwidth = 6;
+		c.gridx = 0;
+		c.gridy = 0;
+		this.add(back, c);
 		
 		
-		GameFieldPanel gameField = new GameFieldPanel(socket, gameFrame, this, c);
+		
+		GameFieldPanel gameField = new GameFieldPanel(socket, this, c);
         c.fill = GridBagConstraints.BOTH;
         gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         c.anchor = GridBagConstraints.CENTER;

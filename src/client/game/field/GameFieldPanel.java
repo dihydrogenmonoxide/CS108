@@ -46,16 +46,7 @@ import javax.swing.JTextField;
 public class GameFieldPanel extends JPanel implements MouseListener
 {
 
-    /**
-     * the width the map will be rendered
-     */
-    public static int MAP_WIDTH = 500;
-    /**
-     * the Height of the Map, is set after rendering.
-     */
-    //TODO find relation MAP_Width to MAP_height
     
-    public static int MAP_HEIGHT=(MAP_WIDTH*4/7);
     /**
      * Buffered image to Paint Map
      */
@@ -68,8 +59,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     /**Buttonspanel to choce pressed button from ButtonGroup*/
     private Clientsocket socket;
     private Image bil;
-    //if the background is rendered already
-    boolean isRendered = false;
     /**angel for showing the movingRange*/
     private double angel=0;
     private double ang=4;
@@ -77,8 +66,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     ChoseObject dr;
     /**Point of mousePressed*/
     int xP,yP;
-    /**GameFrame */
-    GameFrame game;
     /**JPanel InnerGameFrame to add deleteButton*/
     InnerGameFrame inner;
     /**Gridbagcontraints to add Position of delete Button*/
@@ -95,11 +82,10 @@ public class GameFieldPanel extends JPanel implements MouseListener
     Timer timerfast;
     
         
-    public GameFieldPanel(Clientsocket s, GameFrame gameFrame, InnerGameFrame innerGameFrame, GridBagConstraints c)
+    public GameFieldPanel(Clientsocket s, InnerGameFrame innerGameFrame, GridBagConstraints c)
     {
     	this.cl=c;
     	this.inner = innerGameFrame;
-    	this.game= gameFrame;
         this.socket = s;
 
         this.setPreferredSize(this.getMaximumSize());
@@ -133,7 +119,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
          
         
         this.addMouseListener(this);
-        
+        this.setOpaque(false);
         	
         //static framerate:
         timerslow= new Timer(200, new ActionListenerSlow());
@@ -146,16 +132,16 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
     public void paintComponent(Graphics g)
     {
-        boolean logRedraw = false;
+//        boolean logRedraw = false;
         try
         {
-            //-- paint background
-            g.drawImage(backgroundMap, 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), new Color(0, 0, 0), null);
-            if (logRedraw)
-            {
-                Log.DebugLog("GameField: redrawing now!");
-                Log.DebugLog("map width =" + MAP_WIDTH + " height=" + MAP_HEIGHT);
-            }
+//            //-- paint background
+//            g.drawImage(backgroundMap, 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), new Color(0, 0, 0), null);
+//            if (logRedraw)
+//            {
+//                Log.DebugLog("GameField: redrawing now!");
+//                Log.DebugLog("map width =" + MAP_WIDTH + " height=" + MAP_HEIGHT);
+//            }
             //-- paint objects
             Collection<GameObject> c = RunningGame.getObjects().values();
             Iterator<GameObject> objIter = c.iterator();
@@ -163,11 +149,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
             {
                 GameObject obj = objIter.next();
                 BufferedImage objImg = obj.getImg();
-                Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-                if (logRedraw)
-                {
-                    Log.DebugLog("GameField: x=" + obj.getLocation().getX() + " y=" + obj.getLocation().getY() + "berechnet: pixelX=" + pixelCoords.width + " pixelY=" + pixelCoords.height);
-                }
+                Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));
+                //TODO is this necessary, becaus logredraw is never true
+//                if (logRedraw)
+//                {
+//                    Log.DebugLog("GameField: x=" + obj.getLocation().getX() + " y=" + obj.getLocation().getY() + "berechnet: pixelX=" + pixelCoords.width + " pixelY=" + pixelCoords.height);
+//                }
                 //-- draw image
                 //-- width of the image
                 int imageDim = 20;
@@ -237,14 +224,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void paint(Graphics g)
     {
-        //XXX not exactly nice way to do it
-        if (!isRendered)
-        {
-            MAP_WIDTH = getWidth();
-            backgroundMap = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
-            MAP_HEIGHT = backgroundMap.getHeight();
-            isRendered = true;
-        }
         dbImage = createImage(getWidth(), getHeight());
         dbg = dbImage.getGraphics();
         paintComponent(dbg);
@@ -259,8 +238,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
      */
     public void spawnObject(int x, int y, Protocol obj)
     {
-        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
-        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
+        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + Background.MAP_WIDTH + ", m_heigth" + Background.MAP_HEIGHT);
+        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)));
     }
     public void mousePressed(MouseEvent e)
     {
@@ -288,10 +267,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
     			Lines li = new Lines(dr.xObject,dr.yObject,xP,yP);
     			if(dr.lineExist(dr.xObject, dr.yObject)){
     				line.add(li);
+    				
     			}
     			dr.pressed=false;
     			count=0;
         	}
+    		
     		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
     		else{
     			timerfast.stop();
@@ -334,5 +315,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     	  }
     }
+    
+    
     	
 }

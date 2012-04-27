@@ -5,7 +5,6 @@ import client.data.RunningGame;
 import client.events.GameEvent;
 import client.events.GameEventListener;
 import client.events.NetEvent;
-import client.game.GameButtonsPanel;
 import client.game.GameFrame;
 import client.game.InnerGameFrame;
 import client.net.Clientsocket;
@@ -116,6 +115,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 			
 			public void actionPerformed(ActionEvent e) {
 				RunningGame.deleteObject(dr.obj.getID());
+				dr.removeLine(dr.xObject,dr.yObject);
 				timerfast.stop();
 				timerslow.start();
 				dr.pressed=false;
@@ -136,8 +136,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
         
         	
         //static framerate:
-        timerslow= new Timer(300, new ActionListenerSlow());
-        timerfast= new Timer(5,new ActionListerFast());
+        timerslow= new Timer(200, new ActionListenerSlow());
+        timerfast= new Timer(70,new ActionListerFast());
         timerslow.start();
     }
 
@@ -180,41 +180,47 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
             }
             if(dr.pressed){
-            	double n=20;
+            	double n=255;
             	double a=n/(360/4);
             	gd= (Graphics2D) g;
-            	//TODO objectinfo throws nullpointer
-//            	new ObjectInfo(gd,dr.obj);
+            
       		  	double farbe=n;
-      		  	Polygon poly = new Polygon();
+  		  		double rad= Math.toRadians(ang);
 
+  		  		int y1=0;
+  		  		int x1=0;
+      		  	int y = (int) (Math.cos (rad) * dr.radius);
+      		  	int x = (int) (Math.sin (rad) * dr.radius);
+
+      		  	if(count==1){
+                	ObjectInfo inf =new ObjectInfo(gd, dr.obj);
+      		  	}
+      		  	
       		  	/**draws Radar around Object with ObjectRadius*/
-      		  	for(int i=0; i<360/4;i++){
-
-      		  		
-      		  		
-      		  		double rad= Math.toRadians(ang);
+      		  	for(int i=0; i<360/4-5;i++){
+      		  		Polygon poly= new Polygon();
       		  		double rad1= Math.toRadians(angel);
-      		  		
-      		  		int y = (int) (Math.cos (rad) * dr.radius);
-      		  		int y1 = (int) (Math.cos(rad1)*dr.radius);
-      		  		int x = (int) (Math.sin (rad) * dr.radius);
-      		  		int x1 = (int) (Math.sin (rad1) * dr.radius);
+    		  		y=y1;
+    		  		x=x1;
+      		  		y1 = (int) (Math.cos(rad1)*dr.radius);
+      		
+      		  		x1 = (int) (Math.sin (rad1) * dr.radius);
       		  		poly.addPoint(dr.xObject,dr.yObject);
     		  		poly.addPoint(x1+dr.xObject,y1+dr.yObject);
       		  		poly.addPoint(x+dr.xObject,y+dr.yObject);
       		  		gd.setColor(new Color(0,255,0,(int)farbe));
     		  		gd.fillPolygon(poly);
 
-      		  		ang-=4;
       		  		angel-=4;
       		  		farbe-=a;
       		  	}
 
+
+
       		  	
 
             }
-            
+
         	for (Lines l : line)
             	{
             		g.setColor(Color.orange);
@@ -268,9 +274,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		dr.target(xP,yP);
     		dr.add(xP,yP);
 
+
     	}
     	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
     	else{
+
 
     		delete.setVisible(false);
     		inner.revalidate();
@@ -280,8 +288,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
     			Lines li = new Lines(dr.xObject,dr.yObject,xP,yP);
     			if(dr.lineExist(dr.xObject, dr.yObject)){
     				line.add(li);
-//    				count=1;
     			}
+    			dr.pressed=false;
+    			count=0;
         	}
     		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
     		else{
@@ -315,19 +324,15 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
     class ActionListenerSlow implements ActionListener {
     	  public void actionPerformed(ActionEvent e) {
-    		  System.out.println("slow");
     		  repaint();
 
     	  }
-    	}
+    }
     class ActionListerFast implements ActionListener {
     	  public void actionPerformed(ActionEvent e) {
-    		  System.out.println("fast");
-    		  angel+=4;
-    		  ang+=4;
     		  repaint();
 
     	  }
-    	}
+    }
     	
 }

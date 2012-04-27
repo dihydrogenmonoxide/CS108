@@ -147,4 +147,16 @@ public class ChoseObject {
     	}
 		return true;
     }
+    
+    void removeLine(int xstart, int ystart){
+    	for (Lines l : GameFieldPanel.line){
+    		if(l.xs==xstart&&l.ys==ystart){
+    			//TODO if you delete last Element throws exception
+    			GameFieldPanel.line.remove(l);
+    		}
+    	}
+    	
+    }
+    
+    
 }

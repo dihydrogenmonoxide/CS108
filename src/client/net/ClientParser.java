@@ -224,7 +224,7 @@ public class ClientParser {
 			break;
 
 		case GAME_MONEY:
-			RunningGame.setMoney(msg.getIntArgument(1), msg.getLongArgument(2));
+			RunningGame.setMoney(msg.getLongArgument(1));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_MONEY, msg));
 			break;
 

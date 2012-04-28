@@ -131,7 +131,7 @@ public class InnerGameFrame extends JPanel {
 		money.setFont(f);
 		money.setOpaque(false);
 		money.setForeground(new Color(150,150,150));
-		money.setText("Kontostand: "+ Integer.toString(RunningGame.getMoney()));
+		money.setText("Kontostand: "+ Long.toString(RunningGame.getMoney()));
 		money.setEditable(false);
         money.setLineWrap(true);
         money.setWrapStyleWord(true);

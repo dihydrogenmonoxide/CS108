@@ -1,6 +1,8 @@
 package client.data;
 
 import client.game.field.DrawableObject;
+import java.util.Collection;
+import java.util.Iterator;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,7 +24,7 @@ public class RunningGame
 
     static boolean isRunning = false;
     static int gameId;
-    static int fieldId;
+    static int myFieldId;
     /**the time remaining for the current state. */
     static volatile int remainingTime = 0;
     static Timer timer;
@@ -33,7 +35,10 @@ public class RunningGame
     /**the actual phase the game is in.*/
     static GamePhases state = GamePhases.PAUSE;
     
-    static int money=0;
+    /**the money of the current player*/
+    static long myMoney;
+    /**the population of the current player*/
+    static long myPopulation;
     
     private static ConcurrentHashMap<Integer, GameObject> objects = new ConcurrentHashMap<Integer, GameObject>();
 
@@ -45,9 +50,12 @@ public class RunningGame
      */
     public static void setBuildTime(int seconds)
     {
-       if(0 <= seconds)
-       {
        stopTimer();
+       resetObjectLocations();
+       
+       if(0 < seconds)
+       {
+       //-- stop existing timers.
        remainingTime = seconds;
        state = GamePhases.BUILD;
        Log.InformationLog("Entered Build Phase");
@@ -56,7 +64,11 @@ public class RunningGame
        else
        {
            state = GamePhases.ANIM;
+           Log.InformationLog("exit Build Phase");
        }
+       
+       
+       
     }
     /**this method returns the remaining build time.*/
     public static int getBuildTime(){
@@ -159,8 +171,8 @@ public class RunningGame
     {
         Log.InformationLog("a new game has begun.");
         gameId = gId;
-        fieldId = fId;
-        Log.DebugLog("->initialised a new Game with the id " + gameId + " and the fieldId " + fieldId);
+        myFieldId = fId;
+        Log.DebugLog("->initialised a new Game with the id " + gameId + " and the fieldId " + myFieldId);
         isRunning = true;
     }
 
@@ -171,19 +183,22 @@ public class RunningGame
     public static void hardReset()
     {
         //TODO RunningGame implement hard reset
+        myPopulation = 0;
+        myMoney = 0;
+        myFieldId = 0;
+        objects.clear();
         isRunning = false;
     }
+   
 
-    public static int getMyFieldId()
-    {
-        return fieldId;
-    }
-
-    public static void setMoney(int intArgument, long longArgument)
-    {
-        //TODO RunningGame implement set Money
-    }
-
+    /**creates an object if it doesn't exist, otherwise an existing object will be updated.
+     * @param objectType the type of the object
+     * @param xCoords new x Coordinates
+     * @param yCoords new y Coordinates
+     * @param playerId the player Id
+     * @param objectId the id of this object
+     * @param health the new health of this object
+     */
     public static void updateObj(Protocol objectType, int xCoords, int yCoords, int objectId, int playerId, int health)
     {
         GameObject obj = objects.get(objectId);
@@ -201,23 +216,69 @@ public class RunningGame
         }
     }
     
+    /**deletes the object with the given id
+     * @param objectId the id of the object
+     */
     public static void deleteObject(int objectId)
     {
+        Log.DebugLog("object with the id=" + objectId + " has been removed");
         objects.remove(objectId);
     }
 
-    public static void setPop(long longArgument)
+    /**set my population.*/
+    public static void setPop(long population)
     {
-        //TODO RunningGame implement set Population
+        myPopulation = population;
+    }
+    
+    /**set my money.*/
+     public static void setMoney(long money)
+    {
+        myMoney = money;
     }
 
+     /** returns all objects which the client knows
+      * @return all objects
+      */
     public static ConcurrentHashMap<Integer, GameObject> getObjects()
     {
         return objects;
     }
     
-    public static int getMoney(){
-    	return money;
+    /**returns myMoney.
+     * @return my Money
+     */
+    public static long getMoney(){
+    	return myMoney;
+    }
+    
+        /**returns my Population.
+     * @return my Population
+     */
+    public static long getPopulation(){
+    	return myPopulation;
+    }
+
+    /**returns the field id of the given Player.
+     * @return the field id of the given Player
+     */
+    public static int getMyFieldId()
+    {
+        return myFieldId;
+    }
+    
+    /**resets the oldLocation of all GameObjects.
+     * this is to tell them that a new round has begun and
+     * the objects have not been moved since.
+     */
+    private static void resetObjectLocations()
+    {
+            Collection<GameObject> c = objects.values();
+            Iterator<GameObject> objIter = c.iterator();
+            while (objIter.hasNext())
+            {
+                objIter.next().resetOldLocation();
+            }
     }
     
 }

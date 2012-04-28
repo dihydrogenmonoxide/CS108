@@ -1,11 +1,8 @@
 package client.data;
 
 import client.game.field.DrawableObject;
-import java.util.Collection;
-import java.util.Iterator;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import java.awt.Color;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import shared.Log;
 import shared.Protocol;
@@ -40,6 +37,17 @@ public class RunningGame
     /**the population of the current player*/
     static long myPopulation;
     
+    //-- color management
+    static Color myColor = new Color(255, 51, 204);
+    static Color firstEnemy = new Color(51, 204, 255);
+    static Color secondEnemy = new Color(51, 255, 102);
+    static Color thirdEnemy = new Color(255, 204, 51);
+    static Color fourthEnemy = new Color(12, 12, 12);
+    static Color[] enemyColors = { firstEnemy, secondEnemy, thirdEnemy, fourthEnemy };
+    static int colorCounter;
+    static HashMap<Integer, Color> playerColor = new HashMap<Integer, Color>();
+    
+    //-- object management
     private static ConcurrentHashMap<Integer, GameObject> objects = new ConcurrentHashMap<Integer, GameObject>();
 
     /**
@@ -279,6 +287,33 @@ public class RunningGame
             {
                 objIter.next().resetOldLocation();
             }
+    }
+    
+    /** returns a color for each player.
+     * @param playerId the if of the player.
+     */
+    public static Color getPlayerColor(int playerId)
+    { 
+       Color temp = new Color(0,0,0);
+       
+       //-- check if it's me
+       if(playerId == PlayerManager.myId())
+       {
+           temp = myColor;
+       }
+       
+       //-- get color for enemy
+       if(null == playerColor.get(playerId))
+       {
+           playerColor.put(playerId, enemyColors[colorCounter]);
+          
+       }
+       else
+       {
+           temp = playerColor.get(playerId);
+       }
+       
+       return temp;
     }
     
 }

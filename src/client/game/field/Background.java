@@ -11,11 +11,13 @@ import client.data.RunningGame;
 import shared.Log;
 import shared.game.MapManager;
 
-public class Background extends JPanel{
-	 /**
+public class Background extends JPanel
+{
+
+    /**
      * Buffered image to Paint Map
      */
-    private BufferedImage backgroundMap;
+    private BufferedImage bgMap;
     /**
      * the width the map will be rendered
      */
@@ -23,39 +25,28 @@ public class Background extends JPanel{
     /**
      * the Height of the Map, is set after rendering.
      */
-    
-    public static int MAP_HEIGHT=(MAP_WIDTH*4/7);
-    
-    boolean isRendered=false;
-    
-    
-	
-	
-	public Background(){
-		
-	}
-	
-	public void paint(Graphics g){
-		boolean logRedraw=false;
-        //-- paint background
-		rendered();
-        g.drawImage(backgroundMap, 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), new Color(0, 0, 0), null);
-        if (logRedraw)
-        {
-            Log.DebugLog("GameField: redrawing now!");
-            Log.DebugLog("map width =" + MAP_WIDTH + " height=" + MAP_HEIGHT);
-        }
-		
-	}
+    public static int MAP_HEIGHT = (MAP_WIDTH * 4 / 7);
 
-	void rendered(){
-		   //XXX not exactly nice way to do it
-        if (!isRendered)
+    public Background()
+    {
+        
+    }
+    
+    /**this function will render the background map of the game*/
+    public void paint(Graphics g)
+    {        
+        //-- determine if we have to render the map (when the size changes or at the start)
+        if (bgMap == null || bgMap.getWidth() != getWidth())
         {
-            MAP_WIDTH = getWidth();
-            backgroundMap = MapManager.renderMap(RunningGame.getMyFieldId(), MAP_WIDTH);
-            MAP_HEIGHT = backgroundMap.getHeight();
-            isRendered = true;
+            Log.DebugLog("Map manager: rendered Map");
+            //-- render map
+            bgMap = MapManager.renderMap(RunningGame.getMyFieldId(), this.getWidth());
+            MAP_WIDTH = bgMap.getWidth();
+            MAP_HEIGHT = bgMap.getHeight();
         }
-	}
+
+        //-- paint background
+        g.drawImage(bgMap, 0, 0, bgMap.getWidth(), bgMap.getHeight(), 0, 0, bgMap.getWidth(), bgMap.getHeight(), Color.BLACK, null);
+    }
 }
+

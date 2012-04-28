@@ -172,7 +172,7 @@ public class ClientParser {
 		{
 		case GAME_BROADCAST:
 			Log.DebugLog("-->game broadcast: " + msg);
-			GamesManager.addGame(msg.getIntArgument(1),msg.getIntArgument(2),msg.getStringArgument(3)); //XXX ugly
+			GamesManager.addGame(msg.getIntArgument(1),msg.getIntArgument(2),msg.getStringArgument(3));
 			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
 		case GAME_JOIN:

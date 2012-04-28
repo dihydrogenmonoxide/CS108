@@ -38,11 +38,11 @@ public class RunningGame
     static long myPopulation;
     
     //-- color management
-    static Color myColor = new Color(255, 51, 204);
+    static Color myColor = new Color(0 , 61, 245);
     static Color firstEnemy = new Color(51, 204, 255);
     static Color secondEnemy = new Color(51, 255, 102);
     static Color thirdEnemy = new Color(255, 204, 51);
-    static Color fourthEnemy = new Color(12, 12, 12);
+    static Color fourthEnemy = new Color(255, 51, 204);
     static Color[] enemyColors = { firstEnemy, secondEnemy, thirdEnemy, fourthEnemy };
     static int colorCounter;
     static HashMap<Integer, Color> playerColor = new HashMap<Integer, Color>();
@@ -190,7 +190,9 @@ public class RunningGame
      */
     public static void hardReset()
     {
-        //TODO RunningGame implement hard reset
+        stopTimer();
+        isPaused = false;
+        state = GamePhases.PAUSE;
         myPopulation = 0;
         myMoney = 0;
         myFieldId = 0;
@@ -294,19 +296,18 @@ public class RunningGame
      */
     public static Color getPlayerColor(int playerId)
     { 
-       Color temp = null;
-       
        //-- check if it's me
        if(playerId == PlayerManager.myId())
        {
-           temp = myColor;
+           return myColor;
        }
        
        //-- get color for enemy
+       Color temp = null;
        if(null == playerColor.get(playerId))
        {
            playerColor.put(playerId, enemyColors[colorCounter]);
-          
+           colorCounter++;
        }
        else
        {

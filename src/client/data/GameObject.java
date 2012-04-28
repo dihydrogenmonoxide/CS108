@@ -89,20 +89,27 @@ public class GameObject implements DrawableObject
      * @return the image of this object
      */
     public BufferedImage getImg(){
-        int border = 2;
+        //-- how thick the border should be
+        int border = 50;
         
         //-- if image has not been created yet.
         if(image == null)
         {
             BufferedImage typeImg = type.getImg();
-            image = new BufferedImage(typeImg.getWidth()+border, typeImg.getHeight()+border, BufferedImage.TYPE_INT_BGR);
+            image = new BufferedImage(typeImg.getWidth()+border*2, typeImg.getHeight()+border*2, BufferedImage.TYPE_INT_ARGB);
             Graphics g = image.getGraphics();
             //-- set color
             g.setColor(RunningGame.getPlayerColor(playerId));
             
-            //-- draw to image
-            g.drawRect(0, 0, image.getWidth(), image.getHeight());
-            g.drawImage(typeImg, border, border, null);
+            //-- drawing border
+            for(int i=0; i <= border;i++)
+            {
+                //-- used this way, otherwise the inner frame wouldn't be translucent
+                g.drawRect(i, i, image.getWidth()-i*2, image.getHeight()-i*2);
+            }
+            
+            //-- drawing image
+            g.drawImage(typeImg, border, border, typeImg.getWidth(), typeImg.getHeight(), null);
         }
         return image;
     }
@@ -154,7 +161,7 @@ public class GameObject implements DrawableObject
      * @return whether this object is movable or not.
      */
     public boolean isMovable(){
-    	return type.isMovable();
+    	return type.isMovable() && !hasMoved();
     }
     
     /** whether this object can be selected or not.

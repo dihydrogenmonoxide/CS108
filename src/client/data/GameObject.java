@@ -1,8 +1,10 @@
 package client.data;
 
 import client.game.field.DrawableObject;
+import java.awt.Color;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import shared.Protocol;
@@ -19,6 +21,7 @@ import shared.game.GameSettings;
 public class GameObject implements DrawableObject
 {    
     ObjectType type;
+    BufferedImage image;
     int objectId;
     int playerId;
     int healthPoints;
@@ -81,12 +84,26 @@ public class GameObject implements DrawableObject
     
     
     /** get the image which represents this object.
+     * Draws a border with the color of the player around it's image.
      * @return the image of this object
      */
     public BufferedImage getImg(){
-        //TODO markierung if friend or foe
-    
-        return type.getImg();
+        int border = 2;
+        
+        //-- if image has not been created yet.
+        if(image == null)
+        {
+            BufferedImage typeImg = type.getImg();
+            image = new BufferedImage(typeImg.getWidth()+border, typeImg.getHeight()+border, BufferedImage.TYPE_INT_BGR);
+            Graphics g = image.getGraphics();
+            //-- set color
+            g.setColor(RunningGame.getPlayerColor(playerId));
+            
+            //-- draw to image
+            g.drawRect(0, 0, image.getWidth(), image.getHeight());
+            g.drawImage(typeImg, border, border, null);
+        }
+        return image;
     }
 
     /** get the Location of this object.

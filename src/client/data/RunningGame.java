@@ -294,7 +294,7 @@ public class RunningGame
      */
     public static Color getPlayerColor(int playerId)
     { 
-       Color temp = new Color(0,0,0);
+       Color temp = null;
        
        //-- check if it's me
        if(playerId == PlayerManager.myId())

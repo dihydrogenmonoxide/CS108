@@ -339,6 +339,11 @@ public class ATT implements GamePlayObject, Defensive, Building, Unit {
 	{
 		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_STATIONARY_ANTI_TANK.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
+        
+        public String toTargetString()
+        {
+            return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_STATIONARY_ANTI_TANK.str()+target.getX()+" "+target.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
+        }
 }
 
 

@@ -266,7 +266,7 @@ implements Runnable
 					if(o.getOwner() == player)
 					{
 						o.setTarget(new Coordinates(x, y));
-						player.sendData(o.toProtocolString());
+						player.sendData(o.toTargetString());
 					}
 					else
 					{
@@ -305,5 +305,5 @@ implements Runnable
 	{
 		isPaused = true;
 		server.broadcastMessage(Protocol.GAME_PAUSE.str());
-	}
+        }
 }

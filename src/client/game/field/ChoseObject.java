@@ -23,8 +23,6 @@ public class ChoseObject {
 	
     /**boolean to take object*/
     static boolean pressed=false;
-    /**boolean to draw line*/
-    static boolean lineTrue=false;
     /**position to handle the chosen Object from GameObjectList*/
 	static int xObject,yObject;
     /**radius to move object*/
@@ -39,7 +37,7 @@ public class ChoseObject {
     private GameButtonsPanel but;
     /**delete Button to set Visible true*/
     JButton delete;
-    GameObject obj = null;
+    GameObject obj;
     Graphics2D gd;
     
     Timer timerslow,timerfast;
@@ -56,23 +54,22 @@ public class ChoseObject {
 	/**go true every Object which already exists. If point which is pressed equals Object, make pressed true, to draw TargetRadius*/
 	public void target(int x , int y){
 		Collection<GameObject> c = RunningGame.getObjects().values();
-        Iterator<GameObject> objIter = c.iterator();
+                Iterator<GameObject> objIter = c.iterator();
         while(objIter.hasNext()){
         	obj = objIter.next();
-	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));
+	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width - 20 / 2;
         	yObject= pixelCoords.height - 20 / 2;
             if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20&&obj.isMovable()){//TODO i don't think thats best way to check for moving range
         		timerslow.stop();
         		timerfast.start();
-    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));
+    			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
         		frei = false;
-            	xObject=xObject+10;
-            	yObject=yObject+10;
-        		GameFieldPanel.count=1;    
+                        xObject=xObject+10; //??
+                        yObject=yObject+10;
+        		GameFieldPanel.clickCount=1;    
         		delete.setVisible(true);
-        		return;
         	}
         	else{
         		timerfast.stop();
@@ -88,10 +85,9 @@ public class ChoseObject {
 	/**add new Objects to the ObjectList*/
     public void add(int x, int y){
     	if(frei){
-            
-        	
-        	Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
-            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)));
+            	
+            Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
+            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
             Log.DebugLog("sending request to create:" + but.choice);
             switch (but.choice)
             {
@@ -120,8 +116,14 @@ public class ChoseObject {
                 case NONE:
                 default:
             }
-        GameFieldPanel.count=0;
+        GameFieldPanel.clickCount=0;
         }
+    }
+    
+    /**returns which object is selected, if at all oO */
+    public GameObject getSelectedObject()
+    {
+        return obj;
     }
     
     
@@ -131,32 +133,11 @@ public class ChoseObject {
      * @param c   the Coordinates where to spawn
      * @param obj the object to spawn
      */
+    //FIXME for Fabio, fix code duplication
+    //CODE DUPLICATION, do not do that
     public void spawnObject(int x, int y, Protocol obj)
     {
-        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + Background.MAP_WIDTH + ", m_heigth" + Background.MAP_HEIGHT);
-        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)));
+        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + GameFieldPanel.MAP_WIDTH + ", m_heigth" + GameFieldPanel.MAP_HEIGHT);
+        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
     }
-
-    /**check if Object has already a line in this round or not*/
-    boolean lineExist(int xstart, int ystart){
-
-    	for (Lines l : GameFieldPanel.line){
-    		if(l.xs==xstart&&l.ys==ystart){
-    			return false;
-    		}
-    	}
-		return true;
-    }
-    
-    void removeLine(int xstart, int ystart){
-    	for (Lines l : GameFieldPanel.line){
-    		if(l.xs==xstart&&l.ys==ystart){
-    			GameFieldPanel.line.remove(l);
-    			break;
-    		}
-    	}
-    	
-    }
-    
-    
 }

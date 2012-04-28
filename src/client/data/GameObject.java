@@ -40,6 +40,7 @@ public class GameObject implements DrawableObject
     {
         this.type = type;
         this.location = coords;
+        this.oldLocation = coords;
         this.healthPoints = healthPoints;
         this.objectId = objectId;
         this.playerId = playerId;

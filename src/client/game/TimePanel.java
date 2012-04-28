@@ -68,7 +68,6 @@ public class TimePanel extends JPanel{
 		}
 
 		public void actionPerformed(ActionEvent f){
-                    //XXX ugly
                         rundenzeit = RunningGame.getBuildTime();
 
 			timerLabel.setText(makeTime(rundenzeit));

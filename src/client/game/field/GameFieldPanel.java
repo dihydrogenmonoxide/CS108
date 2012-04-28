@@ -241,6 +241,20 @@ public class GameFieldPanel extends JPanel implements MouseListener
         Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + Background.MAP_WIDTH + ", m_heigth" + Background.MAP_HEIGHT);
         socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)));
     }
+    /**
+     * sends a move request to the server.
+     *
+     * @param c   the Coordinates where to spawn
+     * @param obj the object to spawn
+     */
+    public void moveObject(int x, int y, GameObject obj)
+    {
+        Log.InformationLog("Trying to move Object: " + obj.getID() + " to  x=" + x + ", y=" + y + ", m_width" + Background.MAP_WIDTH + ", m_heigth" + Background.MAP_HEIGHT);
+        socket.sendData(Protocol.GAME_UPDATE_OBJECT.str() + obj.getProtocol().str() + Coordinates.pixelToCoord(x, y, new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT)) + " " + obj.getID());
+    }
+    
+    
+    
     public void mousePressed(MouseEvent e)
     {
     	dr= new ChoseObject(socket,delete, gd, timerslow, timerfast);

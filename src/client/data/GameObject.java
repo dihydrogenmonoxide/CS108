@@ -5,6 +5,7 @@ import client.game.field.DrawableObject;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import shared.Protocol;
 import shared.game.Coordinates;
 import shared.game.GameSettings;
 
@@ -79,6 +80,13 @@ public class GameObject implements DrawableObject
     }
     public boolean hasMovingRange(){
     	return type.getMovable();
+    }
+    /**
+     Returns the Protocol of the type.
+     */
+    public Protocol getProtocol()
+    {
+        return type.getProtocol();
     }
     
 }

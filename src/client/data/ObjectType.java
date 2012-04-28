@@ -20,14 +20,14 @@ import shared.game.GameSettings;
 public enum ObjectType
 {
 
-    TANK(Protocol.OBJECT_TANK, "bilder/Panzer.png", true, true, GameSettings.Tank.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints),
-    FIGHTER(Protocol.OBJECT_FIGHTER_JET, "bilder/Flugzeug.png", true, true, GameSettings.Jet.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints),
-    BOMBER(Protocol.OBJECT_BOMBER, "bilder/Bomber.png", true, true, GameSettings.Bomber.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints),
-    ANTIAIR(Protocol.OBJECT_STATIONARY_ANTI_AIR, "bilder/Flugabwehr.png", false, true, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints),
-    BUNKER(Protocol.OBJECT_STATIONARY_ANTI_TANK, "bilder/Landabwehr.png", false, true, GameSettings.ATT.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints),
+    TANK(Protocol.OBJECT_TANK, "bilder/Panzer.png", true, true, GameSettings.Tank.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints, GameSettings.Tank.price),
+    FIGHTER(Protocol.OBJECT_FIGHTER_JET, "bilder/Flugzeug.png", true, true, GameSettings.Jet.movingRange, GameSettings.Jet.attackRange, GameSettings.Jet.healthPoints, GameSettings.Jet.price),
+    BOMBER(Protocol.OBJECT_BOMBER, "bilder/Bomber.png", true, true, GameSettings.Bomber.movingRange, GameSettings.Bomber.attackRange, GameSettings.Bomber.healthPoints, GameSettings.Bomber.price),
+    ANTIAIR(Protocol.OBJECT_STATIONARY_ANTI_AIR, "bilder/Flugabwehr.png", false, true, GameSettings.Flak.attackRange, GameSettings.Flak.healthPoints, GameSettings.Flak.price),
+    BUNKER(Protocol.OBJECT_STATIONARY_ANTI_TANK, "bilder/Landabwehr.png", false, true, GameSettings.ATT.attackRange,  GameSettings.ATT.healthPoints,  GameSettings.ATT.price),
     //RADAR("./bilder/Radar.png", true, true, GameSettings.Tank.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints), 
-    REPRO(Protocol.OBJECT_REPRODUCTION_CENTER, "bilder/Repro.png", false, true, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints),
-    BANK(Protocol.OBJECT_BANK, "bilder/Bank.png", false, true, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints);
+    REPRO(Protocol.OBJECT_REPRODUCTION_CENTER, "bilder/Repro.png", false, true, GameSettings.Reproductioncenter.movingRange, GameSettings.Reproductioncenter.healthPoints, GameSettings.Reproductioncenter.price),
+    BANK(Protocol.OBJECT_BANK, "bilder/Bank.png", false, true, GameSettings.Bank.movingRange, GameSettings.Tank.healthPoints, GameSettings.Tank.price);
     
     Protocol protocol;
     String imagePath;
@@ -36,12 +36,10 @@ public enum ObjectType
     int movingRange;
     int attackRange;
     int initHealthPoints;
+    int value;
     BufferedImage img;
 
-    /**
-     * 
-     */
-    ObjectType(Protocol p, String path, boolean isMovable, boolean isSelectable, int movingRange, int attackRange, int initHealthPoints)
+    ObjectType(Protocol p, String path, boolean isMovable, boolean isSelectable, int movingRange, int attackRange, int initHealthPoints, int price)
     {
         this.protocol = p;
         this.imagePath = path;
@@ -50,12 +48,13 @@ public enum ObjectType
         this.movingRange = movingRange;
         this.attackRange = attackRange;
         this.initHealthPoints = initHealthPoints;
+        this.value = price;
         setImage();
     }
 
-    ObjectType(Protocol p, String path, boolean isMovable, boolean isSelectable, int attackRange, int initHealthPoints)
+    ObjectType(Protocol p, String path, boolean isMovable, boolean isSelectable, int attackRange, int initHealthPoints, int price)
     {
-        this(p, path, isMovable, isSelectable, 0, attackRange, initHealthPoints);
+        this(p, path, isMovable, isSelectable, 0, attackRange, initHealthPoints, price);
     }
 
     /**
@@ -82,7 +81,7 @@ public enum ObjectType
             this.img = ImageIO.read(new File(imagePath));
         } catch (IOException ex)
         {
-            Log.DebugLog("ObjectType, could not load image");
+            Log.ErrorLog("ObjectType, could not load image");
         }
     }
     
@@ -91,7 +90,7 @@ public enum ObjectType
         return imagePath;
     }
 
-    public boolean getMovable()
+    public boolean isMovable()
     {
         return isMovable;
     }
@@ -119,6 +118,11 @@ public enum ObjectType
     public Protocol getProtocol()
     {
         return protocol;
+    }
+    
+    public int getValue()
+    {
+        return value;
     }
 
     public BufferedImage getImg()

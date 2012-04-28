@@ -4,11 +4,15 @@
  */
 package client.game.field;
 
+import java.awt.image.BufferedImage;
+import shared.game.Coordinates;
+
 /**
  *
  * @author oliverwisler
  */
 public interface DrawableObject
 {
-    
+    public BufferedImage getImg();
+    public Coordinates getLocation();
 }

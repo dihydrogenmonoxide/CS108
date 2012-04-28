@@ -62,7 +62,7 @@ public class ChoseObject {
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));
         	xObject= pixelCoords.width - 20 / 2;
         	yObject= pixelCoords.height - 20 / 2;
-            if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20&&obj.hasMovingRange()){//TODO i don't think thats best way to check for moving range
+            if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20&&obj.isMovable()){//TODO i don't think thats best way to check for moving range
         		timerslow.stop();
         		timerfast.start();
     			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(Background.MAP_WIDTH, Background.MAP_HEIGHT));

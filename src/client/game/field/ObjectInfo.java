@@ -22,7 +22,7 @@ public class ObjectInfo extends JPanel{
 		Font f = new Font( Font.SERIF, Font.PLAIN, 18 );
 		gd.setFont(f);
     	gd.drawString("Lebenspunkte: "+ Integer.toString(obj.getHealth()), 10, 20);    	
-    	gd.drawString("Objektwer:  "+Integer.toString(obj.getMoney()), 10, 50);
+    	gd.drawString("Objektwer:  "+Integer.toString(obj.getValue()), 10, 50);
     
 	}
 	

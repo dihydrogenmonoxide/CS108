@@ -234,6 +234,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		time= new TimePanel(game, socket );
+		time.setMinimumSize(new Dimension(200,80));
 		c.gridwidth=3;
 		c.gridheight=3;
 		c.gridx=6;

@@ -3,6 +3,7 @@ package client.game;
 import client.data.RunningGame;
 import client.net.Clientsocket;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -35,13 +36,14 @@ public class TimePanel extends JPanel{
 
 
 
-		timerLabel = new JLabel(" Start ");		
+		timerLabel = new JLabel(" Start ");	
+		timerLabel.setPreferredSize(new Dimension(200,70));
 		timerLabel.setForeground(Color.red);
 		timerLabel.setBackground(Color.black);
 		timerLabel.setOpaque(true);
 		timerLabel.setBorder(new LineBorder(Color.red, 7));
-		timerLabel.setAlignmentX(CENTER_ALIGNMENT);
-		timerLabel.setAlignmentY(CENTER_ALIGNMENT);
+		timerLabel.setHorizontalAlignment(JLabel.CENTER);
+		timerLabel.setVerticalAlignment(JLabel.CENTER);
                 
                 
 		this.add(timerLabel);		

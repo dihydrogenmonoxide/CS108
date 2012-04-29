@@ -39,7 +39,6 @@ public class InnerGameFrame extends JPanel {
 	
 	JButton leave;
 	
-//	Player p = new Player(PlayerManager.myId(), PlayerManager.getNamebyId(PlayerManager.myId()));
 
 	
 		
@@ -140,7 +139,7 @@ public class InnerGameFrame extends JPanel {
 		population.setFont(f);
 		population.setOpaque(false);
 		population.setForeground(new Color(150,150,150));
-		population.setText("Population: "+ 0);//p.getMoney());
+		population.setText("Population: "+ RunningGame.getPopulation());
 		population.setEditable(false);
 		population.setLineWrap(true);
 		population.setWrapStyleWord(true);

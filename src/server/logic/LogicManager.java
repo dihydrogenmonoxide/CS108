@@ -15,6 +15,7 @@ import server.players.Player;
 import server.server.Server;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 import shared.game.Coordinates;
 
 
@@ -78,6 +79,11 @@ implements Runnable
 	{
 		for(Player p : server.getPlayers())
 		{
+			//that the Players can Start with Money, they have to get some Money and Population.
+			//So i give them some, sorry for changing your code Frank. 
+			//Author: Lucius
+			p.addMoney(Settings.GameValues.DEFAULT_MONEY);
+			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
 		}
 		

@@ -110,7 +110,6 @@ public class ChoseObject {
                     spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
                     break;
                 case BANK:
-                	//TODO you cant add Bank in Panel
                     spawnObject(x, y, Protocol.OBJECT_BANK);
                     break;
                 case NONE:

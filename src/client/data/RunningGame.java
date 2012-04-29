@@ -1,7 +1,11 @@
 package client.data;
 
 import client.game.field.DrawableObject;
+import client.game.field.GameFieldPanel;
+import client.net.Clientsocket;
+
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import shared.Log;
@@ -315,6 +319,32 @@ public class RunningGame
        }
        
        return temp;
+    }
+    
+    /**
+     * sends a spawn request to the server.
+     *
+     * @param c   the Coordinates where to spawn
+     * @param obj the object to spawn
+     * @param socket 
+     */
+    public static void spawnObject(int x, int y, Protocol obj, Clientsocket socket)
+    {
+        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + GameFieldPanel.MAP_WIDTH + ", m_heigth" + GameFieldPanel.MAP_HEIGHT);
+        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
+    }
+    /**
+     * sends a move request to the server.
+     *
+     * @param c   the Coordinates where to spawn
+     * @param obj the object to spawn
+     * @param  
+     */
+    public static void moveObject(int x, int y, GameObject obj, Clientsocket socket)
+    {
+        Log.InformationLog("Trying to move Object: " + obj.getID() + " to  x=" + x + ", y=" + y + ", m_width" + GameFieldPanel.MAP_WIDTH + ", m_heigth" + GameFieldPanel.MAP_HEIGHT);
+        Log.DebugLog(Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)).toString());
+        socket.sendData(Protocol.GAME_UPDATE_OBJECT.str() + obj.getProtocol().str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)) + " " + obj.getID());
     }
     
 }

@@ -234,29 +234,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
         g.drawImage(dbImage, 0, 0, this);
     }
 
-    /**
-     * sends a spawn request to the server.
-     *
-     * @param c   the Coordinates where to spawn
-     * @param obj the object to spawn
-     */
-    public void spawnObject(int x, int y, Protocol obj)
-    {
-        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
-        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)));
-    }
-    /**
-     * sends a move request to the server.
-     *
-     * @param c   the Coordinates where to spawn
-     * @param obj the object to spawn
-     */
-    public void moveObject(int x, int y, GameObject obj)
-    {
-        Log.InformationLog("Trying to move Object: " + obj.getID() + " to  x=" + x + ", y=" + y + ", m_width" + MAP_WIDTH + ", m_heigth" + MAP_HEIGHT);
-        Log.DebugLog(Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)).toString());
-        socket.sendData(Protocol.GAME_UPDATE_OBJECT.str() + obj.getProtocol().str() + Coordinates.pixelToCoord(x, y, new Dimension(MAP_WIDTH, MAP_HEIGHT)) + " " + obj.getID());
-    }
     
     
     
@@ -282,7 +259,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                         Log.DebugLog("you have clicked in the radius, trying to move object");
     			if(dr.getSelectedObject() != null)
                         {
-                            moveObject(xP,yP,dr.getSelectedObject());
+                            RunningGame.moveObject(xP,yP,dr.getSelectedObject(), socket);
                         }
     			dr.pressed=false;
     			clickCount=0;

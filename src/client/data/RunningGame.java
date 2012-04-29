@@ -242,12 +242,14 @@ public class RunningGame
     /**set my population.*/
     public static void setPop(long population)
     {
+        Log.DebugLog("Running Game: setting Population to:" + population);
         myPopulation = population;
     }
     
     /**set my money.*/
      public static void setMoney(long money)
     {
+        Log.DebugLog("Running Game: setting Money to:" + money);
         myMoney = money;
     }
 
@@ -313,11 +315,8 @@ public class RunningGame
            playerColor.put(playerId, enemyColors[colorCounter]);
            colorCounter++;
        }
-       else
-       {
-           temp = playerColor.get(playerId);
-       }
        
+       temp = playerColor.get(playerId);
        return temp;
     }
     

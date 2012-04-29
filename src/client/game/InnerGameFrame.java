@@ -128,7 +128,18 @@ public class InnerGameFrame extends JPanel {
 		c.gridy=2;
 		this.add(money,c);
 		
-		
+
+		JTextArea population = new JTextArea();
+		population.setFont(f);
+		population.setOpaque(false);
+		population.setForeground(new Color(150,150,150));
+		population.setText("Population: "+ Long.toString(RunningGame.getPopulation()));
+		population.setEditable(false);
+		population.setLineWrap(true);
+		population.setWrapStyleWord(true);
+		c.gridx=7;
+		c.gridy=3;
+		this.add(population,c);
 		
 		GlassPane = new GlassPane(game.getContentPane(), socket);
 		game.setGlassPane(GlassPane);

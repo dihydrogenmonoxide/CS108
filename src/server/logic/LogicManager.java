@@ -2,6 +2,7 @@ package server.logic;
 
 import server.MainServer;
 import server.GamePlayObjects.ATT;
+import server.GamePlayObjects.Bank;
 import server.GamePlayObjects.Bomber;
 import server.GamePlayObjects.Flak;
 import server.GamePlayObjects.GamePlayObject;
@@ -217,6 +218,9 @@ implements Runnable
 						break;
 					case OBJECT_TANK:
 						o = new Tank(new Coordinates(x, y), player, server.getObjectManager());
+						break;	
+					case OBJECT_BANK:
+						o = new Bank(new Coordinates(x, y), player, server.getObjectManager());
 						break;	
 					default:
 						Log.ErrorLog("Couldn't build the object - \'"+parserString+"\' isn't in a valid format");

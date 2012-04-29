@@ -92,26 +92,25 @@ public class ChoseObject {
             switch (but.choice)
             {
                 case TANK:
-                    spawnObject(x, y, Protocol.OBJECT_TANK);
+                    RunningGame.spawnObject(x, y, Protocol.OBJECT_TANK, socket);
                     break;
                 case FIGHTER:
-                    spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET);
+                    RunningGame.spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET, socket);
                     break;
                 case BOMBER:
-                    spawnObject(x, y, Protocol.OBJECT_BOMBER);
+                	RunningGame.spawnObject(x, y, Protocol.OBJECT_BOMBER, socket);
                     break;
                 case ANTIAIR:
-                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR);
+                	RunningGame.spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR, socket);
                     break;
                 case BUNKER:
-                    spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK);
+                	RunningGame.spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK, socket);
                     break;
                 case REPRO:
-                    spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER);
+                	RunningGame.spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER, socket);
                     break;
                 case BANK:
-                	//TODO you cant add Bank in Panel
-                    spawnObject(x, y, Protocol.OBJECT_BANK);
+                	RunningGame.spawnObject(x, y, Protocol.OBJECT_BANK, socket);
                     break;
                 case NONE:
                 default:
@@ -126,18 +125,5 @@ public class ChoseObject {
         return obj;
     }
     
-    
-    /**
-     * sends a spawn request to the server.
-     *
-     * @param c   the Coordinates where to spawn
-     * @param obj the object to spawn
-     */
-    //FIXME for Fabio, fix code duplication
-    //CODE DUPLICATION, do not do that
-    public void spawnObject(int x, int y, Protocol obj)
-    {
-        Log.InformationLog("Trying to spawn Object: " + obj.str() + ", x=" + x + ", y=" + y + ", m_width" + GameFieldPanel.MAP_WIDTH + ", m_heigth" + GameFieldPanel.MAP_HEIGHT);
-        socket.sendData(Protocol.GAME_SPAWN_OBJECT.str() + obj.str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
-    }
+   
 }

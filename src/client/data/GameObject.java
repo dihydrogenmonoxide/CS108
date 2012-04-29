@@ -187,4 +187,8 @@ public class GameObject implements DrawableObject
         return type.getProtocol();
     }
     
+    public int getPlayerID(){
+    	return playerId;
+    }
+    
 }

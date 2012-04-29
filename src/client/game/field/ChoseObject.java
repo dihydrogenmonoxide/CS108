@@ -27,8 +27,6 @@ public class ChoseObject {
 	static int xObject,yObject;
     /**radius to move object*/
     static int radius;
-//    /**Point of mouseListener*/
-//    static int xMouse, yMouse;
     /**boolean to see if place is free where you want to add Object*/
     boolean frei= true;
     /**the Connection made to the Server.*/
@@ -54,22 +52,21 @@ public class ChoseObject {
 	/**go true every Object which already exists. If point which is pressed equals Object, make pressed true, to draw TargetRadius*/
 	public void target(int x , int y){
 		Collection<GameObject> c = RunningGame.getObjects().values();
-                Iterator<GameObject> objIter = c.iterator();
+		Iterator<GameObject> objIter = c.iterator();
         while(objIter.hasNext()){
         	obj = objIter.next();
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
-        	xObject= pixelCoords.width - 20 / 2;
-        	yObject= pixelCoords.height - 20 / 2;
-            if(x > xObject && x < xObject+20 && y > yObject && y < yObject+20&&obj.isMovable()){//TODO i don't think thats best way to check for moving range
+        	xObject= pixelCoords.width;
+        	yObject= pixelCoords.height;
+            if(x > xObject-10 && x < xObject+10 && y > yObject-10 && y < yObject+10&&obj.isMovable()){//TODO i don't think thats best way to check for moving range
         		timerslow.stop();
         		timerfast.start();
     			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
         		frei = false;
-                        xObject=xObject+10; //??
-                        yObject=yObject+10;
         		GameFieldPanel.clickCount=1;    
         		delete.setVisible(true);
+        		return;
         	}
         	else{
         		timerfast.stop();

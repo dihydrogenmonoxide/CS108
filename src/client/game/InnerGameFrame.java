@@ -1,6 +1,7 @@
 package client.game;
 
 
+import client.data.PlayerManager;
 import client.data.RunningGame;
 import client.game.field.GameFieldPanel;
 import client.net.Clientsocket;
@@ -23,6 +24,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 
+
+
 public class InnerGameFrame extends JPanel {
 	private GlassPane GlassPane;
 	/**the Connection made to the Server.*/
@@ -36,6 +39,10 @@ public class InnerGameFrame extends JPanel {
 	
 	JButton leave;
 	
+//	Player p = new Player(PlayerManager.myId(), PlayerManager.getNamebyId(PlayerManager.myId()));
+
+	
+		
 	
 	public InnerGameFrame(final GameFrame gameFrame, Clientsocket s){
 		this.socket = s;
@@ -133,7 +140,7 @@ public class InnerGameFrame extends JPanel {
 		population.setFont(f);
 		population.setOpaque(false);
 		population.setForeground(new Color(150,150,150));
-		population.setText("Population: "+ Long.toString(RunningGame.getPopulation()));
+		population.setText("Population: "+ 0);//p.getMoney());
 		population.setEditable(false);
 		population.setLineWrap(true);
 		population.setWrapStyleWord(true);

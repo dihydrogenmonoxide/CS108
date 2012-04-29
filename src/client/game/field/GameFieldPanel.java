@@ -146,7 +146,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 
                 //-- draw image
                 //-- width of the image
-                int imageDim = 20;
+                double imageDim = MAP_WIDTH/50*1.5;
 
 
                 if (objImg != null)
@@ -164,7 +164,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        }
                        
                        //-- draw image
-                       g.drawImage(objImg, pixelCoords.width - imageDim / 2, pixelCoords.height - imageDim / 2, 20, 20, null);
+                       g.drawImage(objImg, pixelCoords.width - (int)imageDim / 2, pixelCoords.height - (int)imageDim / 2,(int) imageDim,(int) imageDim, null);
                     
                 }
             }
@@ -256,7 +256,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		inner.repaint();
     		if(Math.pow(xP-dr.xObject,2)+Math.pow(yP-dr.yObject,2)<= Math.pow(dr.radius, 2)){
     			//TODO update Object list with new Points
-                        Log.DebugLog("you have clicked in the radius, trying to move object");
+                Log.DebugLog("you have clicked in the radius, trying to move object");
     			if(dr.getSelectedObject() != null)
                         {
                             RunningGame.moveObject(xP,yP,dr.getSelectedObject(), socket);

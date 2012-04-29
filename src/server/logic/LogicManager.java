@@ -86,6 +86,7 @@ implements Runnable
 			p.addMoney(Settings.GameValues.DEFAULT_MONEY);
 			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
+			resendEverything(p);
 		}
 		
 		thread.start();

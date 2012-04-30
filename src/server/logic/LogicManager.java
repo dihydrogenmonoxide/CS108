@@ -2,6 +2,7 @@ package server.logic;
 
 import server.MainServer;
 import server.GamePlayObjects.ATT;
+import server.GamePlayObjects.Bank;
 import server.GamePlayObjects.Bomber;
 import server.GamePlayObjects.Flak;
 import server.GamePlayObjects.GamePlayObject;
@@ -15,6 +16,7 @@ import server.players.Player;
 import server.server.Server;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 import shared.game.Coordinates;
 
 
@@ -78,7 +80,13 @@ implements Runnable
 	{
 		for(Player p : server.getPlayers())
 		{
+			//that the Players can Start with Money, they have to get some Money and Population.
+			//So i give them some, sorry for changing your code Frank. 
+			//Author: Lucius
+			p.addMoney(Settings.GameValues.DEFAULT_MONEY);
+			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
+			resendEverything(p);
 		}
 		
 		thread.start();
@@ -212,6 +220,9 @@ implements Runnable
 					case OBJECT_TANK:
 						o = new Tank(new Coordinates(x, y), player, server.getObjectManager());
 						break;	
+					case OBJECT_BANK:
+						o = new Bank(new Coordinates(x, y), player, server.getObjectManager());
+						break;	
 					default:
 						Log.ErrorLog("Couldn't build the object - \'"+parserString+"\' isn't in a valid format");
 						return;
@@ -266,7 +277,7 @@ implements Runnable
 					if(o.getOwner() == player)
 					{
 						o.setTarget(new Coordinates(x, y));
-						player.sendData(o.toProtocolString());
+						player.sendData(o.toTargetString());
 					}
 					else
 					{
@@ -305,5 +316,5 @@ implements Runnable
 	{
 		isPaused = true;
 		server.broadcastMessage(Protocol.GAME_PAUSE.str());
-	}
+        }
 }

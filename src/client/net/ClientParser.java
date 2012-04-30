@@ -172,7 +172,7 @@ public class ClientParser {
 		{
 		case GAME_BROADCAST:
 			Log.DebugLog("-->game broadcast: " + msg);
-			GamesManager.addGame(msg.getIntArgument(1),msg.getIntArgument(2),msg.getStringArgument(3)); //XXX ugly
+			GamesManager.addGame(msg.getIntArgument(1),msg.getIntArgument(2),msg.getStringArgument(3));
 			this.lobbyReceived(new LobbyEvent(msg, 12, Protocol.LOBBY_UPDATE , msg));
 			break;
 		case GAME_JOIN:
@@ -224,7 +224,7 @@ public class ClientParser {
 			break;
 
 		case GAME_MONEY:
-			RunningGame.setMoney(msg.getIntArgument(1), msg.getLongArgument(2));
+			RunningGame.setMoney(msg.getLongArgument(1));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_MONEY, msg));
 			break;
 

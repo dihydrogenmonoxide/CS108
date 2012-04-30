@@ -402,4 +402,9 @@ public class Tank implements GamePlayObject, Defensive, Unit {
 	{
 		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_TANK.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
+        
+        public String toTargetString()
+        {
+            return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_TANK.str()+target.getX()+" "+target.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
+        }
 }

@@ -1,7 +1,11 @@
 package client.game;
 
 
+import client.data.PlayerManager;
 import client.data.RunningGame;
+import client.game.field.GameFieldPanel;
+import client.game.field.PlayerInfo;
+import client.lobby.ChatPanel;
 import client.net.Clientsocket;
 
 import java.awt.Color;
@@ -22,6 +26,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 
+
+
 public class InnerGameFrame extends JPanel {
 	private GlassPane GlassPane;
 	/**the Connection made to the Server.*/
@@ -35,6 +41,9 @@ public class InnerGameFrame extends JPanel {
 	
 	JButton leave;
 	
+
+	
+		
 	
 	public InnerGameFrame(final GameFrame gameFrame, Clientsocket s){
 		this.socket = s;
@@ -45,10 +54,9 @@ public class InnerGameFrame extends JPanel {
 		
 		this.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
-          
 		
-		
-		GameFieldPanel gameField = new GameFieldPanel(socket, gameFrame, this, c);
+		GameFieldPanel gameField = new GameFieldPanel(socket, this, c);
+        gameField.setOpaque(true);
         c.fill = GridBagConstraints.BOTH;
         gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         c.anchor = GridBagConstraints.CENTER;
@@ -58,6 +66,8 @@ public class InnerGameFrame extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(gameField, c);
+                
+                
                 
                 
         c.fill = GridBagConstraints.NONE;
@@ -110,21 +120,14 @@ public class InnerGameFrame extends JPanel {
 		});
 		
 		
-		
-		
-		
-		JTextArea money = new JTextArea();
-		Font f = new Font( Font.SERIF, Font.PLAIN, 20 );
-		money.setFont(f);
-		money.setOpaque(false);
-		money.setForeground(new Color(150,150,150));
-		money.setText("Kontostand: "+ Integer.toString(RunningGame.getMoney()));
-		money.setEditable(false);
-        money.setLineWrap(true);
-        money.setWrapStyleWord(true);
+		PlayerInfo playerInf = new PlayerInfo();
 		c.gridx=7;
 		c.gridy=2;
-		this.add(money,c);
+		c.gridheight=2;
+		c.gridwidth=1;
+		this.setOpaque(false);
+		this.add(playerInf,c);
+		
 		
 		
 		

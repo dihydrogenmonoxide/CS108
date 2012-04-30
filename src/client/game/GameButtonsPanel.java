@@ -143,7 +143,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		JLabel defense = new JLabel();
-		defense.setText("Verteidigungselemente");
+		defense.setText("Verteidigungselemente:");
 		defense.setOpaque(false
 				);
 		defense.setForeground(lblTxtColor);
@@ -188,7 +188,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		JLabel gebaude = new JLabel();
-		gebaude.setText("Aufbauelemente");
+		gebaude.setText("Aufbauelemente:");
 		gebaude.setOpaque(false);
 		gebaude.setForeground(lblTxtColor);
 		c.fill = GridBagConstraints.LINE_END;
@@ -234,6 +234,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		time= new TimePanel(game, socket );
+		time.setMinimumSize(new Dimension(200,80));
 		c.gridwidth=3;
 		c.gridheight=3;
 		c.gridx=6;
@@ -249,7 +250,6 @@ public class GameButtonsPanel extends JPanel{
 		group.add(jagd);
 		group.add(bomber);
 		group.add(geld);
-		
 		this.setOpaque(false);
 	}
 }

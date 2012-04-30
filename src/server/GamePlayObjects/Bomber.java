@@ -459,4 +459,9 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 	{
 		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BOMBER.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
+        
+         public String toTargetString()
+        {
+            return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BOMBER.str()+target.getX()+" "+target.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
+        }
 }

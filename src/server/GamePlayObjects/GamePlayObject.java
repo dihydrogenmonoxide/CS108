@@ -14,6 +14,9 @@ public interface GamePlayObject {
 		
 		//Returns the Coordinates where the Object is.
 		Coordinates getPos();
+                
+                //gets the target of this object
+                Coordinates getTarget();
 		
 		//Returns the Owner of the Object.
 		Player getOwner();
@@ -51,8 +54,7 @@ public interface GamePlayObject {
 		 * @return the {@link String} to transfer to the client
 		 */
 		String toProtocolString();
-		
-		
-		
+
+    public String toTargetString();
 
 }

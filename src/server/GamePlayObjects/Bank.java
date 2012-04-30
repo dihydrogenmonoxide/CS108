@@ -300,6 +300,11 @@ public class Bank implements GamePlayObject, Building, Unit {
 	{
 		return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BANK.str()+position.getX()+" "+position.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
 	}
+        
+         public String toTargetString()
+        {
+            return Protocol.GAME_UPDATE_OBJECT.str()+Protocol.OBJECT_BANK.str()+target.getX()+" "+target.getY()+" "+id+" "+Owner.getID()+" "+healthPoints;
+        }
 }
 
 

@@ -2,7 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package client.game;
+package client.game.field;
+
+import java.awt.image.BufferedImage;
+import shared.game.Coordinates;
 
 /**
  *
@@ -10,5 +13,6 @@ package client.game;
  */
 public interface DrawableObject
 {
-    
+    public BufferedImage getImg();
+    public Coordinates getLocation();
 }

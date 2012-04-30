@@ -1,7 +1,7 @@
-package client.game;
+package client.game.field;
 
 class Lines{
-	
+
 	int xs,ys,xe,ye;
 	public Lines(int xstart, int ystart, int xend, int yend){
 		xs=xstart;
@@ -9,5 +9,5 @@ class Lines{
 		xe=xend;
 		ye=yend;
 	}
-	
+
 }

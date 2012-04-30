@@ -147,14 +147,30 @@ public class Jet implements GamePlayObject, Defensive, Flying, Unit {
 	public GamePlayObject selectTarget() {
 		if (this.possibleTargets.isEmpty())
 			return null;
+		
+		GamePlayObject G= null;
 
-		GamePlayObject G = this.possibleTargets.peek();
-		while (G.getHealthPoints() <= 0 && !this.possibleTargets.isEmpty()) {
-			G = this.possibleTargets.pop();
-
-		}
-		if (this.possibleTargets.isEmpty())
-			return null;
+		
+		 
+			 LinkedList<GamePlayObject> Helplist= new LinkedList<GamePlayObject>(this.possibleTargets);
+			 for(GamePlayObject O:Helplist)
+			 {
+				 if(O.getHealthPoints()<=0)
+					 possibleTargets.remove(O);
+			 }
+			 int random=(int) (Math.random()*possibleTargets.size());
+			 
+			
+			 for(GamePlayObject O:this.possibleTargets)
+			 {
+				 
+				 G=O;
+				 if(random==0)break;
+				 random--;
+			 }
+		
+		 
+		
 		return G;
 
 	}

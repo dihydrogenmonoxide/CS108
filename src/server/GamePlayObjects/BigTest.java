@@ -4,6 +4,7 @@ import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.players.Player;
 import server.server.Server;
+import shared.Log;
 import shared.game.Coordinates;
 import test.gamePlayObjects.TestServer;
 
@@ -21,8 +22,8 @@ public class BigTest {
 		GamePlayObjectManager Manager= new GamePlayObjectManager(s, 10);
 		for(Player p:s.getPlayers())
 		{	
-			p.addMoney(100000000);
-			p.addPopulation(200000);
+			p.addMoney(10000000);
+			p.addPopulation(120000);
 			
 			for(int x=0;x<5000;x=x+1)
 			{
@@ -133,7 +134,14 @@ for(int i=0; i<100;i++)
 	}
 catch(GameEndedException e)
 {
-	System.out.println(e.getMessage()+" Winner is"+e.getWinner().getNick()+" with" +e.getWinner().getMoney()+" Money");
+	if(e.getWinner()== null)
+	{
+		Log.InformationLog(e.getMessage()+" A Big Massacre has happened: EVERYBODY IS DEAD!!");
+	}
+	else
+	{
+	Log.InformationLog(e.getMessage()+" Winner is"+e.getWinner().getNick()+" with" +e.getWinner().getMoney()+" Money");
+	}
 }
 /*for(GamePlayObject O: Manager.getObjectList())
 {

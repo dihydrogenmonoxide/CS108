@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import server.exceptions.GameEndedException;
 import server.players.Player;
 import server.server.Server;
+import shared.Log;
 import shared.game.Coordinates;
 
 public class GamePlayObjectManager {
@@ -68,7 +69,7 @@ public class GamePlayObjectManager {
 			}
 
 		} else
-			throw new IllegalArgumentException();
+			Log.DebugLog("Kein Defensive in die Methode GamePlayObjectManager.removeDefensive(Defensive O) gegeben");
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class GamePlayObjectManager {
 				this.distributeId(U);
 			}
 		} else
-			throw new IllegalArgumentException();
+			Log.DebugLog("Keine Unit in die Methode GamePlayObjectManager.addUnit(Unit u) gegeben");
 	}
 	
 	public GamePlayObject getObjectById(int id){
@@ -152,7 +153,7 @@ public class GamePlayObjectManager {
 			AllObjects.remove(O);
 
 		} else
-			throw new IllegalArgumentException();
+			Log.DebugLog("Kein Defensive in die Methode GamePlayObjectManager.removeDefensive(Defensive O) gegeben");
 	}
 
 	/**
@@ -165,7 +166,7 @@ public class GamePlayObjectManager {
 			Units.remove(U);
 			AllObjects.remove(U);
 		} else
-			throw new IllegalArgumentException();
+			Log.DebugLog("Keine Unit in die Methode GamePlayObjectManager.removeUnit(Unit u) gegeben");
 	}
 
 
@@ -222,6 +223,9 @@ public class GamePlayObjectManager {
 		{
 			if(p.getPopulation()<=0)
 			{
+				deleteAllObjectsOfPlayer(p);
+				p.removeMoney(p.getMoney());
+				Server.suspendPlayer(p);
 				PlayerHelpList1.remove(p);
 				
 			}
@@ -233,7 +237,7 @@ public class GamePlayObjectManager {
 			Player winner=null;
 			for(Player p:Server.getPlayers())
 				{
-				if(p.getMoney()>maxMoney)
+				if(p.getMoney()>maxMoney && p.getPopulation()>0)
 				{
 					maxMoney=p.getMoney();
 					winner=p;
@@ -269,16 +273,7 @@ public class GamePlayObjectManager {
 		saveAllObjects.clear();
 
 		
-		LinkedList<Player> Helplist=new LinkedList<Player>(Server.getPlayers()); 
-		for(Player p:Helplist)
-		{
-			if(p.getPopulation()<=0)
-			{
-				deleteAllObjectsOfPlayer(p);
-				Server.removePlayer(p);// To do: change to suspendPlayer(p)
-			}
-			
-		}
+		
 		
 		
 		

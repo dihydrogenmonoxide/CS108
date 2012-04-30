@@ -225,8 +225,10 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 								.getPosAtEnd().getX(), this.getPosAtEnd()
 								.getY())
 								&& P != this.getOwner()) {
+							if(P.getPopulation()>0){
 							P.removePopulation((long) this.getAttackPoints());
 							this.getOwner().addMoney((long) getAttackPoints());
+							}
 
 						}
 

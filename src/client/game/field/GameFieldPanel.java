@@ -17,8 +17,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -69,6 +71,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
      //-- flag if we should write all the drawing to the log
      boolean logRedraw = false;
+     
+     /**ArrayList, which holds Lines*/
+     static List<Lines> line=new ArrayList<Lines>();
     
         
     public GameFieldPanel(Clientsocket s, InnerGameFrame innerGameFrame, GridBagConstraints c)
@@ -105,7 +110,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         this.setOpaque(false);
         	
         //static framerate:
-        timerslow= new Timer(200, new ActionListenerSlow());
+        timerslow= new Timer(300, new ActionListenerSlow());
         timerfast= new Timer(70,new ActionListerFast());
         timerslow.start();
         
@@ -156,7 +161,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
                            g.setColor(Color.orange);
-                           g.drawLine(pixelCoords.width, pixelCoords.height, oldPixelCoords.width, oldPixelCoords.height);
+                           Lines l =new Lines(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
+                           line.add(l);
+                           for (Lines f:line){
+                        	   g.drawLine(f.xs, f.ys, f.xe, f.ye);
+                           }
                            if(logRedraw)
                            {
                                Log.DebugLog("drawing line for this object");
@@ -204,12 +213,20 @@ public class GameFieldPanel extends JPanel implements MouseListener
       		  		farbe-=a;
       		  	}
 
-            }            
+            } 
 
         } catch (Exception e)
         {
             e.printStackTrace();
         }
+        if(RunningGame.getGamePhase().equals("ANIM")){
+        	//TODO is never true
+        	System.out.println("Game is in animation phase");
+        	//TODO draw somethings in animation phase; probably lines gets smaller
+        	new MoveObjects(line);
+        }
+
+        
     }
 
     public void paint(Graphics g)
@@ -255,7 +272,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		inner.revalidate();
     		inner.repaint();
     		if(Math.pow(xP-dr.xObject,2)+Math.pow(yP-dr.yObject,2)<= Math.pow(dr.radius, 2)){
-    			//TODO update Object list with new Points
                 Log.DebugLog("you have clicked in the radius, trying to move object");
     			if(dr.getSelectedObject() != null)
                         {

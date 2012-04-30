@@ -2,6 +2,7 @@ package client.game;
 
 
 
+import client.data.RunningGame;
 import client.net.Clientsocket;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -16,13 +17,20 @@ class GlassPane extends JComponent {
 	
 	public void paint(Graphics g) {
 		if (point != null) {
-			g.setColor(Color.green);
-			g.setFont(font1);
-			g.drawString("Please wait for opponents", 250, 250);
-				
+			if(RunningGame.getGamePhase().equals("ANIM")){
+				g.setFont(font1);
+				g.setColor(Color.red);
+				g.fillRect(200, 500, 500, 600);
+				g.setColor(Color.black);
+				g.drawString("Game is in Animation Phase", 250, 550);		
+			}
+			else{
+				g.setFont(font1);
+				g.setColor(Color.green);
+				g.drawString("Please wait for opponents", 250, 250);
 			}
 		}
-	
+	}
 
 	public void setPoint(Point p) {
 		point = p;

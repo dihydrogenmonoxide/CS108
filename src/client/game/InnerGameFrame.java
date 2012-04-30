@@ -4,6 +4,8 @@ package client.game;
 import client.data.PlayerManager;
 import client.data.RunningGame;
 import client.game.field.GameFieldPanel;
+import client.game.field.PlayerInfo;
+import client.lobby.ChatPanel;
 import client.net.Clientsocket;
 
 import java.awt.Color;
@@ -54,12 +56,12 @@ public class InnerGameFrame extends JPanel {
 		c = new GridBagConstraints();
 		
 		GameFieldPanel gameField = new GameFieldPanel(socket, this, c);
-                gameField.setOpaque(true);
-                c.fill = GridBagConstraints.BOTH;
-                gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-                c.anchor = GridBagConstraints.CENTER;
+        gameField.setOpaque(true);
+        c.fill = GridBagConstraints.BOTH;
+        gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        c.anchor = GridBagConstraints.CENTER;
 		c.weightx = 4.0;
-                c.weighty = 4.0;
+        c.weighty = 4.0;
 		c.gridwidth = 6;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -118,34 +120,16 @@ public class InnerGameFrame extends JPanel {
 		});
 		
 		
-		
-		
-		
-		JTextArea money = new JTextArea();
-		Font f = new Font( Font.SERIF, Font.PLAIN, 20 );
-		money.setFont(f);
-		money.setOpaque(false);
-		money.setForeground(new Color(150,150,150));
-		money.setText("Kontostand: "+ Long.toString(RunningGame.getMoney()));
-		money.setEditable(false);
-        money.setLineWrap(true);
-        money.setWrapStyleWord(true);
+		PlayerInfo playerInf = new PlayerInfo();
 		c.gridx=7;
 		c.gridy=2;
-		this.add(money,c);
+		c.gridheight=2;
+		c.gridwidth=1;
+		this.setOpaque(false);
+		this.add(playerInf,c);
 		
-
-		JTextArea population = new JTextArea();
-		population.setFont(f);
-		population.setOpaque(false);
-		population.setForeground(new Color(150,150,150));
-		population.setText("Population: "+ RunningGame.getPopulation());
-		population.setEditable(false);
-		population.setLineWrap(true);
-		population.setWrapStyleWord(true);
-		c.gridx=7;
-		c.gridy=3;
-		this.add(population,c);
+		
+		
 		
 		GlassPane = new GlassPane(game.getContentPane(), socket);
 		game.setGlassPane(GlassPane);

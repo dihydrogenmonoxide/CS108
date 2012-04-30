@@ -143,7 +143,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		JLabel defense = new JLabel();
-		defense.setText("Verteidigungselemente");
+		defense.setText("Verteidigungselemente:");
 		defense.setOpaque(false
 				);
 		defense.setForeground(lblTxtColor);
@@ -188,7 +188,7 @@ public class GameButtonsPanel extends JPanel{
 		
 		
 		JLabel gebaude = new JLabel();
-		gebaude.setText("Aufbauelemente");
+		gebaude.setText("Aufbauelemente:");
 		gebaude.setOpaque(false);
 		gebaude.setForeground(lblTxtColor);
 		c.fill = GridBagConstraints.LINE_END;

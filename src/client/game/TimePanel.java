@@ -36,7 +36,7 @@ public class TimePanel extends JPanel{
 
 
 
-		timerLabel = new JLabel(" Start ");	
+		timerLabel = new JLabel("Start");	
 		timerLabel.setPreferredSize(new Dimension(200,70));
 		timerLabel.setForeground(Color.red);
 		timerLabel.setBackground(Color.black);
@@ -75,7 +75,7 @@ public class TimePanel extends JPanel{
 			timerLabel.setText(makeTime(rundenzeit));
 
 			if (rundenzeit == 0){
-				timerLabel.setText("  Ende!  ");
+				timerLabel.setText("Ende!");
 				GlassPane = new GlassPane(gameFrame.getContentPane(), socket);
 				gameFrame.setGlassPane(GlassPane);
 				GlassPane.setVisible(true);

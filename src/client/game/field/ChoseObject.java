@@ -19,7 +19,8 @@ import client.data.RunningGame;
 import client.game.GameButtonsPanel;
 import client.net.Clientsocket;
 
-public class ChoseObject {
+public class ChoseObject 
+{
 	
     /**boolean to take object*/
     static boolean pressed=false;
@@ -36,16 +37,15 @@ public class ChoseObject {
     /**delete Button to set Visible true*/
     JButton delete;
     GameObject obj;
-    Graphics2D gd;
-    
+    /**Two timer to repaint one is fast when object is clicked and the other slower*/
     Timer timerslow,timerfast;
     
-	public ChoseObject(Clientsocket s, JButton delete, Graphics2D gd, Timer timerslow, Timer timerfast){
+	public ChoseObject(Clientsocket s, JButton delete, Timer timerslow, Timer timerfast)
+	{
 		this.timerfast=timerfast;
 		this.timerslow=timerslow;
 		this.delete=delete;
 		this.socket=s;
-		this.gd=gd;
 	}
 	
 	
@@ -53,13 +53,15 @@ public class ChoseObject {
 	public void target(int x , int y){
 		Collection<GameObject> c = RunningGame.getObjects().values();
 		Iterator<GameObject> objIter = c.iterator();
-        while(objIter.hasNext()){
+        while(objIter.hasNext())
+        {
         	obj = objIter.next();
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width;
         	yObject= pixelCoords.height;
-            if(x > xObject-10 && x < xObject+10 && y > yObject-10 && y < yObject+10&&obj.isMovable()){//TODO i don't think thats best way to check for moving range
-        		timerslow.stop();
+            if(x > xObject-10 && x < xObject+10 && y > yObject-10 && y < yObject+10&&obj.isMovable())//TODO i don't think thats best way to check for moving range
+            {
+            	timerslow.stop();
         		timerfast.start();
     			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
@@ -68,7 +70,8 @@ public class ChoseObject {
         		delete.setVisible(true);
         		return;
         	}
-        	else{
+        	else
+        	{
         		timerfast.stop();
         		timerslow.start();
         		pressed=false;
@@ -80,8 +83,10 @@ public class ChoseObject {
     }
 	    
 	/**add new Objects to the ObjectList*/
-    public void add(int x, int y){
-    	if(frei){
+    public void add(int x, int y)
+    {
+    	if(frei)
+    	{
             	
             Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
             Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));

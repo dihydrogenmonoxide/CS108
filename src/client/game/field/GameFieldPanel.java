@@ -42,12 +42,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
      * the Height of the Map, is set after rendering.
      */
     public static int MAP_HEIGHT=(MAP_WIDTH*4/7);
-    /**
-     * Buffered image to Paint Map
-     */
-    private BufferedImage backgroundMap;
-    /** the Height of the Map, is set after rendering.  */
-    public static int MAP_HEIGHT = (MAP_WIDTH * 4 / 7);
     
     /**
      * Image for DoubleBufferedImage
@@ -59,7 +53,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
     private Image bil;
     /**angel for showing the movingRange*/
     private double angel=0;
-    private double ang=4;
     
     ChoseObject dr;
     /**Point of mousePressed*/
@@ -73,11 +66,10 @@ public class GameFieldPanel extends JPanel implements MouseListener
     /**delete Button which appears, when its Possible to click on it (if target is drawn)*/
     JButton delete;
 
-    Graphics2D gd;
-    Timer timerslow;
-    Timer timerfast;
+    /**Two timer to repaint one is fast when object is clicked and the other slower*/
+    Timer timerslow,timerfast;
     
-     //-- flag if we should write all the drawing to the log
+     /** flag if we should write all the drawing to the log*/
      boolean logRedraw = false;
      
      /**ArrayList, which holds Lines*/
@@ -99,9 +91,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
 		delete.setVisible(false);
 		inner.add(delete,cl);
 		
-		delete.addActionListener(new ActionListener() {
+		delete.addActionListener(new ActionListener() 
+		{
 			
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				RunningGame.deleteObject(dr.obj.getID());
 				timerfast.stop();
 				timerslow.start();
@@ -111,18 +105,18 @@ public class GameFieldPanel extends JPanel implements MouseListener
 				
 			}
 		});       
-        this.setBackground(Color.blue);
+//        this.setBackground(Color.blue);
          
         
         this.addMouseListener(this);
         this.setOpaque(false);
         	
-        //static framerate:
+        /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
         timerslow= new Timer(300, new ActionListenerSlow());
         timerfast= new Timer(70,new ActionListerFast());
         timerslow.start();
         
-        dr= new ChoseObject(socket,delete, gd, timerslow, timerfast);
+        dr= new ChoseObject(socket,delete, timerslow, timerfast);
     }
 
 	
@@ -132,17 +126,17 @@ public class GameFieldPanel extends JPanel implements MouseListener
     {   
         try
         {
-            //-- paint background
+            /** paint background*/
             g.drawImage(backgroundMap, 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), new Color(0, 0, 0), null);
             
-            //some logging (maybe)
+            /**some logging (maybe)*/
             if (logRedraw)
             {
                 Log.DebugLog("GameField: redrawing now!");
                 Log.DebugLog("map width =" + MAP_WIDTH + " height=" + MAP_HEIGHT);
             }
             
-            //-- paint objects
+            /** paint objects*/
             Collection<GameObject> c = RunningGame.getObjects().values();
             Iterator<GameObject> objIter = c.iterator();
             while (objIter.hasNext())
@@ -151,27 +145,28 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 BufferedImage objImg = obj.getImg();
                 Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
                 
-                //some logging (maybe)
+                /**some logging (maybe)*/
                 if (logRedraw)
                 {
                     Log.DebugLog("GameField: x=" + obj.getLocation().getX() + " y=" + obj.getLocation().getY() + "berechnet: pixelX=" + pixelCoords.width + " pixelY=" + pixelCoords.height);
                 }
                 
-                //-- draw image
-                //-- width of the image
+                /** draw image*/
+                /** width of the image*/
                 double imageDim = MAP_WIDTH/50*1.5;
 
 
                 if (objImg != null)
                 {
-                        //-- draw a line if object has moved
+                        /** draw a line if object has moved*/
                        if(obj.hasMoved())
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
                            g.setColor(Color.orange);
                            Lines l =new Lines(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                            line.add(l);
-                           for (Lines f:line){
+                           for (Lines f:line)
+                           {
                         	   g.drawLine(f.xs, f.ys, f.xe, f.ye);
                            }
                            if(logRedraw)
@@ -180,58 +175,60 @@ public class GameFieldPanel extends JPanel implements MouseListener
                            }
                        }
                        
-                       //-- draw image
+                       /** draw Object*/
                        g.drawImage(objImg, pixelCoords.width - (int)imageDim / 2, pixelCoords.height - (int)imageDim / 2,(int) imageDim,(int) imageDim, null);
                     
                 }
             }
-            if(dr.pressed){
+            if(dr.pressed)
+            {
+            	/**n is the starting value of the transparence*/
         		double n=255;
-        		double a=n/(360/4);
-            	gd= (Graphics2D) g;
-            
-      		  	double farbe=n;
-  		  		double rad= Math.toRadians(ang);
+        		/**a is the value which reduce the Color*/
+        		double a=n/(360/2-5);
+        		/**transparence of the radar*/
+      		  	double transp=n;
+      		  	
 
   		  		int y1=0;
   		  		int x1=0;
-      		  	int y = (int) (Math.cos (rad) * dr.radius);
-      		  	int x = (int) (Math.sin (rad) * dr.radius);
-
-      		  	if(clickCount==1){
-                	ObjectInfo inf =new ObjectInfo(gd, dr.obj);
+  		  		int y;
+  		  		int x;
+      		  	if(clickCount==1)
+      		  	{
+                	ObjectInfo inf =new ObjectInfo(g, dr.obj);
       		  	}
-      		  	
+
       		  	/**draws Radar around Object with ObjectRadius*/
-      		  	for(int i=0; i<360/4-5;i++){
+      		  	for(int i=0; i<360/2-5;i++){
       		  		Polygon poly= new Polygon();
       		  		double rad1= Math.toRadians(angel);
+          		  	g.setColor(new Color(103, 200, 255,(int)transp));
     		  		y=y1;
     		  		x=x1;
       		  		y1 = (int) (Math.cos(rad1)*dr.radius);
-      		
       		  		x1 = (int) (Math.sin (rad1) * dr.radius);
       		  		poly.addPoint(dr.xObject,dr.yObject);
     		  		poly.addPoint(x1+dr.xObject,y1+dr.yObject);
       		  		poly.addPoint(x+dr.xObject,y+dr.yObject);
-      		  		gd.setColor(new Color(0,255,0,(int)farbe));
-    		  		gd.fillPolygon(poly);
+    		  		g.fillPolygon(poly);
 
-      		  		angel-=4;
-      		  		farbe-=a;
+      		  		angel-=2;
+      		  		transp-=a;
       		  	}
 
             } 
 
-        } catch (Exception e)
+        } 
+        catch (Exception e)
         {
             e.printStackTrace();
         }
-        if(RunningGame.getGamePhase().equals("ANIM")){
+        if(RunningGame.getGamePhase().equals("ANIM"))
+        {
         	//TODO is never true
         	System.out.println("Game is in animation phase");
         	//TODO draw somethings in animation phase; probably lines gets smaller
-        	new MoveObjects(line);
         }
 
         
@@ -239,19 +236,19 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void paint(Graphics g)
     {
-        //-- drawing background map
+        /** drawing background map*/
         
-        //-- determine if we have to render the map (when the size changes or at the start)
+        /** determine if we have to render the map (when the size changes or at the start)*/
         if (backgroundMap == null || backgroundMap.getWidth() != getWidth())
         {
             Log.DebugLog("Map manager: rendered Map");
-            //-- render map
+            /** render map*/
             backgroundMap = MapManager.renderMap(RunningGame.getMyFieldId(), this.getWidth());
             MAP_WIDTH = backgroundMap.getWidth();
             MAP_HEIGHT = backgroundMap.getHeight();
         }
 
-        //-- paint background
+        /** paint background*/
         g.drawImage(backgroundMap, 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), 0, 0, backgroundMap.getWidth(), backgroundMap.getHeight(), Color.BLACK, null);
         dbImage = createImage(getWidth(), getHeight());
         dbg = dbImage.getGraphics();
@@ -268,18 +265,21 @@ public class GameFieldPanel extends JPanel implements MouseListener
         yP= e.getY();
     	/**
     	 * if count==0 draw new object or draw target around chousen object*/
-    	if(clickCount==0){
+    	if(clickCount==0)
+    	{
     		dr.target(xP,yP);
     		dr.add(xP,yP);
 
 
     	}
     	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
-    	else{
+    	else
+    	{
     		delete.setVisible(false);
     		inner.revalidate();
     		inner.repaint();
-    		if(Math.pow(xP-dr.xObject,2)+Math.pow(yP-dr.yObject,2)<= Math.pow(dr.radius, 2)){
+    		if(Math.pow(xP-dr.xObject,2)+Math.pow(yP-dr.yObject,2)<= Math.pow(dr.radius, 2))
+    		{
                 Log.DebugLog("you have clicked in the radius, trying to move object");
     			if(dr.getSelectedObject() != null)
                         {
@@ -290,7 +290,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	}
     		
     		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
-    		else{
+    		else
+    		{
     			timerfast.stop();
     			timerslow.start();
     			dr.pressed=false;
@@ -318,19 +319,22 @@ public class GameFieldPanel extends JPanel implements MouseListener
     {
    }
     
-    class ActionListenerSlow implements ActionListener {
-    	  public void actionPerformed(ActionEvent e) {
+    class ActionListenerSlow implements ActionListener 
+    {
+    	  public void actionPerformed(ActionEvent e) 
+    	  {
     		  repaint();
 
     	  }
     }
-    class ActionListerFast implements ActionListener {
-    	  public void actionPerformed(ActionEvent e) {
+    class ActionListerFast implements ActionListener 
+    {
+    	  public void actionPerformed(ActionEvent e) 
+    	  {
     		  repaint();
 
     	  }
     }
-    
     
     	
 }

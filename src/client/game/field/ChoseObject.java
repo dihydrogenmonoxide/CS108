@@ -1,15 +1,10 @@
 package client.game.field;
 
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.Timer;
 
 import shared.Log;
 import shared.Protocol;
@@ -28,8 +23,6 @@ public class ChoseObject
 	static int xObject,yObject;
     /**radius to move object*/
     static int radius;
-    /**boolean to see if place is free where you want to add Object*/
-    boolean frei= true;
     /**the Connection made to the Server.*/
     Clientsocket socket;
     /**Buttonspanel to choce pressed button from ButtonGroup*/
@@ -37,20 +30,20 @@ public class ChoseObject
     /**delete Button to set Visible true*/
     JButton delete;
     GameObject obj;
-    /**Two timer to repaint one is fast when object is clicked and the other slower*/
-    Timer timerslow,timerfast;
+    /**Dimension of the ObjectImage*/
+    double imageDim;
     
-	public ChoseObject(Clientsocket s, JButton delete, Timer timerslow, Timer timerfast)
+	public ChoseObject(Clientsocket s, JButton delete, double imageDim)
 	{
-		this.timerfast=timerfast;
-		this.timerslow=timerslow;
 		this.delete=delete;
 		this.socket=s;
+		this.imageDim=imageDim;
 	}
 	
 	
 	/**go true every Object which already exists. If point which is pressed equals Object, make pressed true, to draw TargetRadius*/
-	public void target(int x , int y){
+	public void target(int x , int y)
+	{
 		Collection<GameObject> c = RunningGame.getObjects().values();
 		Iterator<GameObject> objIter = c.iterator();
         while(objIter.hasNext())
@@ -59,34 +52,26 @@ public class ChoseObject
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width;
         	yObject= pixelCoords.height;
-            if(x > xObject-10 && x < xObject+10 && y > yObject-10 && y < yObject+10&&obj.isMovable())//TODO i don't think thats best way to check for moving range
+            if(x > xObject-imageDim/2 && x < xObject+imageDim/2 && y > yObject-imageDim/2 && y < yObject+imageDim/2 && obj.isMovable())//TODO i don't think thats best way to check for moving range
             {
-            	timerslow.stop();
-        		timerfast.start();
+            	GameFieldPanel.fastTimer();
     			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
-        		frei = false;
         		GameFieldPanel.clickCount=1;    
         		delete.setVisible(true);
         		return;
         	}
-        	else
-        	{
-        		timerfast.stop();
-        		timerslow.start();
-        		pressed=false;
-        		frei = true;
-        	}      	
-
         }
-
+        
+        add(x,y);
+		
     }
 	    
 	/**add new Objects to the ObjectList*/
     public void add(int x, int y)
     {
-    	if(frei)
-    	{
+//    	if(!pressed)
+//    	{
             	
             Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
             Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
@@ -117,15 +102,25 @@ public class ChoseObject
                 case NONE:
                 default:
             }
-        GameFieldPanel.clickCount=0;
-        }
+//        }
     }
     
-    /**returns which object is selected, if at all oO */
-    public GameObject getSelectedObject()
+    void objectPressed(int x, int y)
     {
-        return obj;
+    	delete.setVisible(false);
+		if(Math.pow(x-xObject,2)+Math.pow(y-yObject,2)<= Math.pow(radius, 2))
+		{
+            Log.DebugLog("you have clicked in the radius, trying to move object");
+			if(obj != null)
+                    {
+                        RunningGame.moveObject(x,y,obj, socket);
+                    }
+    	}
+		pressed=false;
+		GameFieldPanel.clickCount=0;
+		GameFieldPanel.slowTimer();
     }
+    
     
    
 }

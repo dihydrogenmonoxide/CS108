@@ -55,7 +55,14 @@ public class InnerGameFrame extends JPanel {
 		this.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
 		
-		GameFieldPanel gameField = new GameFieldPanel(socket, this, c);
+		JButton delete = new JButton("delete");
+		delete.setOpaque(false);
+		c.gridx=5;
+		c.gridy=2;
+		delete.setVisible(false);
+		this.add(delete,c);
+		
+		GameFieldPanel gameField = new GameFieldPanel(socket, delete);
         gameField.setOpaque(true);
         c.fill = GridBagConstraints.BOTH;
         gameField.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -127,7 +134,6 @@ public class InnerGameFrame extends JPanel {
 		c.gridwidth=1;
 		this.setOpaque(false);
 		this.add(playerInf,c);
-		
 		
 		
 		

@@ -8,7 +8,6 @@ import client.net.Clientsocket;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Polygon;
@@ -50,24 +49,22 @@ public class GameFieldPanel extends JPanel implements MouseListener
     private Graphics dbg;
     /**Buttonspanel to choce pressed button from ButtonGroup*/
     private Clientsocket socket;
-    private Image bil;
     /**angel for showing the movingRange*/
     private double angel=0;
+    /** width of the image*/
+    double imageDim;
     
     ChoseObject dr;
     /**Point of mousePressed*/
     int xP,yP;
-    /**JPanel InnerGameFrame to add deleteButton*/
-    InnerGameFrame inner;
-    /**Gridbagcontraints to add Position of delete Button*/
-    GridBagConstraints cl;
     /**Integer to get how many Clicks*/
     static int clickCount=0;
     /**delete Button which appears, when its Possible to click on it (if target is drawn)*/
     JButton delete;
 
     /**Two timer to repaint one is fast when object is clicked and the other slower*/
-    Timer timerslow,timerfast;
+    static Timer timerslow;
+	static Timer timerfast;
     
      /** flag if we should write all the drawing to the log*/
      boolean logRedraw = false;
@@ -76,47 +73,39 @@ public class GameFieldPanel extends JPanel implements MouseListener
      static List<Lines> line=new ArrayList<Lines>();
     
         
-    public GameFieldPanel(Clientsocket s, InnerGameFrame innerGameFrame, GridBagConstraints c)
+    public GameFieldPanel(Clientsocket s, JButton delete2)
     {
-    	this.cl=c;
-    	this.inner = innerGameFrame;
         this.socket = s;
+        this.delete=delete2;
 
+        
+        imageDim = MAP_WIDTH/50*1.5;
         this.setPreferredSize(this.getMaximumSize());
-
-        delete = new JButton("delete");
-		delete.setOpaque(false);
-		cl.gridx=5;
-		cl.gridy=2;
-		delete.setVisible(false);
-		inner.add(delete,cl);
-		
+        
 		delete.addActionListener(new ActionListener() 
 		{
 			
 			public void actionPerformed(ActionEvent e) 
 			{
 				RunningGame.deleteObject(dr.obj.getID());
-				timerfast.stop();
-				timerslow.start();
-				dr.pressed=false;
 				delete.setVisible(false);
 				clickCount=0;
+				slowTimer();
+				dr.pressed=false;
 				
 			}
 		});       
-//        this.setBackground(Color.blue);
          
         
         this.addMouseListener(this);
         this.setOpaque(false);
         	
         /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
-        timerslow= new Timer(300, new ActionListenerSlow());
+        timerslow= new Timer(200, new ActionListenerSlow());
         timerfast= new Timer(70,new ActionListerFast());
         timerslow.start();
         
-        dr= new ChoseObject(socket,delete, timerslow, timerfast);
+        dr= new ChoseObject(socket,delete, imageDim);
     }
 
 	
@@ -152,9 +141,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 }
                 
                 /** draw image*/
-                /** width of the image*/
-                double imageDim = MAP_WIDTH/50*1.5;
-
+                
 
                 if (objImg != null)
                 {
@@ -268,39 +255,14 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	if(clickCount==0)
     	{
     		dr.target(xP,yP);
-    		dr.add(xP,yP);
-
 
     	}
     	/**if count is Bigger then 0 draw Line if new click is inside TargetRadius*/
     	else
     	{
-    		delete.setVisible(false);
-    		inner.revalidate();
-    		inner.repaint();
-    		if(Math.pow(xP-dr.xObject,2)+Math.pow(yP-dr.yObject,2)<= Math.pow(dr.radius, 2))
-    		{
-                Log.DebugLog("you have clicked in the radius, trying to move object");
-    			if(dr.getSelectedObject() != null)
-                        {
-                            RunningGame.moveObject(xP,yP,dr.getSelectedObject(), socket);
-                        }
-    			dr.pressed=false;
-    			clickCount=0;
-        	}
-    		
-    		/**if second click is outside of TargetRadius remove targetRadius and count is zero to draw no Object take one on Panel*/
-    		else
-    		{
-    			timerfast.stop();
-    			timerslow.start();
-    			dr.pressed=false;
-        		clickCount=0;
-    		}
-	}
-                
-
-    	
+    		dr.objectPressed(xP, yP);
+    	}
+            	
     }
 
     public void mouseReleased(MouseEvent e)
@@ -317,14 +279,13 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
     public void mouseClicked(MouseEvent e)
     {
-   }
+    }
     
     class ActionListenerSlow implements ActionListener 
     {
     	  public void actionPerformed(ActionEvent e) 
     	  {
     		  repaint();
-
     	  }
     }
     class ActionListerFast implements ActionListener 
@@ -332,8 +293,18 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	  public void actionPerformed(ActionEvent e) 
     	  {
     		  repaint();
-
     	  }
+    }
+    
+    static void fastTimer()
+    {
+    	timerslow.stop();
+    	timerfast.start();
+    }
+    static void slowTimer()
+    {
+    	timerfast.stop();
+    	timerslow.start();
     }
     
     	

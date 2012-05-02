@@ -70,44 +70,40 @@ public class ChoseObject
 	/**add new Objects to the ObjectList*/
     public void add(int x, int y)
     {
-//    	if(!pressed)
-//    	{
             	
-            Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
-            Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
-            Log.DebugLog("sending request to create:" + but.choice);
-            switch (but.choice)
-            {
-                case TANK:
-                    RunningGame.spawnObject(x, y, Protocol.OBJECT_TANK, socket);
-                    break;
-                case FIGHTER:
-                    RunningGame.spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET, socket);
-                    break;
-                case BOMBER:
-                	RunningGame.spawnObject(x, y, Protocol.OBJECT_BOMBER, socket);
-                    break;
-                case ANTIAIR:
-                	RunningGame.spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR, socket);
-                    break;
-                case BUNKER:
-                	RunningGame.spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK, socket);
-                    break;
-                case REPRO:
-                	RunningGame.spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER, socket);
-                    break;
-                case BANK:
-                	RunningGame.spawnObject(x, y, Protocol.OBJECT_BANK, socket);
-                    break;
-                case NONE:
-                default:
-            }
-//        }
+        Log.DebugLog("User clicked on the map at (" + x + "," + y + ") with the button choice: " + but.choice.toString());
+        Log.DebugLog("this point has the coordinates: " + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)));
+        Log.DebugLog("sending request to create:" + but.choice);
+        switch (but.choice)
+        {
+            case TANK:
+                RunningGame.spawnObject(x, y, Protocol.OBJECT_TANK, socket);
+                break;
+            case FIGHTER:
+                RunningGame.spawnObject(x, y, Protocol.OBJECT_FIGHTER_JET, socket);
+                break;
+            case BOMBER:
+            	RunningGame.spawnObject(x, y, Protocol.OBJECT_BOMBER, socket);
+                break;
+            case ANTIAIR:
+            	RunningGame.spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_AIR, socket);
+                break;
+            case BUNKER:
+            	RunningGame.spawnObject(x, y, Protocol.OBJECT_STATIONARY_ANTI_TANK, socket);
+                break;
+            case REPRO:
+            	RunningGame.spawnObject(x, y, Protocol.OBJECT_REPRODUCTION_CENTER, socket);
+                break;
+            case BANK:
+            	RunningGame.spawnObject(x, y, Protocol.OBJECT_BANK, socket);
+                break;
+            case NONE:
+            default:
+        }
     }
     
     void objectPressed(int x, int y)
     {
-    	delete.setVisible(false);
 		if(Math.pow(x-xObject,2)+Math.pow(y-yObject,2)<= Math.pow(radius, 2))
 		{
             Log.DebugLog("you have clicked in the radius, trying to move object");
@@ -117,6 +113,7 @@ public class ChoseObject
                     }
     	}
 		pressed=false;
+    	delete.setVisible(false);
 		GameFieldPanel.clickCount=0;
 		GameFieldPanel.slowTimer();
     }

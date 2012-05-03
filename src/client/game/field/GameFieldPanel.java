@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -31,7 +32,7 @@ import shared.Protocol;
 import shared.game.Coordinates;
 import shared.game.MapManager;
 
-public class GameFieldPanel extends JPanel implements MouseListener
+public class GameFieldPanel extends JPanel implements MouseListener, ActionListener
 {
 
     /**backgroundmap*/
@@ -97,7 +98,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 			
 			public void actionPerformed(ActionEvent e) 
 			{
-//				RunningGame.deleteObject(dr.obj.getID());
+				RunningGame.deleteObject(dr.obj.getID());
 				//TODO send update to server
 				RunningGame.deleteObjectServer(xP, yP, dr.obj, socket);
 				delete.setVisible(false);
@@ -115,7 +116,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
         timerslow= new Timer(200, new ActionListenerSlow());
         timerfast= new Timer(70,new ActionListerFast());
-        animtimer= new Timer(40, new ActionListenerAnim());
+        animtimer= new Timer(10, this);
         timerslow.start();
         
         dr= new ChoseObject(socket,delete, imageDim);
@@ -226,28 +227,91 @@ public class GameFieldPanel extends JPanel implements MouseListener
         }
         if(RunningGame.getGamePhase()==GamePhases.ANIM)
         {
-//        	timerfast.stop();
-//        	timerslow.stop();
-//        	animtimer.start();
+        	dr.pressed=false;
+        	
+        	timerfast.stop();
+        	timerslow.stop();
+        	animtimer.start();
 //        	xdif=xend-xstart;
 //        	ydif=xend-ystart;
-//        	g.setColor(Color.red);
-//    		for(Lines l: line)
-//    		{
-//    			g.drawLine(l.xs, l.ys, l.xe, l.ye);
-//    			xstart=l.xs;
-//    			xend=l.xe;
-//    			ystart=l.ys;
-//    			yend=l.ye;
-//    		}
+        	//TODO doesnt paint straight
+        	g.setColor(Color.red);
+			for(int i=0; i<line.size();i++){
+				double xstart=line.get(i).xs;;
+				int ystart=line.get(i).ys;
+				int xend=line.get(i).xe;
+				int yend=line.get(i).ye;
+				double xmove= xstart;
+				int ymove=ystart;
+				double xdif=xend-xstart;
+				double ydif=yend-ystart;
+				updateLine(xdif, ydif,xmove, ymove, yend,xend, g ,i);
+				g.drawLine(line.get(i).xs, line.get(i).ys, line.get(i).xe, line.get(i).ye);
+			}
         	
-    	line.clear();
+//    	line.clear();
 
         }
         
 
         
     }
+    
+    void updateLine(double xdif, double ydif, double xmov, int ymov, int yend, int xend, Graphics g, int i){
+		if(xdif==0){
+			if(ymov<=yend){
+				ymov++;
+				  
+			}
+			if(ymov>=yend){
+				ymov--;
+				}
+			}
+
+		else{
+			if(ydif==0){
+				if(xmov<=xend){
+					xmov++;
+				}
+				if(xmov>=xend){
+					xmov--;
+				}
+			}
+			else{
+				double fact=xdif/ydif;
+				
+				if(xdif<=0&&ydif<=0){
+					if(xmov>=xend){
+						xmov-=fact;
+						ymov--;
+					}
+				}
+		  
+				if(xdif<=0&&ydif>=0){
+					if(xmov>=xend){
+						xmov+=fact;
+						ymov++;
+					}
+				}
+		  
+				if(xdif>=0&&ydif<=0){
+					if(xmov<=xend){
+						xmov-=fact;
+						ymov--;
+					}
+				}
+		  
+				if(xdif>=0&&ydif>=0){
+					if(xmov<=xend){
+						ymov+=fact;
+						xmov++;
+					}
+				}
+			}
+		}
+		line.get(i).ys=ymov;
+		line.get(i).xs=(int)xmov;
+	}
 
     public void paint(Graphics g)
     {
@@ -324,13 +388,10 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		  repaint();
     	  }
     }
-    class ActionListenerAnim implements ActionListener 
-    {
-    	  public void actionPerformed(ActionEvent e) 
-    	  {
-    		  
-    	  }
-    }
+    public void actionPerformed(ActionEvent e) {
+
+		repaint();
+	}
     
     
     static void fastTimer()

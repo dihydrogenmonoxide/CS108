@@ -208,18 +208,17 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 	 * ammunation is >0
 	 */
 	public void attack() {
+		for(GamePlayObject O:Manager.getObjectList())
+		{
+			if(O.getPos().getDistance(this.getPosAtEnd())<this.range && this.isAttackableObject(O))
+			{
+				this.addToPossibleTargets(O);
+			}
+		}
 		try {
 			while (this.ammunation > 0) {
-				if (this.getBuildingTarget() != null) {
-					if (this.getBuildingTarget().getHealthPoints() < 0) {
-						this.BuildingTarget = null;
-					} else {
-						this.getBuildingTarget().damage(getAttackPoints());
-						this.getOwner().addMoney((long) getAttackPoints());
+				if (this.possibleTargets.isEmpty()) {
 
-					}
-				} else if (this.BuildingTarget == null
-						&& this.getTarget() != null) {
 					for (Player P : this.Manager.getServer().getPlayers()) {
 						if (MapManager.isInside(P.getFieldID(), this
 								.getPosAtEnd().getX(), this.getPosAtEnd()
@@ -234,9 +233,19 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 
 					}
 
-				}
+				
+					
+				} 
 
 				else {
+					GamePlayObject T=this.selectTarget();
+					if(T.getHealthPoints()>0)
+					{
+						T.damage(this.getAttackPoints());
+						this.getOwner().addMoney(this.getAttackPoints());
+						if(T.getHealthPoints()<0)this.possibleTargets.remove(T);
+						
+					}
 				}
 
 				this.ammunation--;
@@ -245,6 +254,7 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 		} catch (NullPointerException e) {
 		} finally {
 			this.ammunation = GameSettings.Bomber.ammunation;
+			this.possibleTargets.clear();
 		}
 	}
 

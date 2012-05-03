@@ -35,7 +35,7 @@ public class GameSettings {
 	public static class Bomber
 	{
 		final static public int movingRange=200000;
-		final static public int attackRange=5000;
+		final static public int attackRange=1000;
 		final static public String[] attackable = {"Tank", "Building"};
 		final static public int attackPoints=250;
 		final static public int healthPoints=1000;

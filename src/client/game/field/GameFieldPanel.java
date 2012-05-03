@@ -1,6 +1,7 @@
 package client.game.field;
 
 import client.data.GameObject;
+import client.data.GamePhases;
 import client.data.RunningGame;
 import client.game.InnerGameFrame;
 import client.net.Clientsocket;
@@ -65,12 +66,21 @@ public class GameFieldPanel extends JPanel implements MouseListener
     /**Two timer to repaint one is fast when object is clicked and the other slower*/
     static Timer timerslow;
 	static Timer timerfast;
+	static Timer animtimer;
     
-     /** flag if we should write all the drawing to the log*/
-     boolean logRedraw = false;
+	/** flag if we should write all the drawing to the log*/
+	boolean logRedraw = false;
+//	int xab=0;
+//	int yab=0;
+//	private double xstart;
+//	private int ystart;
+//	private int xend;
+//	private int yend;
+//	double xdif=xend-xstart;
+//	double ydif=yend-ystart;
      
-     /**ArrayList, which holds Lines*/
-     static List<Lines> line=new ArrayList<Lines>();
+	/**ArrayList, which holds Lines*/
+	static List<Lines> line=new ArrayList<Lines>();
     
         
     public GameFieldPanel(Clientsocket s, JButton delete2)
@@ -103,6 +113,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
         timerslow= new Timer(200, new ActionListenerSlow());
         timerfast= new Timer(70,new ActionListerFast());
+        animtimer= new Timer(40, new ActionListenerAnim());
         timerslow.start();
         
         dr= new ChoseObject(socket,delete, imageDim);
@@ -186,9 +197,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 	ObjectInfo inf =new ObjectInfo(g, dr.obj);
       		  	}
 
+      		  	Polygon poly= new Polygon();
       		  	/**draws Radar around Object with ObjectRadius*/
       		  	for(int i=0; i<360/2-5;i++){
-      		  		Polygon poly= new Polygon();
       		  		double rad1= Math.toRadians(angel);
           		  	g.setColor(new Color(103, 200, 255,(int)transp));
     		  		y=y1;
@@ -199,9 +210,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		  		poly.addPoint(x1+dr.xObject,y1+dr.yObject);
       		  		poly.addPoint(x+dr.xObject,y+dr.yObject);
     		  		g.fillPolygon(poly);
-
       		  		angel-=2;
       		  		transp-=a;
+    		  		poly.reset();
       		  	}
 
             } 
@@ -211,12 +222,27 @@ public class GameFieldPanel extends JPanel implements MouseListener
         {
             e.printStackTrace();
         }
-        if(RunningGame.getGamePhase().equals("ANIM"))
+        if(RunningGame.getGamePhase()==GamePhases.ANIM)
         {
-        	//TODO is never true
-        	System.out.println("Game is in animation phase");
-        	//TODO draw somethings in animation phase; probably lines gets smaller
+//        	timerfast.stop();
+//        	timerslow.stop();
+//        	animtimer.start();
+//        	xdif=xend-xstart;
+//        	ydif=xend-ystart;
+//        	g.setColor(Color.red);
+//    		for(Lines l: line)
+//    		{
+//    			g.drawLine(l.xs, l.ys, l.xe, l.ye);
+//    			xstart=l.xs;
+//    			xend=l.xe;
+//    			ystart=l.ys;
+//    			yend=l.ye;
+//    		}
+        	
+    	line.clear();
+
         }
+        
 
         
     }
@@ -285,6 +311,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     {
     	  public void actionPerformed(ActionEvent e) 
     	  {
+    		  
     		  repaint();
     	  }
     }
@@ -295,6 +322,14 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		  repaint();
     	  }
     }
+    class ActionListenerAnim implements ActionListener 
+    {
+    	  public void actionPerformed(ActionEvent e) 
+    	  {
+    		  
+    	  }
+    }
+    
     
     static void fastTimer()
     {
@@ -307,5 +342,4 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	timerslow.start();
     }
     
-    	
 }

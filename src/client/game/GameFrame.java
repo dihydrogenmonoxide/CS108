@@ -30,12 +30,11 @@ public class GameFrame
     /**
      * actual width of the screen.
      */
-    private final static int screenX = screen.getDisplayMode().getWidth();
+    final static int screenX = screen.getDisplayMode().getWidth();
     /**
      * actual height of the screen.
      */
-    private final static int screenY = screen.getDisplayMode().getHeight();
-    ;	
+    final static int screenY = screen.getDisplayMode().getHeight();	
 	/**the Connection to listen to*/
 	private Clientsocket socket;
         

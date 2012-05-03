@@ -52,13 +52,15 @@ public class ChoseObject
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
         	xObject= pixelCoords.width;
         	yObject= pixelCoords.height;
-            if(x > xObject-imageDim/2 && x < xObject+imageDim/2 && y > yObject-imageDim/2 && y < yObject+imageDim/2 && obj.isMovable())//TODO i don't think thats best way to check for moving range
+            if(x > xObject-imageDim/2 && x < xObject+imageDim/2 && y > yObject-imageDim/2 && y < yObject+imageDim/2)//TODO i don't think thats best way to check for moving range
             {
             	GameFieldPanel.fastTimer();
     			radius= Coordinates.radCoordToPixel(obj.movingRange(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
     			pressed=true;
-        		GameFieldPanel.clickCount=1;    
-        		delete.setVisible(true);
+    			if(obj.isMovable()){
+    				GameFieldPanel.clickCount=1;    
+    			}
+    			delete.setVisible(true);
         		return;
         	}
         }

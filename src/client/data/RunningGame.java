@@ -346,4 +346,13 @@ public class RunningGame
         socket.sendData(Protocol.GAME_UPDATE_OBJECT.str() + obj.getProtocol().str() + Coordinates.pixelToCoord(x, y, new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT)) + " " + obj.getID());
     }
     
+    
+
+	public static void deleteObjectServer(int xP, int yP, GameObject obj,
+			Clientsocket socket) {
+		Log.InformationLog("Trying to delete Object: " + obj.getID());
+		//TODO create Protocol to delete Objects
+//        socket.sendData(Protocol.Game_)		
+	}
+    
 }

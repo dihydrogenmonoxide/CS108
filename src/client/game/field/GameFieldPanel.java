@@ -97,7 +97,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
 			
 			public void actionPerformed(ActionEvent e) 
 			{
-				RunningGame.deleteObject(dr.obj.getID());
+//				RunningGame.deleteObject(dr.obj.getID());
+				//TODO send update to server
+				RunningGame.deleteObjectServer(xP, yP, dr.obj, socket);
 				delete.setVisible(false);
 				clickCount=0;
 				slowTimer();

@@ -16,12 +16,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.sound.sampled.Line;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -32,7 +34,7 @@ import shared.Protocol;
 import shared.game.Coordinates;
 import shared.game.MapManager;
 
-public class GameFieldPanel extends JPanel implements MouseListener, ActionListener
+public class GameFieldPanel extends JPanel implements MouseListener
 {
 
     /**backgroundmap*/
@@ -81,7 +83,7 @@ public class GameFieldPanel extends JPanel implements MouseListener, ActionListe
 //	double ydif=yend-ystart;
      
 	/**ArrayList, which holds Lines*/
-	static List<Lines> line=new ArrayList<Lines>();
+	static List<Line2D> line=new ArrayList<Line2D>();
     
         
     public GameFieldPanel(Clientsocket s, JButton delete2)
@@ -116,7 +118,6 @@ public class GameFieldPanel extends JPanel implements MouseListener, ActionListe
         /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
         timerslow= new Timer(200, new ActionListenerSlow());
         timerfast= new Timer(70,new ActionListerFast());
-        animtimer= new Timer(10, this);
         timerslow.start();
         
         dr= new ChoseObject(socket,delete, imageDim);
@@ -164,11 +165,12 @@ public class GameFieldPanel extends JPanel implements MouseListener, ActionListe
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
                            g.setColor(Color.orange);
-                           Lines l =new Lines(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
+                           
+                           Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                            line.add(l);
-                           for (Lines f:line)
+                           for (Line2D f:line)
                            {
-                        	   g.drawLine(f.xs, f.ys, f.xe, f.ye);
+                        	   g.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
                            }
                            if(logRedraw)
                            {
@@ -229,27 +231,25 @@ public class GameFieldPanel extends JPanel implements MouseListener, ActionListe
         {
         	dr.pressed=false;
         	
-        	timerfast.stop();
-        	timerslow.stop();
-        	animtimer.start();
-//        	xdif=xend-xstart;
-//        	ydif=xend-ystart;
-        	//TODO doesnt paint straight
+        	fastTimer();
         	g.setColor(Color.red);
-			for(int i=0; i<line.size();i++){
-				double xstart=line.get(i).xs;;
-				int ystart=line.get(i).ys;
-				int xend=line.get(i).xe;
-				int yend=line.get(i).ye;
+        	for(int i=0; i<line.size();i++){
+				double xstart=line.get(i).getX1();;
+				double ystart=line.get(i).getY1();
+				double xend=line.get(i).getX2();
+				double yend=line.get(i).getY2();
 				double xmove= xstart;
-				int ymove=ystart;
-				double xdif=xend-xstart;
-				double ydif=yend-ystart;
-				updateLine(xdif, ydif,xmove, ymove, yend,xend, g ,i);
-				g.drawLine(line.get(i).xs, line.get(i).ys, line.get(i).xe, line.get(i).ye);
-			}
+				double ymove=ystart;
+				double xdif=line.get(i).getX2()-line.get(i).getX1();
+				double ydif=line.get(i).getY2()-line.get(i).getY1();
+		    	updateLine(xdif, ydif,xmove, ymove, yend,xend, g ,i);
+				g.drawLine((int)line.get(i).getX1(),(int)line.get(i).getY1(),(int) line.get(i).getX2(),(int) line.get(i).getY2());
+        	}
         	
-//    	line.clear();
+        	if(RunningGame.getAnimTime()==1){
+            	line.clear();
+            	slowTimer();
+        	}
 
         }
         
@@ -257,60 +257,61 @@ public class GameFieldPanel extends JPanel implements MouseListener, ActionListe
         
     }
     
-    void updateLine(double xdif, double ydif, double xmov, int ymov, int yend, int xend, Graphics g, int i){
+    void updateLine(double xdif, double ydif, double xmove, double ymove, double yend2, double xend2, Graphics g, int i){
 		if(xdif==0){
-			if(ymov<=yend){
-				ymov++;
+			if(ymove<=yend2){
+				ymove++;
 				  
 			}
-			if(ymov>=yend){
-				ymov--;
+			if(ymove>=yend2){
+				ymove--;
 				}
 			}
 
 		else{
 			if(ydif==0){
-				if(xmov<=xend){
-					xmov++;
+				if(xmove<=xend2){
+					xmove++;
 				}
-				if(xmov>=xend){
-					xmov--;
+				if(xmove>=xend2){
+					xmove--;
 				}
 			}
 			else{
 				double fact=xdif/ydif;
 				
 				if(xdif<=0&&ydif<=0){
-					if(xmov>=xend){
-						xmov-=fact;
-						ymov--;
+					if(xmove>=xend2){
+						xmove-=fact;
+						ymove--;
 					}
 				}
 		  
 				if(xdif<=0&&ydif>=0){
-					if(xmov>=xend){
-						xmov+=fact;
-						ymov++;
+					if(ymove<=yend2){
+						xmove+=fact;
+						ymove++;
 					}
 				}
 		  
 				if(xdif>=0&&ydif<=0){
-					if(xmov<=xend){
-						xmov-=fact;
-						ymov--;
+					if(xmove<=xend2){
+						xmove-=fact;
+						ymove--;
 					}
 				}
 		  
 				if(xdif>=0&&ydif>=0){
-					if(xmov<=xend){
-						ymov+=fact;
-						xmov++;
+					if(xmove<=xend2){
+						xmove+=fact;
+						ymove++;
 					}
 				}
 			}
 		}
-		line.get(i).ys=ymov;
-		line.get(i).xs=(int)xmov;
+		line.get(i).setLine(xmove, ymove, line.get(i).getX2(), line.get(i).getY2());
+
+	
 	}
 
     public void paint(Graphics g)
@@ -388,19 +389,17 @@ public class GameFieldPanel extends JPanel implements MouseListener, ActionListe
     		  repaint();
     	  }
     }
-    public void actionPerformed(ActionEvent e) {
-
-		repaint();
-	}
     
     
     static void fastTimer()
     {
+    	System.out.println("fast");
     	timerslow.stop();
     	timerfast.start();
     }
     static void slowTimer()
     {
+    	System.out.println("slow");
     	timerfast.stop();
     	timerslow.start();
     }

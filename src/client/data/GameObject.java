@@ -164,6 +164,7 @@ public class GameObject implements DrawableObject
     	return type.isMovable() && !hasMoved();
     }
     
+    
     /** whether this object can be selected or not.
      * @return whether this object be selected or not.
      */

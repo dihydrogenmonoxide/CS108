@@ -49,6 +49,7 @@ public class GameFrame
 
     public GameFrame(final JFrame lobbyParent, Clientsocket s)
     {
+        super();
         this.socket = s;
         this.lobby = lobbyParent;
 
@@ -100,7 +101,7 @@ public class GameFrame
 
             public void windowClosing(WindowEvent e)
             {
-              GameFrame.closeGame();  
+              closeGame();  
             }    
         });
         //TODO listener which closes the game if something unforeseen happens.

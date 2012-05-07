@@ -84,6 +84,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         
     public GameFieldPanel(Clientsocket s, JButton delete2)
     {
+        super();
         this.socket = s;
         this.delete=delete2;
 

@@ -38,7 +38,8 @@ public class GameChatPanel extends JPanel {
 	private JButton sendButton;
 	
 	public GameChatPanel(final Clientsocket s){
-		
+		super();
+                
 		this.socket = s;
 
 		this.setLayout(new GridBagLayout());

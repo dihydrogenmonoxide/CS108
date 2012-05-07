@@ -41,6 +41,7 @@ public class ChatPanel extends JPanel {
 	 * @param s the Clientsocket on which the messages are received*/
 	public ChatPanel(final Clientsocket s) 
 	{
+                super();
 		this.socket = s;
 
 		this.setLayout(new GridBagLayout());

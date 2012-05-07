@@ -104,6 +104,7 @@ public class GamesPanel extends JPanel
      */
     public GamesPanel(final Clientsocket s, final JFrame lobbyParent)
     {
+        super();
         this.socket = s;
         this.lobbyParent = lobbyParent;
 

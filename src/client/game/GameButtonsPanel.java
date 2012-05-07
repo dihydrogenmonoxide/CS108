@@ -68,6 +68,7 @@ public class GameButtonsPanel extends JPanel{
 
 	
 	public GameButtonsPanel(Clientsocket s, JFrame game){
+                super();
 		Color bg = Color.black;
 		this.socket = s;
 		

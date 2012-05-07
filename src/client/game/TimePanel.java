@@ -29,6 +29,7 @@ public class TimePanel extends JPanel{
  
 
 	public TimePanel( JFrame gameFrame, Clientsocket s){
+                super();
 		this.socket=s;
 		this.gameFrame = gameFrame;
 

@@ -26,6 +26,7 @@ public class InnerLobby extends JPanel {
 	 * @param s the socket to the server
 	 * @param u the current user*/
 	public InnerLobby(final Clientsocket s, final User u, JFrame lobbyParent){
+                super();
 		this.user = u;
 		this.socket = s;
 		

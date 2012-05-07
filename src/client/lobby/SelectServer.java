@@ -60,6 +60,7 @@ public class SelectServer extends JPanel {
 	 * */
 	public SelectServer(User u)
 	{
+                super();
 		this.user = u;
 
 		Log.DebugLog("Choose a server");

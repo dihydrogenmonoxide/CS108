@@ -46,6 +46,7 @@ public class InnerGameFrame extends JPanel {
 		
 	
 	public InnerGameFrame(final GameFrame gameFrame, Clientsocket s){
+                super();
 		this.socket = s;
 		this.gameChat=gameChat;
                 

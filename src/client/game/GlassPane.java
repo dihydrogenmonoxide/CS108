@@ -46,6 +46,7 @@ class GlassPane extends JComponent
 
 	public GlassPane( Container contentPane, Clientsocket s) 
 	{
+                super();
 		this.socket=s;
 		CBListener listener = new CBListener( this, contentPane);
 		addMouseListener(listener);

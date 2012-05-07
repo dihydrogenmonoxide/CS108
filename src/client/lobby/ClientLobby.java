@@ -53,6 +53,7 @@ public class ClientLobby extends JFrame {
 	/**creates the lobby.*/
 	public ClientLobby(User u)
 	{
+                super();
 		this.user = u;
 
 		/*

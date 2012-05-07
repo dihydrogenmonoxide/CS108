@@ -9,12 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="400"
-   height="400"
+   width="100"
+   height="100"
    id="svg3828"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="Bomber.svg">
+   sodipodi:docname="Bomber.svg"
+   inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/bilder/Bomber.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs3830" />
   <sodipodi:namedview
@@ -24,7 +27,7 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.782"
+     inkscape:zoom="0.5"
      inkscape:cx="480.17902"
      inkscape:cy="250"
      inkscape:document-units="px"
@@ -53,17 +56,17 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-652.36218)">
+     transform="translate(0,-952.36218)">
     <path
        sodipodi:type="arc"
-       style="fill:#152dff;fill-opacity:1;stroke:none;stroke-width:1.11899996000000002;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#152dff;fill-opacity:1;stroke:none"
        id="path4346"
        sodipodi:cx="258.95142"
        sodipodi:cy="744.17804"
        sodipodi:rx="161.76471"
        sodipodi:ry="117.64706"
-       d="m 420.71613,744.17804 c 0,64.97467 -72.42453,117.64706 -161.76471,117.64706 -89.34019,0 -161.764713,-52.67239 -161.764713,-117.64706 0,-64.97468 72.424523,-117.64706 161.764713,-117.64706 89.34018,0 161.76471,52.67238 161.76471,117.64706 z"
-       transform="matrix(1.2313695,0,0,1.6931332,-118.86488,-407.63035)"
+       d="m 420.71613,744.17804 a 161.76471,117.64706 0 1 1 -323.529423,0 161.76471,117.64706 0 1 1 323.529423,0 z"
+       transform="matrix(0.3090909,0,0,0.42500001,-29.231661,685.27866)"
        inkscape:export-filename="/Users/fabiosulser/Desktop/swissdefcon/CS108/bilder/Bomber.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />

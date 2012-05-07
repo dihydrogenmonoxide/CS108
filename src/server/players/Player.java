@@ -154,6 +154,8 @@ implements Comparable<Player>
 				{
 					ps_sock.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
 				}
+				if(s.isGameRunning())
+					ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+0+"  "+s.getServername());
 			}
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
 			b_NameSet = true;

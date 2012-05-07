@@ -89,7 +89,7 @@ public class SelectServer extends JPanel {
 		listServers.setListData(msgNoServers);
 		
 		listServers.setEnabled(false); //because no server found yet
-
+                
 		this.startSearch();
 
 		listServers.addListSelectionListener(new ListSelectionListener() {

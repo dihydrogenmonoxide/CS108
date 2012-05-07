@@ -51,7 +51,7 @@ public class ClientLobby extends JFrame {
 	
 	
 	/**creates the lobby.*/
-	public ClientLobby(User u)
+	public ClientLobby(User u, ServerAddress addressServer)
 	{
                 super();
 		this.user = u;
@@ -160,12 +160,21 @@ public class ClientLobby extends JFrame {
 			}
 		});
 		lobbyParent.add(s);
-		Log.InformationLog("you can now select a server");
-		
-
+		Log.InformationLog("you can now select a server");    
+                
+                //-- if a server is given, connect to the suggested server
+                if(addressServer != null)
+                {
+                    s.serverSelected(new ServerSelectedEvent("Server selected", addressServer , u.getUserName()));
+                }
 
 		lobbyParent.setVisible(true);
 	}
+
+    public ClientLobby(User user)
+    {
+        this(user, null);
+    }
 	
 	
 

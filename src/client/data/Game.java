@@ -58,7 +58,7 @@ class Game {
 	 * @return String representation.*/
 	public String toString()
 	{
-		return id + " " + players.size() + " " + name;
+		return "Game: created Gamw with id:"+ id + " number of players:" + players.size() + " name:" + name + " isVisible:" + isVisible;
 	}
 
 	/**adds a player to a game.

@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
+import shared.Protocol;
 
 
 
@@ -35,7 +36,7 @@ public class InnerGameFrame extends JPanel {
 	/**Panel for gameChat*/
 	private GameChatPanel gameChat;
 	
-	private JToggleButton ready;
+	private JButton undo;
                 
 	GridBagConstraints c;
 	
@@ -97,22 +98,41 @@ public class InnerGameFrame extends JPanel {
 		c.gridy=3;
 		this.add(buttons, c);
 		
-		ready= new JToggleButton("ready");
-		ready.setSelected(false);
-		c.gridwidth=1;
-		c.gridx=1;
-		c.gridy=2;
-		c.insets= new Insets(0,50,0,0);
-		this.add(ready, c);
-		
-		ready.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				GlassPane.setVisible(e.getStateChange() == ItemEvent.SELECTED);
-				GameChatPanel glassChat = new GameChatPanel(socket);
-				GlassPane.add(glassChat);
-			}
-		});
-		
+//		ready= new JToggleButton("ready");
+//		ready.setSelected(false);
+//		c.gridwidth=1;
+//		c.gridx=1;
+//		c.gridy=2;
+//		c.insets= new Insets(0,50,0,0);
+//		this.add(ready, c);
+//		
+//		ready.addItemListener(new ItemListener() {
+//			public void itemStateChanged(ItemEvent e) {
+//				GlassPane.setVisible(e.getStateChange() == ItemEvent.SELECTED);
+//				GameChatPanel glassChat = new GameChatPanel(socket);
+//				GlassPane.add(glassChat);
+//                                socket.sendData(Protocol.G);
+//                                
+//			}
+//		});
+
+                undo = new JButton("zurück");
+                c.gridwidth = 1;
+                c.gridx = 1;
+                c.gridy = 2;
+                c.insets = new Insets(0, 50, 0, 0);
+                this.add(undo, c);
+
+                undo.addActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        socket.sendData(Protocol.GAME_UNDO.str());
+                    }
+                });
+                
+                
 
 		leave = new JButton("Beenden");
 		c.gridx=0;

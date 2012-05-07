@@ -6,12 +6,16 @@ import client.data.RunningGame;
 import client.game.InnerGameFrame;
 import client.net.Clientsocket;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Polygon;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -67,20 +71,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
     JButton delete;
 
     /**Two timer to repaint one is fast when object is clicked and the other slower*/
-    static Timer timerslow;
-	static Timer timerfast;
-	static Timer animtimer;
+    static Timer timerSlow;
+	static Timer timerFast;
+	static Timer timerAnim;
     
 	/** flag if we should write all the drawing to the log*/
 	boolean logRedraw = false;
-//	int xab=0;
-//	int yab=0;
-//	private double xstart;
-//	private int ystart;
-//	private int xend;
-//	private int yend;
-//	double xdif=xend-xstart;
-//	double ydif=yend-ystart;
      
 	/**ArrayList, which holds Lines*/
 	static List<Line2D> line=new ArrayList<Line2D>();
@@ -116,9 +112,10 @@ public class GameFieldPanel extends JPanel implements MouseListener
         this.setOpaque(false);
         	
         /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
-        timerslow= new Timer(200, new ActionListenerSlow());
-        timerfast= new Timer(70,new ActionListerFast());
-        timerslow.start();
+        timerSlow= new Timer(200, new ActionListenerSlow());
+        timerFast= new Timer(70,new ActionListerFast());
+        timerAnim= new Timer(30, new ActionListenerAnim());
+        timerSlow.start();
         
         dr= new ChoseObject(socket,delete, imageDim);
     }
@@ -165,10 +162,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
                            g.setColor(Color.orange);
-                           
-                           Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
-                           line.add(l);
-                           for (Line2D f:line)
+//                           if(RunningGame.getGamePhase()!=GamePhases.ANIM)
+//                           {
+                        	   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
+                        	   line.add(l);
+//                           }
+                    	   for (Line2D f:line)
                            {
                         	   g.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
                            }
@@ -204,7 +203,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
       		  	Polygon poly= new Polygon();
       		  	/**draws Radar around Object with ObjectRadius*/
-      		  	for(int i=0; i<360/2-5;i++){
+      		  	for(int i=0; i<360/2-5;i++)
+      		  	{
       		  		double rad1= Math.toRadians(angel);
           		  	g.setColor(new Color(103, 200, 255,(int)transp));
     		  		y=y1;
@@ -231,9 +231,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
         {
         	dr.pressed=false;
         	
-        	fastTimer();
-        	g.setColor(Color.red);
-        	for(int i=0; i<line.size();i++){
+        	timerFast.stop();
+        	timerSlow.stop();
+        	timerAnim.start();
+        	BasicStroke s= new BasicStroke(2.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER);
+        	for(int i=0; i<line.size();i++)
+        	{
 				double xstart=line.get(i).getX1();;
 				double ystart=line.get(i).getY1();
 				double xend=line.get(i).getX2();
@@ -243,66 +246,82 @@ public class GameFieldPanel extends JPanel implements MouseListener
 				double xdif=line.get(i).getX2()-line.get(i).getX1();
 				double ydif=line.get(i).getY2()-line.get(i).getY1();
 		    	updateLine(xdif, ydif,xmove, ymove, yend,xend, g ,i);
-				g.drawLine((int)line.get(i).getX1(),(int)line.get(i).getY1(),(int) line.get(i).getX2(),(int) line.get(i).getY2());
         	}
         	
-        	if(RunningGame.getAnimTime()==1){
+        	if(RunningGame.getAnimTime()<=0)
+        	{
             	line.clear();
+        		timerAnim.stop();
             	slowTimer();
         	}
 
         }
         
-
-        
     }
     
-    void updateLine(double xdif, double ydif, double xmove, double ymove, double yend2, double xend2, Graphics g, int i){
-		if(xdif==0){
-			if(ymove<=yend2){
+    void updateLine(double xdif, double ydif, double xmove, double ymove, double yend2, double xend2, Graphics g, int i)
+    {
+		if(xdif==0)
+		{
+			if(ymove<=yend2)
+			{
 				ymove++;
 				  
 			}
-			if(ymove>=yend2){
+			if(ymove>=yend2)
+			{
 				ymove--;
 				}
 			}
 
-		else{
-			if(ydif==0){
-				if(xmove<=xend2){
+		else
+		{
+			if(ydif==0)
+			{
+				if(xmove<=xend2)
+				{
 					xmove++;
 				}
-				if(xmove>=xend2){
+				if(xmove>=xend2)
+				{
 					xmove--;
 				}
 			}
-			else{
+			else
+			{
 				double fact=xdif/ydif;
 				
-				if(xdif<=0&&ydif<=0){
-					if(xmove>=xend2){
+				if(xdif<=0&&ydif<=0)
+				{
+					if(xmove>=xend2)
+					{
 						xmove-=fact;
 						ymove--;
 					}
 				}
 		  
-				if(xdif<=0&&ydif>=0){
-					if(ymove<=yend2){
+				if(xdif<=0&&ydif>=0)
+				{
+					if(ymove<=yend2)
+					{
 						xmove+=fact;
 						ymove++;
 					}
 				}
 		  
-				if(xdif>=0&&ydif<=0){
-					if(xmove<=xend2){
+				if(xdif>=0&&ydif<=0)
+				{
+					if(xmove<=xend2)
+					{
 						xmove-=fact;
 						ymove--;
 					}
 				}
 		  
-				if(xdif>=0&&ydif>=0){
-					if(xmove<=xend2){
+				if(xdif>=0&&ydif>=0)
+				{
+					if(xmove<=xend2)
+					{
 						xmove+=fact;
 						ymove++;
 					}
@@ -389,19 +408,24 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		  repaint();
     	  }
     }
+    class ActionListenerAnim implements ActionListener 
+    {
+    	  public void actionPerformed(ActionEvent e) 
+    	  {	  
+    		  repaint();
+    	  }
+    }
     
     
     static void fastTimer()
     {
-    	System.out.println("fast");
-    	timerslow.stop();
-    	timerfast.start();
+    	timerSlow.stop();
+    	timerFast.start();
     }
     static void slowTimer()
     {
-    	System.out.println("slow");
-    	timerfast.stop();
-    	timerslow.start();
+    	timerFast.stop();
+    	timerSlow.start();
     }
     
 }

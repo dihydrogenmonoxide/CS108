@@ -90,7 +90,7 @@ public class GameObject implements DrawableObject
      */
     public BufferedImage getImg(){
         //-- how thick the border should be
-        int border = 50;
+        int border = 40;
         
         //-- if image has not been created yet.
         if(image == null)

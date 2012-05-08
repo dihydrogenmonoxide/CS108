@@ -77,6 +77,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
 	/** flag if we should write all the drawing to the log*/
 	boolean logRedraw = false;
+	
+	Graphics2D gd;
      
 	/**ArrayList, which holds Lines*/
 	static List<Line2D> line=new ArrayList<Line2D>();
@@ -99,7 +101,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 			{
 				RunningGame.deleteObject(dr.obj.getID());
 				//TODO send update to server
-				RunningGame.deleteObjectServer(xP, yP, dr.obj, socket);
+				RunningGame.deleteObjectServer(xP, yP, dr.getSelectedObject(), socket);
 				delete.setVisible(false);
 				clickCount=0;
 				slowTimer();
@@ -137,6 +139,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 Log.DebugLog("GameField: redrawing now!");
                 Log.DebugLog("map width =" + MAP_WIDTH + " height=" + MAP_HEIGHT);
             }
+            gd = (Graphics2D)g;
             
             /** paint objects*/
             Collection<GameObject> c = RunningGame.getObjects().values();
@@ -162,7 +165,14 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        if(obj.hasMoved())
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-                           g.setColor(Color.orange);
+                           if(RunningGame.getGamePhase()==GamePhases.ANIM){
+                        	   gd.setColor(Color.red);
+                           		BasicStroke s= new BasicStroke(2.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER);
+                           		gd.setStroke(s);
+                           }
+                           else{
+                        	   gd.setColor(Color.orange);
+                           }
 //                           if(RunningGame.getGamePhase()!=GamePhases.ANIM)
 //                           {
                         	   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
@@ -170,7 +180,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 //                           }
                     	   for (Line2D f:line)
                            {
-                        	   g.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
+                        	   gd.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
                            }
                            if(logRedraw)
                            {
@@ -179,8 +189,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        }
                        
                        /** draw Object*/
-                       g.drawImage(objImg, pixelCoords.width - (int)imageDim / 2, pixelCoords.height - (int)imageDim / 2,(int) imageDim,(int) imageDim, null);
-                    
+//                       if(RunningGame.getGamePhase()==GamePhases.BUILD){
+                    	   g.drawImage(objImg, pixelCoords.width - (int)imageDim / 2, pixelCoords.height - (int)imageDim / 2,(int) imageDim,(int) imageDim, null);
+//                       }
                 }
             }
             if(dr.pressed)
@@ -199,7 +210,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
   		  		int x;
       		  	if(clickCount==1)
       		  	{
-                	ObjectInfo inf =new ObjectInfo(g, dr.obj);
+                	ObjectInfo inf =new ObjectInfo(g, dr.getSelectedObject());
       		  	}
 
       		  	Polygon poly= new Polygon();
@@ -210,11 +221,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
           		  	g.setColor(new Color(103, 200, 255,(int)transp));
     		  		y=y1;
     		  		x=x1;
-      		  		y1 = (int) (Math.cos(rad1)*dr.radius);
-      		  		x1 = (int) (Math.sin (rad1) * dr.radius);
-      		  		poly.addPoint(dr.xObject,dr.yObject);
-    		  		poly.addPoint(x1+dr.xObject,y1+dr.yObject);
-      		  		poly.addPoint(x+dr.xObject,y+dr.yObject);
+      		  		y1 = (int) (Math.cos(rad1)*dr.getRadius());
+      		  		x1 = (int) (Math.sin (rad1) * dr.getRadius());
+      		  		poly.addPoint(dr.objectPositionX(),dr.objectPositionY());
+    		  		poly.addPoint(x1+dr.objectPositionX(),y1+dr.objectPositionY());
+      		  		poly.addPoint(x+dr.objectPositionX(),y+dr.objectPositionY());
     		  		g.fillPolygon(poly);
       		  		angel-=2;
       		  		transp-=a;
@@ -235,7 +246,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	timerFast.stop();
         	timerSlow.stop();
         	timerAnim.start();
-        	BasicStroke s= new BasicStroke(2.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER);
+
         	for(int i=0; i<line.size();i++)
         	{
 				double xstart=line.get(i).getX1();;

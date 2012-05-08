@@ -269,7 +269,17 @@ public class SelectServer extends JPanel {
 					}
 					ServerAddress addressServer = new ServerAddress(addressIP, port, NetworkInterface.getByInetAddress(addressIP));
 					serverSelected(new ServerSelectedEvent("Server selected", addressServer , InputValidator.UserName(inputUsername.getText())));
-				} catch (UnknownHostException|NullPointerException | SocketException  e) {
+				} catch (UnknownHostException e) {
+					Log.DebugLog("PEBKAC -> user to stupid to enter ip --> abort");
+					Log.ErrorLog("User not worthy of this game");
+				}
+				
+				catch (NullPointerException e) {
+					Log.DebugLog("PEBKAC -> user to stupid to enter ip --> abort");
+					Log.ErrorLog("User not worthy of this game");
+				}
+				
+				catch (SocketException  e) {
 					Log.DebugLog("PEBKAC -> user to stupid to enter ip --> abort");
 					Log.ErrorLog("User not worthy of this game");
 				}

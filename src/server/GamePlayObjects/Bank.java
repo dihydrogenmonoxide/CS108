@@ -15,8 +15,7 @@ import shared.Protocol;
 import shared.User;
 
 /**
- * The Server Side Class Tank. Range is the Range in which the Tank can Attack.
- * movingRange is the Range the Tank can move in one Phase.
+ * The Server Side Class Bank.
  * 
  * @author lucius
  * 

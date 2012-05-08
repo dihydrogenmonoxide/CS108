@@ -126,10 +126,14 @@ implements Runnable
 				}							
 			}
 		}
-		catch(MCSException | SocketException e)
+		catch(MCSException e)
 		{
 			Log.ErrorLog("Couldn't create the MulticastSocket: "+e.getMessage());
-		}		
+		}
+		catch(SocketException e)
+		{
+			Log.ErrorLog("Couldn't create the MulticastSocket: "+e.getMessage());
+		}
 	}
 	
 	private MulticastSocket SetUp() 

@@ -165,11 +165,15 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        if(obj.hasMoved())
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-
-                    	   gd.setColor(Color.orange);
                     	   if (RunningGame.getGamePhase()==GamePhases.BUILD){
+                        	   gd.setColor(Color.orange);
                     		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                     		   line.add(l);
+                    	   }
+                    	   if(RunningGame.getGamePhase()==GamePhases.ANIM){
+                    		   gd.setColor(Color.red);
+                    		   BasicStroke s= new BasicStroke(2.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER);
+                    		   gd.setStroke(s);
                     	   }
                     	   for (Line2D f:line)
                            {

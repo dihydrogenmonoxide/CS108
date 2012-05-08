@@ -165,19 +165,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        if(obj.hasMoved())
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
-                           if(RunningGame.getGamePhase()==GamePhases.ANIM){
-                        	   gd.setColor(Color.red);
-                           		BasicStroke s= new BasicStroke(2.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER);
-                           		gd.setStroke(s);
-                           }
-                           else{
-                        	   gd.setColor(Color.orange);
-                           }
-//                           if(RunningGame.getGamePhase()!=GamePhases.ANIM)
-//                           {
-                        	   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
-                        	   line.add(l);
-//                           }
+
+                    	   gd.setColor(Color.orange);
+                    	   if (RunningGame.getGamePhase()==GamePhases.BUILD){
+                    		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
+                    		   line.add(l);
+                    	   }
                     	   for (Line2D f:line)
                            {
                         	   gd.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
@@ -189,9 +182,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        }
                        
                        /** draw Object*/
-//                       if(RunningGame.getGamePhase()==GamePhases.BUILD){
-                    	   g.drawImage(objImg, pixelCoords.width - (int)imageDim / 2, pixelCoords.height - (int)imageDim / 2,(int) imageDim,(int) imageDim, null);
-//                       }
+                	   g.drawImage(objImg, pixelCoords.width - (int)imageDim / 2, pixelCoords.height - (int)imageDim / 2,(int) imageDim,(int) imageDim, null);
                 }
             }
             if(dr.pressed)
@@ -439,5 +430,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	timerFast.stop();
     	timerSlow.start();
     }
+    public static void removeLine(){
+    	if(line!=null){
+    		line.clear();
+    	}
+    	
+	}
     
 }

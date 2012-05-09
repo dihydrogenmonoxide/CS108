@@ -157,7 +157,8 @@ implements Comparable<Player>
 				if(s.isGameRunning())
 					ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+0+"  "+s.getServername());
 			}
-			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
+			if(ps_sock != null)
+				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
 			b_NameSet = true;
 		}
 		
@@ -217,14 +218,13 @@ implements Comparable<Player>
 	 */
 	public void sendData(String s_MSG)
 	{
-		try
-		{
-			ps_sock.sendData(s_MSG);
-		}
-		catch(NullPointerException e)
+		if(ps_sock == null)
 		{
 			Log.ErrorLog("Player "+s_Nick+"("+i_ID+") isn't connected to this server it seems");
+			return;
 		}
+		ps_sock.sendData(s_MSG);
+
 	}
 			
 	/**
@@ -323,8 +323,14 @@ implements Comparable<Player>
 			{
 				s_server.resume();
 				s_server.removePlayer(this);
+				if(s_server.isGameRunning())
+				{
+					for(GamePlayObject o :s_server.getObjectManager().getPlayersObjectList(this))
+						o.damage(o.getHealthPoints());
+				}
 			}
-			ps_sock.close();
+			if(ps_sock != null)
+				ps_sock.close();
 		}
 	}
 	
@@ -412,6 +418,7 @@ implements Comparable<Player>
 				Log.WarningLog("Couldn't refund an object: "+o.getClass());
 			o.damage(o.getHealthPoints());
 			sendData(o.toProtocolString());
+			sendData(Protocol.GAME_MONEY.str()+getMoney());
 		}
 		catch(EmptyStackException e)
 		{

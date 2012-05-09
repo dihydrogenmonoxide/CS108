@@ -26,7 +26,7 @@ public class LogicManager
 implements Runnable
 {
 	private final static int buildTimeInSeconds = 60;
-	private final static int animationTimeInSeconds = 10;
+	private final static int animationTimeInSeconds = 2;
 	private Server server;
 	private Thread thread = new Thread(this);
 	private int voteCount = 0;	
@@ -230,6 +230,7 @@ implements Runnable
 					
 					player.sendData(o.toProtocolString());
 					player.addObject(o);
+					player.sendData(Protocol.GAME_MONEY.str()+player.getMoney());
 					return;
 				}
 				catch(GameObjectBuildException e)

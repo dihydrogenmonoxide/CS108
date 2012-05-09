@@ -20,9 +20,9 @@ public class ChoseObject
     /**boolean to take object*/
     static boolean pressed=false;
     /**position to handle the chosen Object from GameObjectList*/
-	static int xObject,yObject;
+	int xObject,yObject;
     /**radius to move object*/
-    static int radius;
+    int radius;
     /**the Connection made to the Server.*/
     Clientsocket socket;
     /**Buttonspanel to choce pressed button from ButtonGroup*/
@@ -122,6 +122,20 @@ public class ChoseObject
 		GameFieldPanel.slowTimer();
     }
     
+    public GameObject getSelectedObject()
+    {
+        return obj;
+    }
     
-   
+    public int getRadius(){
+    	return radius;
+    }
+    
+    public int objectPositionX(){
+    	return xObject;
+    }
+    public int objectPositionY(){
+    	return yObject;
+    }
+    
 }

@@ -58,6 +58,7 @@ public class Bomber implements GamePlayObject, Unit, Flying {
 	 * Funktionsrumpf für die Drawfunktion des Clients.
 	 * 
 	 */
+	
 	public int getId() {
 		return this.id;
 	}

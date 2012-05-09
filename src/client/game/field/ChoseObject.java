@@ -50,6 +50,7 @@ public class ChoseObject
         {
         	obj = objIter.next();
 	    	Dimension pixelCoords = Coordinates.coordToPixel(obj.getLocation(), new Dimension(GameFieldPanel.MAP_WIDTH, GameFieldPanel.MAP_HEIGHT));
+	    	
         	xObject= pixelCoords.width;
         	yObject= pixelCoords.height;
             if(x > xObject-imageDim/2 && x < xObject+imageDim/2 && y > yObject-imageDim/2 && y < yObject+imageDim/2&&!obj.hasMoved())//TODO i don't think thats best way to check for moving range

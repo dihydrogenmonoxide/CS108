@@ -77,12 +77,12 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
 	/** flag if we should write all the drawing to the log*/
 	boolean logRedraw = false;
-	     
-	Graphics2D gd;
-	
+	     	
 	/**ArrayList, which holds Lines*/
 	static List<Line2D> line=new ArrayList<Line2D>();
 	static List<Polygon> pol = new ArrayList<Polygon>();
+	
+	ChangingLists list;
     
         
     public GameFieldPanel(Clientsocket s, JButton delete2)
@@ -122,6 +122,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         timerSlow.start();
         
         dr= new ChoseObject(socket,delete, imageDim);
+        list= new ChangingLists();
     }
 
 	
@@ -140,7 +141,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                 Log.DebugLog("GameField: redrawing now!");
                 Log.DebugLog("map width =" + MAP_WIDTH + " height=" + MAP_HEIGHT);
             }
-            gd = (Graphics2D)g;
+            Graphics2D gd = (Graphics2D)g;
             
             /** paint objects*/
             Collection<GameObject> c = RunningGame.getObjects().values();
@@ -173,7 +174,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                     		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                     		   line.add(l);
                     		   if(dr.getSelectedObject().hasMoved()){
-                    			   drawArrow( oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
+                    			   list.drawArrow(pol, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
                     		   }
                     		   
                     	   }
@@ -200,23 +201,17 @@ public class GameFieldPanel extends JPanel implements MouseListener
             }
             if(dr.pressed)
             {
-            	/**n is the starting value of the transparence*/
-        		double n=255;
+  		  		ObjectInfo inf =new ObjectInfo(g, dr.getSelectedObject());
+            	/**transp is the starting value of the transparence*/
+        		double transp=255;
         		/**a is the value which reduce the Color*/
-        		double a=n/(360/2-5);
-        		/**transparence of the radar*/
-      		  	double transp=n;
-      		  	
+        		double a=transp/(360/2-5);
 
   		  		int y1=0;
   		  		int x1=0;
   		  		int y;
   		  		int x;
-      		  	if(clickCount==1)
-      		  	{
-                	ObjectInfo inf =new ObjectInfo(g, dr.getSelectedObject());
-      		  	}
-
+  		  		
       		  	Polygon polyRad= new Polygon();
       		  	/**draws Radar around Object with ObjectRadius*/
       		  	for(int i=0; i<360/2-5;i++)
@@ -261,7 +256,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 				double ymove=ystart;
 				double xdif=line.get(i).getX2()-line.get(i).getX1();
 				double ydif=line.get(i).getY2()-line.get(i).getY1();
-		    	updateLine(xdif, ydif,xmove, ymove, yend,xend, g ,i);
+		    	list.updateLine(line, xdif, ydif,xmove, ymove, yend,xend, g ,i);
         	}
         	
         	if(RunningGame.getAnimTime()<=0)
@@ -282,7 +277,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         /** determine if we have to render the map (when the size changes or at the start)*/
         if (backgroundMap == null || backgroundMap.getWidth() != getWidth())
         {
-        	line.clear();
+        	removeObject();
             Log.DebugLog("Map manager: rendered Map");
             /** render map*/
             backgroundMap = MapManager.renderMap(RunningGame.getMyFieldId(), this.getWidth());
@@ -344,8 +339,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     		  repaint();
     	  }
     }
-    
-    
+      
     static void fastTimer()
     {
     	timerSlow.stop();
@@ -356,107 +350,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	timerFast.stop();
     	timerSlow.start();
     }
-    public static void removeLine(){
+    public static void removeObject(){
     	if(line!=null){
+    		pol.clear();
     		line.clear();
     	}
     	
 	}
-    void updateLine(double xdif, double ydif, double xmove, double ymove, double yend2, double xend2, Graphics g, int i)
-    {
-		if(xdif==0)
-		{
-			if(ymove<=yend2)
-			{
-				ymove++;
-				  
-			}
-			if(ymove>=yend2)
-			{
-				ymove--;
-				}
-			}
-
-		else
-		{
-			if(ydif==0)
-			{
-				if(xmove<=xend2)
-				{
-					xmove++;
-				}
-				if(xmove>=xend2)
-				{
-					xmove--;
-				}
-			}
-			else
-			{
-				double fact=xdif/ydif;
-				
-				if(xdif<=0&&ydif<=0)
-				{
-					if(xmove>=xend2)
-					{
-						xmove-=fact;
-						ymove--;
-					}
-				}
-		  
-				if(xdif<=0&&ydif>=0)
-				{
-					if(ymove<=yend2)
-					{
-						xmove+=fact;
-						ymove++;
-					}
-				}
-		  
-				if(xdif>=0&&ydif<=0)
-				{
-					if(xmove<=xend2)
-					{
-						xmove-=fact;
-						ymove--;
-					}
-				}
-		  
-				if(xdif>=0&&ydif>=0)
-				{
-					if(xmove<=xend2)
-					{
-						xmove+=fact;
-						ymove++;
-					}
-				}
-			}
-		}
-		line.get(i).setLine(xmove, ymove, line.get(i).getX2(), line.get(i).getY2());
-
-	
-	}
-    void drawArrow(int startX, int startY, int endX, int endY){
-	    double radians=90*Math.PI/180;
-	    if(endX-startX!=0){
-	    	radians = Math.atan((endY-startY)/(endX-startX));
-	    }
-	
-	    Polygon poly = new Polygon();
-	    double rad1= Math.toRadians(30);
-	    double rad=Math.toRadians(-30);
-		double y=(int) (Math.cos(rad)*30);
-		double x=(int) (Math.sin (rad) * 30);
-		double y1 = (int) (Math.cos(rad1)*30);
-		double x1 = (int) (Math.sin (rad1) * 30);
-		poly.addPoint((int)endX,(int) endY);
-		poly.addPoint((int)(x1+endX),(int)(y1+endY));
-		poly.addPoint((int)(x+endX),(int)(y+endY));
-		
-		if(radians<=0&&endX-startX<=0||endY-startY<=0&&radians>0){
-//			gd.rotate(radians-Math.toRadians(90),endX, endY);
-		}else{
-//			gd.rotate(radians+Math.toRadians(90), endX, endY);
-		}
-		pol.add(poly);
-    }
 }

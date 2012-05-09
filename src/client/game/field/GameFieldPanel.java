@@ -77,9 +77,9 @@ public class GameFieldPanel extends JPanel implements MouseListener
     
 	/** flag if we should write all the drawing to the log*/
 	boolean logRedraw = false;
-	
+	     
 	Graphics2D gd;
-     
+	
 	/**ArrayList, which holds Lines*/
 	static List<Line2D> line=new ArrayList<Line2D>();
 	static List<Polygon> pol = new ArrayList<Polygon>();
@@ -166,12 +166,16 @@ public class GameFieldPanel extends JPanel implements MouseListener
                        if(obj.hasMoved())
                        {
                            Dimension oldPixelCoords = Coordinates.coordToPixel(obj.getOldLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
+                           Dimension newPixelCoodrs = Coordinates.coordToPixel(obj.getLocation(), new Dimension(MAP_WIDTH, MAP_HEIGHT));
                     	   if (RunningGame.getGamePhase()==GamePhases.BUILD){
                     		   
                         	   g.setColor(Color.orange);
                     		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                     		   line.add(l);
-                    		   drawArrow(g, oldPixelCoords.width, oldPixelCoords.height, dr.objectPositionX(), dr.objectPositionY());
+                    		   if(dr.getSelectedObject().hasMoved()){
+                    			   drawArrow( oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
+                    		   }
+                    		   
                     	   }
                     	   if(RunningGame.getGamePhase()==GamePhases.ANIM){
                     		   g.setColor(Color.red);
@@ -181,8 +185,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
                         	   g.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
                            }
                     	   for(Polygon p:pol){
-                    		   g.setColor(Color.white);
-                    		   g.fillPolygon(p);
+                    		   gd.setColor(Color.white);
+                    		   gd.fillPolygon(p);
                     	   }
                            if(logRedraw)
                            {
@@ -431,7 +435,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 
 	
 	}
-    void drawArrow(Graphics g, int endX, int endY, int startX, int startY){
+    void drawArrow(int startX, int startY, int endX, int endY){
 	    double radians=90*Math.PI/180;
 	    if(endX-startX!=0){
 	    	radians = Math.atan((endY-startY)/(endX-startX));
@@ -447,12 +451,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
 		poly.addPoint((int)endX,(int) endY);
 		poly.addPoint((int)(x1+endX),(int)(y1+endY));
 		poly.addPoint((int)(x+endX),(int)(y+endY));
-		Graphics2D gd = (Graphics2D) g;
 		
 		if(radians<=0&&endX-startX<=0||endY-startY<=0&&radians>0){
-			gd.rotate(radians-Math.toRadians(90),endX, endY);
+//			gd.rotate(radians-Math.toRadians(90),endX, endY);
 		}else{
-			gd.rotate(radians+Math.toRadians(90), endX, endY);
+//			gd.rotate(radians+Math.toRadians(90), endX, endY);
 		}
 		pol.add(poly);
     }

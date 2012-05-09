@@ -179,7 +179,7 @@ public class Bank implements GamePlayObject, Building, Unit {
 	 * Attacks the first Target in the List while it isnt dead and the ammunation is >0
 	 */
 	public void attack() {
-		this.getOwner().addMoney((long)(this.Owner.getMoney()*this.getAttackPoints()));
+		this.getOwner().addMoney((long)GameSettings.Bank.attackPoints);
 	}
 
 	/**

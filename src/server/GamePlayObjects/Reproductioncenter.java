@@ -166,9 +166,7 @@ public class Reproductioncenter implements GamePlayObject, Building, Unit {
 	 * Reproducts the Population
 	 */
 	public void attack() {
-		this.getOwner().addPopulation((long)(
-				this.getOwner().getPopulation()
-						* this.getAttackPoints()));
+		this.getOwner().addPopulation((long)GameSettings.Reproductioncenter.attackPoints);
 
 	}
 

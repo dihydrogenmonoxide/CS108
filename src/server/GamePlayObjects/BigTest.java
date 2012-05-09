@@ -7,6 +7,7 @@ import server.server.Server;
 import shared.Log;
 import shared.game.Coordinates;
 import test.gamePlayObjects.TestServer;
+import test.gamePlayObjects.TextServerStaticField;
 
 public class BigTest {
 

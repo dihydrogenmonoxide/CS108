@@ -173,9 +173,10 @@ public class GameFieldPanel extends JPanel implements MouseListener
                         	   g.setColor(Color.orange);
                     		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                     		   line.add(l);
-                    		   if(dr.getSelectedObject().hasMoved()){
-                    			   list.drawArrow(pol, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
-                    		   }
+//                    		   if(dr.getSelectedObject().hasMoved()){
+                    			   list.drawArrow( gd,imageDim, pol, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
+//                    		   }
+                    			   
                     		   
                     	   }
                     	   if(RunningGame.getGamePhase()==GamePhases.ANIM){

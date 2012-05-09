@@ -1,9 +1,12 @@
 package client.game.field;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.util.List;
+
+import client.game.GameFrame;
 
 public class ChangingLists {
 
@@ -80,7 +83,7 @@ public class ChangingLists {
 
 	
 	}
-    void drawArrow(List<Polygon> pol, int startX, int startY, int endX, int endY)
+    void drawArrow(Graphics2D gd, double imageDim, List<Polygon> pol, int startX, int startY, int endX, int endY)
     {
 	    double radians=90*Math.PI/180;
 	    if(endX-startX!=0)
@@ -91,11 +94,11 @@ public class ChangingLists {
 	    Polygon poly = new Polygon();
 	    double rad1= Math.toRadians(30);
 	    double rad=Math.toRadians(-30);
-		double y=(int) (Math.cos(rad)*30);
-		double x=(int) (Math.sin (rad) * 30);
-		double y1 = (int) (Math.cos(rad1)*30);
-		double x1 = (int) (Math.sin (rad1) * 30);
-		poly.addPoint((int)endX,(int) endY);
+		double y=(int) (Math.cos(rad)*GameFieldPanel.MAP_WIDTH/50);
+		double x=(int) (Math.sin (rad) * GameFieldPanel.MAP_WIDTH/50);
+		double y1 = (int) (Math.cos(rad1)*GameFieldPanel.MAP_WIDTH/50);
+		double x1 = (int) (Math.sin (rad1) * GameFieldPanel.MAP_WIDTH/50);
+		poly.addPoint((int)(endX),(int) (endY));
 		poly.addPoint((int)(x1+endX),(int)(y1+endY));
 		poly.addPoint((int)(x+endX),(int)(y+endY));
 		

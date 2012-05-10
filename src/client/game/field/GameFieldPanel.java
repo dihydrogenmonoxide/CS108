@@ -118,7 +118,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         /**static framerate fast one to draw Radar, if object is pressed, otherwise slow one is token*/
         timerSlow= new Timer(200, new PaintAction());
         timerFast= new Timer(70,new PaintAction());
-        timerAnim= new Timer(30, new PaintAction());
+        timerAnim= new Timer(20, new PaintAction());
         timerSlow.start();
         
         dr= new ChoseObject(socket,delete, imageDim);
@@ -173,11 +173,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                         	   g.setColor(Color.orange);
                     		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                     		   line.add(l);
-//                    		   if(dr.getSelectedObject().hasMoved()){
-                    			   list.drawArrow( gd,imageDim, pol, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
-//                    		   }
-                    			   
-                    		   
+                    		   list.drawArrow( gd,imageDim, pol, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
                     	   }
                     	   if(RunningGame.getGamePhase()==GamePhases.ANIM){
                     		   g.setColor(Color.red);
@@ -187,7 +183,6 @@ public class GameFieldPanel extends JPanel implements MouseListener
                         	   g.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
                            }
                     	   for(Polygon p:pol){
-                    		   gd.setColor(Color.white);
                     		   gd.fillPolygon(p);
                     	   }
                            if(logRedraw)

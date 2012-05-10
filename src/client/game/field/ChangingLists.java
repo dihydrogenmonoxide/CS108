@@ -83,33 +83,32 @@ public class ChangingLists {
 
 	
 	}
+    
+    
     void drawArrow(Graphics2D gd, double imageDim, List<Polygon> pol, int startX, int startY, int endX, int endY)
     {
-	    double radians=90*Math.PI/180;
-	    if(endX-startX!=0)
-	    {
-	    	radians = Math.atan((endY-startY)/(endX-startX));
-	    }
-	
-	    Polygon poly = new Polygon();
-	    double rad1= Math.toRadians(30);
-	    double rad=Math.toRadians(-30);
-		double y=(int) (Math.cos(rad)*GameFieldPanel.MAP_WIDTH/50);
-		double x=(int) (Math.sin (rad) * GameFieldPanel.MAP_WIDTH/50);
-		double y1 = (int) (Math.cos(rad1)*GameFieldPanel.MAP_WIDTH/50);
-		double x1 = (int) (Math.sin (rad1) * GameFieldPanel.MAP_WIDTH/50);
-		poly.addPoint((int)(endX),(int) (endY));
-		poly.addPoint((int)(x1+endX),(int)(y1+endY));
-		poly.addPoint((int)(x+endX),(int)(y+endY));
-		
-		//TODO rotate Arrows
-		if(radians<=0&&endX-startX<=0||endY-startY<=0&&radians>0)
-		{
-//			gd.rotate(radians-Math.toRadians(90),endX, endY);
-		}else
-		{
-//			gd.rotate(radians+Math.toRadians(90), endX, endY);
-		}
-		pol.add(poly);
+        double arrowWidth = imageDim/2;
+        double theta = 0.423 ;
+        double length;
+        double breite;
+        double länge;
+        double baseX, baseY ;
+        double diffX= (double)endX - startX ;
+		double diffY= (double)endY - startY ;
+
+        length = (double)Math.sqrt( diffX * diffX + diffY * diffY ) ;
+        breite = arrowWidth / ( length ) ;
+        länge = arrowWidth / ( 2.0 * ( (double)Math.tan( theta ) / 2.0 ) * length ) ;
+
+        // find the base of the arrow
+        baseX = ( (double)endX - länge * diffX);
+        baseY = ( (double)endY - länge * diffY);
+
+        Polygon poly = new Polygon();
+        poly.addPoint((int)(endX),(int)(endY));
+        poly.addPoint( (int)(baseX + breite * -diffY),(int)( baseY + breite * diffX));
+        poly.addPoint((int) (baseX - breite * -diffY),(int) (baseY - breite * diffX));
+
+        pol.add(poly);
     }
 }

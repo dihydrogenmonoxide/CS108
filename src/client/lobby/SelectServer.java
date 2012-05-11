@@ -286,11 +286,11 @@ public class SelectServer extends JPanel {
 			}
 		});
 
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.LINE_END;
 		c.ipady = 5;
 		c.weightx = 0.0;
-		c.gridwidth = 1;
-		c.gridx = 2;
+		c.gridwidth = 3;
+		c.gridx = 0;
 		c.gridy = 7;
 		this.add(buttonIp, c);
 		

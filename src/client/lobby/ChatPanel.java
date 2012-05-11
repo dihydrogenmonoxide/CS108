@@ -114,7 +114,7 @@ public class ChatPanel extends JPanel {
 			{
 				try
 				{
-					chatContent.insertString(chatContent.getLength(), "Received following Message from Server=" + evt.getMsgId(), chatContent.getStyle("HTMLDocument"));
+					chatContent.insertString(chatContent.getLength(), "Folgende Nachricht erhalten=" + evt.getMsgId(), chatContent.getStyle("HTMLDocument"));
 				}
 				catch (BadLocationException e)
 				{

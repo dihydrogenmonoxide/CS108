@@ -47,7 +47,7 @@ public class SelectServer extends JPanel {
 	/**input for the desired username.*/
 	private JFormattedTextField inputUsername;
 	/**message to display if no server found.*/
-	private String[] msgNoServers = {"suchen ...", "bitte haben Sie Geduld"};
+	private String[] msgNoServers = {"suchen ...", "bitte habe Geduld"};
 	/** holds all User relevant infos.*/
 	private User user;
 	/**boolean if DiscoveryClient already started.*/
@@ -69,7 +69,7 @@ public class SelectServer extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 
 		JLabel labelDialog = new JLabel();
-		labelDialog.setText("Wählen Sie ihren Server:");
+		labelDialog.setText("Wähle deinen Server:");
 		labelDialog.setBackground(new Color(255, 255, 255));
 		labelDialog.setOpaque(true);
 		labelDialog.setForeground(new Color(50, 50, 50));
@@ -142,7 +142,7 @@ public class SelectServer extends JPanel {
 
 
 		JLabel labelUser = new JLabel();
-		labelUser.setText("Wählen Sie ihren Benutzernamen:");
+		labelUser.setText("Wähle deinen Benutzernamen:");
 		labelUser.setBackground(new Color(255, 255, 255));
 		labelUser.setOpaque(true);
 		labelUser.setForeground(new Color(50, 50, 50));
@@ -257,7 +257,7 @@ public class SelectServer extends JPanel {
 					
 					if (InputValidator.isIP(stringIP[0]) == false)
 					{
-						JOptionPane.showMessageDialog(buttonIp, "Warum konnte der inhaftierte Programmierer nicht aus dem Gefängnis ausbrechen? \n \n \n 404 Feil not found \n \n (not an ip)", "ID 10 T - Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(buttonIp, "Warum konnte der inhaftierte Programmierer nicht aus dem Gefängnis ausbrechen? \n \n \n 404 Feil not found \n \n (Bitte gebe eine richtige IP ein)", "ID 10 T - Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					InetAddress addressIP = InetAddress.getByName(stringIP[0]);

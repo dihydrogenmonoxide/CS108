@@ -132,7 +132,7 @@ public class ClientLobby extends JFrame {
 							 if (evt.getId() == -1)
 							 {
 								Log.InformationLog("Connection to server broken, starting ServerSelect");
-								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Connection Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(lobbyParent, "Verbindungsunterbruch", "Verbindungsunterbruch", JOptionPane.ERROR_MESSAGE);
 								if (game != null)
 								{	
 									game.closeGame();
@@ -153,7 +153,7 @@ public class ClientLobby extends JFrame {
 				{
 					e.printStackTrace();
 					Log.WarningLog("-->connection broken, could not connect");
-					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Connection Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(lobbyParent, "Konnte nicht mit Server verbinden: ", "Verbindung gestört", JOptionPane.ERROR_MESSAGE);
 					if (socket != null) { socket.disconnect(); }
 					s.setVisible(true);
 					s.startSearch();

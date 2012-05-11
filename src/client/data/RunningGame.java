@@ -352,7 +352,7 @@ public class RunningGame
 			Clientsocket socket) {
 		Log.InformationLog("Trying to delete Object: " + obj.getID());
 		//TODO create Protocol to delete Objects
-//        socket.sendData(Protocol.Game_)		
+                //        socket.sendData(Protocol.Game_)		
 	}
     
 }

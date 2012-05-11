@@ -32,7 +32,7 @@ public class Server {
 			t.join();
 			//this waits for ever, as the thread ain't gonna end
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}		
 	}
 

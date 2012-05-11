@@ -321,7 +321,7 @@ public class SelectServer extends JPanel {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					// not important
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				int selected = listServers.getSelectedIndex();
 				foundServers.clear();

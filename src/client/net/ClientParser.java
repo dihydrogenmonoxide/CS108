@@ -80,7 +80,7 @@ public class ClientParser {
 			Log.ErrorLog("Parser, error could not parse message");
 			Log.ErrorLog("--- " + message + " ---");
 			//XXX uncomment for debugging:
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -467,7 +467,7 @@ public class ClientParser {
 					listener.received(evt);
 				} catch (Exception e) {
 					//should not occur
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		}

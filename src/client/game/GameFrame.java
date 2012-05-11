@@ -1,9 +1,7 @@
 package client.game;
 
 import client.data.RunningGame;
-import client.events.GameEvent;
-import client.events.GameEventListener;
-import client.events.NetEvent;
+import client.events.*;
 import client.net.Clientsocket;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -67,8 +65,7 @@ public class GameFrame
         
         
         game.setContentPane(innerGameFrame);
-       
-        
+  
         
         //-- set size and location
         try
@@ -109,6 +106,7 @@ public class GameFrame
             }    
         });
         
+        //closing the game if it has finished
         socket.addGameEventListener(new GameEventListener(){
 
             @Override
@@ -135,8 +133,19 @@ public class GameFrame
             }
         );
         
-        //TODO listener which closes the game if something unforeseen happens.
-        //would recommend an infoEventListener
+        //closing the game if connection is really broken
+        socket.addInfoEventListener(new InfoEventListener()
+        {
+                @Override
+                public void received(final InfoEvent evt)
+                {
+                            if (evt.getId() == -1)
+                            {
+                                Log.InformationLog("Connection to server broken, starting ServerSelect");
+                                closeGame();
+                            }
+                }
+        });
         
     }
     

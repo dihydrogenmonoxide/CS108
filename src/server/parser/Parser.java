@@ -172,7 +172,7 @@ public class Parser
 		if(ps_sock.getPlayer().getServer() != null)
 		{
 			ps_sock.getPlayer().getServer().removePlayer(ps_sock.getPlayer());
-			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*now chatting in the lobby*");
+			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun in der Lobby*");
 			return;
 		}
 		ps_sock.sendData(Protocol.CON_ERROR.str() + "you can't leave a server you're not in");
@@ -185,7 +185,7 @@ public class Parser
 	private void handleGameJoin(String s_MSG, PlayerSocket ps_sock) {
 		if(ps_sock.getPlayer().getServer() != null)
 		{
-			ps_sock.sendData(Protocol.CON_ERROR.str() + "ALready on a server!");
+			ps_sock.sendData(Protocol.CON_ERROR.str() + "Already on a server!");
 			return;
 		}
 		
@@ -206,7 +206,7 @@ public class Parser
 					else
 					{
 						serv.addPlayer(ps_sock.getPlayer());
-						ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*now chatting in the server \'"+serv.getServername()+"\'*");
+						ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun im Spiel \'"+serv.getServername()+"\'*");
 					}
 					return;
 				}
@@ -248,7 +248,7 @@ public class Parser
 
 			Server serv = new Server(s_MSG ,MainServer.getServerManager().reserveID());
 			serv.addPlayer(ps_sock.getPlayer());
-			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*now chatting in the server \'"+serv.getServername()+"\'*");
+			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun im Spiel \'"+serv.getServername()+"\'*");
 		}
 		catch(NoSuchElementException e)
 		{
@@ -264,7 +264,7 @@ public class Parser
 	private void handleChat(String s_MSG, PlayerSocket ps_sock) {
 		if(s_MSG.length() < 7)
 		{
-			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\tYou're a quiet person, are you?");
+			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\tBist du eine stille Person? Forever Alone!");
 			return;
 		}
 		s_MSG = s_MSG.substring(6);
@@ -280,19 +280,19 @@ public class Parser
 				s_MSG = s_MSG.substring(s[0].length(), s_MSG.length());
 				if(p_player == ps_sock.getPlayer())
 				{
-					ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\tLast time I checked, you were sane... player.IsTalkingWithOneself = true;");
+					ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\tWas sagt ein Informatiker wenn er auf die Welt kommt? 'Hallo Welt!' player.IsTalkingWithOneself = true;");
 					return;
 				}
 				else
 				{
-					ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[to "+p_player.getNick()+"]\t"+s_MSG);
-					p_player.sendData(Protocol.CHAT_MESSAGE.str() + "[from "+ps_sock.getPlayer().getNick()+"]\t"+s_MSG);
+					ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[von "+p_player.getNick()+"]\t"+s_MSG);
+					p_player.sendData(Protocol.CHAT_MESSAGE.str() + "[zu "+ps_sock.getPlayer().getNick()+"]\t"+s_MSG);
 					return;
 				}
 			}
 			catch (PlayerNotFoundException e)
 			{
-				ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t Player \'"+s[0]+"\' isn't playing on this server...");
+				ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t Spieler \'"+s[0]+"\' ist nicht bekannt...");
 			}
 		}
 		else

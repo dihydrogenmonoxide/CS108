@@ -106,16 +106,16 @@ public class ClientParser {
 			return;
 		case CON_TIMEOUT:
 			Log.ErrorLog("--> connection broke, reconnect");
-			sendChatMessage("<client> connection broken, trying to reconnect", msgType.ERROR);
+			sendChatMessage("<client> Verbindung unterbrochen, neuer Versuch", msgType.ERROR);
 			break;
 		case CON_FAIL:
 			//FIXME CLIENT reset all data on disconnection
 			Log.ErrorLog("--> Connection failed, returning to Select server");
-			this.infoReceived(new InfoEvent(msg, -1, "<server disconnected>"));
+			this.infoReceived(new InfoEvent(msg, -1, "<konnte nicht mit Server verbinden>"));
 			break;
 		case CON_EXIT:
 			Log.ErrorLog("-->connection was closed");
-			this.infoReceived(new InfoEvent(msg, -1, "<server closed the connection>"));
+			this.infoReceived(new InfoEvent(msg, -1, "<Server hat die Verbindung unterbrochen>"));
 			break;	
 		case CON_MY_ID:
 			Log.DebugLog("-->received my id");
@@ -145,13 +145,13 @@ public class ClientParser {
 			else
 			{
 				Log.DebugLog("--> nickchange: " + oldNick + " to " + newNick);
-				sendChatMessage("<lobby>changed Nick: " + oldNick + " to " + newNick, msgType.INFO);
+				sendChatMessage("<lobby>Benutzername gewechselt: " + oldNick + " ist nun " + newNick, msgType.INFO);
 			}
 		}
 		else
 		{
 			Log.DebugLog("--> new nick: " + newNick);
-			sendChatMessage("<lobby>new User : " + newNick, msgType.INFO);
+			sendChatMessage("<lobby>neuer Mitspieler : " + newNick, msgType.INFO);
 		}
 		PlayerManager.addPlayer(msg.getIntArgument(1), (String) newNick);
 	}
@@ -192,19 +192,19 @@ public class ClientParser {
 		case GAME_BEGIN:
                         RunningGame.initGame(msg.getIntArgument(1), msg.getIntArgument(2));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_BEGIN, msg));
-                        sendChatMessage("Starting the game", msgType.GAME);
+                        sendChatMessage("Lasst das Spiel beginnen", msgType.GAME);
                         //TODO fire event if something went wrong.
 			break;
 
 		case GAME_PAUSE:
 			RunningGame.setPaused(true);
-			sendChatMessage("game paused", msgType.GAME);
+			sendChatMessage("Spiel pausiert", msgType.GAME);
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_PAUSE, msg));
 			break;
 
 		case GAME_RESUME:
 			RunningGame.setPaused(false);
-			sendChatMessage("game resumed", msgType.GAME);
+			sendChatMessage("Spiel wird fortgeführt", msgType.GAME);
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_RESUME, msg));
 			break;
 
@@ -259,16 +259,17 @@ public class ClientParser {
 		case LOBBY_QUIT:
 			if (PlayerManager.getNamebyId(msg.getIntArgument(1)) == null) { return; }
 			Log.DebugLog("-->User quit lobby");
-			sendChatMessage("<lobby> User left for a game: " + PlayerManager.getNamebyId(msg.getIntArgument(1)), msgType.INFO);
+			sendChatMessage("<lobby> ein Spieler hat das Spiel verlassen: " + PlayerManager.getNamebyId(msg.getIntArgument(1)), msgType.INFO);
 			break;
 		case LOBBY_JOIN:
 			if (PlayerManager.getNamebyId(msg.getIntArgument(1)) == null) { return; }
 			Log.DebugLog("-->User joined");
-			sendChatMessage("<lobby> User joined lobby: " + PlayerManager.getNamebyId(msg.getIntArgument(1)), msgType.INFO);
+			sendChatMessage("<lobby> neuer Spieler in der Lobby: " + PlayerManager.getNamebyId(msg.getIntArgument(1)), msgType.INFO);
 			break;
 		default:
 			Log.DebugLog("-->wrong format");
-			sendChatMessage("<debug>" + msg, msgType.DEBUG);
+			//TODO comment this for final version
+                        sendChatMessage("<debug>" + msg, msgType.DEBUG);
 		}
 	}
 
@@ -288,7 +289,7 @@ public class ClientParser {
 		{
 			t = msgType.SERVER;
 		}
-		if (message.subSequence(1, 11).equals("CHAT [from") || message.subSequence(1, 9).equals("CHAT [to"))
+		if (message.subSequence(1, 11).equals("CHAT [von") || message.subSequence(1, 9).equals("CHAT [zu"))
 		{
 			t = msgType.PRIVATE;
 		}

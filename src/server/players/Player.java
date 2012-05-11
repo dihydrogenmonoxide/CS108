@@ -246,7 +246,7 @@ implements Comparable<Player>
 		//TODO SERVER fix connection reset by beer issue
 		
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
-		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" lost the connection - trying to reconnect!", this);
+		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" Verbindungsunterbruch - neuer Versuch!", this);
 
 		b_ConnectionLost = true;
 		ps_sock.close();
@@ -276,7 +276,7 @@ implements Comparable<Player>
 	{
 		b_ConnectionLost = false;
 		this.ps_sock = ps_socket;
-		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" reconnected!", this);
+		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" ist auferstanden!", this);
 		if(this.s_server != null)
 			this.s_server.resume();
 		
@@ -310,9 +310,9 @@ implements Comparable<Player>
 			MainServer.getGUI().removePlayer(this);
 			MainServer.getPlayerManager().removePlayer(this);
 			if(this.b_ConnectionLost)
-				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" timed out.", this);
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" hat die Verbindung verloren.", this);
 			else
-				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" quit.", this);
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" verlässt uns.", this);
 			
 			if(this.isInLobby())
 				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+this.i_ID+" "+this.s_Nick);
@@ -359,7 +359,7 @@ implements Comparable<Player>
 			else
 			{
 				s_server.addVote();
-				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE+"\t"+this.getNick()+" voted to start the game.", this);
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE+"\t"+this.getNick()+" ist bereit für das Spiel.", this);
 				voted = true;
 			}
 		}

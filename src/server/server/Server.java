@@ -99,7 +99,7 @@ implements Comparable<Server>
 	{
 		if(previousWinners.size() > 0)
 		{
-			broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\tPrevious winners:");
+			broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\tvorherige Gewinner:");
 			for(String s : previousWinners)
 			{
 				broadcastMessage(Protocol.CHAT_MESSAGE.str()+s);
@@ -126,7 +126,7 @@ implements Comparable<Server>
 	//@author Lucius
 	public void suspendPlayer(Player p)
 	{
-		broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+p.getNick()+" is defeated!");
+		broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+p.getNick()+" wurder vernichtet!");
 		p.sendData(Protocol.GAME_LOST_OR_WON.str()+"1");
 	}
 

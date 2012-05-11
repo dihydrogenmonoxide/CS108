@@ -259,7 +259,7 @@ public class ClientParser {
 		case LOBBY_QUIT:
 			if (PlayerManager.getNamebyId(msg.getIntArgument(1)) == null) { return; }
 			Log.DebugLog("-->User quit lobby");
-			sendChatMessage("<lobby> ein Spieler hat das Spiel verlassen: " + PlayerManager.getNamebyId(msg.getIntArgument(1)), msgType.INFO);
+			sendChatMessage("<lobby> ein Spieler hat die Lobby verlassen: " + PlayerManager.getNamebyId(msg.getIntArgument(1)), msgType.INFO);
 			break;
 		case LOBBY_JOIN:
 			if (PlayerManager.getNamebyId(msg.getIntArgument(1)) == null) { return; }

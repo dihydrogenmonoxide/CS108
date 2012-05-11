@@ -10,13 +10,19 @@ public class Main
 	{
 		try
 		{
-                        Log.InformationLog("Starting SwissDefcon "+args.toString());
+                        Log.InformationLog("Starte SwissDefcon "+args.toString());
 			if(args.length > 1)
 			{
 				if(args[0].toLowerCase().equals("server"))
 				{
-					int port = Integer.parseInt(args[1]);
+                                    if(1 < args.length)
+                                    {
+                                        int port = Integer.parseInt(args[1]);
 					MainServer.startServer(port);
+                                    } else
+                                    {
+                                        MainServer.startServer();
+                                    }
 					return;
 				}
                                 
@@ -37,19 +43,28 @@ public class Main
                                         }
 					return;
 				}
+                                if(args[0].toLowerCase().equals("client"))
+				{
+                                        MainServer.startServer();
+                                        MainClient.startClient();
+                                }
                                 
 			}
 		}
 		catch(NumberFormatException e)
 		{
 			System.out.println(
-					"How to use:\n" +
-					"to start a server:\n" +
-					"java -jar this.jar server PORT\n\n" +
-					"to start a client:\n" +
-					"java -jar this.jar client IP:PORT"+
-                                        "or to automatically search a server:"+
-                                        "java -jar this.jar client");
+					"Anleitung:\n" +
+                                        "Server starten:\n"+
+                                        "java -jar dieses.jar server"+
+					"Server mit Portangabe starten:\n" +
+					"java -jar dieses.jar server PORT\n\n" +
+					"Client starten:\n" +
+					"java -jar dieses.jar client IP:PORT \n"+
+                                        "Client mit automatischer Suche starten:\n"+
+                                        "java -jar dieses.jar client\n\n"+
+                                        "Starte beides:"+
+                                        "java -jar dieses.jar beides");
                                         
 		}
 	}

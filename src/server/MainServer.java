@@ -17,6 +17,11 @@ public class MainServer
 	private static PlayerManager pm_PlaM;
 	private static ServerManager sm_ServM;
 	private static ServerUI sui_UI;
+
+    public static void startServer()
+    {
+        startServer(shared.Settings.SERVER_DEFAULT_PORT);
+    }
 	
 	private MainServer()
 	{

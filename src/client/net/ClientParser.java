@@ -236,7 +236,10 @@ public class ClientParser {
                 case GAME_POPULATION:
                         RunningGame.setPop(msg.getLongArgument(1));
                         break;
-
+                case GAME_LOST_OR_WON:
+                        this.gameReceived(new GameEvent(msg, Protocol.GAME_ANIMATION_PHASE, msg));
+                        break;
+                
 		default:
 			Log.ErrorLog("--> wrong formatted " + msg);
 		}

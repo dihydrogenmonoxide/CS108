@@ -1,6 +1,9 @@
 package client.game;
 
 import client.data.RunningGame;
+import client.events.GameEvent;
+import client.events.GameEventListener;
+import client.events.NetEvent;
 import client.net.Clientsocket;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,6 +12,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import shared.Log;
 import shared.Protocol;
 import shared.Settings;
@@ -104,6 +108,33 @@ public class GameFrame
               closeGame();  
             }    
         });
+        
+        socket.addGameEventListener(new GameEventListener(){
+
+            @Override
+            public void received(GameEvent evt)
+            {
+                if(evt.getType() == Protocol.GAME_LOST_OR_WON)
+                {
+                   String msg;  
+                   if(evt.getMsg().getIntArgument(1) == 1)
+                    {
+                        msg = "Du hast gewonnen";
+                    }else{
+                        msg = "Du hast verloren";
+                    }
+                    JOptionPane.showMessageDialog(lobbyParent, msg, "Spiel fertig", JOptionPane.INFORMATION_MESSAGE);
+                    closeGame();
+                }
+            }
+
+            @Override
+            public void received(NetEvent evt)
+            {
+            }
+            }
+        );
+        
         //TODO listener which closes the game if something unforeseen happens.
         //would recommend an infoEventListener
         

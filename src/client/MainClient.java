@@ -33,9 +33,12 @@ public class MainClient
             
             //-- start lobby
             ClientLobby lobby = new ClientLobby(user, addressServer);
-        } catch (UnknownHostException | SocketException ex)
+        } catch (SocketException ex)
         {
             Log.ErrorLog("thou shalt pass a known IP address");
+        } catch(UnknownHostException ex)
+        {
+             Log.ErrorLog("thou shalt pass a known Host");
         }
     }
     

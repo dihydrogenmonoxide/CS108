@@ -1,6 +1,7 @@
 package client.game;
 
 import client.net.Clientsocket;
+import client.resources.ResourceLoader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class GameButtonsPanel extends JPanel{
 	private TimePanel time;
 	/**the Connection made to the Server.*/
 	private Clientsocket socket;
+        
+        private ResourceLoader res = new ResourceLoader();
 	        
      /**
      * all the available buttons which can be selected at the moment.
@@ -94,7 +97,7 @@ public class GameButtonsPanel extends JPanel{
 		this.add(attack, c);
 		
 		
-		ImageIcon tan= new ImageIcon("bilder/Panzer.png");
+		ImageIcon tan= new ImageIcon(res.load("images/Panzer.png"));
 		tan.setImage(tan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		tank = new JToggleButton(tan, false);
                 tank.setAction(new buttonAction(tan, button.TANK));
@@ -110,7 +113,7 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,0,0,0);
 		this.add(tank, c);
 
-		ImageIcon jag= new ImageIcon("bilder/Flugzeug.png");
+		ImageIcon jag= new ImageIcon(res.load("images/Flugzeug.png"));
 		jag.setImage(jag.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		jagd = new JToggleButton(jag,false);
 		jagd.setAction(new buttonAction(jag, button.FIGHTER));
@@ -126,7 +129,7 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,20,0,0);
 		this.add(jagd, c);
 		
-		ImageIcon bom= new ImageIcon("bilder/Bomber.png");
+		ImageIcon bom= new ImageIcon(res.load("images/Bomber.png"));
 		bom.setImage(bom.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		bomber = new JToggleButton(bom, false);
 		bomber.setAction(new buttonAction(bom, button.BOMBER));
@@ -155,7 +158,7 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(0,20,0,0);
 		this.add(defense, c);
 		
-		ImageIcon lan= new ImageIcon("bilder/Landabwehr.png");
+		ImageIcon lan= new ImageIcon(res.load("images/Landabwehr.png"));
 		lan.setImage(lan.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		bunker= new JToggleButton(lan, false);
 		bunker.setAction(new buttonAction(lan, button.BUNKER));
@@ -171,7 +174,7 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,20,0,0);
 		this.add(bunker, c);
 		
-		ImageIcon luf= new ImageIcon("bilder/Flugabwehr.png");
+		ImageIcon luf= new ImageIcon(res.load("images/Flugabwehr.png"));
 		luf.setImage(luf.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		luftabwehr = new JToggleButton(luf, false);
 		luftabwehr.setAction(new buttonAction(luf, button.ANTIAIR));
@@ -200,7 +203,7 @@ public class GameButtonsPanel extends JPanel{
 		this.add(gebaude, c);
 		
 		
-		ImageIcon rep= new ImageIcon("bilder/Repro.png");
+		ImageIcon rep= new ImageIcon(res.load("images/Repro.png"));
 		rep.setImage(rep.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		repro = new JToggleButton(rep, false);
 		repro.setAction(new buttonAction(rep, button.REPRO));
@@ -216,7 +219,7 @@ public class GameButtonsPanel extends JPanel{
 		c.insets = new Insets(2,20,0,0);
 		this.add(repro, c);
 		
-		ImageIcon gel= new ImageIcon("bilder/Bank.png");
+		ImageIcon gel= new ImageIcon(res.load("images/Bank.png"));
 		gel.setImage(gel.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		geld = new JToggleButton(gel, false);
 		geld.setAction(new buttonAction(gel, button.BANK));

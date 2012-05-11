@@ -4,6 +4,7 @@ package client.lobby;
 import client.events.*;
 import client.game.GameFrame;
 import client.net.Clientsocket;
+import client.resources.ResourceLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -49,6 +50,7 @@ public class ClientLobby extends JFrame {
 	/**check if the player is in a game.*/
 	private boolean isInGame = false;
 	
+        private ResourceLoader res = new ResourceLoader();
 	
 	/**creates the lobby.*/
 	public ClientLobby(User u, ServerAddress addressServer)
@@ -195,7 +197,7 @@ public class ClientLobby extends JFrame {
 				BufferedImage img = null;
 				try 
 				{
-					img = ImageIO.read(new File("bilder/lobby_bg.jpg"));
+					img = ImageIO.read(res.load("images/lobby_bg.jpg"));
 					g.drawImage(img, 0, 0, iLobbyX, iLobbyY, 0, 0, img.getWidth(), img.getHeight(), new Color(0, 0, 0), null);
 				} 
 				catch (Exception e) 

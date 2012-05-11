@@ -4,6 +4,7 @@
  */
 package client.data;
 
+import client.resources.ResourceLoader;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,14 +21,14 @@ import shared.game.GameSettings;
 public enum ObjectType
 {
 
-    TANK(Protocol.OBJECT_TANK, "bilder/Panzer.png", true, true, GameSettings.Tank.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints, GameSettings.Tank.price),
-    FIGHTER(Protocol.OBJECT_FIGHTER_JET, "bilder/Flugzeug.png", true, true, GameSettings.Jet.movingRange, GameSettings.Jet.attackRange, GameSettings.Jet.healthPoints, GameSettings.Jet.price),
-    BOMBER(Protocol.OBJECT_BOMBER, "bilder/Bomber.png", true, true, GameSettings.Bomber.movingRange, GameSettings.Bomber.attackRange, GameSettings.Bomber.healthPoints, GameSettings.Bomber.price),
-    ANTIAIR(Protocol.OBJECT_STATIONARY_ANTI_AIR, "bilder/Flugabwehr.png", false, true, GameSettings.Flak.attackRange, GameSettings.Flak.healthPoints, GameSettings.Flak.price),
-    BUNKER(Protocol.OBJECT_STATIONARY_ANTI_TANK, "bilder/Landabwehr.png", false, true, GameSettings.ATT.attackRange,  GameSettings.ATT.healthPoints,  GameSettings.ATT.price),
+    TANK(Protocol.OBJECT_TANK, "images/Panzer.png", true, true, GameSettings.Tank.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints, GameSettings.Tank.price),
+    FIGHTER(Protocol.OBJECT_FIGHTER_JET, "images/Flugzeug.png", true, true, GameSettings.Jet.movingRange, GameSettings.Jet.attackRange, GameSettings.Jet.healthPoints, GameSettings.Jet.price),
+    BOMBER(Protocol.OBJECT_BOMBER, "images/Bomber.png", true, true, GameSettings.Bomber.movingRange, GameSettings.Bomber.attackRange, GameSettings.Bomber.healthPoints, GameSettings.Bomber.price),
+    ANTIAIR(Protocol.OBJECT_STATIONARY_ANTI_AIR, "images/Flugabwehr.png", false, true, GameSettings.Flak.attackRange, GameSettings.Flak.healthPoints, GameSettings.Flak.price),
+    BUNKER(Protocol.OBJECT_STATIONARY_ANTI_TANK, "images/Landabwehr.png", false, true, GameSettings.ATT.attackRange,  GameSettings.ATT.healthPoints,  GameSettings.ATT.price),
     //RADAR("./bilder/Radar.png", true, true, GameSettings.Tank.movingRange, GameSettings.Tank.attackRange, GameSettings.Tank.healthPoints), 
-    REPRO(Protocol.OBJECT_REPRODUCTION_CENTER, "bilder/Repro.png", false, true, GameSettings.Reproductioncenter.movingRange, GameSettings.Reproductioncenter.healthPoints, GameSettings.Reproductioncenter.price),
-    BANK(Protocol.OBJECT_BANK, "bilder/Bank.png", false, true, GameSettings.Bank.movingRange, GameSettings.Tank.healthPoints, GameSettings.Tank.price);
+    REPRO(Protocol.OBJECT_REPRODUCTION_CENTER, "images/Repro.png", false, true, GameSettings.Reproductioncenter.movingRange, GameSettings.Reproductioncenter.healthPoints, GameSettings.Reproductioncenter.price),
+    BANK(Protocol.OBJECT_BANK, "images/Bank.png", false, true, GameSettings.Bank.movingRange, GameSettings.Tank.healthPoints, GameSettings.Tank.price);
     
     Protocol protocol;
     String imagePath;
@@ -38,6 +39,7 @@ public enum ObjectType
     int initHealthPoints;
     int value;
     BufferedImage img;
+    ResourceLoader res = new ResourceLoader();
 
     ObjectType(Protocol p, String path, boolean isMovable, boolean isSelectable, int movingRange, int attackRange, int initHealthPoints, int price)
     {
@@ -78,7 +80,7 @@ public enum ObjectType
     {
         try
         {
-            this.img = ImageIO.read(new File(imagePath));
+            this.img = ImageIO.read(res.load(imagePath));
         } catch (IOException ex)
         {
             Log.ErrorLog("ObjectType, could not load image");

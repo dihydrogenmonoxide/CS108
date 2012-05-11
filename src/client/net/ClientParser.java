@@ -237,7 +237,8 @@ public class ClientParser {
                         RunningGame.setPop(msg.getLongArgument(1));
                         break;
                 case GAME_LOST_OR_WON:
-                        this.gameReceived(new GameEvent(msg, Protocol.GAME_ANIMATION_PHASE, msg));
+                        Log.InformationLog("Spiel beendet:" + msg);
+                        this.gameReceived(new GameEvent(msg, Protocol.GAME_LOST_OR_WON, msg));
                         break;
                 
 		default:

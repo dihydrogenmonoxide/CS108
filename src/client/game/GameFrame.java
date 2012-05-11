@@ -117,7 +117,7 @@ public class GameFrame
                 if(evt.getType() == Protocol.GAME_LOST_OR_WON)
                 {
                    String msg;  
-                   if(evt.getMsg().getIntArgument(1) == 1)
+                   if(evt.getMsg().getIntArgument(1) == 0)
                     {
                         msg = "Du hast gewonnen";
                     }else{

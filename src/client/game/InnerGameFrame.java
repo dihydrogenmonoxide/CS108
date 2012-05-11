@@ -57,7 +57,7 @@ public class InnerGameFrame extends JPanel {
 		this.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
 		
-		JButton delete = new JButton("delete");
+		JButton delete = new JButton("löschen");
 		delete.setOpaque(false);
 		c.gridx=5;
 		c.gridy=2;
@@ -116,7 +116,7 @@ public class InnerGameFrame extends JPanel {
 //			}
 //		});
 
-                undo = new JButton("zurück");
+                undo = new JButton("letzten Zug löschen");
                 c.gridwidth = 1;
                 c.gridx = 1;
                 c.gridy = 2;

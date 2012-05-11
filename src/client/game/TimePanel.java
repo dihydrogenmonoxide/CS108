@@ -76,7 +76,7 @@ public class TimePanel extends JPanel{
 			timerLabel.setText(makeTime(rundenzeit));
 
 			if (rundenzeit == 0){
-				timerLabel.setText("Ende!");
+				timerLabel.setText("Warte");
 				GlassPane = new GlassPane(gameFrame.getContentPane(), socket);
 				gameFrame.setGlassPane(GlassPane);
 				GlassPane.setVisible(true);

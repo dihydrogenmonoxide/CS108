@@ -258,7 +258,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	if(RunningGame.getAnimTime()<=0)
         	{
             	line.clear();
-        		timerAnim.stop();
+                pol.clear();
+        	timerAnim.stop();
             	slowTimer();
         	}
 
@@ -350,6 +351,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	if(line!=null){
     		pol.clear();
     		line.clear();
+                pol.clear();
     	}
     	
 	}

@@ -28,13 +28,13 @@ class GlassPane extends JComponent
 				g.setColor(Color.red);
 				g.fillRect(0, GameFieldPanel.MAP_HEIGHT, GameFieldPanel.MAP_WIDTH, GameFrame.screenY-GameFieldPanel.MAP_HEIGHT);
 				g.setColor(Color.blue);
-				g.drawString("Game is in Animation Phase", 50, GameFieldPanel.MAP_HEIGHT+100);	
+				g.drawString("Habe Geduld", 50, GameFieldPanel.MAP_HEIGHT+100);	
 			}
 			if(RunningGame.getGamePhase()==GamePhases.BUILD)
 			{
 				g.setFont(font1);
 				g.setColor(Color.green);
-				g.drawString("Please wait for opponents", 250, 250);
+				g.drawString("Warte auf die anderen", 250, 250);
 			}
 		}
 	}
@@ -110,7 +110,6 @@ class CBListener extends MouseInputAdapter
 		{
 		
 			toolkit.beep();
-			
 			glassPane.setPoint(glassPanePoint);
 			glassPane.repaint();
 		}

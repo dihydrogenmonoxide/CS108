@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.8.10)  13 MAY 2012 23:00
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.8.10)  13 MAY 2012 23:09
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -841,8 +841,8 @@ File: lobby/spielinfos.png Graphic file (type png)
 <use lobby/spielinfos.png>
 Package pdftex.def Info: lobby/spielinfos.png used on input line 190.
 (pdftex.def)             Requested size: 271.31572pt x 167.12566pt.
- [8 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] [9] (./Handbuch.aux
-) ) 
+ [8 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] [9] [10] (./Handbuc
+h.aux) ) 
 Here is how much of TeX's memory you used:
  7702 strings out of 493633
  107715 string characters out of 3143377
@@ -851,19 +851,19 @@ Here is how much of TeX's memory you used:
  14784 words of font info for 40 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  63i,11n,60p,479b,1131s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc
-}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-</usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></
-usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></us
-r/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/
-local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/lo
-cal/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/loca
-l/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/local/
-texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
-Output written on Handbuch.pdf (9 pages, 7237773 bytes).
+{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
+1.enc}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1000.p
+fb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb
+></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb><
+/usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></u
+sr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr
+/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/l
+ocal/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
+Output written on Handbuch.pdf (10 pages, 7239624 bytes).
 PDF statistics:
- 83 PDF objects out of 1000 (max. 8388607)
- 48 compressed objects within 1 object stream
+ 86 PDF objects out of 1000 (max. 8388607)
+ 50 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

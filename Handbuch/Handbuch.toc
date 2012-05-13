@@ -10,3 +10,10 @@
 \contentsline {subsection}{\numberline {2.1}Chat}{7}
 \contentsline {subsubsection}{\numberline {2.1.1}Befehle}{7}
 \contentsline {subsection}{\numberline {2.2}Spiele}{8}
+\contentsline {section}{\numberline {3}Spiel}{10}
+\contentsline {subsection}{\numberline {3.1}Spielprinzip}{10}
+\contentsline {subsection}{\numberline {3.2}Spielfeld}{10}
+\contentsline {subsection}{\numberline {3.3}Einheiten}{10}
+\contentsline {subsection}{\numberline {3.4}Einheiten platzieren}{10}
+\contentsline {subsection}{\numberline {3.5}Einheiten verschieben}{10}
+\contentsline {subsection}{\numberline {3.6}Gewinner}{10}

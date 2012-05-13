@@ -80,7 +80,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
 	     	
 	/**ArrayList, which holds Lines*/
 	static List<Line2D> line=new ArrayList<Line2D>();
-	static List<Polygon> pol = new ArrayList<Polygon>();
+	static List<Polygon> arrow = new ArrayList<Polygon>();
 	
 	ChangingLists list;
     
@@ -173,7 +173,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                         	   g.setColor(Color.orange);
                     		   Line2D l = new Line2D.Double(oldPixelCoords.width,oldPixelCoords.height,pixelCoords.width, pixelCoords.height);
                     		   line.add(l);
-                    		   list.drawArrow( gd,imageDim, pol, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
+                    		   list.drawArrow( gd,imageDim, arrow, oldPixelCoords.width, oldPixelCoords.height, newPixelCoodrs.width, newPixelCoodrs.height);
                     	   }
                     	   if(RunningGame.getGamePhase()==GamePhases.ANIM){
                     		   g.setColor(Color.red);
@@ -182,7 +182,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
                            {
                         	   g.drawLine((int)f.getX1(),(int) f.getY1(),(int) f.getX2(),(int) f.getY2());
                            }
-                    	   for(Polygon p:pol){
+                    	   for(Polygon p:arrow){
                     		   gd.fillPolygon(p);
                     	   }
                            if(logRedraw)
@@ -257,9 +257,8 @@ public class GameFieldPanel extends JPanel implements MouseListener
         	
         	if(RunningGame.getAnimTime()<=0)
         	{
-            	line.clear();
-                pol.clear();
-        	timerAnim.stop();
+            	removeObjectItems();
+            	timerAnim.stop();
             	slowTimer();
         	}
 
@@ -274,7 +273,7 @@ public class GameFieldPanel extends JPanel implements MouseListener
         /** determine if we have to render the map (when the size changes or at the start)*/
         if (backgroundMap == null || backgroundMap.getWidth() != getWidth())
         {
-        	removeObject();
+        	removeObjectItems();
             Log.DebugLog("Map manager: rendered Map");
             /** render map*/
             backgroundMap = MapManager.renderMap(RunningGame.getMyFieldId(), this.getWidth());
@@ -347,11 +346,11 @@ public class GameFieldPanel extends JPanel implements MouseListener
     	timerFast.stop();
     	timerSlow.start();
     }
-    public static void removeObject(){
+    public static void removeObjectItems(){
     	if(line!=null){
-    		pol.clear();
+//    		pol.clear();
     		line.clear();
-                pol.clear();
+    		arrow.clear();
     	}
     	
 	}

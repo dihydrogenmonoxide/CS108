@@ -129,7 +129,7 @@ public class InnerGameFrame extends JPanel {
                     public void actionPerformed(ActionEvent e)
                     {
                         socket.sendData(Protocol.GAME_UNDO.str());
-                        GameFieldPanel.removeObject();
+                        GameFieldPanel.removeObjectItems();
                     }
                 });
                 

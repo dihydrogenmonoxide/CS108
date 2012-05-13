@@ -2,7 +2,7 @@
 
 %encoding and input
 \usepackage[ngerman]{babel} %spell correction
-\usepackage[latin1]{inputenc} 
+\usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc}
 
 %bugfixes
@@ -18,7 +18,7 @@
 
 %Programming
 \usepackage{listingsutf8} %in utf8
-\lstset{language=Java,captionpos=b,tabsize=3,frame=lines,keywordstyle=\color{blue},commentstyle=\color{teal},stringstyle=\color{red},numbers=left,numberstyle=\tiny,numbersep=5pt,breaklines=true,showstringspaces=false,basicstyle=\footnotesize,emph={label},upquote=true} %Syntax highlighting
+\lstset{language=Java,captionpos=b,tabsize=3,frame=,keywordstyle=\color{blue},commentstyle=\color{teal},stringstyle=\color{red},numbers=none,numberstyle=\tiny,numbersep=5pt,breaklines=false,showstringspaces=false,basicstyle=\footnotesize,emph={label},upquote=false} %Syntax highlighting
 
 %Verbatim extension (with line numbers and tab-expansion)
 \usepackage{moreverb} 
@@ -55,9 +55,44 @@
 
 \newpage
 
-\section{Anmeldung}
+\section{Spiel starten}
+\subsection{Kommandozeile}
+\subsubsection{Server}
+Der Server kann auf dem Standardport(9002) wie folgt gestartet werden:
 
-Starte das Spiel und melde dich volgendermassen an.
+\begin{lstlisting}
+java -jar pfad.zum.jar server
+\end{lstlisting}
+Du kannst auch einen Port angeben, um den Server auf einem von dir definierten Port zu starten:
+\begin{lstlisting}
+java -jar pfad.zum.jar server PORT
+\end{lstlisting}
+           
+
+\subsubsection{Client}
+Der Client kann ohne Angaben wie folgend gestartet werden:
+\begin{lstlisting}
+java -jar pfad.zum.jar
+\end{lstlisting}
+Dabei fängt der Client automatisch an, verfügbare Server zu suchen. 
+Es kann auch direkt versucht werden direkt zu einem Server zu verbinden, 
+dabei ist eine Angabe des Servers sowie des zugehörigen Ports nötig.
+Der Standardport des Servers ist 9002.
+\begin{lstlisting}
+java -jar pfad.zum.jar client IP:PORT 
+\end{lstlisting}
+
+\subsubsection{Server und Client}
+Es kann gleichzeitig ein Client und ein Server gestartet werden.
+Dabei wird der Server auf Standardport 9002 gestartet.
+\begin{lstlisting}
+java -jar pfad.zum.jar beides
+\end{lstlisting}
+
+\newpage
+
+\subsection{Graphisch}
+Starte den Client und melde dich folgendermassen an.
 
 \begin{figure}[h]
 \centering
@@ -65,17 +100,8 @@ Starte das Spiel und melde dich volgendermassen an.
 \caption{Gib den Namen ein}
 \end{figure}
 
-Gib in dem Markierten Feld den Namen ein. Standardm\"{a}ssig wird der Name deines Computers verwendet.
+Gib in dem markierten Feld deinen Namen ein. Standardm\"{a}ssig wird der Benutzername deines Computers verwendet.
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.3]{starten/keine_serververbindung.png}
-\caption{Error, keine Verbinfung zum Server}
-\end{figure}
-
-Falls du keine Verbindung zum Server hast wird die Obige Meldung angezeigt.
-
-\newpage
 
 \begin{figure}[h]
 \centering
@@ -83,7 +109,9 @@ Falls du keine Verbindung zum Server hast wird die Obige Meldung angezeigt.
 \caption{Liste der Server}
 \end{figure}
 
-In dem oben marierten Feld siehst du die Liste der aktiven Server.
+In dem oben markierten Feld siehst du die Liste der aktiven Server.
+
+\newpage 
 
 \begin{figure}[h]
 \centering
@@ -91,10 +119,9 @@ In dem oben marierten Feld siehst du die Liste der aktiven Server.
 \caption{Serveradresse eingeben}
 \end{figure}
 
-Gibt es einen Server, der nicht in der Liste angezeigt wird, so kannst du dessen Adresse auch per
+Gibt es einen Server, der nicht in der Liste angezeigt wird, so kannst du dessen Adresse auch von
 Hand eingeben.
 
-\newpage
 
 \begin{figure}[h]
 \centering
@@ -102,7 +129,20 @@ Hand eingeben.
 \caption{Server w\"{a}hlen}
 \end{figure}
 
-W\"{a}hle einen Server aus der ober beschriebenen Liste per Mausklick aus un gib deinen(1) und dr\"{u}cke dann auf "'Server betreten"'(2).
+W\"{a}hle einen Server aus der ober beschriebenen Liste per Mausklick aus und gib deinen(1) und dr\"{u}cke dann auf "'Server betreten"'(2).
+
+\newpage
+
+\subsection{Verbindungsaufbau}
+Hast du einen Server angegeben, so wird versucht die Verbindung zum Server herzustellen. Sobald du verbunden bist, erscheint die Lobby.
+Falls keine Verbindung zum Server hergestellt werden kann,  wird die nachfolgende Meldung angezeigt. Du gehst wieder zurück zur Serverauswahl.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{starten/keine_serververbindung.png}
+\caption{Fehler, keine Verbindung zum Server}
+\end{figure}
+
+
 
 
 \newpage
@@ -110,8 +150,8 @@ W\"{a}hle einen Server aus der ober beschriebenen Liste per Mausklick aus un gib
 \section{Lobby}
 
 Nun hast du es geschafft und bist in der Lobby.
-Auf der Rechten Seite siehst du das Chatfenster.
-
+\subsection{Chat}
+Auf der rechten Seite siehst du das Chatfenster.
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.3]{lobby/chat.png}
@@ -120,11 +160,15 @@ Auf der Rechten Seite siehst du das Chatfenster.
 
 In dem Chat kannst du nun Nachrichten von anderen Personen sehen, die sich auf dem selben Server wie du befinden. Zudem werden dir wichtige Informationen in dem Chatfenster angezeigt(1).
 Unterhalb des Chat-Ausgabefensters siehst du das Eingabepanel, in dem du deine Nachricht eingeben kannst(2). Zum senden der Nachricht dr\"{u}cke entweder die Enter-Taste, oder dr\"{u}cke auf den senden-Button.
-Eine normale Chat-eingabe ist f\"{u}r alle Mitspieler sichtbar. M\"{o}chtest du eine Private Nachricht an eine Person senden, so gieb den Befehl "'/MSG muster hallo"' in das Eingabepanel ein, wobei "'muster"' der Name des anderen Spielers ist und "'hallo"' die Nachricht, die gesendet wird.
-Um deinen Nicknamen noch zu wechseln, gib den Befehl "'/VNICK muster"' in das Eingabepanel ein, wobei muster dein neuer Name ist.
+\subsubsection{Befehle}
+Eine normale Chat-eingabe ist f\"{u}r alle Mitspieler sichtbar. \\
+M\"{o}chtest du eine private Nachricht an eine Person senden, so gieb den Befehl \lstinline{/MSG hans hallo} in das Eingabepanel ein, wobei "'hans"' der Name des anderen Spielers ist und "'hallo"' die Nachricht, die gesendet wird. \\
+Um deinen Nicknamen zu wechseln, gib den Befehl \lstinline{/VNICK muster} in das Eingabepanel ein, wobei "'muster'" dein neuer Name ist.
+Alle Eingaben welche ein führenden Backslash haben, werden direkt als Befehl an den Server geschickt. Damit ist es möglich von Hand Befehle an den Server zu schicken (zum Beispiel \lstinline{/VEXIT} beendet die Verbindung). Serverbefehle sind nicht case-sensitive.
 
 \newpage
 
+\subsection{Spiele}
 M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies Folgendermassen machen.
 
 \begin{figure}[h]
@@ -149,7 +193,7 @@ Danach gelangst du einen Schritt weiter. Hier siehst du einige Infos zum Spiel i
 
  Ganz links steht der Name des Spiels(1), in der Mitte findest du die Anzahl der Mitspieler(2) und ganz rechts siehst du eine Liste mit den Namen deiner Mitspieler(3).
 Um zur allgemeinen Lobby zur\"{u}ckzukehren dr\"{u}cke auf "'verlassen"'(4).
-Wenn du bereit zum Spielen bist, dann dr\"{u}cke auf "'ich bin bereit"'(5).
+Wenn du bereit zum Spielen bist, dann dr\"{u}cke auf "'ich bin bereit"'(5). Sobald mehr als die Hälfte aller Mitspieler bereit ist, so beginnt das Spiel.
 
 
 

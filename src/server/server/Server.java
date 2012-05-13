@@ -199,11 +199,18 @@ implements Comparable<Server>
 	public void removePlayer(Player player)
 	{
 		if(isGameRunning)
-		{
-			//TODO SERVER test if this works; fix round end votes!   
-			for(GamePlayObject o : objectManager.getPlayersObjectList(player))
+		{   
+			if(isGameRunning())
 			{
-				o.damage(o.getHealthPoints());
+				Log.InformationLog("Removing a players objects as he quit");
+				for(GamePlayObject o :getObjectManager().getPlayersObjectList(player))
+				{
+					o.damage(o.getHealthPoints());
+				}
+			}
+			else
+			{
+				Log.InformationLog("Server not running, not removing any objects");
 			}
 		}
 		

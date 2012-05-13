@@ -129,6 +129,8 @@ public class Parser
 			break;
 		}		
 	}
+	
+	//TOTO SERVER javadoc
 
 	private void handleAuthentication(String s_MSG, PlayerSocket ps_sock)
 	{
@@ -223,7 +225,6 @@ public class Parser
 	 * @param s_MSG
 	 * @param ps_sock
 	 */
-        //FIXME game names with less than 3 letters are called "unknown game"
 	private void handleMakeGame(String s_MSG, PlayerSocket ps_sock) {
 		if(ps_sock.getPlayer().getServer() != null)
 		{

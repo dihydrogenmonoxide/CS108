@@ -325,8 +325,12 @@ implements Comparable<Player>
 				s_server.removePlayer(this);
 				if(s_server.isGameRunning())
 				{
+					Log.InformationLog("Removing a players objects as he quit");
 					for(GamePlayObject o :s_server.getObjectManager().getPlayersObjectList(this))
+					{
+						Log.InformationLog("Removed a "+o.getClass()+" ("+o.getHealthPoints()+")");
 						o.damage(o.getHealthPoints());
+					}
 				}
 			}
 			if(ps_sock != null)

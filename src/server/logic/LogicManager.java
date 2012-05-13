@@ -28,7 +28,7 @@ implements Runnable
 	private final static int buildTimeInSeconds = 60;
 	private final static int animationTimeInSeconds = 2;
 	private Server server;
-	private Thread thread = new Thread(this);
+	private Thread thread;
 	private int voteCount = 0;	
 	private boolean isPaused = false;
 	private boolean isInBuildPhase = false;
@@ -57,10 +57,11 @@ implements Runnable
 		catch (GameEndedException e)
 		{
 			Player winner = e.getWinner();
-			server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+winner.getNick()+" won the game with a "+winner.getMoney()+" points");
+			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CHAT_MESSAGE.str()+"\t"+winner.getNick()+" hat das Spiel \""+server.getServername()+"\" mit "+winner.getMoney()+" Punkten gewonnen!");
 			server.broadcastPreviousWinners();
-			server.addWinner("\t"+winner.getNick()+": "+winner.getMoney()+" points");
+			server.addWinner("\t"+winner.getNick()+": "+winner.getMoney()+" Punkte");
 			winner.sendData(Protocol.GAME_LOST_OR_WON.str()+"0");
+			//TODO SERVER implementieren, dass man in die 2. runde kann
 			return;
 		}
 	}
@@ -78,11 +79,14 @@ implements Runnable
 	 */
 	public void startGame()
 	{
+		if(server.isGameRunning())
+		{
+			Log.WarningLog("That game's already running!");
+			return;
+		}
+		new Thread(this);
 		for(Player p : server.getPlayers())
 		{
-			//that the Players can Start with Money, they have to get some Money and Population.
-			//So i give them some, sorry for changing your code Frank. 
-			//Author: Lucius
 			p.addMoney(Settings.GameValues.DEFAULT_MONEY);
 			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
@@ -149,6 +153,7 @@ implements Runnable
 	
 	public void resendEverything(Player player)
 	{
+		player.sendData(Protocol.GAME_RESET.str());
 		//TODO SERVER make sure that destroyed objects are updated aswell! (and are deleted next round) <--- test this
 		for(GamePlayObject o :server.getObjectManager().getObjectList())
 		{
@@ -163,7 +168,6 @@ implements Runnable
 		if(isInBuildPhase && !player.finishedBuilding())
 		{
 			voteCount++;
-			player.finishedBuilding(true);
 			if(voteCount >= server.getPlayerAmount())
 			{
 				thread.interrupt();

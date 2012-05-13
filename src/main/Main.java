@@ -52,7 +52,7 @@ public class Main
 			}
 			else
 			{
-				/**if no argminets are passed, we'll just run a client in discovery mode*/
+				/**if no arguments are passed, we'll just run a client in discovery mode*/
 				MainClient.startClient();
 			}
 		}

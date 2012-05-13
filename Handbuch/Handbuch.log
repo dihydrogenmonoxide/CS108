@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.5.12)  13 MAY 2012 18:54
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.5.12)  13 MAY 2012 19:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -533,27 +533,46 @@ File: starten/server_waehlen.png Graphic file (type png)
 Package pdftex.def Info: starten/server_waehlen.png used on input line 101.
 (pdftex.def)             Requested size: 271.01459pt x 167.12566pt.
  [5 <./starten/server_waehlen.png>]
-(./Handbuch.aux) ) 
+<lobby/chat.png, id=34, 903.375pt x 556.0775pt>
+File: lobby/chat.png Graphic file (type png)
+ <use lobby/chat.png>
+Package pdftex.def Info: lobby/chat.png used on input line 117.
+(pdftex.def)             Requested size: 271.01459pt x 166.82454pt.
+ [6 <./lobby/chat.png>] <lobby/spiel_erstellen.png, id=39, 904.37875pt x 556.07
+75pt>
+File: lobby/spiel_erstellen.png Graphic file (type png)
+
+<use lobby/spiel_erstellen.png>
+Package pdftex.def Info: lobby/spiel_erstellen.png used on input line 132.
+(pdftex.def)             Requested size: 271.31572pt x 166.82454pt.
+
+<lobby/spielinfos.png, id=40, 904.37875pt x 557.08125pt>
+File: lobby/spielinfos.png Graphic file (type png)
+
+<use lobby/spielinfos.png>
+Package pdftex.def Info: lobby/spielinfos.png used on input line 146.
+(pdftex.def)             Requested size: 271.31572pt x 167.12566pt.
+ [7 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] (./Handbuch.aux) ) 
 Here is how much of TeX's memory you used:
- 7061 strings out of 493633
- 102252 string characters out of 3143377
- 198833 words of memory out of 3000000
- 10241 multiletter control sequences out of 15000+200000
+ 7077 strings out of 493633
+ 102592 string characters out of 3143377
+ 199833 words of memory out of 3000000
+ 10253 multiletter control sequences out of 15000+200000
  11294 words of font info for 29 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  63i,11n,60p,482b,245s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/
-cm-super-t1.enc}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super
-/sfrm1200.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/s
-frm1728.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfs
-x1200.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1
-440.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx172
-8.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.
-pfb>
-Output written on Handbuch.pdf (5 pages, 5633262 bytes).
+{
+/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</u
+sr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr
+/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/l
+ocal/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/loc
+al/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local
+/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/local/t
+exlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
+Output written on Handbuch.pdf (7 pages, 7207158 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
- 32 compressed objects within 1 object stream
+ 69 PDF objects out of 1000 (max. 8388607)
+ 38 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

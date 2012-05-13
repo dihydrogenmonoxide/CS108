@@ -6,18 +6,14 @@ package client.resources;
 import java.net.URL;
 
 /**
- *
- * @author oliverwisler
+ *the ResourceLoader loads all resources which are placed inside the jar file 
+ * for the other classes.
  */
 public class ResourceLoader
-{   
-    private void ResourceLoader()
-    {
-        return;
-    }
-    
-    
+{       
     /**this loads a given resource inside the jar
+     * <p> Sample usage "res.load("/images/bang.png");"</p>
+     *
      @param name the filename of the resource
      @return the URL of the resource
      */

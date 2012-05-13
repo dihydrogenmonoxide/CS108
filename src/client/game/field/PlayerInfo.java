@@ -1,21 +1,15 @@
 package client.game.field;
 
+import client.data.RunningGame;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
-import javax.swing.border.LineBorder;
-
-import client.data.RunningGame;
-import client.game.TimePanel.TimeClassMin;
 
 public class PlayerInfo extends JPanel {
 	private long money;

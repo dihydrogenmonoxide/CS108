@@ -4,7 +4,6 @@ import client.events.ChatEvent;
 import client.events.ChatEventListener;
 import client.events.NetEvent;
 import client.net.Clientsocket;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

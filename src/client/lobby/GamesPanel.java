@@ -459,13 +459,6 @@ public class GamesPanel extends JPanel
                 {
                     Vector<String> temp = gamesData.get(gamesTable.getSelectedRow());
                     String[] info = GamesManager.getInfo(Integer.valueOf(temp.get(0)));
-                    if (info != null)
-                    {
-                        //do nothing
-                    } else
-                    {
-                        //do nothing
-                    }
                     //gameSettings.setText(temp.get(0) + " : " + temp.get(1) + " : " + temp.get(2));
                 }
             }
@@ -503,7 +496,7 @@ public class GamesPanel extends JPanel
     }
 
     /**
-     *
+     * displays the lobby so you can see all open games
      */
     private void displayAllGames()
     {
@@ -515,7 +508,7 @@ public class GamesPanel extends JPanel
     }
 
     /**
-     *
+     * display the game you have joined.
      */
     private void displayJoinedGame()
     {

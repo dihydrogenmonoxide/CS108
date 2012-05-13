@@ -3,19 +3,8 @@ package client.game.field;
 import client.data.GameObject;
 import client.data.GamePhases;
 import client.data.RunningGame;
-import client.game.InnerGameFrame;
 import client.net.Clientsocket;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.Image;
-import java.awt.Polygon;
-import java.awt.Shape;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -26,15 +15,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.sound.sampled.Line;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
 import shared.Log;
-import shared.Protocol;
 import shared.game.Coordinates;
 import shared.game.MapManager;
 

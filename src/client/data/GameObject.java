@@ -1,15 +1,10 @@
 package client.data;
 
 import client.game.field.DrawableObject;
-import java.awt.Color;
-
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import shared.Protocol;
 import shared.game.Coordinates;
-import shared.game.GameSettings;
 
 /**
  * This is class holds all the Informations about a specific GameObject (e.g. a

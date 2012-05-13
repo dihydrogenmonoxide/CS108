@@ -1,19 +1,10 @@
 package client.game.field;
 
+import client.data.GameObject;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.util.Collection;
-
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
-import client.data.GameObject;
-import client.data.RunningGame;
 
 public class ObjectInfo extends JPanel{
 	

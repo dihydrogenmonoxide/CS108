@@ -8,16 +8,16 @@ class Player {
         {
             return money;
         }
-        public void setMoney(int m)
-        {
-            money = m;
-        }
 	public int getId(){
 		return id;
 	}
 	public String getName(){
 		return name;
 	}
+        /**Create a new Player
+         @param playerId the Id of the player
+         @param playerName the Name of the player
+         */
 	public Player(int playerId, String playerName){
 		this.id=playerId;
 		this.name=playerName;

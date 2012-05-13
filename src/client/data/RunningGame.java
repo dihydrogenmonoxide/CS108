@@ -1,9 +1,7 @@
 package client.data;
 
-import client.game.field.DrawableObject;
 import client.game.field.GameFieldPanel;
 import client.net.Clientsocket;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.*;
@@ -22,12 +20,15 @@ import shared.game.Coordinates;
  */
 public class RunningGame
 {
-
+    /**if the game is running or not.*/
     static boolean isRunning = false;
+    /**which id the game has.*/
     static int gameId;
+    /**which is my Field.*/
     static int myFieldId;
     /**the time remaining for the current state. */
     static volatile int remainingTime = 0;
+    /**timer, used to decrease the remaining time of the actual phase.*/
     static Timer timer;
 
     /**boolean if the game is paused or not, a little workaround so all the external classes
@@ -36,9 +37,9 @@ public class RunningGame
     /**the actual phase the game is in.*/
     static GamePhases state = GamePhases.PAUSE;
     
-    /**the money of the current player*/
+    /**the money of the current player.*/
     static long myMoney;
-    /**the population of the current player*/
+    /**the population of the current player.*/
     static long myPopulation;
     
     //-- color management
@@ -48,10 +49,12 @@ public class RunningGame
     static Color thirdEnemy = new Color(255, 204, 51);
     static Color fourthEnemy = new Color(255, 51, 204);
     static Color[] enemyColors = { firstEnemy, secondEnemy, thirdEnemy, fourthEnemy };
+    /**how much colors are already in use.*/
     static int colorCounter;
+    /**linking of the colors to the players.*/
     static HashMap<Integer, Color> playerColor = new HashMap<Integer, Color>();
     
-    //-- object management
+    /**holds all the objects this client knows about.*/
     private static ConcurrentHashMap<Integer, GameObject> objects = new ConcurrentHashMap<Integer, GameObject>();
 
     /**
@@ -59,6 +62,7 @@ public class RunningGame
      * game changes in the state BUILD. Then a timer is started which decreases
      * the build time until it reaches 0; Otherwise the state is changed to
      * ANIM.
+     * @param seconds how long the next phase is.
      */
     public static void setBuildTime(int seconds)
     {
@@ -82,7 +86,9 @@ public class RunningGame
        
        
     }
-    /**this method returns the remaining build time.*/
+    /**this method returns the remaining build time.
+     @return how long the remaining Build time is.
+     */
     public static int getBuildTime(){
         if(state == GamePhases.BUILD)
         {
@@ -92,7 +98,9 @@ public class RunningGame
     }
     
     /**Sets the Animation time until the next round.
-     if seconds is smaller than 0 nothing happens.*/
+     if seconds is smaller than 0 nothing happens.
+     *  @param seconds how long the animation phase is.
+     */
     public static void setAnim(int seconds)
     {
         if(0 <= seconds)
@@ -105,7 +113,9 @@ public class RunningGame
         }
     }
     
-    /**this method returns the remaining animation time.*/
+    /**this method returns the remaining animation time.
+     @return how long the remaining Anim time is.
+     */
     public static int getAnimTime(){
         if(state == GamePhases.ANIM)
         {
@@ -160,7 +170,9 @@ public class RunningGame
         Log.DebugLog("Started new Timer with " + remainingTime + "s in the phase" + state);
     }
     
-    /**set if a game is paused or not.*/
+    /**set if a game is paused or not.
+     *  @param b is it paused or not?
+     */
     public static void setPaused(boolean b){
         isPaused = b;
     }
@@ -178,6 +190,8 @@ public class RunningGame
     
     /**
      * starts a new game. Sets the GameId and the field which the player has.
+     * @param gId the Game id of this game
+     * @param  fId on which field this player is
      */
     public static void initGame(int gId, int fId)
     {
@@ -239,14 +253,18 @@ public class RunningGame
         objects.remove(objectId);
     }
 
-    /**set my population.*/
+    /**set my population.
+     @param population the actual population of our Player.
+     */
     public static void setPop(long population)
     {
         Log.DebugLog("Running Game: setting Population to:" + population);
         myPopulation = population;
     }
     
-    /**set my money.*/
+    /**set my money.
+     @param money how much money the player has.
+     */
      public static void setMoney(long money)
     {
         Log.DebugLog("Running Game: setting Money to:" + money);
@@ -297,7 +315,7 @@ public class RunningGame
             }
     }
     
-    /** returns a color for each player.
+    /** returns the color for a player. (Always the same Color for the same Player)
      * @param playerId the if of the player.
      */
     public static Color getPlayerColor(int playerId)
@@ -347,12 +365,14 @@ public class RunningGame
     }
     
     
-
-	public static void deleteObjectServer(int xP, int yP, GameObject obj,
-			Clientsocket socket) {
-		Log.InformationLog("Trying to delete Object: " + obj.getID());
-		//TODO create Protocol to delete Objects
-                //        socket.sendData(Protocol.Game_)		
-	}
+    /** Is sending a delete request (NOT IMPLEMENTED)
+     *  @deprecated
+     */
+    public static void deleteObjectServer(int xP, int yP, GameObject obj,
+                    Clientsocket socket) {
+            Log.InformationLog("Trying to delete Object: " + obj.getID());
+            //TODO create Protocol to delete Objects
+            //        socket.sendData(Protocol.Game_)		
+    }
     
 }

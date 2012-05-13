@@ -7,7 +7,6 @@ import client.net.Clientsocket;
 import client.resources.ResourceLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -52,7 +51,10 @@ public class ClientLobby extends JFrame {
 	
         private ResourceLoader res = new ResourceLoader();
 	
-	/**creates the lobby.*/
+	/**creates the lobby.
+         * @param u the user
+         * @param addressServer the Server to connect to or null if not set.
+         */
 	public ClientLobby(User u, ServerAddress addressServer)
 	{
                 super();
@@ -173,6 +175,9 @@ public class ClientLobby extends JFrame {
 		lobbyParent.setVisible(true);
 	}
 
+    /** Creates a new lobby with a predefined user but no server to connect to.
+        @param user the user
+     */
     public ClientLobby(User user)
     {
         this(user, null);

@@ -2,6 +2,7 @@ package client.events;
 
 import java.util.EventObject;
 
+/**Event used to spread informations between Parser, Lobby and Game*/
 public class InfoEvent extends EventObject {
 
 	private int infoId;

@@ -6,8 +6,6 @@ import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.util.List;
 
-import client.game.GameFrame;
-
 public class ChangingLists {
 
     void updateLine(List<Line2D> line, double xdif, double ydif, double xmove, double ymove, double yend2, double xend2, Graphics g, int i)

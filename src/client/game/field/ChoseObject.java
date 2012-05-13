@@ -1,18 +1,16 @@
 package client.game.field;
 
-import java.awt.Dimension;
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.swing.JButton;
-
-import shared.Log;
-import shared.Protocol;
-import shared.game.Coordinates;
 import client.data.GameObject;
 import client.data.RunningGame;
 import client.game.GameButtonsPanel;
 import client.net.Clientsocket;
+import java.awt.Dimension;
+import java.util.Collection;
+import java.util.Iterator;
+import javax.swing.JButton;
+import shared.Log;
+import shared.Protocol;
+import shared.game.Coordinates;
 
 public class ChoseObject 
 {

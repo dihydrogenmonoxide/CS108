@@ -1,0 +1,83 @@
+\documentclass[ngerman, 12pt, pdftex]{scrartcl}[2006/07/30]
+
+%encoding and input
+\usepackage[ngerman]{babel} %spell correction
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+
+%bugfixes
+\usepackage{fixltx2e} 
+
+%Font Symbols and Colors
+\usepackage{textcomp} %more symbols
+\usepackage{xcolor}
+
+%Math
+\usepackage{amsmath}
+\usepackage{mathtools} %extends amsmath
+
+%Programming
+\usepackage{listingsutf8} %in utf8
+\lstset{language=Java,captionpos=b,tabsize=3,frame=,keywordstyle=\color{blue},commentstyle=\color{teal},stringstyle=\color{red},numbers=none,numberstyle=\tiny,numbersep=5pt,breaklines=false,showstringspaces=false,basicstyle=\footnotesize,emph={label},upquote=false} %Syntax highlighting
+
+%Verbatim extension (with line numbers and tab-expansion)
+\usepackage{moreverb} 
+
+%Headers and Footer
+\usepackage{fancyhdr}
+
+%title
+\title{Dokumentation}
+\author{Frank M\"{u}ller, Oliver Wisler, Luzius Bachmann, Fabio Sulser}
+\subtitle{Swissdefcon-Team}
+
+\begin{document}
+%declare  Header
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyhead[L]{Dokumentation} %left header
+\fancyhead[C]{Swissdefcon-Team} %centered header
+\fancyhead[R]{\thepage}  % right header
+\renewcommand{\headrulewidth}{0.1pt} 	%upper separating line
+%\fancyfoot[C]{\thepage} 				%centered footer, line number
+
+
+
+%you might want to enable come features:
+\maketitle
+%\listoffigures 
+%\listoftables
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+%-- Client
+\section{Client}
+\subsection{Aufbau}
+\subsection{Datenverwaltung}
+
+\subsection{Rendering}
+
+%-- Server
+\section{Server}
+\subsection{Aufbau}
+\subsection{Datenverwaltung}
+\subsection{Logik}
+
+%-- Kommunikation
+\section{Kommunikation}
+
+\subsection{Serverauswahl}
+\subsection{Verbindung}
+\subsection{Protokoll}
+
+%-- Unittest
+\section{Unittest}
+
+
+
+\end{document}

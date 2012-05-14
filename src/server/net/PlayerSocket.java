@@ -123,10 +123,14 @@ implements Runnable
 						}
 					}
 					
+					int counter = 0;
 					while(!bq_Queue.isEmpty())
 					{
+						counter++;
 						try 
 						{
+							if(counter % 200 == 0)
+								OOS_MSG.flush();
 							OOS_MSG.writeUTF(bq_Queue.take());
 						} 
 						catch (InterruptedException e)

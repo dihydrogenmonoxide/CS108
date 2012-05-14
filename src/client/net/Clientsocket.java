@@ -19,38 +19,38 @@ implements Runnable
 {
 	
 	/**how many reconnects failed so far.*/
-	private int i_ReconnectionsFailed = 0;
+	private int failedReconnections = 0;
 	
-	private Socket S_sock;
-	private ServerAddress SA_Server;
-	private Thread T_Thread_rec;
-	private Thread T_Thread_send;
+	private Socket socket;
+	private ServerAddress serverAddress;
+	private Thread receiverThread;
+	private Thread senderThread;
 	private boolean b_connected;
-	private ObjectOutputStream OOS_MSG;
-	private ObjectInputStream OIS_MSG;
+	private ObjectOutputStream outputStream;
+	private ObjectInputStream inputStream;
 	
-	private BlockingQueue<String> bq_Queue = new LinkedBlockingQueue<String>();
+	private BlockingQueue<String> commandQueue = new LinkedBlockingQueue<String>();
 	
-	private String s_PlayerID = "";
+	private String playerID = "";
 	
 	/**Parser to parse the received messages.*/
 	private ClientParser parser;
 	
 	/**
 	 * Creates the Socket to communicate with the server
-	 * @param SA_Server The Server you'd like to connect to
+	 * @param serverAddress The Server you'd like to connect to
 	 */
-	public Clientsocket(ServerAddress SA_Server)
+	public Clientsocket(ServerAddress serverAddress)
 	throws SocketCreationException
 	{	
-		this.SA_Server = SA_Server;
+		this.serverAddress = serverAddress;
 		try
 		{
-			S_sock = new Socket();
-			S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), Settings.SocketTimeout.TIMEOUT);
-			S_sock.setKeepAlive(true);
-			S_sock.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
-			S_sock.setTcpNoDelay(true);
+			socket = new Socket();
+			socket.connect(new InetSocketAddress(this.serverAddress.getAddress(), this.serverAddress.getPort()), Settings.SocketTimeout.TIMEOUT);
+			socket.setKeepAlive(true);
+			socket.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
+			socket.setTcpNoDelay(true);
 		}
 		catch (IOException e)
 		{
@@ -65,25 +65,25 @@ implements Runnable
 		try 
 		{
 			//TODO SERVER failure creating objectoutput and or inputstream ("invalid argument")
-			OOS_MSG = new ObjectOutputStream(S_sock.getOutputStream());
-			OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
+			outputStream = new ObjectOutputStream(socket.getOutputStream());
+			inputStream = new ObjectInputStream(socket.getInputStream());
 			
 			//Authenticating with the server
-			OOS_MSG.writeUTF(Protocol.CON_AUTH.toString());
-			OOS_MSG.flush();
-			String s_Answer = OIS_MSG.readUTF();
+			outputStream.writeUTF(Protocol.CON_AUTH.toString());
+			outputStream.flush();
+			String s_Answer = inputStream.readUTF();
 			if(s_Answer.startsWith(Protocol.CON_HASH.str()))
 			{
 				s_Answer = s_Answer.substring(6);
 				Log.InformationLog("Received the hash: \'" + s_Answer+"\'");
-				this.s_PlayerID = s_Answer;
+				this.playerID = s_Answer;
 			}
 			else
 			{
 				throw new SocketCreationException("Authentication failed: "+s_Answer);
 			}
 			
-			bq_Queue.clear();			
+			commandQueue.clear();			
 		} 
 		catch(EOFException e)
 		{
@@ -94,23 +94,23 @@ implements Runnable
 			throw new SocketCreationException("Failed to create input and output streams: "+e.getMessage());
 		}
 		
-		this.T_Thread_rec = new Thread(this);
-		this.T_Thread_rec.start();
+		this.receiverThread = new Thread(this);
+		this.receiverThread.start();
 		
-		this.T_Thread_send = new Thread(this);
-		this.T_Thread_send.start();
+		this.senderThread = new Thread(this);
+		this.senderThread.start();
 	}
 
 	
 	public void run()
 	{
-		if(Thread.currentThread() == this.T_Thread_rec)
+		if(Thread.currentThread() == this.receiverThread)
 		{
 			Log.InformationLog("Started a Receiver");
 			Receiver();
 			Log.InformationLog("Shut down a Receiver");
 		}
-		else if(Thread.currentThread() == this.T_Thread_send)
+		else if(Thread.currentThread() == this.senderThread)
 		{
 			Log.InformationLog("Started a Sender");
 			Sender();
@@ -131,86 +131,86 @@ implements Runnable
 			{
 				try
 				{
-					String s = OIS_MSG.readUTF();
+					String s = inputStream.readUTF();
 					parser.parse(s);					
 				}
 				catch(SocketTimeoutException  e3)
 				{
 					Log.ErrorLog("Disconnected! Initiating reconnect! "+e3.getMessage());
-					S_sock.close();
+					socket.close();
 					
 					parser.parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT);
 					try
 					{
 						this.reconnect();
-						i_ReconnectionsFailed = 0;
+						failedReconnections = 0;
 					}
 					catch(SocketCreationException e1)
 					{
 						Log.WarningLog("A reconnect failed: "+e1.getMessage());
-						if(i_ReconnectionsFailed >= Settings.SocketTimeout.MAX_RETRIES-1)
+						if(failedReconnections >= Settings.SocketTimeout.MAX_RETRIES-1)
 						{
 							parser.parse(Protocol.CON_FAIL.toString());
 							b_connected = false;
-							this.S_sock.close();
+							this.socket.close();
 							Log.ErrorLog("Failed to reconnect too often, shutting down");
 						}
-						i_ReconnectionsFailed++;
+						failedReconnections++;
 					}
 				}
 				catch(EOFException e)
 				{
 					Log.ErrorLog("Reading Error: "+e.getMessage());
-					S_sock.close();
+					socket.close();
 					try
 					{
 						this.reconnect();
-						i_ReconnectionsFailed = 0;
+						failedReconnections = 0;
 					}
 					catch(SocketCreationException e1)
 					{
 						Log.WarningLog("A reconnect failed: "+e1.getMessage());
-						if(i_ReconnectionsFailed >= Settings.SocketTimeout.MAX_RETRIES-1)
+						if(failedReconnections >= Settings.SocketTimeout.MAX_RETRIES-1)
 						{
 							parser.parse(Protocol.CON_FAIL.toString());
 							Log.ErrorLog("Connection reset by beer");
 							b_connected = false;
-							OIS_MSG.close();
-							OOS_MSG.close();
-							S_sock.close();
+							inputStream.close();
+							outputStream.close();
+							socket.close();
 						}
-						i_ReconnectionsFailed++;
+						failedReconnections++;
 					}
 				}
 				catch(IOException e1)
 				{
 					if(!b_connected)
 					{
-						S_sock.close();
+						socket.close();
 						Log.DebugLog("Socket closed - exiting");
 						return;
 					}
 					
-					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
+					if(!socket.isConnected() || socket.isClosed() || socket.isInputShutdown() || socket.isOutputShutdown())
 					{
 						Log.ErrorLog("Socket Closed unexpectedly: "+e1.getMessage());
 						parser.parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT);
 						try
 						{
 							this.reconnect();
-							i_ReconnectionsFailed = 0;
+							failedReconnections = 0;
 						}
 						catch(SocketCreationException e2)
 						{
 							Log.WarningLog("A reconnect failed: "+e2.getMessage());
-							if(i_ReconnectionsFailed >= Settings.SocketTimeout.MAX_RETRIES)
+							if(failedReconnections >= Settings.SocketTimeout.MAX_RETRIES)
 							{
 								parser.parse(Protocol.CON_FAIL.toString());
 								b_connected = false;
-								this.S_sock.close();
+								this.socket.close();
 								Log.ErrorLog("Failed to reconnect too often, shutting down");
 							}
-							i_ReconnectionsFailed++;
+							failedReconnections++;
 						}
 					}
 					Log.ErrorLog("Socket IO Error : "+e1.getMessage());
@@ -232,14 +232,18 @@ implements Runnable
 			{
 				try
 				{
-					if(bq_Queue.isEmpty()) 
-						OOS_MSG.writeUTF(Protocol.CON_PING.toString());
+					if(commandQueue.isEmpty()) 
+						outputStream.writeUTF(Protocol.CON_PING.toString());
 					
-					while(!bq_Queue.isEmpty())
+					int counter = 0;
+					while(!commandQueue.isEmpty())
 					{
+						counter++;
 						try 
 						{
-							OOS_MSG.writeUTF(bq_Queue.take());
+							if(counter % 200 == 0)
+								outputStream.flush();
+							outputStream.writeUTF(commandQueue.take());
 						} 
 						catch (InterruptedException e)
 						{
@@ -247,11 +251,11 @@ implements Runnable
 							return;
 						}
 					}
-					OOS_MSG.flush();
+					outputStream.flush();
 					
-					if(bq_Queue.isEmpty())	
+					if(commandQueue.isEmpty())	
 					{
-						synchronized(this.T_Thread_send)
+						synchronized(this.senderThread)
 						{
 							try 
 							{
@@ -269,12 +273,12 @@ implements Runnable
 				{
 					if(!b_connected)
 					{
-						S_sock.close();
+						socket.close();
 						Log.DebugLog("Socket closed - exiting");
 						return;
 					}
 					
-					if(!S_sock.isConnected() || S_sock.isClosed() || S_sock.isInputShutdown() || S_sock.isOutputShutdown())
+					if(!socket.isConnected() || socket.isClosed() || socket.isInputShutdown() || socket.isOutputShutdown())
 					{
 						Log.ErrorLog("Socket is closed! "+e1.getMessage());
 						return;
@@ -302,10 +306,10 @@ implements Runnable
 	{
 		try 
 		{
-			bq_Queue.put(s_Data);			
-			synchronized(this.T_Thread_send)
+			commandQueue.put(s_Data);			
+			synchronized(this.senderThread)
 			{
-				T_Thread_send.notify();
+				senderThread.notify();
 			}
 		}
 		catch (InterruptedException e) 
@@ -327,20 +331,10 @@ implements Runnable
 	{
 		try 
 		{
-			bq_Queue.put(Protocol.CHAT_MESSAGE.str() + s_MSG);
-			//TODO remove this in the final version
-		/*	for(int i = 1000; i != 0; i--)
+			commandQueue.put(Protocol.CHAT_MESSAGE.str() + s_MSG);
+			synchronized(this.senderThread)
 			{
-			//	bq_Queue.put("CCHAT derp "+i+" : "+System.currentTimeMillis());
-				if(i%2 == 0)
-					bq_Queue.put("GMAKE asdasd"+i);
-				else
-					bq_Queue.put("GQUIT");
-			}*/
-			//end removal
-			synchronized(this.T_Thread_send)
-			{
-				T_Thread_send.notify();
+				senderThread.notify();
 			}
 		}
 		catch (InterruptedException e) 
@@ -361,9 +355,9 @@ implements Runnable
 		
 		try
 		{
-			OOS_MSG.close();
-			OIS_MSG.close();
-			S_sock.close();
+			outputStream.close();
+			inputStream.close();
+			socket.close();
 		}
 		catch(IOException e)
 		{
@@ -371,17 +365,17 @@ implements Runnable
 		}
 		
 		
-		if(this.S_sock.isClosed() || !this.S_sock.isConnected())
+		if(this.socket.isClosed() || !this.socket.isConnected())
 		{
 			Log.DebugLog("Socket was Closed... Attempting reconnect");
-			this.T_Thread_send.interrupt();
+			this.senderThread.interrupt();
 			try 
 			{
-				S_sock = new Socket();
-				S_sock.connect(new InetSocketAddress(this.SA_Server.getAddress(), this.SA_Server.getPort()), Settings.SocketTimeout.TIMEOUT);
-				S_sock.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
-				S_sock.setKeepAlive(true);
-				S_sock.setTcpNoDelay(true);
+				socket = new Socket();
+				socket.connect(new InetSocketAddress(this.serverAddress.getAddress(), this.serverAddress.getPort()), Settings.SocketTimeout.TIMEOUT);
+				socket.setSoTimeout(Settings.SocketTimeout.TIMEOUT);
+				socket.setKeepAlive(true);
+				socket.setTcpNoDelay(true);
 			} 
 			catch (IOException e) 
 			{
@@ -390,14 +384,14 @@ implements Runnable
 			
 			try 
 			{
-				OOS_MSG = new ObjectOutputStream(S_sock.getOutputStream());
-				OIS_MSG = new ObjectInputStream(S_sock.getInputStream());
+				outputStream = new ObjectOutputStream(socket.getOutputStream());
+				inputStream = new ObjectInputStream(socket.getInputStream());
 				
 				//Authenticating with the server
-				OOS_MSG.writeUTF(Protocol.CON_AUTH.str()+this.s_PlayerID);
-				OOS_MSG.flush();
-				String s_Answer = OIS_MSG.readUTF();
-				if(s_Answer.equals(Protocol.CON_HASH+" "+this.s_PlayerID))
+				outputStream.writeUTF(Protocol.CON_AUTH.str()+this.playerID);
+				outputStream.flush();
+				String s_Answer = inputStream.readUTF();
+				if(s_Answer.equals(Protocol.CON_HASH+" "+this.playerID))
 				{
 					Log.InformationLog("Reconnected!");
 				}
@@ -406,7 +400,7 @@ implements Runnable
 					throw new SocketCreationException("Failed to reconnect: the Server didn't accept the playerID "+s_Answer);
 				}
 				
-				bq_Queue.clear();			
+				commandQueue.clear();			
 			} 
 			catch(EOFException e)
 			{
@@ -420,8 +414,8 @@ implements Runnable
 			
 			try
 			{
-				this.T_Thread_send = new Thread(this);
-				T_Thread_send.start();
+				this.senderThread = new Thread(this);
+				senderThread.start();
 			}
 			catch(IllegalThreadStateException e)
 			{
@@ -434,14 +428,14 @@ implements Runnable
 		try 
 		{
 			Log.InformationLog("Sennding a Ping");
-			OOS_MSG.writeUTF(Protocol.CON_PING.toString());
-			OOS_MSG.flush();
+			outputStream.writeUTF(Protocol.CON_PING.toString());
+			outputStream.flush();
 		} 
 		catch (IOException e) 
 		{
 			throw new SocketCreationException("Failed to send a reconnect ping: "+e.getMessage());
 		}
-		i_ReconnectionsFailed = 0;
+		failedReconnections = 0;
 	}
 	
 	/**

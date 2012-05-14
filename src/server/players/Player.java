@@ -243,7 +243,6 @@ implements Comparable<Player>
 	{
 		if(ps_sock.getSocket() != sock)
 			return;
-		//TODO SERVER fix connection reset by beer issue
 		
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
 		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" Verbindungsunterbruch - neuer Versuch!", this);

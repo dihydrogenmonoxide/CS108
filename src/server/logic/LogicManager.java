@@ -84,7 +84,7 @@ implements Runnable
 			Log.WarningLog("That game's already running!");
 			return;
 		}
-		new Thread(this);
+		thread = new Thread(this);
 		for(Player p : server.getPlayers())
 		{
 			p.addMoney(Settings.GameValues.DEFAULT_MONEY);

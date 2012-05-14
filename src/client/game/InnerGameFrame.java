@@ -1,6 +1,7 @@
 package client.game;
 
 
+import client.data.PlayerManager;
 import client.game.field.GameFieldPanel;
 import client.game.field.PlayerInfo;
 import client.net.Clientsocket;
@@ -10,9 +11,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import shared.Protocol;
 
 
@@ -29,6 +33,7 @@ public class InnerGameFrame extends JPanel {
 	GridBagConstraints c;
 	
 	JButton leave;
+        private final JToggleButton ready;
 	
 
 	
@@ -86,23 +91,24 @@ public class InnerGameFrame extends JPanel {
 		c.gridy=3;
 		this.add(buttons, c);
 		
-//		ready= new JToggleButton("ready");
-//		ready.setSelected(false);
-//		c.gridwidth=1;
-//		c.gridx=1;
-//		c.gridy=2;
-//		c.insets= new Insets(0,50,0,0);
-//		this.add(ready, c);
-//		
-//		ready.addItemListener(new ItemListener() {
-//			public void itemStateChanged(ItemEvent e) {
+		ready= new JToggleButton("nächste Runde");
+		ready.setSelected(false);
+		c.gridwidth=1;
+		c.gridx=2;
+		c.gridy=2;
+		c.insets= new Insets(0,50,0,0);
+		this.add(ready, c);
+		
+		ready.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
 //				GlassPane.setVisible(e.getStateChange() == ItemEvent.SELECTED);
 //				GameChatPanel glassChat = new GameChatPanel(socket);
 //				GlassPane.add(glassChat);
-//                                socket.sendData(Protocol.G);
-//                                
-//			}
-//		});
+                                socket.sendData(Protocol.GAME_BUILD_PHASE.str());
+                                socket.sendChatMessage(PlayerManager.getNamebyId(PlayerManager.myId()) + " ist parat für die nächste Runde");
+                                
+			}
+		});
 
                 undo = new JButton("letzten Zug löschen");
                 c.gridwidth = 1;

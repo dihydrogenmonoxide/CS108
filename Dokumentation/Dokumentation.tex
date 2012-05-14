@@ -11,6 +11,7 @@
 %Font Symbols and Colors
 \usepackage{textcomp} %more symbols
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 %Math
 \usepackage{amsmath}
@@ -55,29 +56,97 @@
 
 \newpage
 
+\section{Grobaufbau}
+Unser Projekt gliedert sich in 5 grosse Pakete, alle Klassen welche Client und Server übergreifend verwendet werden, 
+befinden sich im Paket "shared". Der ganze Server befindet sich im Paket "server" und der Client im Paket "Client".
+Zum Ausprobieren und testen während dem Programmieren, als auch für den Unittest gibt es das Paket "test".
+
 %-- Client
 \section{Client}
 \subsection{Aufbau}
+Der Client gliedert sich in 6 Pakete, wovon 4 der Datenverwaltung dienen und 2 jeweils für die Lobby oder das Spiel zuständig sind.
+Eine kurze Beschreibung der Pakete findet sich in der folgenden Tabelle:
+\begin{table}[h!]
+\begin{tabular}{ l p{12cm} }
+  Paketname & Zweck \\ \hline
+  net &  stellt Klassen für die Kommunikation und Serversuche zur Verfügung. In diesem Paket werden alle empfangenen Daten ausgewertet und mittels Event oder statischen Funktionen weitergeleitet.\\
+  events & Stellt Events zur Verfügung welche für die interne Kommunikation im Client genutzt werden. (GameEvent, ChatEvent)\\
+  data&  haltet Daten welche für das Spiel oder die Lobby wichtig sind (die Spielerid, Zuordnung Spieler zu Id, etc...).\\
+  resources & Stellt eine Klasse zur Verfügung mittels derer Daten (Bilder, etc...) geladen werden können.\\
+  lobby & Beinhaltet die ganze Lobby\\
+  game & Beinhaltet das GUI für das Spiel\\
+\end{tabular}
+\caption{Unterpakete im Paket client}
+\end{table}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{client/client_aufbau_ann.png}
+\caption{Importe zwischen den Paketen}
+\end{figure}
+
 \subsection{Datenverwaltung}
+Ausgehend vom Parser werden die Daten mit zwei Methoden verteilt.
+Daten welche nicht permanent gespeichert werden müssen (z.Bsp. Chatnachrichten) werden per Event 
+weitergeleitet, so dass von überall her mit einem geeigneten Listener darauf zugegriffen werden kann.
+Daten welche langfristig gespeichert werden (zum Beispiel die Zuordnung von Spielernamen zu ihrer Id) werden
+von Klassen im Paket "client.data" gespeichert. Darunter fällt  "PlayerManager" welcher alle Informationen bezüglich Spieler speichert und "RunningGame" welche alle Informationen zum gerade laufenden Spiel bereithält.
+Auf diese gespeicherten Daten kann mittels statischer Methoden jederzeit vom Spiel oder von der Lobby zugegriffen werden.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{client/datenhaltung.pdf}
+\caption{Datenverteilung}
+\end{figure}
 
 \subsection{Rendering}
 
+%todo fabio
+
 %-- Server
 \section{Server}
+
+%todo frank
+
 \subsection{Aufbau}
 \subsection{Datenverwaltung}
+
+%todo frank und lucius
+
 \subsection{Logik}
+
+%todo lucius
 
 %-- Kommunikation
 \section{Kommunikation}
-
 \subsection{Serverauswahl}
+
+%todo frank
+
 \subsection{Verbindung}
+
+%Todo frank
+
 \subsection{Protokoll}
+\subsubsection{Aufbau}
+Jeder Protokolbefehl besteht aus 5 Buchstaben. Der erste Buchstaben bezeichnet jeweils den Bereich des Befehls, es sind dies:
+\begin{itemize}
+\item D für die Serversuche
+\item V für Befehle betreffend der Verbindung
+\item C für den Chat
+\item G für das Spiel
+\end{itemize}
+\subsubsection{Befehle}
+Alle Protokolbefehle können im Wiki unter \url{http://chaos-theory.ch/CS108/wiki/doku.php?id=protocol} abgerufen werden.
+
+\section{Andere Pakete}
+\subsection{shared}
+Hier sind diverse Klassen, welche sowohl vom Server als auch vom Client benutzt werden.
+Darunter fällt das Protokoll, ein InputValidator, welcher Eingaben validieren kann, Eine Klasse welche Log Funktionen zur Verfügung stellt,
+diverse Einstellungen (Spiel und Kommunikation).
 
 %-- Unittest
 \section{Unittest}
 
-
+%TODO lucius
 
 \end{document}

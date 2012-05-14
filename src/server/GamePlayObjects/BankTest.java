@@ -89,6 +89,7 @@ public class BankTest {
 		Bank Bank3;
 		try {
 			 Bank1=new Bank(new Coordinates(0,0),Player, Manager);//Falsche Position, mit Geld
+			 assertTrue(false);
 		
 		} catch (GameObjectBuildException e) {
 			assertTrue(true);
@@ -105,6 +106,7 @@ public class BankTest {
 		Player.removeMoney(Player.getMoney());//Kohle Weg
 		try {
 			 Bank3=new Bank(new Coordinates(0,0),Player, Manager);//Falsche Position, ohne Geld
+			 assertTrue(false);
 		} catch (GameObjectBuildException e) {
 			assertTrue(true);
 			
@@ -114,6 +116,7 @@ public class BankTest {
 		
 		try {
 			Bank3=new Bank(new Coordinates(523871,238019),Player, Manager);//Richtige Position, ohne Geld
+			assertTrue(false);
 		} catch (GameObjectBuildException e) {
 			assertTrue(true);
 			
@@ -123,6 +126,7 @@ public class BankTest {
 			
 			try {
 				 Bank2=new Bank(new Coordinates(523871,238019),Player, Manager);//Richtige Position, mit Geld
+				 assertTrue(true);
 			} catch (GameObjectBuildException e) {
 				e.printStackTrace();
 				assertTrue(false); 

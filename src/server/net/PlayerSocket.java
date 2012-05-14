@@ -19,57 +19,57 @@ public class PlayerSocket
 implements Runnable
 {
 
-	private Socket S_socket;
-	private Parser P_Parser;
-	private Player p_player;
+	private Socket socket;
+	private Parser parser;
+	private Player player;
 	
 	private boolean connectionLost = false;
 	
-	private Thread t_thread_send;
-	private Thread t_thread_rec;
-	private ObjectInputStream OIS_MSG;
-	private ObjectOutputStream OOS_MSG;
-	private boolean b_active = true;
+	private Thread senderThread;
+	private Thread receiverThread;
+	private ObjectInputStream inputStream;
+	private ObjectOutputStream outputStream;
+	private boolean isActive = true;
 	
-	BlockingQueue<String> bq_Queue = new LinkedBlockingQueue<String>();
+	BlockingQueue<String> commandQueue = new LinkedBlockingQueue<String>();
 	
-	public PlayerSocket(Socket S_Sock, Parser P_Parser)
+	public PlayerSocket(Socket sock, Parser pars)
 	{
-		this.S_socket = S_Sock;
-		this.P_Parser = P_Parser;
+		this.socket = sock;
+		this.parser = pars;
 		
 		try 
 		{
-			OIS_MSG = new ObjectInputStream(S_socket.getInputStream());
-			OOS_MSG = new ObjectOutputStream(S_socket.getOutputStream());
+			inputStream = new ObjectInputStream(socket.getInputStream());
+			outputStream = new ObjectOutputStream(socket.getOutputStream());
 			
-			S_socket.setKeepAlive(true);
+			socket.setKeepAlive(true);
 			
-			t_thread_send = new Thread(this);
-			t_thread_send.start();
-			t_thread_rec = new Thread(this);
-			t_thread_rec.start();
+			senderThread = new Thread(this);
+			senderThread.start();
+			receiverThread = new Thread(this);
+			receiverThread.start();
 		}
 		catch (IOException e1) 
 		{
 			Log.ErrorLog("Clouldn't create an input or output-stream on the Server: "+e1.getMessage());
-			b_active = false;
+			isActive = false;
 			return;
 		}
 		
-		Log.DebugLog("New Socket open: "+S_socket.getInetAddress());
+		Log.DebugLog("New Socket open: "+socket.getInetAddress());
 	}
 
 	
 	public void run()
 	{
-		if(Thread.currentThread() == this.t_thread_rec)
+		if(Thread.currentThread() == this.receiverThread)
 		{
 			Log.InformationLog("Started a Receiver on the server");
 			Receiver();
 			Log.InformationLog("Shut down a Receiver on the server");
 		}
-		else if(Thread.currentThread() == this.t_thread_send)
+		else if(Thread.currentThread() == this.senderThread)
 		{
 			Log.InformationLog("Started a Sender on the server");
 			Sender();
@@ -90,28 +90,28 @@ implements Runnable
 			{
 				try
 				{
-					if(bq_Queue.isEmpty())	
+					if(commandQueue.isEmpty())	
 					{
-						synchronized(this.t_thread_send)
+						synchronized(this.senderThread)
 						{
 							try 
 							{
 								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
 								Thread.currentThread().wait(Settings.SocketTimeout.TIMEOUT);
 								
-								if(bq_Queue.isEmpty() && !this.S_socket.isClosed() && b_active)
+								if(commandQueue.isEmpty() && !this.socket.isClosed() && isActive)
 								{
 									//TODO SERVER move this to the receiver, as this in fact is rubbish
 									//the wait was interrupted by a timeout, this client has lost the connection!
-									this.P_Parser.Parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT, this);
-									this.b_active = false;
-									this.S_socket.close();
+									this.parser.Parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT, this);
+									this.isActive = false;
+									this.socket.close();
 									if(connectionLost)
 										return;
 											
 									connectionLost = true;
 									if(this.getPlayer() != null)
-										this.getPlayer().connectionLost(S_socket);
+										this.getPlayer().connectionLost(socket);
 									else
 										Log.WarningLog("A player disconnected before he was really connected");
 									return;
@@ -124,56 +124,56 @@ implements Runnable
 					}
 					
 					int counter = 0;
-					while(!bq_Queue.isEmpty())
+					while(!commandQueue.isEmpty())
 					{
 						counter++;
 						try 
 						{
 							if(counter % 200 == 0)
-								OOS_MSG.flush();
-							OOS_MSG.writeUTF(bq_Queue.take());
+								outputStream.flush();
+							outputStream.writeUTF(commandQueue.take());
 						} 
 						catch (InterruptedException e)
 						{
 							Log.ErrorLog("This shouldn't be interrupted!");
 						}
 					}
-					OOS_MSG.flush();
+					outputStream.flush();
 				}
 				catch(EOFException e)
 				{
 					//the client closed the socket without saying good bye
 					Log.DebugLog("Client Disconnected without saying bye");
-					this.b_active = false;
+					this.isActive = false;
 					
 					if(connectionLost)
 						return;
 							
 					connectionLost = true;
-					this.p_player.disconnect();
+					this.player.disconnect();
 					return;
 				}
 				catch(IOException e)
 				{
-					if(S_socket.isClosed())
+					if(socket.isClosed())
 					{
 						Log.InformationLog("CLosed a socket");
-						OIS_MSG.close();
-						OOS_MSG.close();
+						inputStream.close();
+						outputStream.close();
 						return;
 					}
-					if(!S_socket.isConnected() || S_socket.isInputShutdown() || S_socket.isOutputShutdown())
+					if(!socket.isConnected() || socket.isInputShutdown() || socket.isOutputShutdown())
 					{
-						Log.InformationLog("Someone just disconnected: " +S_socket.getInetAddress().getHostAddress());
-						S_socket.close();
-						OIS_MSG.close();
-						OOS_MSG.close();
+						Log.InformationLog("Someone just disconnected: " +socket.getInetAddress().getHostAddress());
+						socket.close();
+						inputStream.close();
+						outputStream.close();
 						return;
 					}
 					Log.WarningLog("Failed to receive or send: "+e.getMessage());
 				}
 			}
-			while(b_active);
+			while(isActive);
 		}
 		catch(IOException e1)
 		{
@@ -189,7 +189,7 @@ implements Runnable
 			{
 				try
 				{
-					P_Parser.Parse(OIS_MSG.readUTF(), this);
+					parser.Parse(inputStream.readUTF(), this);
 				}
 				catch(EOFException e)
 				{
@@ -200,26 +200,26 @@ implements Runnable
 				}
 				catch(IOException e)
 				{
-					if(S_socket.isClosed())
+					if(socket.isClosed())
 					{
 						Log.InformationLog("CLosed a socket");
-						OIS_MSG.close();
-						OOS_MSG.close();
+						inputStream.close();
+						outputStream.close();
 						return;
 					}
-					if(!S_socket.isConnected() || S_socket.isInputShutdown() || S_socket.isOutputShutdown())
+					if(!socket.isConnected() || socket.isInputShutdown() || socket.isOutputShutdown())
 					{
-						Log.InformationLog("Someone just disconnected: " +S_socket.getInetAddress().getHostAddress());
-						S_socket.close();
-						OIS_MSG.close();
-						OOS_MSG.close();
+						Log.InformationLog("Someone just disconnected: " +socket.getInetAddress().getHostAddress());
+						socket.close();
+						inputStream.close();
+						outputStream.close();
 						return;
 					}
 					
 					Log.WarningLog("Failed to receive or send: "+e.getMessage());
 				}
 			}
-			while(b_active);
+			while(isActive);
 		}
 		catch(IOException e1)
 		{
@@ -232,10 +232,10 @@ implements Runnable
 	{
 		try 
 		{
-			bq_Queue.put(s_MSG);
-			synchronized(this.t_thread_send)
+			commandQueue.put(s_MSG);
+			synchronized(this.senderThread)
 			{
-				t_thread_send.notify();
+				senderThread.notify();
 			}
 		}
 		catch (InterruptedException e) 
@@ -250,7 +250,7 @@ implements Runnable
 	 */
 	public Player getPlayer()
 	{
-		return this.p_player;
+		return this.player;
 	}
 	
 	/**
@@ -259,7 +259,7 @@ implements Runnable
 	 */
 	public void setPlayer(Player p_player)
 	{
-		this.p_player = p_player;
+		this.player = p_player;
 	}
 	
 	/**
@@ -270,15 +270,15 @@ implements Runnable
 		if(!connectionLost)
 		{
 			this.sendData(Protocol.CON_EXIT.toString());
-			this.p_player.disconnect();
+			this.player.disconnect();
 		}
-		this.b_active = false;
+		this.isActive = false;
 		
 	}
 
 
 	public Socket getSocket()
 	{
-		return S_socket;
+		return socket;
 	}
 }

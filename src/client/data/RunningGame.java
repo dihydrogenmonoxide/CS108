@@ -208,14 +208,19 @@ public class RunningGame
      */
     public static void hardReset()
     {
-        stopTimer();
-        isPaused = false;
-        state = GamePhases.PAUSE;
+        
+        
         myPopulation = 0;
         myMoney = 0;
-        myFieldId = 0;
+        
         objects.clear();
+        /*
+        state = GamePhases.PAUSE;
+        myFieldId = 0;
         isRunning = false;
+        stopTimer();
+        isPaused = false;
+        */
     }
    
 

@@ -109,7 +109,6 @@ public class ClientParser {
 			sendChatMessage("<client> Verbindung unterbrochen, neuer Versuch", msgType.ERROR);
 			break;
 		case CON_FAIL:
-			//FIXME CLIENT reset all data on disconnection
 			Log.ErrorLog("--> Connection failed, returning to Select server");
 			this.infoReceived(new InfoEvent(msg, -1, "<konnte nicht mit Server verbinden>"));
 			break;
@@ -193,7 +192,6 @@ public class ClientParser {
                         RunningGame.initGame(msg.getIntArgument(1), msg.getIntArgument(2));
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_BEGIN, msg));
                         sendChatMessage("Lasst das Spiel beginnen", msgType.GAME);
-                        //TODO fire event if something went wrong.
 			break;
 
 		case GAME_PAUSE:

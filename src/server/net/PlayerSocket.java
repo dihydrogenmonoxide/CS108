@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -99,22 +100,13 @@ implements Runnable
 								//Wait for Data that needs to be sent and send a VPING if nothing was sent for too long
 								Thread.currentThread().wait(Settings.SocketTimeout.TIMEOUT);
 								
+								if(connectionLost)
+									return;
+								
 								if(commandQueue.isEmpty() && !this.socket.isClosed() && isActive)
 								{
-									//TODO SERVER move this to the receiver, as this in fact is rubbish
-									//the wait was interrupted by a timeout, this client has lost the connection!
-									this.parser.Parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT, this);
-									this.isActive = false;
-									this.socket.close();
 									if(connectionLost)
 										return;
-											
-									connectionLost = true;
-									if(this.getPlayer() != null)
-										this.getPlayer().connectionLost(socket);
-									else
-										Log.WarningLog("A player disconnected before he was really connected");
-									return;
 								}
 							} catch (InterruptedException e) 
 							{
@@ -190,6 +182,22 @@ implements Runnable
 				try
 				{
 					parser.Parse(inputStream.readUTF(), this);
+				}
+				catch(SocketTimeoutException  e)
+				{
+					this.parser.Parse(Protocol.CON_TIMEOUT.str()+Settings.SocketTimeout.TIMEOUT, this);
+					this.isActive = false;
+					this.socket.close();
+					
+					if(connectionLost)
+						return;
+					
+					connectionLost = true;
+					if(this.getPlayer() != null)
+						this.getPlayer().connectionLost(socket);
+					else
+						Log.WarningLog("A player disconnected before he was really connected");
+					return;
 				}
 				catch(EOFException e)
 				{

@@ -5,10 +5,7 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 import server.MainServer;
-import server.GamePlayObjects.ATT;
-import server.GamePlayObjects.Bank;
 import server.GamePlayObjects.GamePlayObject;
-import server.GamePlayObjects.Tank;
 import server.net.*;
 import server.server.Server;
 import shared.Log;
@@ -19,14 +16,14 @@ import shared.game.GameSettings;
 public class Player 
 implements Comparable<Player>
 {
-	private String s_Nick = "JohnDoe";
-	private String s_PlayerToken;
-	private Server s_server;
-	private PlayerSocket ps_sock;
-	private int i_ID;
-	private boolean b_NameSet = false;
-	private boolean b_quit = false;
-	private boolean b_ConnectionLost = false;
+	private String nick = "JohnDoe";
+	private String playerToken;
+	private Server server;
+	private PlayerSocket socket;
+	private int playerID;
+	private volatile boolean isNameSet = false;
+	private boolean isInactive = false;
+	private volatile boolean isConnectionLost = false;
 	private int fieldID = 0;
 	private long money = 0;
 	private long population = 0;
@@ -36,16 +33,25 @@ implements Comparable<Player>
 	
 	/**
 	 * Creates a new Player on the Server;
-	 * @param s_ID The unique token the Server assigned
+	 * @param authToken The unique token the Server assigned
 	 */
-	public Player(String s_ID, PlayerSocket ps_sock, int i_ID)
+	public Player(String authToken, PlayerSocket sock, int id)
 	{
-		this.s_PlayerToken = s_ID;
-		this.ps_sock = ps_sock;
+		this.playerToken = authToken;
+		this.socket = sock;
 		MainServer.getPlayerManager().addPlayer(this);
-		this.i_ID = i_ID+100;
+		this.playerID = id+100;
 		MainServer.getGUI().addPlayer(this);
-		MainServer.printInformation("A New Player connected - Assigned ID: "+this.i_ID);
+		MainServer.printInformation("A New Player connected - Assigned ID: "+this.playerID);
+	}
+	
+	/**
+	 * 
+	 * @return whether a {@link Player} set it's nickname or not
+	 */
+	public boolean isNickSet()
+	{
+		return isNameSet;
 	}
 	
 	
@@ -61,7 +67,7 @@ implements Comparable<Player>
 	@Override
 	public int compareTo(Player o)
 	{
-		return o.i_ID-this.i_ID;
+		return o.playerID-this.playerID;
 	}
 	
 	/**
@@ -129,40 +135,39 @@ implements Comparable<Player>
 	
 	/**
 	 * 
-	 * @param s_Nick The nickname you'd like to assign to the specified player
+	 * @param nickName The nickname you'd like to assign to the specified player
 	 */
-	public void setNick(String s_Nick)
+	public void setNick(String nickName)
 	{
-		//TODO SERVER potential risk of players abusing this (not setting the nick and thus not appearing anywhere
-		String s_oldNick = this.s_Nick;
-		this.s_Nick = s_Nick;
-		if(!b_NameSet)
+		String s_oldNick = this.nick;
+		this.nick = nickName;
+		if(!isNameSet)
 		{
 			for(Player play : MainServer.getPlayerManager().getPlayers())
 			{
 				if(play != this)
 				{
 					if(play.isInLobby())
-						ps_sock.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
-					ps_sock.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
+						socket.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
+					socket.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
 				}
 			}
 			for(Server s : MainServer.getServerManager().getServers())
 			{
-				ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+				socket.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
 				for(Player p : s.getPlayers())
 				{
-					ps_sock.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
+					socket.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
 				}
 				if(s.isGameRunning())
-					ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+0+"  "+s.getServername());
+					socket.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+0+"  "+s.getServername());
 			}
-			if(ps_sock != null)
-				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+ps_sock.getPlayer().getID()+" "+ps_sock.getPlayer().getNick());
-			b_NameSet = true;
+			if(socket != null)
+				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_JOIN.str()+socket.getPlayer().getID()+" "+socket.getPlayer().getNick());
+			isNameSet = true;
 		}
 		
-		MainServer.printInformation("The Player with the ID "+this.i_ID+" changed his name: \'"+s_oldNick+"\' -> \'"+s_Nick+"\'");
+		MainServer.printInformation("The Player with the ID "+this.playerID+" changed his name: \'"+s_oldNick+"\' -> \'"+nickName+"\'");
 		MainServer.getGUI().addPlayer(this);
 		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CON_NICK.str()+getID()+" "+getNick());
 	}
@@ -173,7 +178,7 @@ implements Comparable<Player>
 	 */
 	public String getNick() 
 	{
-		return s_Nick;
+		return nick;
 	}
 	
 	/**
@@ -182,7 +187,7 @@ implements Comparable<Player>
 	 */
 	public int getID()
 	{
-		return this.i_ID;
+		return this.playerID;
 	}
 	
 	/**
@@ -191,7 +196,7 @@ implements Comparable<Player>
 	 */
 	public String getToken()
 	{
-		return this.s_PlayerToken;
+		return this.playerToken;
 	}
 
 	/**
@@ -200,7 +205,7 @@ implements Comparable<Player>
 	 */
 	public Server getServer() 
 	{
-		return this.s_server;
+		return this.server;
 	}
 	
 	/**
@@ -209,21 +214,21 @@ implements Comparable<Player>
 	 */
 	public void setServer(Server s_serv) 
 	{
-		this.s_server = s_serv;
+		this.server = s_serv;
 	}
 
 	/**
 	 * Sends the Data to the specified Player
-	 * @param s_MSG the data
+	 * @param data the data
 	 */
-	public void sendData(String s_MSG)
+	public void sendData(String data)
 	{
-		if(ps_sock == null)
+		if(socket == null)
 		{
-			Log.ErrorLog("Player "+s_Nick+"("+i_ID+") isn't connected to this server it seems");
+			Log.ErrorLog("Player "+nick+"("+playerID+") isn't connected to this server it seems");
 			return;
 		}
-		ps_sock.sendData(s_MSG);
+		socket.sendData(data);
 
 	}
 			
@@ -233,7 +238,7 @@ implements Comparable<Player>
 	 */
 	public boolean isInLobby()
 	{
-		return (this.s_server == null);
+		return (this.server == null);
 	}
 
 	/**
@@ -241,16 +246,18 @@ implements Comparable<Player>
 	 */
 	public void connectionLost(Socket sock)
 	{
-		if(ps_sock.getSocket() != sock)
+		if(isConnectionLost)
 			return;
 		
+		isConnectionLost = true;
+		
 		MainServer.printInformation("The Player "+this.getNick()+" lost the connection - pausing and waiting for reconnect");
-		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" Verbindungsunterbruch - neuer Versuch!", this);
+		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.nick+" Verbindungsunterbruch - neuer Versuch!", this);
 
-		b_ConnectionLost = true;
-		ps_sock.close();
-		if(this.s_server != null)
-			this.s_server.pause();
+
+		socket.close();
+		if(this.server != null)
+			this.server.pause();
 		try 
 		{
 			Thread.sleep(Settings.SocketTimeout.TIMEOUT*Settings.SocketTimeout.MAX_RETRIES);
@@ -260,40 +267,41 @@ implements Comparable<Player>
 			Log.WarningLog("Failed to sleep and therefore immediatly disconnected the player");
 		}
 		
-		if(this.b_ConnectionLost)
+		if(this.isConnectionLost)
 		{
 			this.disconnect();
 		}
+		isConnectionLost = false;
 			
 	}
 
 	/**
 	 * This is called when the player reconnects
-	 * @param ps_socket the new socket
+	 * @param sock the new socket
 	 */
-	public void reconnect(PlayerSocket ps_socket) 
+	public void reconnect(PlayerSocket sock) 
 	{
-		b_ConnectionLost = false;
-		this.ps_sock = ps_socket;
-		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" ist auferstanden!", this);
-		if(this.s_server != null)
-			this.s_server.resume();
+		isConnectionLost = false;
+		this.socket = sock;
+		MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.nick+" ist auferstanden!", this);
+		if(this.server != null)
+			this.server.resume();
 		
 		for(Player play : MainServer.getPlayerManager().getPlayers())
 		{
 			if(play != this)
 			{
 				if(play.isInLobby())
-					ps_sock.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
-				ps_sock.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
+					socket.sendData(Protocol.LOBBY_JOIN.str()+play.getID()+" "+play.getNick());
+				socket.sendData(Protocol.CON_NICK.str()+play.getID()+" "+play.getNick());
 			}			
 		}
 		for(Server s : MainServer.getServerManager().getServers())
 		{
-			ps_sock.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
+			socket.sendData(Protocol.GAME_BROADCAST.str()+s.getID()+" "+s.getPlayerAmount()+"  "+s.getServername());
 			for(Player p : s.getPlayers())
 			{
-				ps_sock.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
+				socket.sendData(Protocol.GAME_JOIN.str()+s.getID()+" "+p.getID()+" "+p.getNick()); 
 			}
 		}
 	}
@@ -303,37 +311,37 @@ implements Comparable<Player>
 	 */
 	public synchronized void disconnect() 
 	{
-		if(!b_quit)
+		if(!isInactive)
 		{
-			b_quit = true;
+			isInactive = true;
 			MainServer.getGUI().removePlayer(this);
 			MainServer.getPlayerManager().removePlayer(this);
-			if(this.b_ConnectionLost)
-				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" hat die Verbindung verloren.", this);
+			if(this.isConnectionLost)
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.nick+" hat die Verbindung verloren.", this);
 			else
-				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.s_Nick+" verlässt uns.", this);
+				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE.str() + "[SERVER]\t"+this.nick+" verlässt uns.", this);
 			
 			if(this.isInLobby())
-				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+this.i_ID+" "+this.s_Nick);
+				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.LOBBY_QUIT.str()+this.playerID+" "+this.nick);
 			else
-				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.s_server.getID()+" "+this.i_ID+" "+this.s_Nick);
+				MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.GAME_QUIT.str()+this.server.getID()+" "+this.playerID+" "+this.nick);
 		
-			if(s_server != null)
+			if(server != null)
 			{
-				s_server.resume();
-				s_server.removePlayer(this);
-				if(s_server.isGameRunning())
+				server.resume();
+				server.removePlayer(this);
+				if(server.isGameRunning())
 				{
 					Log.InformationLog("Removing a players objects as he quit");
-					for(GamePlayObject o :s_server.getObjectManager().getPlayersObjectList(this))
+					for(GamePlayObject o :server.getObjectManager().getPlayersObjectList(this))
 					{
 						Log.InformationLog("Removed a "+o.getClass()+" ("+o.getHealthPoints()+")");
 						o.damage(o.getHealthPoints());
 					}
 				}
 			}
-			if(ps_sock != null)
-				ps_sock.close();
+			if(socket != null)
+				socket.close();
 		}
 	}
 	
@@ -341,7 +349,7 @@ implements Comparable<Player>
 	@Override
 	public String toString()
 	{
-		return this.s_Nick;
+		return this.nick;
 	}
 	
 	/**
@@ -355,13 +363,13 @@ implements Comparable<Player>
 		}
 		else
 		{
-			if(s_server == null)
+			if(server == null)
 			{
 				sendData(Protocol.CON_ERROR+"Can't vote as you're not in a server");
 			}
 			else
 			{
-				s_server.addVote();
+				server.addVote();
 				MainServer.getPlayerManager().broadcastMessage(Protocol.CHAT_MESSAGE+"\t"+this.getNick()+" ist bereit für das Spiel.", this);
 				voted = true;
 			}
@@ -462,8 +470,8 @@ implements Comparable<Player>
 	 */
 	public boolean isInActiveGame()
 	{
-		if(s_server == null)
+		if(server == null)
 			return false;
-		return s_server.isGameRunning();
+		return server.isGameRunning();
 	}
 }

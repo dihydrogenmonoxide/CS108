@@ -10,6 +10,7 @@ import server.players.Player;
 import server.server.Server;
 import shared.Log;
 import shared.Protocol;
+import shared.Settings;
 
 public class Parser 
 {
@@ -22,17 +23,17 @@ public class Parser
 	
 	/**
 	 * Parses the given Message and sends the corresponding answers
-	 * @param s_MSG the Message the Server socket received
+	 * @param data the Message the Server socket received
 	 * @return What the Socket should answer
 	 */
-	public void Parse(String s_MSG, PlayerSocket ps_sock)
+	public void Parse(String data, PlayerSocket sock)
 	{
-		String s_ParseMSG;
+		String parsedData;
 		
-		if(s_MSG.length() >= 5)
+		if(data.length() >= 5)
 		{
-			s_ParseMSG = s_MSG.substring(0, 5).toUpperCase();
-			if(ps_sock.getPlayer() == null && s_ParseMSG.compareTo(Protocol.CON_AUTH.toString()) != 0)
+			parsedData = data.substring(0, 5).toUpperCase();
+			if(sock.getPlayer() == null && parsedData.compareTo(Protocol.CON_AUTH.toString()) != 0)
 			{
 				Log.ErrorLog("Critical: A player wasn't connected propperly");
 				return;
@@ -44,110 +45,119 @@ public class Parser
 			return;
 		}
 
-		Protocol command = Protocol.fromString(s_ParseMSG);
+		Protocol command = Protocol.fromString(parsedData);
 		
 		switch(command)
 		{
-		case CON_AUTH://tested & works ~frank
-			handleAuthentication(s_MSG, ps_sock);
+		case CON_AUTH:
+			handleAuthentication(data, sock);
+			return;
 			
-		case CON_PING://tested & works ~frank
-			ps_sock.sendData(Protocol.CON_PONG.toString());
+		case CON_PING:
+			sock.sendData(Protocol.CON_PONG.toString());
+			return;
+			
+		case CON_NICK:
+			handleNick(data, sock);
+			return;
+			
+		case CON_EXIT:
+			sock.close();
+			return;
+			
+		case CON_MY_ID:
+			sock.sendData(Protocol.CON_MY_ID.str() + sock.getPlayer().getID());
+			return;
+		}
+		
+		if(!sock.getPlayer().isNickSet())
+		{
+			sock.sendData(Protocol.CON_ERROR.str()+" Bitte Nick setzen!");
+			return;
+		}
+		
+		switch(command)
+		{
+		case GAME_MAKE:
+			handleMakeGame(data, sock);
 			break;
 			
-		case CON_NICK://tested & works ~frank
-			handleNick(s_MSG, ps_sock);
+		case GAME_JOIN:
+			handleGameJoin(data, sock);			
 			break;
 			
-		case CON_EXIT://tested & working ~frank
-			ps_sock.close();
+		case GAME_QUIT:
+			handleGameQuit(sock);
 			break;
 			
-		case CON_MY_ID://tested & working ~frank
-			ps_sock.sendData(Protocol.CON_MY_ID.str() + ps_sock.getPlayer().getID());
-			break;
-			
-		case GAME_MAKE://tested & works ~frank
-			handleMakeGame(s_MSG, ps_sock);
-			break;
-			
-		case GAME_JOIN://tested & works ~frank
-			handleGameJoin(s_MSG, ps_sock);			
-			break;
-			
-		case GAME_QUIT://tested & works ~frank
-			handleGameQuit(ps_sock);
-			break;
-			
-		case CHAT_MESSAGE://tested & works ~Frank
-			handleChat(s_MSG, ps_sock);
+		case CHAT_MESSAGE:
+			handleChat(data, sock);
 			break;
 		case GAME_RESET:
-			if(!ps_sock.getPlayer().isInActiveGame())
+			if(!sock.getPlayer().isInActiveGame())
 			{
-				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
 				break;
 			}
-			ps_sock.getPlayer().getServer().getLogicManager().resendEverything(ps_sock.getPlayer());
+			sock.getPlayer().getServer().getLogicManager().resendEverything(sock.getPlayer());
 			break;
 		case GAME_SPAWN_OBJECT:
-			if(!ps_sock.getPlayer().isInActiveGame())
+			if(!sock.getPlayer().isInActiveGame())
 			{
-				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
 				break;
 			}
-			ps_sock.getPlayer().getServer().getLogicManager().buildObject(s_MSG, ps_sock.getPlayer());
+			sock.getPlayer().getServer().getLogicManager().buildObject(data, sock.getPlayer());
 			break;
 		case GAME_UPDATE_OBJECT:
-			if(!ps_sock.getPlayer().isInActiveGame())
+			if(!sock.getPlayer().isInActiveGame())
 			{
-				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
 				break;
 			}
-			ps_sock.getPlayer().getServer().getLogicManager().updateObject(s_MSG, ps_sock.getPlayer());
+			sock.getPlayer().getServer().getLogicManager().updateObject(data, sock.getPlayer());
 			break;
 		case GAME_BUILD_PHASE:
-			if(!ps_sock.getPlayer().isInActiveGame())
+			if(!sock.getPlayer().isInActiveGame())
 			{
-				ps_sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
+				sock.sendData(Protocol.CON_ERROR.str()+"Game isn't running");
 				break;
 			}
-			ps_sock.getPlayer().getServer().getLogicManager().finishedBuilding(ps_sock.getPlayer());
+			sock.getPlayer().getServer().getLogicManager().finishedBuilding(sock.getPlayer());
 			break;
 			
 		case GAME_VOTESTART:
-			ps_sock.getPlayer().voteStart();
+			sock.getPlayer().voteStart();
 			break;
 			
 		case GAME_UNDO:
-			ps_sock.getPlayer().removeObject();
+			sock.getPlayer().removeObject();
 			break;
 			
 		default:
-			Log.InformationLog("Received: \'"+s_MSG+"\'" );
-			ps_sock.sendData(Protocol.CON_ERROR.str() + "not implemented yet");	
+			Log.InformationLog("Received: \'"+data+"\'" );
+			sock.sendData(Protocol.CON_ERROR.str() + "not implemented yet");	
 			break;
 		}		
 	}
 	
-	//TOTO SERVER javadoc
 
-	private void handleAuthentication(String s_MSG, PlayerSocket ps_sock)
+	private void handleAuthentication(String data, PlayerSocket sock)
 	{
-		if(s_MSG.length()>7)
+		if(data.length()>7)
 		{
-			String s_PlayerID = s_MSG.substring(6, s_MSG.length());
+			String s_PlayerID = data.substring(6, data.length());
 			try
 			{
 				Player p = MainServer.getPlayerManager().findUUID(s_PlayerID);
 				MainServer.printInformation("The Player "+p.getNick()+" just reconnected");
-				ps_sock.sendData(Protocol.CON_HASH.str()+s_PlayerID);
-				p.reconnect(ps_sock);
-				ps_sock.setPlayer(p);
+				sock.sendData(Protocol.CON_HASH.str()+s_PlayerID);
+				p.reconnect(sock);
+				sock.setPlayer(p);
 			}
 			catch(PlayerNotFoundException e)
 			{
-				ps_sock.sendData(Protocol.CON_ERROR.str() + "Unknown UUID, you're not allowed to reconnect");
+				sock.sendData(Protocol.CON_ERROR.str() + "Unknown UUID, you're not allowed to reconnect");
 			}
 		}
 		else
@@ -155,60 +165,55 @@ public class Parser
 			String uuid = UUID.randomUUID().toString();
 			try
 			{
-				ps_sock.setPlayer(new Player(uuid, ps_sock, MainServer.getPlayerManager().reserveID()));
-				ps_sock.sendData(Protocol.CON_HASH.str() + uuid);
+				sock.setPlayer(new Player(uuid, sock, MainServer.getPlayerManager().reserveID()));
+				sock.sendData(Protocol.CON_HASH.str() + uuid);
 			}
 			catch(NoSuchElementException e)
 			{
-				ps_sock.sendData(Protocol.CON_ERROR.str() + "All seats taken - server is full!");
-				ps_sock.sendData(Protocol.CON_EXIT.toString());
-				ps_sock.close();
+				sock.sendData(Protocol.CON_ERROR.str() + "All seats taken - server is full!");
+				sock.sendData(Protocol.CON_EXIT.toString());
+				sock.close();
 			}
 		}
 	}
 
-	/**
-	 * @param ps_sock
-	 */
-	private void handleGameQuit(PlayerSocket ps_sock) {
-		if(ps_sock.getPlayer().getServer() != null)
+
+	private void handleGameQuit(PlayerSocket sock) {
+		if(sock.getPlayer().getServer() != null)
 		{
-			ps_sock.getPlayer().getServer().removePlayer(ps_sock.getPlayer());
-			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun in der Lobby*");
+			sock.getPlayer().getServer().removePlayer(sock.getPlayer());
+			sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun in der Lobby*");
 			return;
 		}
-		ps_sock.sendData(Protocol.CON_ERROR.str() + "you can't leave a server you're not in");
+		sock.sendData(Protocol.CON_ERROR.str() + "you can't leave a server you're not in");
 	}
 
-	/**
-	 * @param s_MSG
-	 * @param ps_sock
-	 */
-	private void handleGameJoin(String s_MSG, PlayerSocket ps_sock) {
-		if(ps_sock.getPlayer().getServer() != null)
+
+	private void handleGameJoin(String data, PlayerSocket socket) {
+		if(socket.getPlayer().getServer() != null)
 		{
-			ps_sock.sendData(Protocol.CON_ERROR.str() + "Already on a server!");
+			socket.sendData(Protocol.CON_ERROR.str() + "Already on a server!");
 			return;
 		}
 		
 		
-		if(s_MSG.length() > 6)
+		if(data.length() > 6)
 		{
-			s_MSG = s_MSG.substring(6, s_MSG.length());
+			data = data.substring(6, data.length());
 			try
 			{
-				int id = Integer.parseInt(s_MSG);
+				int id = Integer.parseInt(data);
 				Server serv = MainServer.getServerManager().findServer(id);
 				if(serv != null)
 				{
 					if(serv.getPlayerAmount() >= 5)
 					{
-						ps_sock.sendData(Protocol.CON_ERROR.str() + "this server is full!");
+						socket.sendData(Protocol.CON_ERROR.str() + "this server is full!");
 					}
 					else
 					{
-						serv.addPlayer(ps_sock.getPlayer());
-						ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun im Spiel \'"+serv.getServername()+"\'*");
+						serv.addPlayer(socket.getPlayer());
+						socket.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun im Spiel \'"+serv.getServername()+"\'*");
 					}
 					return;
 				}
@@ -218,42 +223,77 @@ public class Parser
 			}
 		}
 		
-		ps_sock.sendData(Protocol.CON_ERROR.str() + "the specified server was not found");
+		socket.sendData(Protocol.CON_ERROR.str() + "the specified server was not found");
 	}
 
+
 	/**
-	 * @param s_MSG
-	 * @param ps_sock
+	 * Handles the creation of a game
+	 * @param data the data
+	 * @param sock the socket
 	 */
-	private void handleMakeGame(String s_MSG, PlayerSocket ps_sock) {
-		if(ps_sock.getPlayer().getServer() != null)
+	private void handleMakeGame(String data, PlayerSocket sock) 
+	{
+		if(sock.getPlayer().getServer() != null)
 		{
-			ps_sock.sendData(Protocol.CON_ERROR.str() + "already on a server, leave this one to create another one");
+			sock.sendData(Protocol.CON_ERROR.str() + "already on a server, leave this one to create another one");
 			return;
 		}
+		
 		try
 		{
-			if(s_MSG.length() > 7)
+			
+			
+			long population, money;
+			
+			String difficulty = "";
+			
+			if(data.length() > 12)
 			{
-				s_MSG = s_MSG.substring(6, s_MSG.length());
-				if(s_MSG.length() > 15)
-					s_MSG = s_MSG.substring(0, 15);
+				difficulty = data.substring(6, 11);
+				data.substring(12, data.length());
+				Log.DebugLog("Difficulty: '"+difficulty+"'");
 			}
 			else
 			{
-				s_MSG = "UnknownGame";
+				data = "";
 			}
 			
-			if(s_MSG.length() < 4)
-				s_MSG = "UnknownGame";
+			switch(Protocol.fromString(difficulty))
+			{
+			case DIF_DEMO:
+				population = Settings.GameValuesPresentation.DEFAULT_POPULATION;
+				money = Settings.GameValuesPresentation.DEFAULT_MONEY;
+				break;
+			case DIF_RUSH:
+				population = Settings.GameValuesRush.DEFAULT_POPULATION;
+				money = Settings.GameValuesRush.DEFAULT_MONEY;
+				break;
+			default:
+				population = Settings.GameValuesNormal.DEFAULT_POPULATION;
+				money = Settings.GameValuesNormal.DEFAULT_MONEY;
+				break;
+			}
+			
 
-			Server serv = new Server(s_MSG ,MainServer.getServerManager().reserveID());
-			serv.addPlayer(ps_sock.getPlayer());
-			ps_sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun im Spiel \'"+serv.getServername()+"\'*");
+			
+			if(data.length() > 3)
+			{
+				if(data.length() > 15)
+					data = data.substring(0, 15);
+			}
+			else
+			{
+				data = "UnknownGame";
+			}
+
+			Server serv = new Server(data ,MainServer.getServerManager().reserveID(), population, money);
+			serv.addPlayer(sock.getPlayer());
+			sock.sendData(Protocol.CHAT_MESSAGE.str() + "*du bist nun im Spiel \'"+serv.getServername()+"\'*");
 		}
 		catch(NoSuchElementException e)
 		{
-			ps_sock.sendData(Protocol.CON_ERROR.str() + "Maximum amount of Servers reached, please join an existing one.");
+			sock.sendData(Protocol.CON_ERROR.str() + "Maximum amount of Servers reached, please join an existing one.");
 		}
 	}
 
@@ -304,41 +344,42 @@ public class Parser
 
 	/**
 	 * Assigns a nick to a player.
-	 * @param s_MSG the message
-	 * @param ps_sock the player socket
+	 * @param data the message
+	 * @param sock the player socket
 	 */
-	private void handleNick(String s_MSG, PlayerSocket ps_sock) {
-		if(s_MSG.length() < 7)
+	@SuppressWarnings("unused")
+	private void handleNick(String data, PlayerSocket sock) {
+		if(data.length() < 7)
 		{
-			s_MSG = "anon";
+			data = "anon";
 		}
 		else
 		{
-			s_MSG = s_MSG.substring(6, s_MSG.length());
+			data = data.substring(6, data.length());
 			//remove anything that isn't a-z or 0-9
-			s_MSG = s_MSG.replaceAll("[^a-zA-Z0-9]", "");
-			if(s_MSG.length() > 15)
-				s_MSG = s_MSG.substring(0, 15);
+			data = data.replaceAll("[^a-zA-Z0-9]", "");
+			if(data.length() > 15)
+				data = data.substring(0, 15);
 		}
 		
-		if(s_MSG.length() < 4)
-			s_MSG = "anon";
+		if(data.length() < 4)
+			data = "anon";
 		
 		// make sure no nicks are used twice
 		int i = 0;
 		try
 		{
-			Player p = MainServer.getPlayerManager().findPlayer(s_MSG);
+			Player p = MainServer.getPlayerManager().findPlayer(data);
 			while(true)
 			{
 				try
 				{
 					i++;
-					p = MainServer.getPlayerManager().findPlayer(s_MSG+i);
+					p = MainServer.getPlayerManager().findPlayer(data+i);
 				}
 				catch (PlayerNotFoundException e)
 				{
-					s_MSG = s_MSG+i;
+					data = data+i;
 					break;
 				}
 			}
@@ -348,8 +389,8 @@ public class Parser
 			
 		}
 		
-		ps_sock.getPlayer().setNick(s_MSG);
-		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CON_NICK.str()+ps_sock.getPlayer().getID()+" "+s_MSG);
+		sock.getPlayer().setNick(data);
+		MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CON_NICK.str()+sock.getPlayer().getID()+" "+data);
 	}
 
 }

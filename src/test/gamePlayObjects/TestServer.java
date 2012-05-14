@@ -23,7 +23,7 @@ public class TestServer
 			Player p = new Player("derp", null, i+100);
 		}
 		
-		Server s = new Server("hurp", 201);
+		Server s = new Server("hurp", 201, 10000, 10000);
 		for(Player p : MainServer.getPlayerManager().getPlayers())
 		{
 			s.addPlayer(p);

@@ -10,13 +10,13 @@ import server.server.ServerManager;
 
 public class MainServer 
 {
-	private static int i_Serverport = Settings.SERVER_DEFAULT_PORT;
-	private static Serversocket ss_sock;
-	private static Parser p_parser;
-	private static DiscoveryServer ds_serv;
-	private static PlayerManager pm_PlaM;
-	private static ServerManager sm_ServM;
-	private static ServerUI sui_UI;
+	private static int serverPort = Settings.SERVER_DEFAULT_PORT;
+	private static Serversocket socket;
+	private static Parser parser;
+	private static DiscoveryServer discoverServer;
+	private static PlayerManager playerManager;
+	private static ServerManager serverManager;
+	private static ServerUI serverUI;
 
     public static void startServer()
     {
@@ -32,48 +32,48 @@ public class MainServer
 	 * Starts a Server with discovery in LAN environments that provides lobby functionality and can hold multiple games
 	 * <p>
 	 * If the Serverport isn't specified (=0) it'll use a default port
-	 * @param i_Port The Port on which the server's listening
+	 * @param port The Port on which the server's listening
 	 */
-	public static void startServer(int i_Port)
+	public static void startServer(int port)
 	{
-		if (i_Port < 1024 || i_Port >= 0xFFFF)
+		if (port < 1024 || port >= 0xFFFF)
 		{
-			MainServer.printInformation("No Port specified, defaulting to " + i_Serverport);
+			MainServer.printInformation("No Port specified, defaulting to " + serverPort);
 		}
 		else
 		{
-			i_Serverport = i_Port;
+			serverPort = port;
 		}
 		
 		//creating the server UI
-		sui_UI = new ServerUI();
-		sui_UI.setVisible(true);
+		serverUI = new ServerUI();
+		serverUI.setVisible(true);
 		
-		p_parser = new Parser();
+		parser = new Parser();
 		try
 		{
-			ss_sock = new Serversocket(i_Serverport, p_parser);
-			ss_sock.start_();
-			ds_serv = new DiscoveryServer(i_Serverport);
+			socket = new Serversocket(serverPort, parser);
+			socket.start_();
+			discoverServer = new DiscoveryServer(serverPort);
 		} 
 		catch (SocketCreationException e) 
 		{
 			MainServer.printInformation("Starting the Server failed: "+e.getMessage());
 			return;
 		}
-		pm_PlaM = new PlayerManager();
-		sm_ServM = new ServerManager();
+		playerManager = new PlayerManager();
+		serverManager = new ServerManager();
 		
 		MainServer.printInformation("Server is up and running!");
 	}
 	
 	/**
 	 * Prints the Information onto the ServerUI
-	 * @param s_MSG
+	 * @param data
 	 */
-	public static void printInformation(String s_MSG)
+	public static void printInformation(String data)
 	{
-		sui_UI.printText(s_MSG);
+		serverUI.printText(data);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class MainServer
 	 */
 	public static PlayerManager getPlayerManager() 
 	{
-		return pm_PlaM;		
+		return playerManager;		
 	}
 	
 	/**
@@ -91,7 +91,7 @@ public class MainServer
 	 */
 	public static ServerUI getGUI()
 	{
-		return sui_UI;
+		return serverUI;
 	}
 	
 	/**
@@ -100,7 +100,7 @@ public class MainServer
 	 */
 	public static ServerManager getServerManager() 
 	{
-		return sm_ServM;		
+		return serverManager;		
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class MainServer
 	 */
 	public static Serversocket getServersocket()
 	{
-		return ss_sock;
+		return socket;
 	}
 	
 	/**
@@ -118,6 +118,6 @@ public class MainServer
 	 */
 	public static DiscoveryServer getDiscoveryServer()
 	{
-		return ds_serv;
+		return discoverServer;
 	}
 }

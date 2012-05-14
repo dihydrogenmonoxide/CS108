@@ -96,7 +96,15 @@ public enum Protocol {
 	/**undo the last built object*/
 	GAME_UNDO(GAME, "UNDO"),
 	/**tells the client that it should go back into pre game mode*/
-	GAME_LOST_OR_WON(GAME, "LOST");
+	GAME_LOST_OR_WON(GAME, "LOST"),
+	/**Difficulty get's an X because fuck logic*/
+	DIFFICULTY("X"),
+	/**normal difficulty*/
+	DIF_NORMAL(DIFFICULTY, "NORM"),
+	/**Rush mode*/
+	DIF_RUSH(DIFFICULTY, "RUSH"),
+	/**Demo mode*/
+	DIF_DEMO(DIFFICULTY, "DEMO");
 	
 	/**holds the String belonging to the Enum.*/
 	private final String message;

@@ -26,7 +26,7 @@ public class TextServerStaticField
 		Player p = new Player("derp", null, 101);
 		p.setNick("DAFUQ");
 		
-		Server s = new Server("hurp", 201);
+		Server s = new Server("hurp", 201, 10000, 10000);
 		s.addPlayer(p);
 		p.setFieldID(1);
 		return s;

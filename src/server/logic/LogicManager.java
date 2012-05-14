@@ -16,7 +16,6 @@ import server.players.Player;
 import server.server.Server;
 import shared.Log;
 import shared.Protocol;
-import shared.Settings;
 import shared.game.Coordinates;
 
 
@@ -61,7 +60,6 @@ implements Runnable
 			server.broadcastPreviousWinners();
 			server.addWinner("\t"+winner.getNick()+": "+winner.getMoney()+" Punkte");
 			winner.sendData(Protocol.GAME_LOST_OR_WON.str()+"0");
-			//TODO SERVER implementieren, dass man in die 2. runde kann
 			return;
 		}
 	}
@@ -84,18 +82,25 @@ implements Runnable
 			Log.WarningLog("That game's already running!");
 			return;
 		}
+		
+		long money = server.getMoney();
+		long population = server.getPopulation();
+		
+		
 		thread = new Thread(this);
+		
 		for(Player p : server.getPlayers())
 		{
-			p.addMoney(Settings.GameValues.DEFAULT_MONEY);
-			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION);
+			p.addMoney(money);
+			p.addPopulation(population);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
-			resendEverything(p);
+			MainServer.printInformation("Assigned "+p.getNick()+" to the field "+p.getFieldID());
+			resendEverything(p); 
 		}
 		
 		thread.start();
 	}
-	
+
 	private void animationPhase()
 	{
 		server.broadcastMessage(Protocol.GAME_ANIMATION_PHASE.str()+animationTimeInSeconds);
@@ -154,7 +159,6 @@ implements Runnable
 	public void resendEverything(Player player)
 	{
 		player.sendData(Protocol.GAME_RESET.str());
-		//TODO SERVER make sure that destroyed objects are updated aswell! (and are deleted next round) <--- test this
 		for(GamePlayObject o :server.getObjectManager().getObjectList())
 		{
 			player.sendData(o.toProtocolString());

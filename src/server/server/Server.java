@@ -14,7 +14,6 @@ import server.logic.LogicManager;
 import server.players.*;
 import shared.Log;
 import shared.Protocol;
-import shared.Settings;
 
 
 public class Server 
@@ -31,21 +30,26 @@ implements Comparable<Server>
 	private boolean isGameRunning = false;
 	private boolean isPaused = false;
 	private List<String> previousWinners = new Vector<String>();
+	private long population;
+	private long money;
 	
+
 	@SuppressWarnings("unchecked")
-	public Server(String s_Servername, int i_ID)
-	
+	public Server(String serverName, int id, long population, long money)
 	{
 		for(int i = 1; i != 6; i++)
 		{
 			availableFieldIDs.offer(i);
 		}
 		
+		this.population = population;
+		this.money = money;
+		
 		Collections.shuffle((List<Integer>) availableFieldIDs);
 		
-		serverName = s_Servername;
+		this.serverName = serverName;
 		playerListLocked = Collections.unmodifiableList(playerList);
-		serverID = i_ID+200;
+		serverID = id+200;
 		
 		objectManager = new GamePlayObjectManager(this);
 		logicManager = new LogicManager(this);
@@ -120,10 +124,6 @@ implements Comparable<Server>
 	 * This is called when a {@link Player} is defeated
 	 * @param p the {@link Player} to remove
 	 */
-	//Ich baue jetzt bei mir das Endgültige ignorieren dieses Players ein.
-	//Jetzt ist es noch so dass die Objekte gelöscht werden etc., aber wenn alle
-	//Player bis auf einen Suspended sind, dann geht das Spiel trotzdem weiter.
-	//@author Lucius
 	public void suspendPlayer(Player p)
 	{
 		broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\t"+p.getNick()+" wurder vernichtet!");
@@ -336,9 +336,28 @@ implements Comparable<Server>
 	{
 		for(Player p : playerList)
 		{
-			p.addMoney(Settings.GameValues.DEFAULT_MONEY-p.getMoney());
-			p.addPopulation(Settings.GameValues.DEFAULT_POPULATION-p.getPopulation());
+			p.addMoney(getMoney()-p.getMoney());
+			p.addPopulation(getPopulation()-p.getPopulation());
 		}
 		Log.DebugLog("reset population & money");
+	}
+
+
+	/**
+	 * @return the default money
+	 */
+	public long getMoney()
+	{
+		return money;
+	}
+
+
+	/**
+	 * 
+	 * @return the default population
+	 */
+	public long getPopulation()
+	{
+		return population;
 	}
 }

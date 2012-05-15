@@ -90,7 +90,7 @@ public class GameFrame
         }
 
         game.setPreferredSize(game.getMaximumSize());
-        game.revalidate();
+//        game.revalidate();
         
         game.setVisible(true);
 

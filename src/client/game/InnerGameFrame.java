@@ -2,6 +2,9 @@ package client.game;
 
 
 import client.data.PlayerManager;
+import client.events.GameEvent;
+import client.events.GameEventListener;
+import client.events.NetEvent;
 import client.game.field.GameFieldPanel;
 import client.game.field.PlayerInfo;
 import client.net.Clientsocket;
@@ -109,6 +112,7 @@ public class InnerGameFrame extends JPanel {
                                 
 			}
 		});
+                
 
                 undo = new JButton("letzten Zug löschen");
                 c.gridwidth = 1;
@@ -158,8 +162,31 @@ public class InnerGameFrame extends JPanel {
 		
 		
 		this.setOpaque(false);
+                
+                //-- add listener so it frees the button "next round" on a next round
+            socket.addGameEventListener(new GameEventListener()
+            {
+
+                @Override
+                public void received(GameEvent evt)
+                {
+                    if(evt.getType() == Protocol.GAME_BUILD_PHASE)
+                    {
+                        ready.setSelected(false);
+                    }
+                }
+
+                @Override
+                public void received(NetEvent evt)
+                {
+                    //-- do nothing
+                }
+            });
+
 	}
 	
+        
+        
 
 		
 }

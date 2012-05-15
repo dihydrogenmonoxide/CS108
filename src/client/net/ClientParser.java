@@ -207,7 +207,7 @@ public class ClientParser {
 			break;
 
 		case GAME_RESET:
-			RunningGame.hardReset();
+			RunningGame.softReset();
 			this.gameReceived(new GameEvent(msg, Protocol.GAME_RESET, msg));
 			break;
 
@@ -234,9 +234,11 @@ public class ClientParser {
                 case GAME_POPULATION:
                         RunningGame.setPop(msg.getLongArgument(1));
                         break;
+                    
                 case GAME_LOST_OR_WON:
                         Log.InformationLog("Spiel beendet:" + msg);
                         this.gameReceived(new GameEvent(msg, Protocol.GAME_LOST_OR_WON, msg));
+                        RunningGame.hardReset();
                         break;
                 
 		default:

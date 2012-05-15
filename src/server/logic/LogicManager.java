@@ -173,8 +173,10 @@ implements Runnable
 		if(isInBuildPhase && !player.finishedBuilding())
 		{
 			voteCount++;
+			server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+player.getNick()+" ist bereit für die nächste Runde!");
 			if(voteCount >= server.getPlayerAmount())
 			{
+				server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+"Alle sind bereit, die jetzige Runde wird beendet");
 				thread.interrupt();
 				Log.InformationLog("Everyone has finished b4 time ran out");
 			}

@@ -294,7 +294,7 @@ public class GamesPanel extends JPanel
             @Override
             public void actionPerformed(final ActionEvent e)
             {
-                if (newGameName.getText() != null && 2 < newGameName.getText().length())
+                if (newGameName.getText() != null && 3 < newGameName.getText().length())
                 {
                     Log.DebugLog("Erstelle Spiel: "+Protocol.GAME_MAKE.str() + group.getSelection().getActionCommand()  +  newGameName.getText());
                     socket.sendData(Protocol.GAME_MAKE.str() + group.getSelection().getActionCommand()  +  newGameName.getText());

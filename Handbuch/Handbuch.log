@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.8.10)  13 MAY 2012 23:09
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.8.10)  15 MAY 2012 14:47
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -839,31 +839,54 @@ Package pdftex.def Info: lobby/spiel_erstellen.png used on input line 176.
 File: lobby/spielinfos.png Graphic file (type png)
 
 <use lobby/spielinfos.png>
-Package pdftex.def Info: lobby/spielinfos.png used on input line 190.
+Package pdftex.def Info: lobby/spielinfos.png used on input line 191.
 (pdftex.def)             Requested size: 271.31572pt x 167.12566pt.
- [8 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] [9] [10] (./Handbuc
-h.aux) ) 
+ [8 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] [9] <spiel/spielfen
+ster.jpg, id=55, 2569.6pt x 1445.4pt>
+File: spiel/spielfenster.jpg Graphic file (type jpg)
+
+<use spiel/spielfenster.jpg>
+Package pdftex.def Info: spiel/spielfenster.jpg used on input line 223.
+(pdftex.def)             Requested size: 385.42337pt x 216.80064pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<spiel/map_with_units.png, id=56, 984.67876pt x 579.16376pt>
+File: spiel/map_with_units.png Graphic file (type png)
+
+<use spiel/map_with_units.png>
+Package pdftex.def Info: spiel/map_with_units.png used on input line 232.
+(pdftex.def)             Requested size: 393.86452pt x 231.66139pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[10] [11 <./spiel/spielfenster.jpg> <./spiel/map_with_units.png>] [12]
+(./Handbuch.aux) ) 
 Here is how much of TeX's memory you used:
- 7702 strings out of 493633
- 107715 string characters out of 3143377
+ 7717 strings out of 493633
+ 108016 string characters out of 3143377
  204786 words of memory out of 3000000
- 10858 multiletter control sequences out of 15000+200000
- 14784 words of font info for 40 fonts, out of 3000000 for 9000
+ 10868 multiletter control sequences out of 15000+200000
+ 15121 words of font info for 41 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  63i,11n,60p,479b,1131s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
-1.enc}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10
-.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1000.p
-fb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb
-></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb><
-/usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></u
-sr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr
-/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/l
-ocal/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
-Output written on Handbuch.pdf (10 pages, 7239624 bytes).
+{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/
+cm-super-ts1.enc}{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/c
+m-super-t1.enc}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/s
+frm1000.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfr
+m1200.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1
+728.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx120
+0.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1440.
+pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pf
+b></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
+
+Output written on Handbuch.pdf (12 pages, 7726014 bytes).
 PDF statistics:
- 86 PDF objects out of 1000 (max. 8388607)
- 50 compressed objects within 1 object stream
+ 98 PDF objects out of 1000 (max. 8388607)
+ 57 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 

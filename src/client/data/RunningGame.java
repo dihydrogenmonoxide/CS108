@@ -213,7 +213,7 @@ public class RunningGame
         myPopulation = 0;
         myMoney = 0;
         
-        objects.clear();
+        //objects.clear();
         /*
         state = GamePhases.PAUSE;
         myFieldId = 0;

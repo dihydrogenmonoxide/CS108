@@ -169,7 +169,7 @@ Alle Eingaben welche ein führenden Backslash haben, werden direkt als Befehl an
 \newpage
 
 \subsection{Spiele}
-M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies Folgendermassen machen.
+M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies folgendermassen machen.
 
 \begin{figure}[h]
 \centering
@@ -178,7 +178,8 @@ M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies Folge
 \end{figure}
 
 Um ein neues Spiel zu erstellen, so gieb im Textfeld einen neuen Spielnamen ein(1).
-W\"{a}hle eine Schwierigkeitsstufe zwischen "'normal"', "'mittel"' oder "'Chuck Norris"' aus(2).
+Der Spielname muss mindestens aus 4 Buchstaben bestehen.
+W\"{a}hle eine Schwierigkeitsstufe zwischen "'normal"', "'schnell"' oder "'Präsentation"' aus(2).
 Um das erstellen des Spiels abzuschliessen dr\"{u}cke auf den Knopf erstellen.
 
 Um einem bereits bestehenden Spiel beizutreten, so w\"{a}hle dieses per Mausklick in der Liste der Spiele (4) aus, und dr\"{u}cke dann auf den Knopf "'beitreten"'.
@@ -199,10 +200,52 @@ Wenn du bereit zum Spielen bist, dann dr\"{u}cke auf "'ich bin bereit"'(5). Soba
 
 \section{Spiel}
 \subsection{Spielprinzip}
+Im Jahre 2100 besteht die Schweiz aus 5 Grosskantonen. Jeder dieser Kantone hat den Anspruch die vollständige Macht in der Schweiz zu übernehmen.
+Genauer heisst dies, dass du die Macht im Nationalrat übernehmen musst. Dies ist der Fall sobald alle anderen Kantone keine Bevölkerung mehr haben.
+Du bist der Präsident eines dieser Kantone und hast das Ziel, deinen Kanton zum Herrscher über die Schweiz zu machen. 
+Um deine Ziele zu erreichen stehen dir verschiedene Einheiten zur Verfügung, welche im Kapitel Einheiten erläutert werden.
+Das Spiel ist rundenbasiert, das heisst das du jeweils eine Runde Zeit hast deine Züge zu machen und danach die Züge ausgeführt werden.
+
+\subsection{Schwierigkeitsgrade}
+\begin{itemize}
+\item Normal 
+\item Schnell
+\item Präsentation
+\end{itemize}
+
+\subsection{Spielfenster}
+Hier eine Übersicht über das Spielfenster. Das Spiel wird im Vollbildmodus gestartet. Auf der rechten Seite ist der Chat, mit dem du mit allen Spielern im Spiel chatten kannst.
+Unten rechts findest du den Zustand deines Kantons. Unten in der Mitte wird die verbleibende Zeit für diese Runde angezeigt. 
+Direkt daneben ist das Panel mit welchem du Einheiten platzieren kannst, dazu wählst du einfach eine Einheit aus und platzierst sie auf deinem Feld (das blaue Feld).
+Links findest du noch die Bedienbuttons zum Beenden des Spiel oder um deinen letzten Spielzug zu löschen.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.15]{spiel/spielfenster.jpg}
+\caption{Spielfenster}
+\end{figure}
+
 
 \subsection{Spielfeld}
+Das Feld mit dem blau-grauen Hintergrund ist dein Kanton. Deine Einheiten werden blau umrandet, während gegnerische Einheiten jeweils mit einer anderen Farbe gekennzeichnet werden.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{spiel/map_with_units.png}
+\caption{Karte mit Einheiten}
+\end{figure}
+Wenn du deine Einheiten verschiebst, so wird dies mit einem gelben Pfeil markiert. Einheiten die sich seit der letzten Runde verschoben haben werden mit einem roten Pfeil angezeigt.
 
 \subsection{Einheiten}
+
+\begin{tabular}{l l l l l}
+Einheit	&	Stärke	& Schwäche	& Lebenspunkte & Preis \\ \hline
+Panzer  & & & & \\
+Panzerabwehr  & & & & \\
+Bomber & & & & \\
+Düsenjäger & & & & \\
+Flugabwehr & & & & \\
+Bank & & & & \\
+Repro-Center & & & & \\
+\end{tabular}
 
 \subsection{Einheiten platzieren}
 

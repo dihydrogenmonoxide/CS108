@@ -62,7 +62,7 @@ public class GameFrame
         
         
         game.setBackground(Color.black);
-        
+        game.setResizable(false);
         
         game.setContentPane(innerGameFrame);
   
@@ -115,6 +115,9 @@ public class GameFrame
                 if(evt.getType() == Protocol.GAME_LOST_OR_WON)
                 {
                    String msg;  
+                   screen.setFullScreenWindow(null);
+                   game.setSize(new Dimension(1000,600));
+                   game.setLocation(screenX / 2 - game.getWidth() / 2, screenY / 2 - game.getHeight() / 2);
                    if(evt.getMsg().getIntArgument(1) == 0)
                     {
                         msg = "Du hast gewonnen";

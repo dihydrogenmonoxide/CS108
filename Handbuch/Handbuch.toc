@@ -12,8 +12,10 @@
 \contentsline {subsection}{\numberline {2.2}Spiele}{8}
 \contentsline {section}{\numberline {3}Spiel}{10}
 \contentsline {subsection}{\numberline {3.1}Spielprinzip}{10}
-\contentsline {subsection}{\numberline {3.2}Spielfeld}{10}
-\contentsline {subsection}{\numberline {3.3}Einheiten}{10}
-\contentsline {subsection}{\numberline {3.4}Einheiten platzieren}{10}
-\contentsline {subsection}{\numberline {3.5}Einheiten verschieben}{10}
-\contentsline {subsection}{\numberline {3.6}Gewinner}{10}
+\contentsline {subsection}{\numberline {3.2}Schwierigkeitsgrade}{10}
+\contentsline {subsection}{\numberline {3.3}Spielfenster}{10}
+\contentsline {subsection}{\numberline {3.4}Spielfeld}{10}
+\contentsline {subsection}{\numberline {3.5}Einheiten}{12}
+\contentsline {subsection}{\numberline {3.6}Einheiten platzieren}{12}
+\contentsline {subsection}{\numberline {3.7}Einheiten verschieben}{12}
+\contentsline {subsection}{\numberline {3.8}Gewinner}{12}

@@ -61,6 +61,7 @@ public class ScoreManager
 		Collections.sort(topScores);
 		if(topScores.size() > 10)
 		{
+			Log.DebugLog("A player just fell out of the top 10");
 			topScores.remove(10);
 		}
 	}

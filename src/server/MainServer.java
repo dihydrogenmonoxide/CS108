@@ -5,6 +5,7 @@ import server.UI.ServerUI;
 import server.net.*;
 import server.parser.*;
 import server.players.*;
+import server.score.ScoreManager;
 import server.server.ServerManager;
 
 
@@ -17,6 +18,7 @@ public class MainServer
 	private static PlayerManager playerManager;
 	private static ServerManager serverManager;
 	private static ServerUI serverUI;
+	private static ScoreManager scoreManager;
 
     public static void startServer()
     {
@@ -63,6 +65,7 @@ public class MainServer
 		}
 		playerManager = new PlayerManager();
 		serverManager = new ServerManager();
+		scoreManager = new ScoreManager();
 		
 		MainServer.printInformation("Server is up and running!");
 	}
@@ -119,5 +122,13 @@ public class MainServer
 	public static DiscoveryServer getDiscoveryServer()
 	{
 		return discoverServer;
+	}
+	
+	/**
+	 * @return  the {@link ScoreManager}'s instance
+	 */
+	public static ScoreManager getScoreManager()
+	{
+		return scoreManager;
 	}
 }

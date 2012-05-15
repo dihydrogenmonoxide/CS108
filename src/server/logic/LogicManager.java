@@ -13,6 +13,7 @@ import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.parser.Parser;
 import server.players.Player;
+import server.score.ScoreManager;
 import server.server.Server;
 import shared.Log;
 import shared.Protocol;
@@ -57,8 +58,7 @@ implements Runnable
 		{
 			Player winner = e.getWinner();
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CHAT_MESSAGE.str()+"\t"+winner.getNick()+" hat das Spiel \""+server.getServername()+"\" mit "+winner.getMoney()+" Punkten gewonnen!");
-			server.broadcastPreviousWinners();
-			server.addWinner("\t"+winner.getNick()+": "+winner.getMoney()+" Punkte");
+			MainServer.getScoreManager().addScore(winner);
 			winner.sendData(Protocol.GAME_LOST_OR_WON.str()+"0");
 			return;
 		}

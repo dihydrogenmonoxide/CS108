@@ -225,6 +225,12 @@ Links findest du noch die Bedienbuttons zum Beenden des Spiel oder um deinen let
 \end{figure}
 
 
+Ziel des Spiels ist es die gegnerische Bevölkerung auszulöschen. Hat ein Spieler keine Bevölkerung mehr scheidet er aus dem Spiel aus.
+Hierzu hat jeder Spieler zu Beginn des Spiels eine bestimmte Anzahl an Bevölkerung, sowie Geld zur verfügung.
+Mit dem Geld hat man die Möglichkeit Gebäude (Banken und Reproduktionszentren), Abwehrelemente (Luft- und Landabwehr), sowie Angriffselemente (Bomber, Panzer und Jets) zu kaufen. Mit denen hat man die Möglichkeit sich zu Schützen, wieder Aufzubauen oder Anzugreifen. Nähere Informationen findest du im Kapitel \ref{subsec:Einheit} Einheiten.
+
+\newpage
+
 \subsection{Spielfeld}
 Das Feld mit dem blau-grauen Hintergrund ist dein Kanton. Deine Einheiten werden blau umrandet, während gegnerische Einheiten jeweils mit einer anderen Farbe gekennzeichnet werden.
 \begin{figure}[h!]
@@ -234,7 +240,112 @@ Das Feld mit dem blau-grauen Hintergrund ist dein Kanton. Deine Einheiten werden
 \end{figure}
 Wenn du deine Einheiten verschiebst, so wird dies mit einem gelben Pfeil markiert. Einheiten die sich seit der letzten Runde verschoben haben werden mit einem roten Pfeil angezeigt.
 
-\subsection{Einheiten}
+Das Spielfeld Besteht aus der Schweizerkarte, die in fünf Felder aufgeteilt ist. Das eigene Feld ist Grün umrandet und hat einen blauen Hintergrund. Die Felder der Gegner haben alle eine rote Umrandung auf schwarzem Hintergrund.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{spiel/spielfeld.png}
+\caption{Spielfeld}
+\end{figure}
+
+Das Fenster des Spiels besteht aus verschiedenen Elementen. eines ist das oben vorgestellte Spielfeld, ein anderes ist der Chat auf der rechten Seite(1), die Buttons um Objekte zu setzten(2),
+Buttons um ein Spiel zu beenden, den letzten Zug zu löschen oder um zu zeigen, dass man bereit ist um eine neue Runde zu Spielen(5), ein Timer(3), der die restliche Spielzeit in dieser Runde anzeigt, sowie die Information über das aktuelle Kontoinhaben und die Population(4).
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{spiel/spielfenster.png}
+\caption{Fenster in dem das Spiel stattfindet}
+\end{figure}
+
+\newpage
+
+\subsection{Einheiten} \label{subsec:Einheit}
+
+Wie bereits beschrieben gibt es folgende Spielfiguren: Bomber, Panzer, Jet, Flugabwehr, Landabwehr, Bank, Reproduktionszentrum.
+
+\subsubsection{Bomber}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.8]{spiel/Bomber.png}
+\caption{Bomber}
+\end{figure}
+
+Der Bomber ist ein Angrifsobjekt.
+Er wird auf den Eigenen Kanton gesetzt. Um einen Zug zu tätigen muss er angewählt werden und seine Zieldestination kann gesetzt werden. Seine spezielle Eigenschaft ist, dass er als einziger nach jeder Runde direkt wieder zurück an seinen Startort fliegt.
+Seine Ziele sind einerseits Gebäude aber auch die Bevölerung eines Landes. Seine Reichweite sind 200'000 km.
+
+\subsubsection{Panzer}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.8]{spiel/Panzer.png}
+\caption{Panzer}
+\end{figure}
+
+Der Panzer ist ebenfalls ein Angriffselement.
+Mit seinem Bewegungsradius von 30'000 km hat er die kleinste Reichweite pro Zug. Er greift alles, das um ihn herum ist an, sei es Bevölkerung oder Gebäude. 
+
+\newpage
+
+\subsubsection{Jet}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.8]{spiel/Flugzeug.png}
+\caption{Jet}
+\end{figure}
+
+Genau wie der Bomber und der Panzer ist der Jet ebenfalls ein Angrifselement.
+Seine Aufgabe ist es die eigenen Bomber zu eskortieren. Er kann lediglich andere Bomber und Flugabwehr angreifen. Mit einer Reichweite von 50'000 km pro Runde liegt er im Mittelwert.
+
+\subsubsection{Landabwehr}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=18]{spiel/Landabwehr.png}
+\caption{Landabwehr}
+\end{figure}
+
+Die Landabwehr ist ein Abwehrelement. Es kann wie alle Abwehrelemente nur in dem eigenen Kanton gebaut werden und danach nicht mehr verschoben werden. Seine Aufgabe ist es Gebäude und die Bevölkerung vor gegnerischen Panzern zu schützen.
+
+
+\newpage
+
+\subsubsection{Flugabwehr}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=18]{spiel/Flugabwehr.png}
+\caption{Flugabwehr}
+\end{figure}
+
+Die Flugabwehr ist das zweite Abwehrelement. Es kann Jet und Bomber Angreifen, die den eigenen Kanton versuchen anzugreifen.
+
+
+\subsubsection{Bank}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.8]{spiel/Bank.png}
+\caption{Bank}
+\end{figure}
+
+Die Bank ist eines der Beiden Aufbauelemente. Die Bank wird in dem eigenen Kanton gebaut und sorgt für zusätzliches Geld in der Kommenden Runde. Jede Bank bringt dem Besitzer ein Plus von 1000 pro Spielrunde.
+
+\newpage
+
+\subsubsection{Reproduktionszentrum}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=2]{spiel/Repro.png}
+\caption{Reproduktionszentrum}
+\end{figure}
+
+Mit dem Reproduktionszentrum kann die Bevölkerung vermehrt werden. Sie bringt pro Runde 100 neue Bevölkerung.
+
+\newpage
 
 \begin{tabular}{l l l l l}
 Einheit	&	Stärke	& Schwäche	& Lebenspunkte & Preis \\ \hline
@@ -249,8 +360,80 @@ Repro-Center & & & & \\
 
 \subsection{Einheiten platzieren}
 
+Einheiten können Folgendermassen plaziert werden. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{spiel/Objekt_aussuchen.png}
+\caption{Objekt wählen}
+\end{figure}
+
+Zuerst muss das gewünste Objekt, dass gebildet werden soll durch Mausklick ausgesucht werden. Der Hintergrund des ausgesuchten Objektes unerscheidet sich farblich von den anderen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{spiel/Objekt_setzen.png}
+\caption{Objekt auf Kanton setzten}
+\end{figure}
+
+Als nächstes muss das Objekt auf dem Bild platziert werden. Dazu einfach per Mausclick auf den eigenen Kanton setzten. Ist der Zug ungültig, da man kein Geld mehr hat oder das Objekt an einen unzulässigen Platz gesetzt wird, so wird der Fehler in der Chatausgabe mit einem gelben Hintergrung angezeigt.
+
+\newpage
+
 \subsection{Einheiten verschieben}
 
-\subsection{Gewinner}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.29]{spiel/Objekt_anwaehlen.png}
+\caption{Objekt anw\"{a}hlen}
+\end{figure}
+
+Um ein Objekt zu verschieben, muss dieses zuerst angew\"{a}hlt werden. Daf\"{u}hr drückt man lediglich auf der Spielfläche auf das gwünschte Objekt. Danach erscheint ein blauer Radar, welcher den Radius darstellt, um welchen das Objekt verschoben werden kann. Zudem wird oben Links auf der Karte die aktuellen Lebenspunkte, sowie der Geldwert angezeigt. Zudem erscheint ein Löschknopf, mit dem das angewählte Objekt gelöscht werden kann.
+
+Um den Bestimmungsort des Objektes zu wählen musst du per Maus innerhalb des Radius drücken. Danach wird ein Pfeil vom alten an den neuen Ort gezeichnet.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.29]{spiel/Objekt_verschieben.png}
+\caption{Objekt verschieben}
+\end{figure}
+
+Möchte man keinen Zug mit diesem Objekt vollziehen, so drückt man ausserhalb des Radars auf den Bildschirm und das Objekt wird abgewählt.
+
+\newpage
+
+\subsection{Nach der Erstelungs-Phase}
+
+Ist die Erstellungsphase beendet, so ist nichtsmehr anwählbar und du bekommst falls du noch versuchst weiter zu setzten eine Meldung.
+Nach dieser Phase siehst du, was deine Gegner in der letzten Runde für Objekte erstellt hat, jeder Spieler hat eine andere Farbe, mit der dessen Objekte umrandet sind. Zudem wird sich deine Population und Kontostand verändern, da die Altionen ausgeführt werden.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{spiel/Objekt_gegner.png}
+\caption{Objekt aller Gegner}
+\end{figure}
+
+\newpage
+
+\subsection{Gewinner und Verlierer}
+
+Verlässt ein Spieler das Spiel oder hat er keine Population mehr, so verliert er dieses. Sind noch mehr als 1 Spieler in einem Spiel aktiv, so spielen diese weiter.
+Dem Verlierer wird folgende Meldung angezeigt:
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.29]{spiel/verloren.png}
+\caption{Ausgabe beim Verlierer}
+\end{figure}
+
+Die anderen Spieler spielen so lange weiter, bis nur noch ein Spieler übrigt bleibt. Wer ausgeschieden ist, hat jedoch die Möglichkeit bei dem Spiel weiter zuzuschauen.
+Dem Gewinner wird nach dem Spiel folgendes Angezeigt:
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.29]{spiel/gewonnen.png}
+\caption{Ausgabe beim Gewinner}
+\end{figure}
+
+Wenn das Spiel zu ende ist, oder ein Spieler das Spiel verlässt, gelangt er zurück in die Lobby, wo neue Spiele gestartet werden können.
 
 \end{document}

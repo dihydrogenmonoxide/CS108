@@ -40,9 +40,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="64.376049"
-     inkscape:cy="48.826037"
+     inkscape:zoom="3.8429079"
+     inkscape:cx="36.123021"
+     inkscape:cy="44.502991"
      inkscape:document-units="px"
      inkscape:current-layer="g2989"
      showgrid="false"
@@ -80,21 +80,41 @@
          width="400"
          height="400"
          x="0"
-         y="652.36224" />
+         y="652.36224"
+         inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/text2993.png"
+         inkscape:export-xdpi="270"
+         inkscape:export-ydpi="270" />
       <text
-         transform="scale(1.0804141,0.92557104)"
+         transform="scale(0.95523298,1.046865)"
          sodipodi:linespacing="125%"
          id="text3778"
-         y="1128.8961"
-         x="10.880864"
-         style="font-size:571.38488769999992201px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ef0000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         y="810.56433"
+         x="-8.7866373"
+         style="font-size:722.2119751px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ef0000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
          xml:space="preserve"
          inkscape:export-xdpi="270"
+         inkscape:export-ydpi="270"
+         inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/text2993.png"><tspan
+           y="810.56433"
+           x="-8.7866373"
+           sodipodi:role="line"
+           style="font-size:257.07189941px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif Bold"
+           id="tspan2989">UB</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:339.50534057999999504px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ef0000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="62.268898"
+         y="1216.2617"
+         id="text2993"
+         sodipodi:linespacing="125%"
+         transform="scale(1.1614547,0.86098924)"
+         inkscape:export-xdpi="270"
          inkscape:export-ydpi="270"><tspan
-           y="1128.8961"
-           x="10.880864"
-           id="tspan3780"
-           sodipodi:role="line">€</tspan></text>
+           sodipodi:role="line"
+           id="tspan2995"
+           x="62.268898"
+           y="1216.2617"
+           style="font-size:424.38168335000000297px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#ef0000;fill-opacity:1">s</tspan></text>
     </g>
   </g>
 </svg>

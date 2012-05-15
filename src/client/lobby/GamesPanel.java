@@ -90,6 +90,10 @@ public class GamesPanel extends JPanel
      */
     private JPanel createPanel;
     /**
+     * how difficult the game is
+     */
+    private ButtonGroup group;
+    /**
      * Frame which contains the GUI for the Game.
      */
     public GameFrame game;
@@ -233,7 +237,7 @@ public class GamesPanel extends JPanel
          * create the dialog to choose the difficulty:
 		 *
          */
-
+        //TODO set right actionCommands
         JLabel title = new JLabel("Wähle den Schwierigkeitsgrad:");
         title.setHorizontalTextPosition(SwingConstants.CENTER);
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -242,21 +246,21 @@ public class GamesPanel extends JPanel
         JRadioButton normal = new JRadioButton("normal");
         normal.setMnemonic(KeyEvent.VK_B);
         normal.setPreferredSize(new Dimension(100, 30));
-        normal.setActionCommand("normal");
+        normal.setActionCommand(Protocol.DIF_NORMAL.str());
         normal.setSelected(true);
 
-        JRadioButton middle = new JRadioButton("mittel");
+        JRadioButton middle = new JRadioButton("schnell");
         middle.setMnemonic(KeyEvent.VK_C);
         middle.setHorizontalAlignment(SwingConstants.CENTER);
         middle.setPreferredSize(new Dimension(100, 30));
-        middle.setActionCommand("mittel");
+        middle.setActionCommand(Protocol.DIF_RUSH.str());
 
-        JRadioButton chuckNorris = new JRadioButton("Chuck Norris");
+        JRadioButton chuckNorris = new JRadioButton("Präsentation");
         chuckNorris.setMnemonic(KeyEvent.VK_R);
         //chuckNorris.setPreferredSize(new Dimension(100, 30));
-        chuckNorris.setActionCommand("Chuck Norris");
+        chuckNorris.setActionCommand(Protocol.DIF_DEMO.str());
 
-        ButtonGroup group = new ButtonGroup();
+         group = new ButtonGroup();
         group.add(normal);
         group.add(middle);
         group.add(chuckNorris);
@@ -292,7 +296,8 @@ public class GamesPanel extends JPanel
             {
                 if (newGameName.getText() != null && 2 < newGameName.getText().length())
                 {
-                    socket.sendData(Protocol.GAME_MAKE.str() + newGameName.getText());
+                    Log.DebugLog("Erstelle Spiel: "+Protocol.GAME_MAKE.str() + group.getSelection().getActionCommand()  +  newGameName.getText());
+                    socket.sendData(Protocol.GAME_MAKE.str() + group.getSelection().getActionCommand()  +  newGameName.getText());
                 }
             }
         });

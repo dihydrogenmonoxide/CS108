@@ -206,7 +206,7 @@ public class RunningGame
      * this method clears all the fields in this class. is used at the end of a
      * game, so everything is ready for a new game.
      */
-    public static void hardReset()
+    public static void softReset()
     {
         
         
@@ -222,7 +222,21 @@ public class RunningGame
         isPaused = false;
         */
     }
-   
+    
+    /**
+     * this method clears all the fields in this class. is used at the end of a
+     * game, so everything is ready for a new game.
+     */
+    public static void hardReset()
+    {myPopulation = 0;
+        myMoney = 0;
+        objects.clear();
+        state = GamePhases.PAUSE;
+        myFieldId = 0;
+        isRunning = false;
+        stopTimer();
+        isPaused = false;
+    }
 
     /**creates an object if it doesn't exist, otherwise an existing object will be updated.
      * @param objectType the type of the object

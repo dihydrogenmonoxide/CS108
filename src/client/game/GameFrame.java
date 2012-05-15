@@ -164,7 +164,7 @@ public class GameFrame
             {
                 screen.setFullScreenWindow(null);
                 game.dispose();
-                RunningGame.hardReset();
+                RunningGame.softReset();
                 socket.sendData(Protocol.GAME_QUIT.str());
                 lobby.setVisible(true);
             } 

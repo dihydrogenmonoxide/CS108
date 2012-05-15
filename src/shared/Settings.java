@@ -29,7 +29,7 @@ public final class Settings {
 	public final class GameValuesRush
 	{
 		/**The default money value a player receives on round begin*/
-		public static final long DEFAULT_MONEY = 50000;
+		public static final long DEFAULT_MONEY = 75000;
 		/**The default Population amount*/
 		public static final long DEFAULT_POPULATION = 50000;
 	}

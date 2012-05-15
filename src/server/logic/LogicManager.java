@@ -94,6 +94,7 @@ implements Runnable
 			p.addMoney(money);
 			p.addPopulation(population);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
+			p.sendData(Protocol.GAME_RESET.str());
 			MainServer.printInformation("Assigned "+p.getNick()+" to the field "+p.getFieldID());
 			resendEverything(p); 
 		}
@@ -150,7 +151,7 @@ implements Runnable
 		}
 		catch (InterruptedException e)
 		{
-			Log.DebugLog("All Players finished building before tiem ran out");
+			Log.DebugLog("All Players finished building before time ran out");
 		}
 		isInBuildPhase = false;
 		server.broadcastMessage(Protocol.GAME_BUILD_PHASE.str()+0);

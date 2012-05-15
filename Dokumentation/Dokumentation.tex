@@ -29,7 +29,7 @@
 
 %title
 \title{Dokumentation}
-\author{Frank M\"{u}ller, Oliver Wisler, Luzius Bachmann, Fabio Sulser}
+\author{Frank M\"{u}ller, Oliver Wisler, Lucius Bachmann, Fabio Sulser}
 \subtitle{Swissdefcon-Team}
 
 \begin{document}
@@ -112,9 +112,24 @@ Auf diese gespeicherten Daten kann mittels statischer Methoden jederzeit vom Spi
 
 %todo frank und lucius
 
-\subsection{Logik}
+\subsection{Spiellogik}
+\subsection{Aufbauphase}
+Mit dem Start des Spiels wird der GamePlayObjectManager instanziert. Er verwaltet die GamePlayObjects.
+Wird ein Objekt erstellt, \"{u}bergibt man dem Objekt den GamePlayObjectManager. Das Objekt, falls es an einer g\"{u}ltigen Position gesetzt wurde und der Spieler noch Geld hat, tr\"{a}gt sich dann in die Liste AllObjects und, wenn ein Defensivobjekt, in die Liste Defensives ein. Wird ein Objekt bewegt, dann wird das in die Membervariable Target eingetragen.
 
-%todo lucius
+\subsection{Runde}
+
+Wird jetzt die Runde gestartet, dann..
+\begin{itemize}
+
+\item Testet der GamePlayObjectManager zuerst, ob ein Spieler noch Population hat. Wenn nicht, werden all seine Objekte gel\ "{o}scht und sein Geld auf 0 gesetzt.
+\item Darauf werden die Objekte gepr\"{u}ft, ob sie noch Lebenspunkte haben. Wenn nicht, werden sie gel\"{o}scht.
+\item Dann rechnet jedes Objekt aus, wohin es sich bewegen wird. Falls ein Objekt weiter als seine MovingRange bewegt werden sollte, dann bewegt es sich in Richtung Target soweit, wie es die MovingRange erlaubt. Das Ergebnis wird in moveProv gespeichert.
+\item Jetzt senden alle Objekte allen Objekten ihre Bewegung, und jedes Objekt testet die eingegangenen Bewegungen darauf, ob sie durch ihren Angriffsradius verlaufen. Wenn ja und angreifbar, werden sie in der Liste possibleTargets gespeichert. Dann werden die Objekte auf ihre neue Position gesetzt.
+\item Schiesslich f\"{u}hren alle Objekte ihre Angriffe aus. Die Banken geben Geld, die Reproduktionszentren Geld. Alle anderen Objekte w\"{a}hlen zuf\"{u}llig ein Objekt aus den possibleTargets aus, schiessen darauf bis es keine Lebenspunkte mehr hat, wenn es 0 Lebenspunkte hat w\"{a}hlen sie das n\"{a}chste Objekt, bis sie keine Munition mehr haben.
+\end{itemize}
+
+
 
 %-- Kommunikation
 \section{Kommunikation}

@@ -125,6 +125,9 @@ public class GameFrame
                         msg = "Du hast verloren";
                     }
                     JOptionPane.showMessageDialog(lobbyParent, msg, "Spiel fertig", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    //-- remove this listener because otherwise in the next game there would be 2 listeners attached to it
+                    socket.removeGameEventListener(this);
                     closeGame();
                 }
             }

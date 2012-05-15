@@ -94,6 +94,7 @@ implements Runnable
 			p.addMoney(money);
 			p.addPopulation(population);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
+			p.sendData(Protocol.GAME_RESET.str());
 			MainServer.printInformation("Assigned "+p.getNick()+" to the field "+p.getFieldID());
 			resendEverything(p); 
 		}
@@ -150,7 +151,7 @@ implements Runnable
 		}
 		catch (InterruptedException e)
 		{
-			Log.DebugLog("All Players finished building before tiem ran out");
+			Log.DebugLog("All Players finished building before time ran out");
 		}
 		isInBuildPhase = false;
 		server.broadcastMessage(Protocol.GAME_BUILD_PHASE.str()+0);
@@ -172,8 +173,10 @@ implements Runnable
 		if(isInBuildPhase && !player.finishedBuilding())
 		{
 			voteCount++;
+			server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+player.getNick()+" ist bereit für die nächste Runde!");
 			if(voteCount >= server.getPlayerAmount())
 			{
+				server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+"Alle sind bereit, die jetzige Runde wird beendet");
 				thread.interrupt();
 				Log.InformationLog("Everyone has finished b4 time ran out");
 			}

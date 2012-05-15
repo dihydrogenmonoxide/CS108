@@ -90,6 +90,10 @@ public class GamesPanel extends JPanel
      */
     private JPanel createPanel;
     /**
+     * Button to display the highscore.
+     */
+    private JButton highscore;
+    /**
      * how difficult the game is
      */
     private ButtonGroup group;
@@ -115,9 +119,14 @@ public class GamesPanel extends JPanel
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
+       
+        
         makeGameChooser(c);
         makeGameCreator(c);
-
+        
+     
+        
+        
         this.setOpaque(false);
 
         /*
@@ -314,6 +323,15 @@ public class GamesPanel extends JPanel
      */
     private void makeGameChooser(GridBagConstraints c)
     {
+        //-- create highscorebutton
+        highscore = new JButton("Highscore");
+        highscore.setVisible(true);
+        c.gridx = 3;
+        c.gridy = 40;
+        c.insets = new Insets(30, 0, 0, 0);
+        this.add(highscore, c);
+        
+        
         /*
          * Create the Listing with all the Games
 		 *
@@ -454,6 +472,15 @@ public class GamesPanel extends JPanel
         this.add(separator, c);
 
         // LISTENERS
+        highscore.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                socket.sendData(Protocol.LOBBY_SCORE.str());
+            }
+        });
+        
         gamesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
         {
 
@@ -509,6 +536,7 @@ public class GamesPanel extends JPanel
         gamesScroll.setVisible(true);
         toggleButton.setText("beitreten");
         createPanel.setVisible(true);
+        highscore.setVisible(true);
         isJoined = false;
     }
 
@@ -522,6 +550,7 @@ public class GamesPanel extends JPanel
         gamesScroll.setVisible(false);
         toggleButton.setText("verlassen");
         createPanel.setVisible(false);
+        highscore.setVisible(false);
         isJoined = true;
     }
 

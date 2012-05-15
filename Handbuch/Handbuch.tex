@@ -70,7 +70,7 @@ java -jar pfad.zum.jar server PORT
            
 
 \subsubsection{Client}
-Der Client kann ohne Angaben wie folgend gestartet werden:
+Der Client kann ohne Angaben wie folgt gestartet werden:
 \begin{lstlisting}
 java -jar pfad.zum.jar
 \end{lstlisting}
@@ -162,14 +162,14 @@ In dem Chat kannst du nun Nachrichten von anderen Personen sehen, die sich auf d
 Unterhalb des Chat-Ausgabefensters siehst du das Eingabepanel, in dem du deine Nachricht eingeben kannst(2). Zum senden der Nachricht dr\"{u}cke entweder die Enter-Taste, oder dr\"{u}cke auf den senden-Button.
 \subsubsection{Befehle}
 Eine normale Chat-eingabe ist f\"{u}r alle Mitspieler sichtbar. \\
-M\"{o}chtest du eine private Nachricht an eine Person senden, so gieb den Befehl \lstinline{/MSG hans hallo} in das Eingabepanel ein, wobei "'hans"' der Name des anderen Spielers ist und "'hallo"' die Nachricht, die gesendet wird. \\
+M\"{o}chtest du eine private Nachricht an eine Person senden, so gib den Befehl \lstinline{/MSG hans hallo} in das Eingabepanel ein, wobei "'hans"' der Name des anderen Spielers ist und "'hallo"' die Nachricht, die gesendet wird. \\
 Um deinen Nicknamen zu wechseln, gib den Befehl \lstinline{/VNICK muster} in das Eingabepanel ein, wobei "'muster'" dein neuer Name ist.
 Alle Eingaben welche ein führenden Backslash haben, werden direkt als Befehl an den Server geschickt. Damit ist es möglich von Hand Befehle an den Server zu schicken (zum Beispiel \lstinline{/VEXIT} beendet die Verbindung). Serverbefehle sind nicht case-sensitive.
 
 \newpage
 
 \subsection{Spiele}
-M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies Folgendermassen machen.
+M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies folgendermassen machen.
 
 \begin{figure}[h]
 \centering
@@ -177,8 +177,9 @@ M\"{o}chtest du ein neues Spiel erstellen oder betreten, so kannst du dies Folge
 \caption{Spiel erstellen oder beitreten}
 \end{figure}
 
-Um ein neues Spiel zu erstellen, so gieb im Textfeld einen neuen Spielnamen ein(1).
-W\"{a}hle eine Schwierigkeitsstufe zwischen "'normal"', "'mittel"' oder "'Chuck Norris"' aus(2).
+Um ein neues Spiel zu erstellen, so gib im Textfeld einen neuen Spielnamen ein(1).
+Der Spielname muss mindestens aus 4 Buchstaben bestehen.
+W\"{a}hle eine Schwierigkeitsstufe zwischen "'normal"', "'schnell"' oder "'Präsentation"' aus(2).
 Um das erstellen des Spiels abzuschliessen dr\"{u}cke auf den Knopf erstellen.
 
 Um einem bereits bestehenden Spiel beizutreten, so w\"{a}hle dieses per Mausklick in der Liste der Spiele (4) aus, und dr\"{u}cke dann auf den Knopf "'beitreten"'.
@@ -199,14 +200,45 @@ Wenn du bereit zum Spielen bist, dann dr\"{u}cke auf "'ich bin bereit"'(5). Soba
 
 \section{Spiel}
 \subsection{Spielprinzip}
+Im Jahre 2100 besteht die Schweiz aus 5 Grosskantonen. Jeder dieser Kantone hat den Anspruch die vollständige Macht in der Schweiz zu übernehmen.
+Genauer heisst dies, dass du die Macht im Nationalrat übernehmen musst. Dies ist der Fall sobald alle anderen Kantone keine Bevölkerung mehr haben.
+Du bist der Präsident eines dieser Kantone und hast das Ziel, deinen Kanton zum Herrscher über die Schweiz zu machen. 
+Um deine Ziele zu erreichen stehen dir verschiedene Einheiten zur Verfügung, welche im Kapitel Einheiten erläutert werden.
+Das Spiel ist rundenbasiert, das heisst, dass du jeweils eine Runde Zeit hast deine Züge zu machen und danach die Züge ausgeführt werden.
+
+\subsection{Schwierigkeitsgrade}
+\begin{itemize}
+\item Normal mit grosser Population und wenig Geld
+\item Schnell mit kleiner Population und viel Geld
+\item Präsentation mit sehr kleiner Population und sehr viel Geld
+\end{itemize}
+
+\subsection{Spielfenster}
+Hier eine Übersicht über das Spielfenster. Das Spiel wird im Vollbildmodus gestartet. Auf der rechten Seite ist der Chat, mit dem du mit allen Spielern im Spiel chatten kannst.
+Unten rechts findest du den Zustand deines Kantons. Unten in der Mitte wird die verbleibende Zeit für diese Runde angezeigt. 
+Direkt daneben ist das Panel mit welchem du Einheiten platzieren kannst, dazu wählst du einfach eine Einheit aus und platzierst sie auf deinem Feld (das blaue Feld).
+Links findest du noch die Bedienbuttons zum Beenden des Spiel oder um deinen letzten Spielzug zu löschen.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.15]{spiel/spielfenster.jpg}
+\caption{Spielfenster}
+\end{figure}
+
 
 Ziel des Spiels ist es die gegnerische Bevölkerung auszulöschen. Hat ein Spieler keine Bevölkerung mehr scheidet er aus dem Spiel aus.
 Hierzu hat jeder Spieler zu Beginn des Spiels eine bestimmte Anzahl an Bevölkerung, sowie Geld zur verfügung.
-Mit dem Geld hat man die Möglichkeit Gebäude (Banken und Reproduktionszentren), Abwehrelemente (Luft- und Landabwehr), sowie Angriffselemente (Bomber, Panzer und Jets) zu kaufen. Mit denen hat man die Möglichkeit sich zu Schützen, wieder Aufzubauen oder Anzugreifen. Nähere Informationen findest du im Kapitel \ref{subsec:Einheit} Einheiten.
+Mit dem Geld hat man die Möglichkeit Gebäude (Banken und Reproduktionszentren), Abwehrelemente (Luft- und Landabwehr), sowie Angriffselemente (Bomber, Panzer und Jets) zu kaufen. Mit denen hat man die Möglichkeit sich zu schützen, wieder Aufzubauen oder Anzugreifen. Nähere Informationen findest du im Kapitel \ref{subsec:Einheit} Einheiten.
 
 \newpage
 
 \subsection{Spielfeld}
+Das Feld mit dem blau-grauen Hintergrund ist dein Kanton. Deine Einheiten werden blau umrandet, während gegnerische Einheiten jeweils mit einer anderen Farbe gekennzeichnet werden.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{spiel/map_with_units.png}
+\caption{Spielfeld mit Einheiten}
+\end{figure}
+Wenn du deine Einheiten verschiebst, so wird dies mit einem gelben Pfeil markiert. Einheiten die sich seit der letzten Runde verschoben haben werden mit einem roten Pfeil angezeigt.
 
 Das Spielfeld Besteht aus der Schweizerkarte, die in fünf Felder aufgeteilt ist. Das eigene Feld ist Grün umrandet und hat einen blauen Hintergrund. Die Felder der Gegner haben alle eine rote Umrandung auf schwarzem Hintergrund.
 
@@ -216,20 +248,29 @@ Das Spielfeld Besteht aus der Schweizerkarte, die in fünf Felder aufgeteilt ist
 \caption{Spielfeld}
 \end{figure}
 
-Das Fenster des Spiels besteht aus verschiedenen Elementen. eines ist das oben vorgestellte Spielfeld, ein anderes ist der Chat auf der rechten Seite(1), die Buttons um Objekte zu setzten(2),
-Buttons um ein Spiel zu beenden, den letzten Zug zu löschen oder um zu zeigen, dass man bereit ist um eine neue Runde zu Spielen(5), ein Timer(3), der die restliche Spielzeit in dieser Runde anzeigt, sowie die Information über das aktuelle Kontoinhaben und die Population(4).
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.3]{spiel/spielfenster.png}
-\caption{Fenster in dem das Spiel stattfindet}
-\end{figure}
+%Das Fenster des Spiels besteht aus verschiedenen Elementen. eines ist das oben vorgestellte Spielfeld, ein anderes ist der Chat auf der rechten Seite(1), die Buttons um Objekte zu setzten(2),
+%Buttons um ein Spiel zu beenden, den letzten Zug zu löschen oder um zu zeigen, dass man bereit ist um eine neue Runde zu Spielen(5), ein Timer(3), der die restliche Spielzeit in dieser Runde anzeigt, sowie die Information über das aktuelle Kontoinhaben und die Population(4).
+%
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=0.3]{spiel/spielfenster.png}
+%\caption{Fenster in dem das Spiel stattfindet}
+%\end{figure}
 
 \newpage
 
 \subsection{Einheiten} \label{subsec:Einheit}
 
-Wie bereits beschrieben gibt es folgende Spielfiguren: Bomber, Panzer, Jet, Flugabwehr, Landabwehr, Bank, Reproduktionszentrum.
+Es gibt folgende Spielfiguren: 
+\begin{itemize}
+\item Bomber
+\item Panzer
+\item Jet
+\item Flugabwehr
+\item Landabwehr
+\item Bank
+\item  Reproduktionszentrum
+\end{itemize}
 
 \subsubsection{Bomber}
 
@@ -239,9 +280,9 @@ Wie bereits beschrieben gibt es folgende Spielfiguren: Bomber, Panzer, Jet, Flug
 \caption{Bomber}
 \end{figure}
 
-Der Bomber ist ein Angrifsobjekt.
-Er wird auf den Eigenen Kanton gesetzt. Um einen Zug zu tätigen muss er angewählt werden und seine Zieldestination kann gesetzt werden. Seine spezielle Eigenschaft ist, dass er als einziger nach jeder Runde direkt wieder zurück an seinen Startort fliegt.
-Seine Ziele sind einerseits Gebäude aber auch die Bevölerung eines Landes. Seine Reichweite sind 200'000 km.
+Der Bomber ist ein Angriffsobjekt.
+Er wird auf den eigenen Kanton gesetzt. Um einen Zug zu tätigen muss er angewählt werden und seine Zieldestination kann gesetzt werden. Seine spezielle Eigenschaft ist, dass er als einziger nach jeder Runde direkt wieder zurück an seinen Startort fliegt.
+Seine Ziele sind einerseits Gebäude aber auch die Bevölkerung eines Landes. Seine Reichweite sind 200'000 km.
 
 \subsubsection{Panzer}
 
@@ -252,7 +293,7 @@ Seine Ziele sind einerseits Gebäude aber auch die Bevölerung eines Landes. Sei
 \end{figure}
 
 Der Panzer ist ebenfalls ein Angriffselement.
-Mit seinem Bewegungsradius von 30'000 km hat er die kleinste Reichweite pro Zug. Er greift alles, das um ihn herum ist an, sei es Bevölkerung oder Gebäude. 
+Mit seinem Bewegungsradius von 30'000 km hat er die kleinste Reichweite pro Zug. Er greift alles, dass um ihn herum ist an, sei es Bevölkerung oder Gebäude. 
 
 \newpage
 
@@ -264,10 +305,11 @@ Mit seinem Bewegungsradius von 30'000 km hat er die kleinste Reichweite pro Zug.
 \caption{Jet}
 \end{figure}
 
-Genau wie der Bomber und der Panzer ist der Jet ebenfalls ein Angrifselement.
-Seine Aufgabe ist es die eigenen Bomber zu eskortieren. Er kann lediglich andere Bomber und Flugabwehr angreifen. Mit einer Reichweite von 50'000 km pro Runde liegt er im Mittelwert.
+Genau wie der Bomber und der Panzer ist der Jet ebenfalls ein Angriffselement.
+Seine Aufgabe ist es, die eigenen Bomber zu eskortieren. Er kann lediglich andere Bomber und Flugabwehr angreifen. Mit einer Reichweite von 50'000 km pro Runde liegt er im Mittelwert.
 
 \subsubsection{Landabwehr}
+
 
 \begin{figure}[h]
 \centering
@@ -299,7 +341,7 @@ Die Flugabwehr ist das zweite Abwehrelement. Es kann Jet und Bomber Angreifen, d
 \caption{Bank}
 \end{figure}
 
-Die Bank ist eines der Beiden Aufbauelemente. Die Bank wird in dem eigenen Kanton gebaut und sorgt für zusätzliches Geld in der Kommenden Runde. Jede Bank bringt dem Besitzer ein Plus von 1000 pro Spielrunde.
+Die Bank ist eines der Beiden Aufbauelemente. Die Bank wird in dem eigenen Kanton gebaut und sorgt für zusätzliches Geld in der Kommenden Runde. Jede Bank bringt dem Besitzer ein Plus von 1000 Geld pro Spielrunde.
 
 \newpage
 
@@ -317,7 +359,7 @@ Mit dem Reproduktionszentrum kann die Bevölkerung vermehrt werden. Sie bringt p
 
 \subsection{Einheiten platzieren}
 
-Einheiten können Folgendermassen plaziert werden. 
+Einheiten können folgendermassen plaziert werden. 
 
 \begin{figure}[h]
 \centering
@@ -325,7 +367,7 @@ Einheiten können Folgendermassen plaziert werden.
 \caption{Objekt wählen}
 \end{figure}
 
-Zuerst muss das gewünste Objekt, dass gebildet werden soll durch Mausklick ausgesucht werden. Der Hintergrund des ausgesuchten Objektes unerscheidet sich farblich von den anderen.
+Zuerst muss das gewünschte Objekt, dass gebildet werden soll durch Mausklick ausgesucht werden. Der Hintergrund des ausgesuchten Objektes unterscheidet sich farblich von den anderen.
 
 \begin{figure}[h]
 \centering
@@ -333,7 +375,7 @@ Zuerst muss das gewünste Objekt, dass gebildet werden soll durch Mausklick ausg
 \caption{Objekt auf Kanton setzten}
 \end{figure}
 
-Als nächstes muss das Objekt auf dem Bild platziert werden. Dazu einfach per Mausclick auf den eigenen Kanton setzten. Ist der Zug ungültig, da man kein Geld mehr hat oder das Objekt an einen unzulässigen Platz gesetzt wird, so wird der Fehler in der Chatausgabe mit einem gelben Hintergrung angezeigt.
+Als nächstes muss das Objekt auf der Karte platziert werden. Dazu einfach per Mausklick auf den eigenen Kanton setzten. Ist der Zug ungültig, da man kein Geld mehr hat oder das Objekt an einen unzulässigen Platz gesetzt wird, so wird er nicht ausgeführt.
 
 \newpage
 
@@ -345,7 +387,7 @@ Als nächstes muss das Objekt auf dem Bild platziert werden. Dazu einfach per Ma
 \caption{Objekt anw\"{a}hlen}
 \end{figure}
 
-Um ein Objekt zu verschieben, muss dieses zuerst angew\"{a}hlt werden. Daf\"{u}hr drückt man lediglich auf der Spielfläche auf das gwünschte Objekt. Danach erscheint ein blauer Radar, welcher den Radius darstellt, um welchen das Objekt verschoben werden kann. Zudem wird oben Links auf der Karte die aktuellen Lebenspunkte, sowie der Geldwert angezeigt. Zudem erscheint ein Löschknopf, mit dem das angewählte Objekt gelöscht werden kann.
+Um ein Objekt zu verschieben, muss dieses zuerst angew\"{a}hlt werden. Daf\"{u}hr drückt man lediglich auf der Spielfläche auf das gewünschte Objekt. Danach erscheint ein blauer Radar, welcher den Radius darstellt, um welchen das Objekt verschoben werden kann. Zudem wird oben Links auf der Karte die aktuellen Lebenspunkte, sowie der Geldwert angezeigt. Zudem erscheint ein Löschknopf, mit dem das angewählte Objekt gelöscht werden kann.
 
 Um den Bestimmungsort des Objektes zu wählen musst du per Maus innerhalb des Radius drücken. Danach wird ein Pfeil vom alten an den neuen Ort gezeichnet.
 \begin{figure}[h]
@@ -354,14 +396,14 @@ Um den Bestimmungsort des Objektes zu wählen musst du per Maus innerhalb des Ra
 \caption{Objekt verschieben}
 \end{figure}
 
-Möchte man keinen Zug mit diesem Objekt vollziehen, so drückt man ausserhalb des Radars auf den Bildschirm und das Objekt wird abgewählt.
+Möchte man keinen Zug mit diesem Objekt vollziehen, so klickt man ausserhalb des Radars auf den Bildschirm und das Objekt wird abgewählt.
 
 \newpage
 
-\subsection{Nach der Erstelungs-Phase}
+\subsection{Nach der Erstellungs-Phase}
 
-Ist die Erstellungsphase beendet, so ist nichtsmehr anwählbar und du bekommst falls du noch versuchst weiter zu setzten eine Meldung.
-Nach dieser Phase siehst du, was deine Gegner in der letzten Runde für Objekte erstellt hat, jeder Spieler hat eine andere Farbe, mit der dessen Objekte umrandet sind. Zudem wird sich deine Population und Kontostand verändern, da die Altionen ausgeführt werden.
+Ist die Erstellungsphase beendet, so ist nichts mehr anwählbar und du bekommst falls du noch versuchst weiter zu setzten eine Meldung.
+Nach dieser Phase siehst du, was deine Gegner in der letzten Runde für Objekte erstellt hat, jeder Spieler hat eine andere Farbe, mit der seine Objekte umrandet sind. Zudem wird sich deine Population und Kontostand verändern, da die Aktionen ausgeführt werden.
 
 \begin{figure}[h]
 \centering
@@ -382,8 +424,8 @@ Dem Verlierer wird folgende Meldung angezeigt:
 \caption{Ausgabe beim Verlierer}
 \end{figure}
 
-Die anderen Spieler spielen so lange weiter, bis nur noch ein Spieler übrigt bleibt. Wer ausgeschieden ist, hat jedoch die Möglichkeit bei dem Spiel weiter zuzuschauen.
-Dem Gewinner wird nach dem Spiel folgendes Angezeigt:
+Die anderen Spieler spielen so lange weiter, bis nur noch ein Spieler übrig bleibt. Wer ausgeschieden ist, hat jedoch die Möglichkeit bei dem Spiel weiter zuzuschauen.
+Dem Gewinner wird nach dem Spiel folgendes angezeigt:
 
 \begin{figure}[h]
 \centering
@@ -391,6 +433,6 @@ Dem Gewinner wird nach dem Spiel folgendes Angezeigt:
 \caption{Ausgabe beim Gewinner}
 \end{figure}
 
-Wenn das Spiel zu ende ist, oder ein Spieler das Spiel verlässt, gelangt er zurück in die Lobby, wo neue Spiele gestartet werden können.
+Wenn das Spiel zu Ende ist, oder ein Spieler das Spiel verlässt, gelangt er zurück in die Lobby, wo neue Spiele gestartet werden können.
 
 \end{document}

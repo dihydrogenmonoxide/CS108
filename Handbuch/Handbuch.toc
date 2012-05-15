@@ -12,16 +12,18 @@
 \contentsline {subsection}{\numberline {2.2}Spiele}{8}
 \contentsline {section}{\numberline {3}Spiel}{10}
 \contentsline {subsection}{\numberline {3.1}Spielprinzip}{10}
-\contentsline {subsection}{\numberline {3.2}Spielfeld}{11}
-\contentsline {subsection}{\numberline {3.3}Einheiten}{12}
-\contentsline {subsubsection}{\numberline {3.3.1}Bomber}{12}
-\contentsline {subsubsection}{\numberline {3.3.2}Panzer}{12}
-\contentsline {subsubsection}{\numberline {3.3.3}Jet}{13}
-\contentsline {subsubsection}{\numberline {3.3.4}Landabwehr}{13}
-\contentsline {subsubsection}{\numberline {3.3.5}Flugabwehr}{14}
-\contentsline {subsubsection}{\numberline {3.3.6}Bank}{14}
-\contentsline {subsubsection}{\numberline {3.3.7}Reproduktionszentrum}{15}
-\contentsline {subsection}{\numberline {3.4}Einheiten platzieren}{16}
-\contentsline {subsection}{\numberline {3.5}Einheiten verschieben}{17}
-\contentsline {subsection}{\numberline {3.6}Nach der Erstelungs-Phase}{19}
-\contentsline {subsection}{\numberline {3.7}Gewinner und Verlierer}{20}
+\contentsline {subsection}{\numberline {3.2}Schwierigkeitsgrade}{10}
+\contentsline {subsection}{\numberline {3.3}Spielfenster}{10}
+\contentsline {subsection}{\numberline {3.4}Spielfeld}{11}
+\contentsline {subsection}{\numberline {3.5}Einheiten}{13}
+\contentsline {subsubsection}{\numberline {3.5.1}Bomber}{13}
+\contentsline {subsubsection}{\numberline {3.5.2}Panzer}{13}
+\contentsline {subsubsection}{\numberline {3.5.3}Jet}{14}
+\contentsline {subsubsection}{\numberline {3.5.4}Landabwehr}{14}
+\contentsline {subsubsection}{\numberline {3.5.5}Flugabwehr}{15}
+\contentsline {subsubsection}{\numberline {3.5.6}Bank}{15}
+\contentsline {subsubsection}{\numberline {3.5.7}Reproduktionszentrum}{16}
+\contentsline {subsection}{\numberline {3.6}Einheiten platzieren}{17}
+\contentsline {subsection}{\numberline {3.7}Einheiten verschieben}{18}
+\contentsline {subsection}{\numberline {3.8}Nach der Erstellungs-Phase}{20}
+\contentsline {subsection}{\numberline {3.9}Gewinner und Verlierer}{21}

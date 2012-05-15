@@ -251,7 +251,7 @@ public class Parser
 			if(data.length() > 12)
 			{
 				difficulty = data.substring(6, 11);
-				data.substring(12, data.length());
+				data = data.substring(12, data.length());
 				Log.DebugLog("Difficulty: '"+difficulty+"'");
 			}
 			else

@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.7173462"
-     inkscape:cx="66.540284"
-     inkscape:cy="-19.391176"
+     inkscape:zoom="1.6484375"
+     inkscape:cx="-66.919432"
+     inkscape:cy="138.49403"
      inkscape:document-units="px"
      inkscape:current-layer="g2990"
      showgrid="false"
@@ -60,50 +60,55 @@
        transform="matrix(0.25,0,0,0.24971895,0,789.5674)"
        inkscape:export-xdpi="2700"
        inkscape:export-ydpi="2700">
-      <path
-         sodipodi:nodetypes="ccccccc"
-         inkscape:connector-curvature="0"
-         id="path3761"
-         d="m 0,1017.3622 300,0 0,-235.75639 -100,-129.69381 -100,0 L 0,781.60581 z"
-         style="fill:#c2ffff;fill-opacity:1;stroke:none"
-         inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/path3769.png"
-         inkscape:export-xdpi="90"
-         inkscape:export-ydpi="90" />
-      <rect
-         y="702.36218"
-         x="100"
-         height="50"
-         width="300"
-         id="rect3765"
-         style="fill:#ff00db;fill-opacity:1;stroke:none"
-         inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/path3769.png"
-         inkscape:export-xdpi="90"
-         inkscape:export-ydpi="90" />
-      <path
-         transform="matrix(1.1211865,0,0,1.18125,-5.6779785,633.61217)"
-         d="m 259.25926,324.86774 c 0,16.36399 -13.9763,29.62963 -31.21693,29.62963 -17.24064,0 -31.21693,-13.26564 -31.21693,-29.62963 0,-16.364 13.97629,-29.62963 31.21693,-29.62963 17.24063,0 31.21693,13.26563 31.21693,29.62963 z"
-         sodipodi:ry="29.629629"
-         sodipodi:rx="31.21693"
-         sodipodi:cy="324.86774"
-         sodipodi:cx="228.04233"
-         id="path3767"
-         style="fill:#ff00db;fill-opacity:1;stroke:none"
-         sodipodi:type="arc"
-         inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/path3769.png"
-         inkscape:export-xdpi="90"
-         inkscape:export-ydpi="90" />
-      <path
-         transform="matrix(0.9316901,0,0,1.0176924,-28.380278,687.28523)"
-         d="m 121.69312,324.33862 c 0,18.99392 -16.81893,34.39154 -37.566136,34.39154 -20.747206,0 -37.56614,-15.39762 -37.56614,-34.39154 0,-18.99392 16.818934,-34.39153 37.56614,-34.39153 20.747206,0 37.566136,15.39761 37.566136,34.39153 z"
-         sodipodi:ry="34.391533"
-         sodipodi:rx="37.566139"
-         sodipodi:cy="324.33862"
-         sodipodi:cx="84.126984"
-         id="path3769"
-         style="fill:#ff00db;fill-opacity:1;stroke:none"
-         sodipodi:type="arc"
-         inkscape:export-xdpi="90"
-         inkscape:export-ydpi="90" />
+      <g
+         id="g3755"
+         inkscape:export-xdpi="270"
+         inkscape:export-ydpi="270">
+        <path
+           inkscape:export-ydpi="270"
+           inkscape:export-xdpi="270"
+           inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/path3769.png"
+           style="fill:#2025d0;fill-opacity:1;stroke:none"
+           d="m 0,1017.3622 300,0 0,-235.75639 -100,-129.69381 -100,0 L 0,781.60581 z"
+           id="path3761"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccc" />
+        <rect
+           inkscape:export-ydpi="270"
+           inkscape:export-xdpi="270"
+           inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/path3769.png"
+           style="fill:#17e105;fill-opacity:1;stroke:none"
+           id="rect3765"
+           width="300"
+           height="50"
+           x="100"
+           y="702.36218" />
+        <path
+           inkscape:export-ydpi="270"
+           inkscape:export-xdpi="270"
+           inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/path3769.png"
+           sodipodi:type="arc"
+           style="fill:#17e105;fill-opacity:1;stroke:none"
+           id="path3767"
+           sodipodi:cx="228.04233"
+           sodipodi:cy="324.86774"
+           sodipodi:rx="31.21693"
+           sodipodi:ry="29.629629"
+           d="m 259.25926,324.86774 c 0,16.36399 -13.9763,29.62963 -31.21693,29.62963 -17.24064,0 -31.21693,-13.26564 -31.21693,-29.62963 0,-16.364 13.97629,-29.62963 31.21693,-29.62963 17.24063,0 31.21693,13.26563 31.21693,29.62963 z"
+           transform="matrix(1.1211865,0,0,1.18125,-5.6779785,633.61217)" />
+        <path
+           inkscape:export-ydpi="270"
+           inkscape:export-xdpi="270"
+           sodipodi:type="arc"
+           style="fill:#17e105;fill-opacity:1;stroke:none"
+           id="path3769"
+           sodipodi:cx="84.126984"
+           sodipodi:cy="324.33862"
+           sodipodi:rx="37.566139"
+           sodipodi:ry="34.391533"
+           d="m 121.69312,324.33862 c 0,18.99392 -16.81893,34.39154 -37.566136,34.39154 -20.747206,0 -37.56614,-15.39762 -37.56614,-34.39154 0,-18.99392 16.818934,-34.39153 37.56614,-34.39153 20.747206,0 37.566136,15.39761 37.566136,34.39153 z"
+           transform="matrix(0.9316901,0,0,1.0176924,-28.380278,687.28523)" />
+      </g>
     </g>
   </g>
 </svg>

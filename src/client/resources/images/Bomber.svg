@@ -22,7 +22,7 @@
    sodipodi:docname="Bomber.svg"><metadata
    id="metadata12"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
    id="defs10" /><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
@@ -32,12 +32,12 @@
    guidetolerance="10"
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
-   inkscape:window-width="807"
-   inkscape:window-height="480"
+   inkscape:window-width="1280"
+   inkscape:window-height="662"
    id="namedview8"
    showgrid="false"
-   inkscape:zoom="2.5996875"
-   inkscape:cx="-35.805413"
+   inkscape:zoom="5.1904893"
+   inkscape:cx="33.793034"
    inkscape:cy="52.803444"
    inkscape:window-x="0"
    inkscape:window-y="0"
@@ -49,7 +49,7 @@
    points="-0.667,86.123 49.317,0 100,86.319 92.686,99.825 76.313,71.443 63.251,93.953 57.678,84.558    49.666,97.477 42.002,84.166 35.907,93.366 23.89,71.247 6.473,99.825  "
    id="polyline5"
    fill="#152DFF"
-   style="fill:#c2ffff;fill-opacity:1"
+   style="fill:#2025d0;fill-opacity:1;"
    inkscape:export-xdpi="270"
    inkscape:export-ydpi="270"
    inkscape:export-filename="/Users/fabio/Desktop/swissdefcon/CS108/src/client/resources/images/Bomber.png" />

@@ -104,17 +104,52 @@ Auf diese gespeicherten Daten kann mittels statischer Methoden jederzeit vom Spi
 
 %-- Server
 \section{Server}
-
-%todo frank
-
 \subsection{Aufbau}
+Der Server gliedert sich in 9 Pakete, wovon 4 der Datenverwaltung dienen. Die andern Pakete enthalten Serverinterne Exceptions, das GUI, die Spiellogik und das Socket.
+Eine kurze Beschreibung der Pakete findet sich in der folgenden Tabelle:
+\begin{table}[h!]
+\begin{tabular}{ l p{12cm} }
+  Paketname & Zweck \\ \hline
+  
+  net &  
+  Stellt Klassen für die Kommunikation und Serversuche zur Verfügung. \\
+  
+  exceptions & 
+  Hält Serverinterne Exceptions\\
+  
+  GamePlayObjects &
+  Hält alle Objekte, die gebaut werden können (Bomber, Jets, Banken, usw.)\\
+  
+  logic &
+  Hält die Spiellogik, die die Runden bestimmt und überprüft.\\
+  
+  parser &
+  In diesem Paket werden alle empfangenen Daten ausgewertet und die Saten an die jeweiligen Funktionen übergeben.\\
+  
+  players &
+  Hält alle Spielerbezogenen Daten. (Name, ID, Socket, Server, ...)\\
+  
+  score &
+  Speichert eine Top-Ten der Spieler, die jederzeit aus der Lobby aufgerufen werden kann.\\
+  
+  server &
+  Hält alle aktiven Spiele.\\
+  
+  UI &
+  Hält das Benutzerinterface des Servers.\\
+  
+ 
+\end{tabular}
+\caption{Unterpakete im Paket server}
+\end{table}
+
 \subsection{Datenverwaltung}
 
 %todo frank und lucius
 
 \subsection{Spiellogik}
 \subsubsection{Aufbauphase}
-Mit dem Start des Spiels wird der GamePlayObjectManager instanziert. Er verwaltet die GamePlayObjects.
+Mit dem Start des Spiels wird der Game}PlayObjectManager instanziert. Er verwaltet die GamePlayObjects.
 Wird ein Objekt erstellt, \"{u}bergibt man dem Objekt den GamePlayObjectManager. Das Objekt, falls es an einer g\"{u}ltigen Position gesetzt wurde und der Spieler noch Geld hat, tr\"{a}gt sich dann in die Liste AllObjects und, wenn ein Defensivobjekt, in die Liste Defensives ein. Wird ein Objekt bewegt, dann wird das in die Membervariable Target eingetragen.
 
 \subsubsection{Runde}
@@ -140,13 +175,14 @@ Wird jetzt die Runde gestartet, dann..
 \subsection{Verbindung}
 
 %Todo frank
+%Todo frank
 
 \subsection{Protokoll}
 \subsubsection{Aufbau}
 Jeder Protokolbefehl besteht aus 5 Buchstaben. Der erste Buchstaben bezeichnet jeweils den Bereich des Befehls, es sind dies:
 \begin{itemize}
 \item D für die Serversuche
-\item V für Befehle betreffend der Verbindung
+\item V für Belantfehle betreffend der Verbindung
 \item C für den Chat
 \item G für das Spiel
 \end{itemize}

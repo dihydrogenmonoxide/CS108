@@ -59,6 +59,8 @@ public enum Protocol {
 	LOBBY_QUIT(LOBBY, "QUIT"),
 	/**join the lobby.*/
 	LOBBY_JOIN(LOBBY, "JOIN"),
+	/**Prints out a top 10*/
+	LOBBY_SCORE(LOBBY, "SCOR"),
 	/**chat messages.*/
 	CHAT_MESSAGE(CHAT, "CHAT"),
 	/**prefix for private messages.*/

@@ -15,6 +15,7 @@ server.logic
 server.net
 server.parser
 server.players
+server.score
 server.server
 shared
 shared.game

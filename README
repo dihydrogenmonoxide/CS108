@@ -1,2 +1,25 @@
-TODO: write the readme
-well, this is for svn testing purposes
+Hello
+
+you will find our .jar with the game in the same directory as this readme.
+	./SwissDefcon.jar
+
+to start a client:
+	cd /path/to/this/directory
+	java -jar SwissDefcon.jar client
+
+to start a server:
+	cd /path/to/this/directory
+	java -jar SwissDefcon.jar server
+
+you will find the documentation in
+	./Documentation
+	./Documentation/Javadoc
+
+The manual in
+	./Handbuch
+
+The source code in
+	./src
+
+the presentation for milestone 5 in
+	./presentations/milestone_5

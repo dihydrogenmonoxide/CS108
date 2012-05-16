@@ -43,6 +43,8 @@ public class BankTest {
 
 	@Test
 	public void test() {
+		for(int i=0;i<10000;i++)
+		{
 		Bank Bank1=null;
 		
 		test_Constructor();
@@ -59,7 +61,7 @@ public class BankTest {
 		assertTrue(Bank1!=null);
 		
 		//Test if the Bank can get Bombed
-		test_damage(Bank1);
+		test_damage(Bank1,i);
 		
 		//Test if the Bank adds Money
 		long before=Bank1.getOwner().getMoney();
@@ -67,18 +69,18 @@ public class BankTest {
 		assertTrue(Bank1.getOwner().getMoney()==before+GameSettings.Bank.attackPoints);
 		
 		
+		Bank1.Manager.deleteAllObjectsOfPlayer(Bank1.getOwner());
 		
-		
-		
+		}
 		
 	}
 
-	private void test_damage(Bank Bank1) {
+	private void test_damage(Bank Bank1,int i) {
 		//Now Bank1 is generated, Testing its Methods:
 		//Test if the Bank can be attacked:
 		int before=Bank1.getHealthPoints();
 		assertTrue(Bank1.getHealthPoints()==GameSettings.Bank.healthPoints);
-		int damage=100;
+		int damage=i;
 		Bank1.damage(damage);
 		assertTrue(before-damage==Bank1.getHealthPoints());
 	}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.5.12)  16 MAY 2012 11:17
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.5.12)  16 MAY 2012 14:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -892,75 +892,75 @@ File: einheiten/Landabwehr.png Graphic file (type png)
 <use einheiten/Landabwehr.png>
 Package pdftex.def Info: einheiten/Landabwehr.png used on input line 319.
 (pdftex.def)             Requested size: 144.53986pt x 144.53986pt.
- [15 <./einheiten/Landabwehr.png>]
-<einheiten/Flugabwehr.png, id=87, 8.03pt x 8.03pt>
+
+<einheiten/Flugabwehr.png, id=83, 8.03pt x 8.03pt>
 File: einheiten/Flugabwehr.png Graphic file (type png)
 
 <use einheiten/Flugabwehr.png>
-Package pdftex.def Info: einheiten/Flugabwehr.png used on input line 332.
+Package pdftex.def Info: einheiten/Flugabwehr.png used on input line 330.
 (pdftex.def)             Requested size: 144.53943pt x 144.53943pt.
- <einheiten/Bank.png, id=88, 80.3pt x 80.3pt>
+ [15 <./einheiten/Landabwehr.png> <./einheiten/Flugabwehr.png>] <einheiten/Bank
+.png, id=89, 80.3pt x 80.3pt>
 File: einheiten/Bank.png Graphic file (type png)
 
 <use einheiten/Bank.png>
-Package pdftex.def Info: einheiten/Bank.png used on input line 343.
+Package pdftex.def Info: einheiten/Bank.png used on input line 342.
 (pdftex.def)             Requested size: 144.53986pt x 144.53986pt.
- [16 <./einheiten/Flugabwehr.png> <./einheiten/Bank.png>] <einheiten/Repro.png,
- id=94, 80.3pt x 80.3pt>
+ <einheiten/Repro.png, id=90, 80.3pt x 80.3pt>
 File: einheiten/Repro.png Graphic file (type png)
- <use einheiten/Repro.png>
-Package pdftex.def Info: einheiten/Repro.png used on input line 355.
-(pdftex.def)             Requested size: 160.59958pt x 160.59958pt.
 
-[17 <./einheiten/Repro.png>]
-<spiel/Objekt_aussuchen.png, id=99, 1284.8pt x 660.4675pt>
+<use einheiten/Repro.png>
+Package pdftex.def Info: einheiten/Repro.png used on input line 352.
+(pdftex.def)             Requested size: 160.59958pt x 160.59958pt.
+ [16 <./einheiten/Bank.png> <./einheiten/Repro.png>]
+<spiel/Objekt_aussuchen.png, id=96, 1284.8pt x 660.4675pt>
 File: spiel/Objekt_aussuchen.png Graphic file (type png)
 
 <use spiel/Objekt_aussuchen.png>
-Package pdftex.def Info: spiel/Objekt_aussuchen.png used on input line 369.
+Package pdftex.def Info: spiel/Objekt_aussuchen.png used on input line 366.
 (pdftex.def)             Requested size: 385.44298pt x 198.14177pt.
 
-<spiel/Objekt_setzen.png, id=100, 1284.8pt x 665.48625pt>
+<spiel/Objekt_setzen.png, id=97, 1284.8pt x 665.48625pt>
 File: spiel/Objekt_setzen.png Graphic file (type png)
 
 <use spiel/Objekt_setzen.png>
-Package pdftex.def Info: spiel/Objekt_setzen.png used on input line 377.
+Package pdftex.def Info: spiel/Objekt_setzen.png used on input line 374.
 (pdftex.def)             Requested size: 385.44298pt x 199.64742pt.
- [18 <./spiel/Objekt_aussuchen.png> <./spiel/Objekt_setzen.png>] <spiel/Objekt_
-anwaehlen.png, id=105, 1284.8pt x 663.47874pt>
+ [17 <./spiel/Objekt_aussuchen.png> <./spiel/Objekt_setzen.png>] <spiel/Objekt_
+anwaehlen.png, id=102, 1284.8pt x 663.47874pt>
 File: spiel/Objekt_anwaehlen.png Graphic file (type png)
 
 <use spiel/Objekt_anwaehlen.png>
-Package pdftex.def Info: spiel/Objekt_anwaehlen.png used on input line 389.
+Package pdftex.def Info: spiel/Objekt_anwaehlen.png used on input line 386.
 (pdftex.def)             Requested size: 359.74155pt x 185.77278pt.
 
-<spiel/Objekt_verschieben.png, id=106, 1284.8pt x 664.4825pt>
+<spiel/Objekt_verschieben.png, id=103, 1284.8pt x 664.4825pt>
 File: spiel/Objekt_verschieben.png Graphic file (type png)
 
 <use spiel/Objekt_verschieben.png>
-Package pdftex.def Info: spiel/Objekt_verschieben.png used on input line 398.
+Package pdftex.def Info: spiel/Objekt_verschieben.png used on input line 395.
 (pdftex.def)             Requested size: 359.74155pt x 186.05382pt.
- [19 <./spiel/Objekt_anwaehlen.png> <./spiel/Objekt_verschieben.png>]
-<spiel/Objekt_gegner.png, id=111, 1284.8pt x 661.47125pt>
+ [18 <./spiel/Objekt_anwaehlen.png> <./spiel/Objekt_verschieben.png>]
+<spiel/Objekt_gegner.png, id=107, 1284.8pt x 661.47125pt>
 File: spiel/Objekt_gegner.png Graphic file (type png)
 
 <use spiel/Objekt_gegner.png>
-Package pdftex.def Info: spiel/Objekt_gegner.png used on input line 413.
+Package pdftex.def Info: spiel/Objekt_gegner.png used on input line 410.
 (pdftex.def)             Requested size: 385.44298pt x 198.4429pt.
- [20 <./spiel/Objekt_gegner.png>]
-<spiel/verloren.png, id=115, 1284.8pt x 689.57625pt>
+ [19 <./spiel/Objekt_gegner.png>]
+<spiel/verloren.png, id=112, 1284.8pt x 689.57625pt>
 File: spiel/verloren.png Graphic file (type png)
  <use spiel/verloren.png>
-Package pdftex.def Info: spiel/verloren.png used on input line 426.
+Package pdftex.def Info: spiel/verloren.png used on input line 423.
 (pdftex.def)             Requested size: 372.58246pt x 199.97198pt.
 
-<spiel/gewonnen.png, id=116, 1284.8pt x 665.48625pt>
+<spiel/gewonnen.png, id=113, 1284.8pt x 665.48625pt>
 File: spiel/gewonnen.png Graphic file (type png)
  <use spiel/gewonnen.png>
-Package pdftex.def Info: spiel/gewonnen.png used on input line 435.
+Package pdftex.def Info: spiel/gewonnen.png used on input line 432.
 (pdftex.def)             Requested size: 372.58246pt x 192.98607pt.
 
-[21 <./spiel/verloren.png> <./spiel/gewonnen.png>] (./Handbuch.aux) ) 
+[20 <./spiel/verloren.png> <./spiel/gewonnen.png>] (./Handbuch.aux) ) 
 Here is how much of TeX's memory you used:
  7794 strings out of 493633
  109849 string characters out of 3143377
@@ -980,10 +980,10 @@ e/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/
 11/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local/texlive/2011
 /texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/local/texlive/2011/t
 exmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
-Output written on Handbuch.pdf (21 pages, 9848733 bytes).
+Output written on Handbuch.pdf (20 pages, 9848370 bytes).
 PDF statistics:
- 150 PDF objects out of 1000 (max. 8388607)
- 77 compressed objects within 1 object stream
+ 147 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

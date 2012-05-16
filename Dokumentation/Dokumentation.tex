@@ -91,7 +91,7 @@ weitergeleitet, so dass von überall her mit einem geeigneten Listener darauf zu
 Daten welche langfristig gespeichert werden (zum Beispiel die Zuordnung von Spielernamen zu ihrer Id) werden
 von Klassen im Paket "client.data" gespeichert. Darunter fällt  "PlayerManager" welcher alle Informationen bezüglich Spieler speichert und "RunningGame" welche alle Informationen zum gerade laufenden Spiel bereithält.
 Auf diese gespeicherten Daten kann mittels statischer Methoden jederzeit vom Spiel oder von der Lobby zugegriffen werden.
-
+frank
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.6]{client/datenhaltung.pdf}
@@ -144,13 +144,18 @@ Eine kurze Beschreibung der Pakete findet sich in der folgenden Tabelle:
 \end{table}
 
 \subsection{Datenverwaltung}
-
-%todo frank und lucius
+Die vom Parser empfangenen Daten werden aufgeteilt zu Spielerdaten, Objektdaten und Serverdaten.
+Spielerdaten werden in der Instanz einer Player-Klasse des jeweiligen Spieler gespeichert. Objektdaten werden in der jeweiligen Instanz diese Objektes gespeichert. Serverdaten werden in einer Instanz der Server-Klasse gespeichert. Aktive Server werden vom Servermanager gehalten. Dieser entfernt auch automatisch inaktive Instanzen. 1
+\begin{figure}[h!]
+\centering
+\includegraphics[width=14cm]{server/server.png}
+\caption{Datenverteilung}
+\end{figure}
 
 \subsection{Spiellogik}
 \subsubsection{Aufbauphase}
 Mit dem Start des Spiels wird der GamePlayObjectManager instanziert. Er verwaltet die GamePlayObjects.
-Wird ein Objekt erstellt, \"{u}bergibt man dem Objekt den GamePlayObjectManager. Das Objekt, falls es an einer g\"{u}ltigen Position gesetzt wurde und der Spieler noch Geld hat, tr\"{a}gt sich dann in die Liste AllObjects und, wenn ein Defensivobjekt, in die Liste Defensives ein. Wird ein Objekt bewegt, dann wird das in die Membervariable Target eingetragen.
+Wird ein Objekt erstellt, \"{u}bergibt man dem Objekt den GamePlayObjectManager. Das Objekt, falls es an einer g\"{u}ltigen Position gesetzt wurde und der Spieler noch Geld hat, tr\"{a}gt sich dann in die Liste AllObjects und, lalalalwenn ein Defensivobjekt, in die Liste Defensives ein. Wird ein Objekt bewegt, dann wird das in die Membervariable Target eingetragen.
 
 \subsubsection{Runde}
 

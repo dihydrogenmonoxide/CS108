@@ -100,7 +100,15 @@ frank
 
 \subsection{Rendering}
 
-%todo fabio
+Das Ganze Bild wird über einen doubleBuffer gezeichnet.
+Dazu wird aufgrund der Bildschirmgr\"{o}sse die optimale Spielfeldgr\"{o}sse ermittelt.
+Die gesetzten Objekte werden gezeichnet, fals sie bewegt wurden, wird eine Linie und eine Pfeilspitze mit Referenz auf das Objekt gezeichnet.
+Ein Algorithmus \"{u}berpr\"{u}ft, ob bei einem Klick auf ein Objekt gedr\"{u}ckt wurde oder nicht. Falls nein, wird ein neues Objekt an der gedr\"{u}kten Stelle gezeichnet, ansonsents wird die moving-range, sowie Lebenspunkte und aktuellen Wert des angew\"{a}hlten Objektes auf dem Spielfeld angezeigt.
+Die h\"{a}ufigkeit, in der das Spielfeld neu gezeichnet wird, h\"{a}ngt von der Spielsituation ab. Ist ein Objekt angew\"{a}hlt, so wird das Bild alle 70 Millisekunden neu gezeichnet. Ist kein Objekt angew\"{a}hlt, so wird das Bild alle 200 Millisekunden neu gezeichnet. In der Animationsphase wird das Bild alle 20 Millisekunden neu erstellt.
+Wird die Gr\"{o}sse des Fenster ver\"{ä}ndert, so wird das Bild neu gerendert.
+Die Objekte werden als Bild gezeichnet und farbig umrandet. Jeder Spieler besitz auf der gegnerischen Karte eine andere Farbe, seine eigene ist jedoch immer Blau.
+Der Radar wird als dreieckige Polygone gezeichnet, die mit dem zunehmenden Winkel an Farbe verlieren. Die Objektangaben werden als Strings gezeichnet.
+
 
 %-- Server
 \section{Server}

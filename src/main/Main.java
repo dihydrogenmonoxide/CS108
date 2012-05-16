@@ -12,7 +12,7 @@ public class Main
 		try
 		{
 			Log.InformationLog("Starte SwissDefcon ");
-			if (args.length > 1)
+			if (args.length > 0)
 			{
 				if (args[0].toLowerCase().equals("server"))
 				{

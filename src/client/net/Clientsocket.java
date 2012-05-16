@@ -64,7 +64,6 @@ implements Runnable
 		
 		try 
 		{
-			//TODO SERVER failure creating objectoutput and or inputstream ("invalid argument")
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			

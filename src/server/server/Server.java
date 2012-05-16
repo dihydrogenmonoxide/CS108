@@ -81,8 +81,7 @@ implements Comparable<Server>
 	public void addVote()
 	{
 		startVotes++;
-		//TODO SERVER uncomment after oli is done testing
-		if(/*l_players.size() > 1 && startVotes > l_players.size() / 2 &*/ !isPaused)
+		if(playerList.size() > 1 && startVotes > playerList.size() / 2 & !isPaused)
 			startGame();
 	}
 	

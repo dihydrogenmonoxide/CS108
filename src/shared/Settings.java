@@ -18,7 +18,6 @@ public final class Settings {
 		public static final int MAX_RETRIES = 5;
 	}	
 	
-	//TODO SERVER set all values below
 	public final class GameValuesNormal
 	{
 		/**The default money value a player receives on round begin*/

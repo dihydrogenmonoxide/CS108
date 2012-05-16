@@ -6,7 +6,7 @@ public final class Settings {
 	public static final int DISCOVERY_CLIENT_SCAN_PERIOD = 6000;
 	public static final int SERVER_DEFAULT_PORT = 9003;
 	public static final boolean PRINT_DEBUG_MSG_IN_CHAT = true;
-        public static final boolean FULLSCREEN = false;
+        public static final boolean FULLSCREEN = true;
 	
 	public final class SocketTimeout
 	{
@@ -29,7 +29,7 @@ public final class Settings {
 	public final class GameValuesRush
 	{
 		/**The default money value a player receives on round begin*/
-		public static final long DEFAULT_MONEY = 50000;
+		public static final long DEFAULT_MONEY = 75000;
 		/**The default Population amount*/
 		public static final long DEFAULT_POPULATION = 50000;
 	}

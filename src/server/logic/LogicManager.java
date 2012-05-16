@@ -13,6 +13,7 @@ import server.exceptions.GameEndedException;
 import server.exceptions.GameObjectBuildException;
 import server.parser.Parser;
 import server.players.Player;
+import server.score.ScoreManager;
 import server.server.Server;
 import shared.Log;
 import shared.Protocol;
@@ -57,8 +58,7 @@ implements Runnable
 		{
 			Player winner = e.getWinner();
 			MainServer.getPlayerManager().broadcastMessage_everyone(Protocol.CHAT_MESSAGE.str()+"\t"+winner.getNick()+" hat das Spiel \""+server.getServername()+"\" mit "+winner.getMoney()+" Punkten gewonnen!");
-			server.broadcastPreviousWinners();
-			server.addWinner("\t"+winner.getNick()+": "+winner.getMoney()+" Punkte");
+			MainServer.getScoreManager().addScore(winner);
 			winner.sendData(Protocol.GAME_LOST_OR_WON.str()+"0");
 			return;
 		}
@@ -94,6 +94,7 @@ implements Runnable
 			p.addMoney(money);
 			p.addPopulation(population);
 			p.sendData(Protocol.GAME_BEGIN.str()+server.getID()+" "+p.getFieldID());
+			p.sendData(Protocol.GAME_RESET.str());
 			MainServer.printInformation("Assigned "+p.getNick()+" to the field "+p.getFieldID());
 			resendEverything(p); 
 		}
@@ -150,7 +151,7 @@ implements Runnable
 		}
 		catch (InterruptedException e)
 		{
-			Log.DebugLog("All Players finished building before tiem ran out");
+			Log.DebugLog("All Players finished building before time ran out");
 		}
 		isInBuildPhase = false;
 		server.broadcastMessage(Protocol.GAME_BUILD_PHASE.str()+0);
@@ -172,8 +173,10 @@ implements Runnable
 		if(isInBuildPhase && !player.finishedBuilding())
 		{
 			voteCount++;
+			server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+player.getNick()+" ist bereit für die nächste Runde!");
 			if(voteCount >= server.getPlayerAmount())
 			{
+				server.broadcastMessage(Protocol.CHAT_MESSAGE.str()+"Alle sind bereit, die jetzige Runde wird beendet");
 				thread.interrupt();
 				Log.InformationLog("Everyone has finished b4 time ran out");
 			}

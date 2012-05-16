@@ -29,7 +29,6 @@ implements Comparable<Server>
 	private LogicManager logicManager;
 	private boolean isGameRunning = false;
 	private boolean isPaused = false;
-	private List<String> previousWinners = new Vector<String>();
 	private long population;
 	private long money;
 	
@@ -77,15 +76,6 @@ implements Comparable<Server>
 	}
 	
 	/**
-	 * Adds a winner
-	 * @param winner the winner message
-	 */
-	public void addWinner(String winner)
-	{
-		previousWinners.add(winner);
-	}
-	
-	/**
 	 * adds a vote to start the game
 	 */
 	public void addVote()
@@ -94,21 +84,6 @@ implements Comparable<Server>
 		//TODO SERVER uncomment after oli is done testing
 		if(/*l_players.size() > 1 && startVotes > l_players.size() / 2 &*/ !isPaused)
 			startGame();
-	}
-	
-	/**
-	 * broadcasts previous winners
-	 */
-	public void broadcastPreviousWinners()
-	{
-		if(previousWinners.size() > 0)
-		{
-			broadcastMessage(Protocol.CHAT_MESSAGE.str()+"\tvorherige Gewinner:");
-			for(String s : previousWinners)
-			{
-				broadcastMessage(Protocol.CHAT_MESSAGE.str()+s);
-			}
-		}
 	}
 	
 	
@@ -194,8 +169,6 @@ implements Comparable<Server>
 	 * Manually remove a player on quit
 	 * @param player the player to remove
 	 */
-        
-        
 	public void removePlayer(Player player)
 	{
 		if(isGameRunning)

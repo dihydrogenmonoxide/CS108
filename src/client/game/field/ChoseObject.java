@@ -59,7 +59,7 @@ public class ChoseObject
     			if(obj.isMovable()){
     				GameFieldPanel.clickCount=1;    
     			}
-    			delete.setVisible(true);
+    			//delete.setVisible(true);
         		return;
         	}
             delete.setVisible(false);

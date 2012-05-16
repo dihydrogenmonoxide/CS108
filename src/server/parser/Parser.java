@@ -68,6 +68,9 @@ public class Parser
 		case CON_MY_ID:
 			sock.sendData(Protocol.CON_MY_ID.str() + sock.getPlayer().getID());
 			return;
+		case LOBBY_SCORE:
+			MainServer.getScoreManager().printScore(sock.getPlayer());
+			return;
 		}
 		
 		if(!sock.getPlayer().isNickSet())

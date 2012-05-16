@@ -1,6 +1,6 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.8.10)  13 MAY 2012 23:09
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.5.12)  16 MAY 2012 11:17
 entering extended mode
- \write18 enabled.
+ restricted \write18 enabled.
  %&-line parsing enabled.
 **Handbuch.tex
 (./Handbuch.tex
@@ -822,9 +822,9 @@ File: lobby/chat.png Graphic file (type png)
 Package pdftex.def Info: lobby/chat.png used on input line 157.
 (pdftex.def)             Requested size: 271.01459pt x 166.82454pt.
 
-Overfull \hbox (13.5272pt too wide) in paragraph at lines 164--168
+Overfull \hbox (8.30624pt too wide) in paragraph at lines 164--168
 \T1/cmr/m/n/12 Möchtest du ei-ne pri-va-te Nach-richt an ei-ne Per-son sen-den,
- so gieb den Be-fehl [][][][][][][][]
+ so gib den Be-fehl [][][][][][][][]
  []
 
 [7 <./lobby/chat.png>]
@@ -839,31 +839,151 @@ Package pdftex.def Info: lobby/spiel_erstellen.png used on input line 176.
 File: lobby/spielinfos.png Graphic file (type png)
 
 <use lobby/spielinfos.png>
-Package pdftex.def Info: lobby/spielinfos.png used on input line 190.
+Package pdftex.def Info: lobby/spielinfos.png used on input line 191.
 (pdftex.def)             Requested size: 271.31572pt x 167.12566pt.
- [8 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] [9] [10] (./Handbuc
-h.aux) ) 
+ [8 <./lobby/spiel_erstellen.png> <./lobby/spielinfos.png>] [9] <spiel/spielfen
+ster.jpg, id=55, 2569.6pt x 1445.4pt>
+File: spiel/spielfenster.jpg Graphic file (type jpg)
+
+<use spiel/spielfenster.jpg>
+Package pdftex.def Info: spiel/spielfenster.jpg used on input line 223.
+(pdftex.def)             Requested size: 385.42337pt x 216.80064pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[10] <spiel/map_with_units.png, id=60, 984.67876pt x 579.16376pt>
+File: spiel/map_with_units.png Graphic file (type png)
+
+<use spiel/map_with_units.png>
+Package pdftex.def Info: spiel/map_with_units.png used on input line 238.
+(pdftex.def)             Requested size: 393.86452pt x 231.66139pt.
+ [11 <./spiel/spielfenster.jpg> <./spiel/map_with_units.png>] <spiel/spielfeld.
+png, id=65, 915.42pt x 526.96875pt>
+File: spiel/spielfeld.png Graphic file (type png)
+
+<use spiel/spielfeld.png>
+Package pdftex.def Info: spiel/spielfeld.png used on input line 247.
+(pdftex.def)             Requested size: 274.62811pt x 158.09184pt.
+ [12 <./spiel/spielfeld.png>]
+<einheiten/Bomber.png, id=69, 80.83533pt x 80.03233pt>
+File: einheiten/Bomber.png Graphic file (type png)
+
+<use einheiten/Bomber.png>
+Package pdftex.def Info: einheiten/Bomber.png used on input line 279.
+(pdftex.def)             Requested size: 145.50345pt x 144.05807pt.
+ [13 <./einheiten/Bomber.png>]
+<einheiten/Panzer.png, id=75, 80.3pt x 80.3pt>
+File: einheiten/Panzer.png Graphic file (type png)
+ <use einheiten/Panzer.png>
+Package pdftex.def Info: einheiten/Panzer.png used on input line 293.
+(pdftex.def)             Requested size: 144.53986pt x 144.53986pt.
+
+<einheiten/Flugzeug.png, id=76, 79.97525pt x 79.44386pt>
+File: einheiten/Flugzeug.png Graphic file (type png)
+
+<use einheiten/Flugzeug.png>
+Package pdftex.def Info: einheiten/Flugzeug.png used on input line 305.
+(pdftex.def)             Requested size: 143.95532pt x 142.99883pt.
+ [14 <./einheiten/Panzer.png> <./einheiten/Flugzeug.png>] <einheiten/Landabwehr
+.png, id=82, 80.3pt x 80.3pt>
+File: einheiten/Landabwehr.png Graphic file (type png)
+
+<use einheiten/Landabwehr.png>
+Package pdftex.def Info: einheiten/Landabwehr.png used on input line 319.
+(pdftex.def)             Requested size: 144.53986pt x 144.53986pt.
+ [15 <./einheiten/Landabwehr.png>]
+<einheiten/Flugabwehr.png, id=87, 8.03pt x 8.03pt>
+File: einheiten/Flugabwehr.png Graphic file (type png)
+
+<use einheiten/Flugabwehr.png>
+Package pdftex.def Info: einheiten/Flugabwehr.png used on input line 332.
+(pdftex.def)             Requested size: 144.53943pt x 144.53943pt.
+ <einheiten/Bank.png, id=88, 80.3pt x 80.3pt>
+File: einheiten/Bank.png Graphic file (type png)
+
+<use einheiten/Bank.png>
+Package pdftex.def Info: einheiten/Bank.png used on input line 343.
+(pdftex.def)             Requested size: 144.53986pt x 144.53986pt.
+ [16 <./einheiten/Flugabwehr.png> <./einheiten/Bank.png>] <einheiten/Repro.png,
+ id=94, 80.3pt x 80.3pt>
+File: einheiten/Repro.png Graphic file (type png)
+ <use einheiten/Repro.png>
+Package pdftex.def Info: einheiten/Repro.png used on input line 355.
+(pdftex.def)             Requested size: 160.59958pt x 160.59958pt.
+
+[17 <./einheiten/Repro.png>]
+<spiel/Objekt_aussuchen.png, id=99, 1284.8pt x 660.4675pt>
+File: spiel/Objekt_aussuchen.png Graphic file (type png)
+
+<use spiel/Objekt_aussuchen.png>
+Package pdftex.def Info: spiel/Objekt_aussuchen.png used on input line 369.
+(pdftex.def)             Requested size: 385.44298pt x 198.14177pt.
+
+<spiel/Objekt_setzen.png, id=100, 1284.8pt x 665.48625pt>
+File: spiel/Objekt_setzen.png Graphic file (type png)
+
+<use spiel/Objekt_setzen.png>
+Package pdftex.def Info: spiel/Objekt_setzen.png used on input line 377.
+(pdftex.def)             Requested size: 385.44298pt x 199.64742pt.
+ [18 <./spiel/Objekt_aussuchen.png> <./spiel/Objekt_setzen.png>] <spiel/Objekt_
+anwaehlen.png, id=105, 1284.8pt x 663.47874pt>
+File: spiel/Objekt_anwaehlen.png Graphic file (type png)
+
+<use spiel/Objekt_anwaehlen.png>
+Package pdftex.def Info: spiel/Objekt_anwaehlen.png used on input line 389.
+(pdftex.def)             Requested size: 359.74155pt x 185.77278pt.
+
+<spiel/Objekt_verschieben.png, id=106, 1284.8pt x 664.4825pt>
+File: spiel/Objekt_verschieben.png Graphic file (type png)
+
+<use spiel/Objekt_verschieben.png>
+Package pdftex.def Info: spiel/Objekt_verschieben.png used on input line 398.
+(pdftex.def)             Requested size: 359.74155pt x 186.05382pt.
+ [19 <./spiel/Objekt_anwaehlen.png> <./spiel/Objekt_verschieben.png>]
+<spiel/Objekt_gegner.png, id=111, 1284.8pt x 661.47125pt>
+File: spiel/Objekt_gegner.png Graphic file (type png)
+
+<use spiel/Objekt_gegner.png>
+Package pdftex.def Info: spiel/Objekt_gegner.png used on input line 413.
+(pdftex.def)             Requested size: 385.44298pt x 198.4429pt.
+ [20 <./spiel/Objekt_gegner.png>]
+<spiel/verloren.png, id=115, 1284.8pt x 689.57625pt>
+File: spiel/verloren.png Graphic file (type png)
+ <use spiel/verloren.png>
+Package pdftex.def Info: spiel/verloren.png used on input line 426.
+(pdftex.def)             Requested size: 372.58246pt x 199.97198pt.
+
+<spiel/gewonnen.png, id=116, 1284.8pt x 665.48625pt>
+File: spiel/gewonnen.png Graphic file (type png)
+ <use spiel/gewonnen.png>
+Package pdftex.def Info: spiel/gewonnen.png used on input line 435.
+(pdftex.def)             Requested size: 372.58246pt x 192.98607pt.
+
+[21 <./spiel/verloren.png> <./spiel/gewonnen.png>] (./Handbuch.aux) ) 
 Here is how much of TeX's memory you used:
- 7702 strings out of 493633
- 107715 string characters out of 3143377
+ 7794 strings out of 493633
+ 109849 string characters out of 3143377
  204786 words of memory out of 3000000
- 10858 multiletter control sequences out of 15000+200000
- 14784 words of font info for 40 fonts, out of 3000000 for 9000
+ 10929 multiletter control sequences out of 15000+200000
+ 15121 words of font info for 41 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 63i,11n,60p,479b,1131s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
-1.enc}</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10
-.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1000.p
-fb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb
-></usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb><
-/usr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></u
-sr/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr
-/local/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/l
-ocal/texlive/2011/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
-Output written on Handbuch.pdf (10 pages, 7239624 bytes).
+ 63i,12n,60p,479b,1131s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/loca
+l/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}{/usr/local
+/texlive/2011/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/t
+exlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
+xlive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texl
+ive/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texliv
+e/2011/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/
+2011/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/texlive/20
+11/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local/texlive/2011
+/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/local/texlive/2011/t
+exmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb>
+Output written on Handbuch.pdf (21 pages, 9848733 bytes).
 PDF statistics:
- 86 PDF objects out of 1000 (max. 8388607)
- 50 compressed objects within 1 object stream
+ 150 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

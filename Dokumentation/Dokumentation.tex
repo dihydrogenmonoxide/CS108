@@ -91,7 +91,7 @@ weitergeleitet, so dass von überall her mit einem geeigneten Listener darauf zu
 Daten welche langfristig gespeichert werden (zum Beispiel die Zuordnung von Spielernamen zu ihrer Id) werden
 von Klassen im Paket "client.data" gespeichert. Darunter fällt  "PlayerManager" welcher alle Informationen bezüglich Spieler speichert und "RunningGame" welche alle Informationen zum gerade laufenden Spiel bereithält.
 Auf diese gespeicherten Daten kann mittels statischer Methoden jederzeit vom Spiel oder von der Lobby zugegriffen werden.
-
+frank
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.6]{client/datenhaltung.pdf}
@@ -104,18 +104,58 @@ Auf diese gespeicherten Daten kann mittels statischer Methoden jederzeit vom Spi
 
 %-- Server
 \section{Server}
-
-%todo frank
-
 \subsection{Aufbau}
-\subsection{Datenverwaltung}
+Der Server gliedert sich in 9 Pakete, wovon 4 der Datenverwaltung dienen. Die andern Pakete enthalten Serverinterne Exceptions, das GUI, die Spiellogik und das Socket.
+Eine kurze Beschreibung der Pakete findet sich in der folgenden Tabelle:
+\begin{table}[h!]
+\begin{tabular}{ l p{11.5cm} }
+  Paketname & Zweck \\ \hline
+  
+  net &  
+  Stellt Klassen für die Kommunikation und Serversuche zur Verfügung. \\
+  
+  exceptions & 
+  Hält Serverinterne Exceptions\\
+  
+  GamePlayObjects &
+  Hält alle Objekte, die gebaut werden können (Bomber, Jets, Banken, usw.)\\
+  
+  logic &
+  Hält die Spiellogik, die die Runden bestimmt und überprüft.\\
+  
+  parser &
+  In diesem Paket werden alle empfangenen Daten ausgewertet und die Saten an die jeweiligen Funktionen übergeben.\\
+  
+  players &
+  Hält alle Spielerbezogenen Daten. (Name, ID, Socket, Server, ...)\\
+  
+  score &
+  Speichert eine Top-Ten der Spieler, die jederzeit aus der Lobby aufgerufen werden kann.\\
+  
+  server &
+  Hält alle aktiven Spiele.\\
+  
+  UI &
+  Hält das Benutzerinterface des Servers.\\
+  
+ 
+\end{tabular}
+\caption{Unterpakete im Paket server}
+\end{table}
 
-%todo frank und lucius
+\subsection{Datenverwaltung}
+Die vom Parser empfangenen Daten werden aufgeteilt zu Spielerdaten, Objektdaten und Serverdaten.
+Spielerdaten werden in der Instanz einer Player-Klasse des jeweiligen Spieler gespeichert. Objektdaten werden in der jeweiligen Instanz diese Objektes gespeichert. Serverdaten werden in einer Instanz der Server-Klasse gespeichert. Aktive Server werden vom Servermanager gehalten. Dieser entfernt auch automatisch inaktive Instanzen. 1
+\begin{figure}[h!]
+\centering
+\includegraphics[width=14cm]{server/server.png}
+\caption{Datenverteilung}
+\end{figure}
 
 \subsection{Spiellogik}
 \subsubsection{Aufbauphase}
 Mit dem Start des Spiels wird der GamePlayObjectManager instanziert. Er verwaltet die GamePlayObjects.
-Wird ein Objekt erstellt, \"{u}bergibt man dem Objekt den GamePlayObjectManager. Das Objekt, falls es an einer g\"{u}ltigen Position gesetzt wurde und der Spieler noch Geld hat, tr\"{a}gt sich dann in die Liste AllObjects und, wenn ein Defensivobjekt, in die Liste Defensives ein. Wird ein Objekt bewegt, dann wird das in die Membervariable Target eingetragen.
+Wird ein Objekt erstellt, \"{u}bergibt man dem Objekt den GamePlayObjectManager. Das Objekt, falls es an einer g\"{u}ltigen Position gesetzt wurde und der Spieler noch Geld hat, tr\"{a}gt sich dann in die Liste AllObjects und, lalalalwenn ein Defensivobjekt, in die Liste Defensives ein. Wird ein Objekt bewegt, dann wird das in die Membervariable Target eingetragen.
 
 \subsubsection{Runde}
 
@@ -134,12 +174,11 @@ Wird jetzt die Runde gestartet, dann..
 %-- Kommunikation
 \section{Kommunikation}
 \subsection{Serverauswahl}
-
-%todo frank
+Die Serverauswahl wird durch ein äusserst rudimentäres Discovery over Multicast bereitgestellt. Der Server sendet hier in konstantem Zeitabstand ein Multicast-Paket ins Netzwerk, das seinen Port enthält und natürlich auch seine IP (durch UDP-Packet-Header). Diese Lösung erfüllz zwar seinen Zweck, kann aber zu unnötigem Traffic innerhalb eines Netzwerkes führen. Dies zu verbessern wäre etwas für zukünftige Releases.
 
 \subsection{Verbindung}
+Die Verbindung basiert auf einem TCP-Socket beim Clienten und einem beim Server. Daher auf jedem Socket zwei Threads laufen (einer, der nur empfängt und einer, der nur sendet) können jederzeit daten gesendet und empfangen werden. Dies ermöglicht dem Server auch in Anwesenheit eines Routers jederzeit und instant, Nachrichten zum Clienten zu pushen. Das Socket beim Clienten sendet automatisch ein Ping, falls in den vorhergehenden 500ms keine Daten versendet wurden.
 
-%Todo frank
 
 \subsection{Protokoll}
 \subsubsection{Aufbau}

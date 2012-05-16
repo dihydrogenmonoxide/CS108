@@ -62,7 +62,7 @@ public class GameFrame
         
         
         game.setBackground(Color.black);
-        
+        game.setResizable(false);
         
         game.setContentPane(innerGameFrame);
   
@@ -90,7 +90,7 @@ public class GameFrame
         }
 
         game.setPreferredSize(game.getMaximumSize());
-        game.revalidate();
+//        game.revalidate();
         
         game.setVisible(true);
 
@@ -115,6 +115,9 @@ public class GameFrame
                 if(evt.getType() == Protocol.GAME_LOST_OR_WON)
                 {
                    String msg;  
+                   screen.setFullScreenWindow(null);
+                   game.setSize(new Dimension(1000,600));
+                   game.setLocation(screenX / 2 - game.getWidth() / 2, screenY / 2 - game.getHeight() / 2);
                    if(evt.getMsg().getIntArgument(1) == 0)
                     {
                         msg = "Du hast gewonnen";
@@ -122,6 +125,9 @@ public class GameFrame
                         msg = "Du hast verloren";
                     }
                     JOptionPane.showMessageDialog(lobbyParent, msg, "Spiel fertig", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    //-- remove this listener because otherwise in the next game there would be 2 listeners attached to it
+                    socket.removeGameEventListener(this);
                     closeGame();
                 }
             }
@@ -158,7 +164,7 @@ public class GameFrame
             {
                 screen.setFullScreenWindow(null);
                 game.dispose();
-                RunningGame.hardReset();
+                RunningGame.softReset();
                 socket.sendData(Protocol.GAME_QUIT.str());
                 lobby.setVisible(true);
             } 

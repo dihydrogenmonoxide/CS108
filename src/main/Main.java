@@ -26,9 +26,7 @@ public class Main
 						MainServer.startServer();
 					}
 					return;
-				}
-
-				if (args[0].toLowerCase().equals("client"))
+				}else if (args[0].toLowerCase().equals("client"))
 				{
 					if (1 < args.length)
 					{
@@ -47,8 +45,18 @@ public class Main
 							MainClient.startClient(ip, port);
 						}
 					}
+                                        else 
+                                        {
+                                            MainClient.startClient();
+                                        }
 					return;
 				}
+                                else
+                                {
+                                    //-- wrong arguments passed
+                                    printHelp();
+                                }
+                                
 			}
 			else
 			{
@@ -58,7 +66,14 @@ public class Main
 		}
 		catch (NumberFormatException e)
 		{
-			System.out.println("Anleitung:\n" + "Server starten:\n"
+			printHelp();
+
+		}
+	}
+        
+        public static void printHelp()
+        {
+            System.out.println("Anleitung:\n" + "Server starten:\n"
 					+ "java -jar dieses.jar server"
 					+ "Server mit Portangabe starten:\n"
 					+ "java -jar dieses.jar server PORT\n\n"
@@ -67,7 +82,5 @@ public class Main
 					+ "Client mit automatischer Suche starten:\n"
 					+ "java -jar dieses.jar client\n\n" + "Starte beides:"
 					+ "java -jar dieses.jar beides");
-
-		}
-	}
+        }
 }

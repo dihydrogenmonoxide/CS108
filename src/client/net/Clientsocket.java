@@ -236,7 +236,7 @@ implements Runnable
 						outputStream.writeUTF(Protocol.CON_PING.toString());
 					
 					int counter = 0;
-					while(!commandQueue.isEmpty())
+					while(!commandQueue.isEmpty())//Gleiche Frage: Warum ohne Timeout?
 					{
 						counter++;
 						try 

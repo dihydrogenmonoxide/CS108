@@ -130,7 +130,7 @@ implements Runnable
 							Log.ErrorLog("This shouldn't be interrupted!");
 						}
 					}
-					outputStream.flush();
+					outputStream.flush();//Frage an Frank: Why?
 				}
 				catch(EOFException e)
 				{

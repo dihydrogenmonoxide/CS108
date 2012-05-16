@@ -120,7 +120,7 @@ implements Runnable
 			{
 				//listening to connection attempts and opening a Socket
 				Socket S_Sock = this.SS_Socket.accept();
-				new PlayerSocket(S_Sock, P_Parser);
+				new PlayerSocket(S_Sock, P_Parser);//Frank: Why no timeout? From Lucius
 			} 
 			catch (IOException e) 
 			{

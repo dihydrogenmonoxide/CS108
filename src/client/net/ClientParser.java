@@ -390,7 +390,7 @@ public class ClientParser {
 	 */
 	void chatMsgReceived(ChatEvent evt) {
 		Object[] listeners = chatListeners.getListenerList();
-		for (int i=0; i<listeners.length; i+=2) {
+		for (int i=0; i<listeners.length; i+=2) {//Frage an Oli, Why? geht es nicht mit instanceof?
 			if (listeners[i]==ChatEventListener.class) {
 				ChatEventListener listener = (ChatEventListener)listeners[i+1];
 				listener.received(evt);
@@ -424,7 +424,7 @@ public class ClientParser {
 	void infoReceived(InfoEvent evt)
 	{
 		Object[] listeners = infoListeners.getListenerList();
-		for (int i=0; i<listeners.length; i+=2) {
+		for (int i=0; i<listeners.length; i+=2) {//Frage an Oli: Why?
 			if (listeners[i]==InfoEventListener.class) {
 				InfoEventListener listener = (InfoEventListener)listeners[i+1];
 				listener.received(evt);
@@ -458,7 +458,7 @@ public class ClientParser {
 	void lobbyReceived(LobbyEvent evt) 
 	{
 		Object[] listeners = lobbyListeners.getListenerList();
-		for (int i=0; i<listeners.length; i+=2) {
+		for (int i=0; i<listeners.length; i+=2) {//Frage an Oli: Why?
 			if (listeners[i]==LobbyEventListener.class) {
 				LobbyEventListener listener = (LobbyEventListener)listeners[i+1];
 				try {

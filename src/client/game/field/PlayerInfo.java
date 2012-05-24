@@ -32,7 +32,6 @@ public class PlayerInfo extends JPanel {
 		moneyPanel.setForeground(new Color(150,150,150));
 		moneyPanel.setText("Kontostand: "+"\n"+ Long.toString(RunningGame.getMoney()));
 		moneyPanel.setEditable(false);
-        moneyPanel.setLineWrap(true);
         moneyPanel.setWrapStyleWord(true);
 		c.gridx=7;
 		c.gridy=2;
@@ -45,7 +44,6 @@ public class PlayerInfo extends JPanel {
 		populationPanel.setForeground(new Color(150,150,150));
 		populationPanel.setText("Population: "+"\n"+ RunningGame.getPopulation());
 		populationPanel.setEditable(false);
-		populationPanel.setLineWrap(true);
 		populationPanel.setWrapStyleWord(true);
 		c.gridx=7;
 		c.gridy=3;
